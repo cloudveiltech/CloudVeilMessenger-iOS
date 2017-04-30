@@ -38,7 +38,7 @@
     return 0;
 }
 
-- (id<TLObject>)TLbuildFromMetaObject:(std::tr1::shared_ptr<TLMetaObject>)__unused metaObject
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)__unused metaObject
 {
     TGLog(@"TLbuildFromMetaObject is not implemented for base type");
     return nil;
@@ -65,7 +65,7 @@
     return (int32_t)0xcdb8de75;
 }
 
-- (id<TLObject>)TLbuildFromMetaObject:(std::tr1::shared_ptr<TLMetaObject>)metaObject
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)metaObject
 {
     TLRPCchannels_editAdmin$channels_editAdmin *object = [[TLRPCchannels_editAdmin$channels_editAdmin alloc] init];
     object.channel = metaObject->getObject((int32_t)0xe11f3d41);

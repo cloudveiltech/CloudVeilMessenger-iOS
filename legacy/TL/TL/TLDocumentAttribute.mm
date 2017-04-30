@@ -21,7 +21,7 @@
     return 0;
 }
 
-- (id<TLObject>)TLbuildFromMetaObject:(std::tr1::shared_ptr<TLMetaObject>)__unused metaObject
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)__unused metaObject
 {
     TGLog(@"TLbuildFromMetaObject is not implemented for base type");
     return nil;
@@ -48,7 +48,7 @@
     return (int32_t)0x9b6d8cdd;
 }
 
-- (id<TLObject>)TLbuildFromMetaObject:(std::tr1::shared_ptr<TLMetaObject>)metaObject
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)metaObject
 {
     TLDocumentAttribute$documentAttributeImageSize *object = [[TLDocumentAttribute$documentAttributeImageSize alloc] init];
     object.w = metaObject->getInt32((int32_t)0x98407fc3);
@@ -88,7 +88,7 @@
     return (int32_t)0xb1b0af2c;
 }
 
-- (id<TLObject>)TLbuildFromMetaObject:(std::tr1::shared_ptr<TLMetaObject>)__unused metaObject
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)__unused metaObject
 {
     TLDocumentAttribute$documentAttributeAnimated *object = [[TLDocumentAttribute$documentAttributeAnimated alloc] init];
     return object;
@@ -114,7 +114,7 @@
     return (int32_t)0xbd5974ef;
 }
 
-- (id<TLObject>)TLbuildFromMetaObject:(std::tr1::shared_ptr<TLMetaObject>)metaObject
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)metaObject
 {
     TLDocumentAttribute$documentAttributeVideo *object = [[TLDocumentAttribute$documentAttributeVideo alloc] init];
     object.duration = metaObject->getInt32((int32_t)0xac00f752);
@@ -161,7 +161,7 @@
     return (int32_t)0xcddece5f;
 }
 
-- (id<TLObject>)TLbuildFromMetaObject:(std::tr1::shared_ptr<TLMetaObject>)metaObject
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)metaObject
 {
     TLDocumentAttribute$documentAttributeFilename *object = [[TLDocumentAttribute$documentAttributeFilename alloc] init];
     object.file_name = metaObject->getString((int32_t)0x3fa248c4);
@@ -194,7 +194,7 @@
     return (int32_t)0x1cbf90c3;
 }
 
-- (id<TLObject>)TLbuildFromMetaObject:(std::tr1::shared_ptr<TLMetaObject>)metaObject
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)metaObject
 {
     TLDocumentAttribute$documentAttributeStickerMeta *object = [[TLDocumentAttribute$documentAttributeStickerMeta alloc] init];
     object.flags = metaObject->getInt32((int32_t)0x81915c23);
@@ -248,7 +248,7 @@
     return (int32_t)0x2865c028;
 }
 
-- (id<TLObject>)TLbuildFromMetaObject:(std::tr1::shared_ptr<TLMetaObject>)__unused metaObject
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)__unused metaObject
 {
     TLDocumentAttribute$documentAttributeHasStickers *object = [[TLDocumentAttribute$documentAttributeHasStickers alloc] init];
     return object;

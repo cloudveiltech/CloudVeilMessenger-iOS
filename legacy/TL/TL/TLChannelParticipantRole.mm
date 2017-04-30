@@ -19,7 +19,7 @@
     return 0;
 }
 
-- (id<TLObject>)TLbuildFromMetaObject:(std::tr1::shared_ptr<TLMetaObject>)__unused metaObject
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)__unused metaObject
 {
     TGLog(@"TLbuildFromMetaObject is not implemented for base type");
     return nil;
@@ -46,7 +46,7 @@
     return (int32_t)0xf9b1f5c1;
 }
 
-- (id<TLObject>)TLbuildFromMetaObject:(std::tr1::shared_ptr<TLMetaObject>)__unused metaObject
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)__unused metaObject
 {
     TLChannelParticipantRole$channelRoleEmpty *object = [[TLChannelParticipantRole$channelRoleEmpty alloc] init];
     return object;
@@ -72,7 +72,7 @@
     return (int32_t)0xc5ea95f2;
 }
 
-- (id<TLObject>)TLbuildFromMetaObject:(std::tr1::shared_ptr<TLMetaObject>)__unused metaObject
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)__unused metaObject
 {
     TLChannelParticipantRole$channelRoleModerator *object = [[TLChannelParticipantRole$channelRoleModerator alloc] init];
     return object;
@@ -98,7 +98,7 @@
     return (int32_t)0x7b5178e0;
 }
 
-- (id<TLObject>)TLbuildFromMetaObject:(std::tr1::shared_ptr<TLMetaObject>)__unused metaObject
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)__unused metaObject
 {
     TLChannelParticipantRole$channelRoleEditor *object = [[TLChannelParticipantRole$channelRoleEditor alloc] init];
     return object;

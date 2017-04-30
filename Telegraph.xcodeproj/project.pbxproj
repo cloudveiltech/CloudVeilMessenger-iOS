@@ -7960,7 +7960,7 @@
 		D01B0E831A4112BF007ACE93 /* TGDocumentAttributeImageSize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGDocumentAttributeImageSize.h; sourceTree = "<group>"; };
 		D01B0E841A4112BF007ACE93 /* TGDocumentAttributeImageSize.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGDocumentAttributeImageSize.m; sourceTree = "<group>"; };
 		D01B0E8C1A41BDC5007ACE93 /* NSArray_Document.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSArray_Document.h; sourceTree = "<group>"; };
-		D01B0E8D1A41BDC5007ACE93 /* NSArray_Document.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NSArray_Document.mm; sourceTree = "<group>"; };
+		D01B0E8D1A41BDC5007ACE93 /* NSArray_Document.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = NSArray_Document.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		D01B0E921A41BDC5007ACE93 /* TLmessages_Stickers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLmessages_Stickers.h; sourceTree = "<group>"; };
 		D01B0E931A41BDC5007ACE93 /* TLmessages_Stickers.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLmessages_Stickers.mm; sourceTree = "<group>"; };
 		D01B0E9C1A41DC35007ACE93 /* TLRPCmessages_getStickers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLRPCmessages_getStickers.h; sourceTree = "<group>"; };
@@ -8825,7 +8825,7 @@
 		D04ABBFC1A3B3C2A00869014 /* ListsDownDisclosureIndicator@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ListsDownDisclosureIndicator@2x.png"; path = "Resources/ListsDownDisclosureIndicator@2x.png"; sourceTree = "<group>"; };
 		D04ABBFD1A3B3C2A00869014 /* ListsDownDisclosureIndicator_Highlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ListsDownDisclosureIndicator_Highlighted.png; path = Resources/ListsDownDisclosureIndicator_Highlighted.png; sourceTree = "<group>"; };
 		D04ABFD41A3B4BD000869014 /* NSArray_DocumentAttribute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSArray_DocumentAttribute.h; sourceTree = "<group>"; };
-		D04ABFD51A3B4BD000869014 /* NSArray_DocumentAttribute.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NSArray_DocumentAttribute.mm; sourceTree = "<group>"; };
+		D04ABFD51A3B4BD000869014 /* NSArray_DocumentAttribute.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = NSArray_DocumentAttribute.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		D04ABFD61A3B4BD000869014 /* TLaccount_Password.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLaccount_Password.h; sourceTree = "<group>"; };
 		D04ABFD71A3B4BD000869014 /* TLaccount_Password.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLaccount_Password.mm; sourceTree = "<group>"; };
 		D04ABFD81A3B4BD000869014 /* TLDocumentAttribute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLDocumentAttribute.h; sourceTree = "<group>"; };
@@ -9471,7 +9471,7 @@
 		D08968B81A7BAE6800784CE8 /* SharedMediaVideoThumbnailPlay@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "SharedMediaVideoThumbnailPlay@2x.png"; path = "Resources/SharedMediaVideoThumbnailPlay@2x.png"; sourceTree = "<group>"; };
 		D08968B91A7BAE6800784CE8 /* SharedMediaVideoThumbnailPlay@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "SharedMediaVideoThumbnailPlay@3x.png"; path = "Resources/SharedMediaVideoThumbnailPlay@3x.png"; sourceTree = "<group>"; };
 		D089E0411AC57463009A744B /* NSArray_Authorization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSArray_Authorization.h; sourceTree = "<group>"; };
-		D089E0421AC57463009A744B /* NSArray_Authorization.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NSArray_Authorization.mm; sourceTree = "<group>"; };
+		D089E0421AC57463009A744B /* NSArray_Authorization.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = NSArray_Authorization.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		D089E0431AC57463009A744B /* TLaccount_Authorizations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLaccount_Authorizations.h; sourceTree = "<group>"; };
 		D089E0441AC57463009A744B /* TLaccount_Authorizations.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLaccount_Authorizations.mm; sourceTree = "<group>"; };
 		D089E0451AC57463009A744B /* TLAuthorization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLAuthorization.h; sourceTree = "<group>"; };
@@ -9909,33 +9909,33 @@
 		D0983DC319CB9BE000CE5BB0 /* TGZeroOutputStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGZeroOutputStream.h; sourceTree = "<group>"; };
 		D0983DC419CB9BE000CE5BB0 /* TGZeroOutputStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGZeroOutputStream.m; sourceTree = "<group>"; };
 		D0983DC619CB9BE000CE5BB0 /* NSArray_Chat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSArray_Chat.h; sourceTree = "<group>"; };
-		D0983DC719CB9BE000CE5BB0 /* NSArray_Chat.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NSArray_Chat.mm; sourceTree = "<group>"; };
+		D0983DC719CB9BE000CE5BB0 /* NSArray_Chat.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = NSArray_Chat.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		D0983DCA19CB9BE000CE5BB0 /* NSArray_ChatParticipant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSArray_ChatParticipant.h; sourceTree = "<group>"; };
-		D0983DCB19CB9BE000CE5BB0 /* NSArray_ChatParticipant.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NSArray_ChatParticipant.mm; sourceTree = "<group>"; };
+		D0983DCB19CB9BE000CE5BB0 /* NSArray_ChatParticipant.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = NSArray_ChatParticipant.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		D0983DCC19CB9BE000CE5BB0 /* NSArray_Contact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSArray_Contact.h; sourceTree = "<group>"; };
-		D0983DCD19CB9BE000CE5BB0 /* NSArray_Contact.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NSArray_Contact.mm; sourceTree = "<group>"; };
+		D0983DCD19CB9BE000CE5BB0 /* NSArray_Contact.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = NSArray_Contact.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		D0983DCE19CB9BE000CE5BB0 /* NSArray_ContactBlocked.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSArray_ContactBlocked.h; sourceTree = "<group>"; };
-		D0983DCF19CB9BE000CE5BB0 /* NSArray_ContactBlocked.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NSArray_ContactBlocked.mm; sourceTree = "<group>"; };
+		D0983DCF19CB9BE000CE5BB0 /* NSArray_ContactBlocked.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = NSArray_ContactBlocked.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		D0983DD219CB9BE000CE5BB0 /* NSArray_ContactLocated.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSArray_ContactLocated.h; sourceTree = "<group>"; };
-		D0983DD319CB9BE000CE5BB0 /* NSArray_ContactLocated.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NSArray_ContactLocated.mm; sourceTree = "<group>"; };
+		D0983DD319CB9BE000CE5BB0 /* NSArray_ContactLocated.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = NSArray_ContactLocated.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		D0983DD419CB9BE000CE5BB0 /* NSArray_ContactRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSArray_ContactRequest.h; sourceTree = "<group>"; };
-		D0983DD519CB9BE000CE5BB0 /* NSArray_ContactRequest.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NSArray_ContactRequest.mm; sourceTree = "<group>"; };
+		D0983DD519CB9BE000CE5BB0 /* NSArray_ContactRequest.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = NSArray_ContactRequest.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		D0983DD819CB9BE000CE5BB0 /* NSArray_ContactStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSArray_ContactStatus.h; sourceTree = "<group>"; };
-		D0983DD919CB9BE000CE5BB0 /* NSArray_ContactStatus.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NSArray_ContactStatus.mm; sourceTree = "<group>"; };
+		D0983DD919CB9BE000CE5BB0 /* NSArray_ContactStatus.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = NSArray_ContactStatus.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		D0983DDA19CB9BE000CE5BB0 /* NSArray_ContactSuggested.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSArray_ContactSuggested.h; sourceTree = "<group>"; };
-		D0983DDB19CB9BE000CE5BB0 /* NSArray_ContactSuggested.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NSArray_ContactSuggested.mm; sourceTree = "<group>"; };
+		D0983DDB19CB9BE000CE5BB0 /* NSArray_ContactSuggested.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = NSArray_ContactSuggested.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		D0983DDC19CB9BE000CE5BB0 /* NSArray_DcNetworkStats.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSArray_DcNetworkStats.h; sourceTree = "<group>"; };
-		D0983DDD19CB9BE000CE5BB0 /* NSArray_DcNetworkStats.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NSArray_DcNetworkStats.mm; sourceTree = "<group>"; };
+		D0983DDD19CB9BE000CE5BB0 /* NSArray_DcNetworkStats.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = NSArray_DcNetworkStats.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		D0983DDE19CB9BE000CE5BB0 /* NSArray_DcOption.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSArray_DcOption.h; sourceTree = "<group>"; };
-		D0983DDF19CB9BE000CE5BB0 /* NSArray_DcOption.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NSArray_DcOption.mm; sourceTree = "<group>"; };
+		D0983DDF19CB9BE000CE5BB0 /* NSArray_DcOption.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = NSArray_DcOption.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		D0983DE019CB9BE000CE5BB0 /* NSArray_DestroySessionRes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSArray_DestroySessionRes.h; sourceTree = "<group>"; };
-		D0983DE119CB9BE000CE5BB0 /* NSArray_DestroySessionRes.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NSArray_DestroySessionRes.mm; sourceTree = "<group>"; };
+		D0983DE119CB9BE000CE5BB0 /* NSArray_DestroySessionRes.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = NSArray_DestroySessionRes.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		D0983DE219CB9BE000CE5BB0 /* NSArray_Dialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSArray_Dialog.h; sourceTree = "<group>"; };
-		D0983DE319CB9BE000CE5BB0 /* NSArray_Dialog.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NSArray_Dialog.mm; sourceTree = "<group>"; };
+		D0983DE319CB9BE000CE5BB0 /* NSArray_Dialog.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = NSArray_Dialog.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		D0983DE419CB9BE000CE5BB0 /* NSArray_EncryptedMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSArray_EncryptedMessage.h; sourceTree = "<group>"; };
-		D0983DE519CB9BE000CE5BB0 /* NSArray_EncryptedMessage.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NSArray_EncryptedMessage.mm; sourceTree = "<group>"; };
+		D0983DE519CB9BE000CE5BB0 /* NSArray_EncryptedMessage.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = NSArray_EncryptedMessage.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		D0983DE819CB9BE000CE5BB0 /* NSArray_ImportedContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSArray_ImportedContact.h; sourceTree = "<group>"; };
-		D0983DE919CB9BE000CE5BB0 /* NSArray_ImportedContact.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NSArray_ImportedContact.mm; sourceTree = "<group>"; };
+		D0983DE919CB9BE000CE5BB0 /* NSArray_ImportedContact.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = NSArray_ImportedContact.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		D0983DEA19CB9BE000CE5BB0 /* NSArray_InputContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSArray_InputContact.h; sourceTree = "<group>"; };
 		D0983DEB19CB9BE000CE5BB0 /* NSArray_InputContact.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NSArray_InputContact.mm; sourceTree = "<group>"; };
 		D0983DEC19CB9BE000CE5BB0 /* NSArray_InputPhoto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSArray_InputPhoto.h; sourceTree = "<group>"; };
@@ -10616,7 +10616,7 @@
 		D0A4D7AA1C0F979000537E74 /* TLRPCmessages_searchGifs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLRPCmessages_searchGifs.h; sourceTree = "<group>"; };
 		D0A4D7AB1C0F979000537E74 /* TLRPCmessages_searchGifs.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLRPCmessages_searchGifs.mm; sourceTree = "<group>"; };
 		D0A4D7AC1C0F979000537E74 /* NSArray_FoundGif.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSArray_FoundGif.h; sourceTree = "<group>"; };
-		D0A4D7AD1C0F979000537E74 /* NSArray_FoundGif.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NSArray_FoundGif.mm; sourceTree = "<group>"; };
+		D0A4D7AD1C0F979000537E74 /* NSArray_FoundGif.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = NSArray_FoundGif.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		D0A4D7BA1C0F97C400537E74 /* TLFoundGif.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLFoundGif.h; sourceTree = "<group>"; };
 		D0A4D7BB1C0F97C400537E74 /* TLFoundGif.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLFoundGif.mm; sourceTree = "<group>"; };
 		D0A4D7BC1C0F97C400537E74 /* TLmessages_FoundGifs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLmessages_FoundGifs.h; sourceTree = "<group>"; };
@@ -11120,7 +11120,7 @@
 		D0D43CE61BA0A4AE00F6C78F /* TLChatFull$channelFull.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLChatFull$channelFull.h; sourceTree = "<group>"; };
 		D0D43CE71BA0A4AE00F6C78F /* TLChatFull$channelFull.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLChatFull$channelFull.mm; sourceTree = "<group>"; };
 		D0D43CEE1BA0A8D400F6C78F /* NSArray_ChannelParticipant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSArray_ChannelParticipant.h; sourceTree = "<group>"; };
-		D0D43CEF1BA0A8D400F6C78F /* NSArray_ChannelParticipant.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NSArray_ChannelParticipant.mm; sourceTree = "<group>"; };
+		D0D43CEF1BA0A8D400F6C78F /* NSArray_ChannelParticipant.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = NSArray_ChannelParticipant.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		D0D43CF21BA0A8D400F6C78F /* TLupdates_ChannelDifference.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLupdates_ChannelDifference.h; sourceTree = "<group>"; };
 		D0D43CF31BA0A8D400F6C78F /* TLupdates_ChannelDifference.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLupdates_ChannelDifference.mm; sourceTree = "<group>"; };
 		D0D443B7195315D500CF2A7E /* Icon-76@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-76@2x.png"; sourceTree = "<group>"; };
@@ -11290,7 +11290,7 @@
 		D0DEAB1D1A67331A008311D1 /* TGMessageSearchSignals.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGMessageSearchSignals.h; sourceTree = "<group>"; };
 		D0DEAB1E1A67331A008311D1 /* TGMessageSearchSignals.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGMessageSearchSignals.m; sourceTree = "<group>"; };
 		D0DEE4F21AA0A90500B04AAA /* NSArray_DisabledFeature.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSArray_DisabledFeature.h; sourceTree = "<group>"; };
-		D0DEE4F31AA0A90600B04AAA /* NSArray_DisabledFeature.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NSArray_DisabledFeature.mm; sourceTree = "<group>"; };
+		D0DEE4F31AA0A90600B04AAA /* NSArray_DisabledFeature.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = NSArray_DisabledFeature.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		D0DEE4F41AA0A90600B04AAA /* TLDisabledFeature.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLDisabledFeature.h; sourceTree = "<group>"; };
 		D0DEE4F51AA0A90600B04AAA /* TLDisabledFeature.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLDisabledFeature.mm; sourceTree = "<group>"; };
 		D0DEE5041AA0A96000B04AAA /* TGApplicationFeatures.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGApplicationFeatures.h; sourceTree = "<group>"; };
@@ -11566,7 +11566,7 @@
 		D0EDE55A1D9ABA27005D4CE8 /* TGGameMediaAttachment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGGameMediaAttachment.h; sourceTree = "<group>"; };
 		D0EDE55B1D9ABA27005D4CE8 /* TGGameMediaAttachment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGGameMediaAttachment.m; sourceTree = "<group>"; };
 		D0EDE55E1D9AC041005D4CE8 /* NSArray_HighScore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSArray_HighScore.h; sourceTree = "<group>"; };
-		D0EDE55F1D9AC041005D4CE8 /* NSArray_HighScore.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NSArray_HighScore.mm; sourceTree = "<group>"; };
+		D0EDE55F1D9AC041005D4CE8 /* NSArray_HighScore.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = NSArray_HighScore.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		D0EDE5601D9AC041005D4CE8 /* TLGame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLGame.h; sourceTree = "<group>"; };
 		D0EDE5611D9AC041005D4CE8 /* TLGame.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLGame.mm; sourceTree = "<group>"; };
 		D0EDE5621D9AC041005D4CE8 /* TLHighScore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLHighScore.h; sourceTree = "<group>"; };
@@ -11734,9 +11734,9 @@
 		D0FC06E51B1C16B2008CC3BB /* TLUser$modernUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLUser$modernUser.h; sourceTree = "<group>"; };
 		D0FC06E61B1C16B2008CC3BB /* TLUser$modernUser.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLUser$modernUser.mm; sourceTree = "<group>"; };
 		D0FC06F11B1C1BBA008CC3BB /* NSArray_BotCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSArray_BotCommand.h; sourceTree = "<group>"; };
-		D0FC06F21B1C1BBA008CC3BB /* NSArray_BotCommand.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NSArray_BotCommand.mm; sourceTree = "<group>"; };
+		D0FC06F21B1C1BBA008CC3BB /* NSArray_BotCommand.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = NSArray_BotCommand.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		D0FC06F31B1C1BBA008CC3BB /* NSArray_BotInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSArray_BotInfo.h; sourceTree = "<group>"; };
-		D0FC06F41B1C1BBA008CC3BB /* NSArray_BotInfo.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NSArray_BotInfo.mm; sourceTree = "<group>"; };
+		D0FC06F41B1C1BBA008CC3BB /* NSArray_BotInfo.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = NSArray_BotInfo.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		D0FC06F51B1C1BBA008CC3BB /* TLBotCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLBotCommand.h; sourceTree = "<group>"; };
 		D0FC06F61B1C1BBA008CC3BB /* TLBotCommand.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLBotCommand.mm; sourceTree = "<group>"; };
 		D0FC06F71B1C1BBA008CC3BB /* TLBotInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLBotInfo.h; sourceTree = "<group>"; };
@@ -24377,7 +24377,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = TG;
-				LastUpgradeCheck = 0630;
+				LastUpgradeCheck = 0830;
 				TargetAttributes = {
 					68744C0C1BB1A9F700FE6542 = {
 						CreatedOnToolsVersion = 7.1;
@@ -24425,7 +24425,7 @@
 						};
 					};
 					D08805AB156E8F3600311537 = {
-						DevelopmentTeam = NBGJ43H8PS;
+						DevelopmentTeam = XAR2YFPBRT;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.ApplePay = {
@@ -28778,7 +28778,7 @@
 				LIBRARY_SEARCH_PATHS = thirdparty/SSignalKit;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_BUNDLE_IDENTIFIER = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "$(TELEGRAPH_WATCHEXT_BUNDLE_ID)";
 				PRODUCT_NAME = "${TARGET_NAME}";
 				PROVISIONING_PROFILE = "fa3a73e6-2790-4b55-bb6e-29d31e7d9266";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "910eaeba-2d88-4938-8365-24f49cad7234";
@@ -28816,7 +28816,7 @@
 				LIBRARY_SEARCH_PATHS = thirdparty/SSignalKit;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_BUNDLE_IDENTIFIER = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "$(TELEGRAPH_WATCHEXT_BUNDLE_ID)";
 				PRODUCT_NAME = "${TARGET_NAME}";
 				PROVISIONING_PROFILE = "00ea86d7-b098-48f0-b8ac-8e9f9b222c05";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "00ea86d7-b098-48f0-b8ac-8e9f9b222c05";
@@ -28850,7 +28850,7 @@
 				IBSC_MODULE = watchkitapp_Extension;
 				INFOPLIST_FILE = Watch/App/Info.plist;
 				MTL_ENABLE_DEBUG_INFO = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "$(TELEGRAPH_WATCHAPP_BUNDLE_ID)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "fdcbd773-556c-4626-8f18-3f577682fdd5";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "fdcbd773-556c-4626-8f18-3f577682fdd5";
@@ -28864,7 +28864,7 @@
 		};
 		68744C351BB1A9F800FE6542 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D064421C1E4E2A3600394D5F /* AppStore.xcconfig */;
+			baseConfigurationReference = 93EFBF0E173DC6DA00F7B89E /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = WatchAppIcon;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -28885,7 +28885,7 @@
 				IBSC_MODULE = watchkitapp_Extension;
 				INFOPLIST_FILE = Watch/App/Info.plist;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "$(TELEGRAPH_WATCHAPP_BUNDLE_ID)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "8ef52063-eee0-494c-bba5-fa20b6c2dd0f";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "8ef52063-eee0-494c-bba5-fa20b6c2dd0f";
@@ -28899,22 +28899,28 @@
 		};
 		D018D7B31E5C411500F75970 /* Debug AppStore */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D064421C1E4E2A3600394D5F /* AppStore.xcconfig */;
+			baseConfigurationReference = 93EFBF0E173DC6DA00F7B89E /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -28923,14 +28929,14 @@
 					"$(inherited)",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_VERSION = "";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				ONLY_ACTIVE_ARCH = YES;
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
@@ -28946,11 +28952,11 @@
 		};
 		D018D7B41E5C411500F75970 /* Debug AppStore */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D064421C1E4E2A3600394D5F /* AppStore.xcconfig */;
+			baseConfigurationReference = 93EFBF0E173DC6DA00F7B89E /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
-				CLANG_CXX_LIBRARY = "libstdc++";
+				CLANG_CXX_LIBRARY = "compiler-default";
 				CLANG_WARN_OBJC_IMPLICIT_ATOMIC_PROPERTIES = YES;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = NO;
 				CLANG_WARN_OBJC_MISSING_PROPERTY_SYNTHESIS = NO;
@@ -28961,7 +28967,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = NBGJ43H8PS;
+				DEVELOPMENT_TEAM = XAR2YFPBRT;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -28998,7 +29004,7 @@
 					submodules/libtgvoip,
 				);
 				INFOPLIST_FILE = "Telegraph/Telegraph-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -29037,7 +29043,7 @@
 		};
 		D018D7B51E5C411500F75970 /* Debug AppStore */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D064421C1E4E2A3600394D5F /* AppStore.xcconfig */;
+			baseConfigurationReference = 93EFBF0E173DC6DA00F7B89E /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -29078,6 +29084,7 @@
 					"-ObjC",
 					"-lc++",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "$(TELEGRAPH_SHARE_BUNDLE_ID)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "5298703b-95a8-4ff3-8619-68821ca01fe1";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "2c5cfefd-460c-4c3f-937c-6de5c41c4099";
@@ -29088,7 +29095,7 @@
 		};
 		D018D7B61E5C411500F75970 /* Debug AppStore */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D064421C1E4E2A3600394D5F /* AppStore.xcconfig */;
+			baseConfigurationReference = 93EFBF0E173DC6DA00F7B89E /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = WatchAppIcon;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -29108,7 +29115,7 @@
 				IBSC_MODULE = watchkitapp_Extension;
 				INFOPLIST_FILE = Watch/App/Info.plist;
 				MTL_ENABLE_DEBUG_INFO = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "$(TELEGRAPH_WATCHAPP_BUNDLE_ID)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "6d8ba905-2f88-4bb4-a75d-0755c934f39c";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6d8ba905-2f88-4bb4-a75d-0755c934f39c";
@@ -29122,7 +29129,7 @@
 		};
 		D018D7B71E5C411500F75970 /* Debug AppStore */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D064421C1E4E2A3600394D5F /* AppStore.xcconfig */;
+			baseConfigurationReference = 93EFBF0E173DC6DA00F7B89E /* Config.xcconfig */;
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -29145,7 +29152,7 @@
 				LIBRARY_SEARCH_PATHS = thirdparty/SSignalKit;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_BUNDLE_IDENTIFIER = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "$(TELEGRAPH_WATCHEXT_BUNDLE_ID)";
 				PRODUCT_NAME = "${TARGET_NAME}";
 				PROVISIONING_PROFILE = "944f892d-83e1-43dc-94b6-4fe8e74a9014";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "944f892d-83e1-43dc-94b6-4fe8e74a9014";
@@ -29159,7 +29166,7 @@
 		};
 		D018D7B81E5C411500F75970 /* Debug AppStore */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D064421C1E4E2A3600394D5F /* AppStore.xcconfig */;
+			baseConfigurationReference = 93EFBF0E173DC6DA00F7B89E /* Config.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -29193,7 +29200,7 @@
 		};
 		D018D7B91E5C411500F75970 /* Debug AppStore */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D064421C1E4E2A3600394D5F /* AppStore.xcconfig */;
+			baseConfigurationReference = 93EFBF0E173DC6DA00F7B89E /* Config.xcconfig */;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -29206,7 +29213,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Peter Iakovlev (9J4EJ3F97G)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEFINES_MODULE = YES;
@@ -29324,7 +29331,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Peter Iakovlev (9J4EJ3F97G)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEFINES_MODULE = YES;
@@ -29374,7 +29381,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: TELEGRAM MESSENGER LLP";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -29454,6 +29461,7 @@
 					"-ObjC",
 					"-lc++",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "$(TELEGRAPH_SHARE_BUNDLE_ID)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "761707fe-6e26-48ac-ade2-535450bdc05d";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "fbef160a-0fa6-4140-aaa6-f54e7aecf152";
@@ -29464,7 +29472,7 @@
 		};
 		D02601E51A55CA2400716290 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D064421C1E4E2A3600394D5F /* AppStore.xcconfig */;
+			baseConfigurationReference = 93EFBF0E173DC6DA00F7B89E /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -29502,6 +29510,7 @@
 					"-ObjC",
 					"-lc++",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "$(TELEGRAPH_SHARE_BUNDLE_ID)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "1df6ae0e-83f6-4477-a8d8-74f1ed282e81";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "1df6ae0e-83f6-4477-a8d8-74f1ed282e81";
@@ -29515,28 +29524,33 @@
 			baseConfigurationReference = 93EFBF0E173DC6DA00F7B89E /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Digital Fortress LLC (C67CF9S4VU)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Digital Fortress LLC (C67CF9S4VU)";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_VERSION = "";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				PROVISIONING_PROFILE = "3d288e61-4eb7-41c0-87cc-4cb24f2b7517";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "3d288e61-4eb7-41c0-87cc-4cb24f2b7517";
@@ -29557,7 +29571,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
-				CLANG_CXX_LIBRARY = "libstdc++";
+				CLANG_CXX_LIBRARY = "compiler-default";
 				CLANG_WARN_OBJC_IMPLICIT_ATOMIC_PROPERTIES = YES;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = NO;
 				CLANG_WARN_OBJC_MISSING_PROPERTY_SYNTHESIS = NO;
@@ -29568,7 +29582,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
-				DEVELOPMENT_TEAM = NBGJ43H8PS;
+				DEVELOPMENT_TEAM = XAR2YFPBRT;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -29604,7 +29618,7 @@
 					submodules/libtgvoip,
 				);
 				INFOPLIST_FILE = "Telegraph/Telegraph-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -29681,6 +29695,7 @@
 					"-ObjC",
 					"-lc++",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "$(TELEGRAPH_SHARE_BUNDLE_ID)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "25f82627-bca3-44f9-8108-ea51af08a059";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "7405c401-c1ea-4de1-965f-c4695051d431";
@@ -29712,7 +29727,7 @@
 				IBSC_MODULE = watchkitapp_Extension;
 				INFOPLIST_FILE = Watch/App/Info.plist;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "$(TELEGRAPH_WATCHAPP_BUNDLE_ID)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "01d1e98d-6f55-42ee-b8cf-a2da5e4e438e";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "cec1b79c-0570-4cb8-8974-3454294e1eb9";
@@ -29750,7 +29765,7 @@
 				LIBRARY_SEARCH_PATHS = thirdparty/SSignalKit;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_BUNDLE_IDENTIFIER = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "$(TELEGRAPH_WATCHEXT_BUNDLE_ID)";
 				PRODUCT_NAME = "${TARGET_NAME}";
 				PROVISIONING_PROFILE = "8055198b-f533-42f9-a336-3d1fc27ee913";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "d2dcafba-2f65-4b5b-803e-fa45d7726083";
@@ -29811,7 +29826,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: TELEGRAM MESSENGER LLP";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -29853,19 +29868,25 @@
 			baseConfigurationReference = 93EFBF0E173DC6DA00F7B89E /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -29874,14 +29895,14 @@
 					"$(inherited)",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_VERSION = "";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				ONLY_ACTIVE_ARCH = YES;
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
@@ -29900,28 +29921,33 @@
 			baseConfigurationReference = D064421C1E4E2A3600394D5F /* AppStore.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Digital Fortress LLC (C67CF9S4VU)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Digital Fortress LLC (C67CF9S4VU)";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_VERSION = "";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				PROVISIONING_PROFILE = "3d288e61-4eb7-41c0-87cc-4cb24f2b7517";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "3d288e61-4eb7-41c0-87cc-4cb24f2b7517";
@@ -29942,7 +29968,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
-				CLANG_CXX_LIBRARY = "libstdc++";
+				CLANG_CXX_LIBRARY = "compiler-default";
 				CLANG_WARN_OBJC_IMPLICIT_ATOMIC_PROPERTIES = YES;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = NO;
 				CLANG_WARN_OBJC_MISSING_PROPERTY_SYNTHESIS = NO;
@@ -29953,7 +29979,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = NBGJ43H8PS;
+				DEVELOPMENT_TEAM = XAR2YFPBRT;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -29990,7 +30016,7 @@
 					submodules/libtgvoip,
 				);
 				INFOPLIST_FILE = "Telegraph/Telegraph-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -30029,11 +30055,11 @@
 		};
 		D08805C6156E8F3600311537 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D064421C1E4E2A3600394D5F /* AppStore.xcconfig */;
+			baseConfigurationReference = 93EFBF0E173DC6DA00F7B89E /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
-				CLANG_CXX_LIBRARY = "libstdc++";
+				CLANG_CXX_LIBRARY = "compiler-default";
 				CLANG_WARN_OBJC_IMPLICIT_ATOMIC_PROPERTIES = YES;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = NO;
 				CLANG_WARN_OBJC_MISSING_PROPERTY_SYNTHESIS = NO;
@@ -30044,7 +30070,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
-				DEVELOPMENT_TEAM = NBGJ43H8PS;
+				DEVELOPMENT_TEAM = XAR2YFPBRT;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -30080,7 +30106,7 @@
 					submodules/libtgvoip,
 				);
 				INFOPLIST_FILE = "Telegraph/Telegraph-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",

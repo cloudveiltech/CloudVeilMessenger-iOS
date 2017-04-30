@@ -19,7 +19,7 @@
     return 0;
 }
 
-- (id<TLObject>)TLbuildFromMetaObject:(std::tr1::shared_ptr<TLMetaObject>)__unused metaObject
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)__unused metaObject
 {
     TGLog(@"TLbuildFromMetaObject is not implemented for base type");
     return nil;
@@ -46,7 +46,7 @@
     return (int32_t)0x62bdefab;
 }
 
-- (id<TLObject>)TLbuildFromMetaObject:(std::tr1::shared_ptr<TLMetaObject>)metaObject
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)metaObject
 {
     TLChannelParticipant$channelParticipant *object = [[TLChannelParticipant$channelParticipant alloc] init];
     object.user_id = metaObject->getInt32((int32_t)0xafdf4073);
@@ -86,7 +86,7 @@
     return (int32_t)0x1f33494d;
 }
 
-- (id<TLObject>)TLbuildFromMetaObject:(std::tr1::shared_ptr<TLMetaObject>)metaObject
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)metaObject
 {
     TLChannelParticipant$channelParticipantSelf *object = [[TLChannelParticipant$channelParticipantSelf alloc] init];
     object.user_id = metaObject->getInt32((int32_t)0xafdf4073);
@@ -133,7 +133,7 @@
     return (int32_t)0x5591a596;
 }
 
-- (id<TLObject>)TLbuildFromMetaObject:(std::tr1::shared_ptr<TLMetaObject>)metaObject
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)metaObject
 {
     TLChannelParticipant$channelParticipantModerator *object = [[TLChannelParticipant$channelParticipantModerator alloc] init];
     object.user_id = metaObject->getInt32((int32_t)0xafdf4073);
@@ -180,7 +180,7 @@
     return (int32_t)0xae3d2310;
 }
 
-- (id<TLObject>)TLbuildFromMetaObject:(std::tr1::shared_ptr<TLMetaObject>)metaObject
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)metaObject
 {
     TLChannelParticipant$channelParticipantEditor *object = [[TLChannelParticipant$channelParticipantEditor alloc] init];
     object.user_id = metaObject->getInt32((int32_t)0xafdf4073);
@@ -227,7 +227,7 @@
     return (int32_t)0xc03c70cb;
 }
 
-- (id<TLObject>)TLbuildFromMetaObject:(std::tr1::shared_ptr<TLMetaObject>)metaObject
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)metaObject
 {
     TLChannelParticipant$channelParticipantKicked *object = [[TLChannelParticipant$channelParticipantKicked alloc] init];
     object.user_id = metaObject->getInt32((int32_t)0xafdf4073);
@@ -274,7 +274,7 @@
     return (int32_t)0x32ce00ff;
 }
 
-- (id<TLObject>)TLbuildFromMetaObject:(std::tr1::shared_ptr<TLMetaObject>)metaObject
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)metaObject
 {
     TLChannelParticipant$channelParticipantCreator *object = [[TLChannelParticipant$channelParticipantCreator alloc] init];
     object.user_id = metaObject->getInt32((int32_t)0xafdf4073);

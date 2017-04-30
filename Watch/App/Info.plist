@@ -11,7 +11,7 @@
 	<key>CFBundleIcons</key>
 	<dict/>
 	<key>CFBundleIdentifier</key>
-	<string>$(TELEGRAPH_WATCHAPP_BUNDLE_ID)</string>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -23,7 +23,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>61071</string>
+	<string>61082</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

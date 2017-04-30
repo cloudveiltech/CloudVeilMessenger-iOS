@@ -1250,7 +1250,7 @@ static NSString *addGameShareHash(NSString *url, NSString *addHash) {
         }
     }
     
-    std::tr1::shared_ptr<std::map<int, TGUser *> > pUsers = [TGDatabaseInstance() loadUsers:requiredUsers];
+    std::shared_ptr<std::map<int, TGUser *> > pUsers = [TGDatabaseInstance() loadUsers:requiredUsers];
     NSDictionary *channels = requiredChannelPeerIds.count == 0 ? nil : [TGDatabaseInstance() loadChannels:requiredChannelPeerIds];
     
     for (int itemIndex : requiredUsersItemIndices)

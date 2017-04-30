@@ -21,7 +21,7 @@
     return 0;
 }
 
-- (id<TLObject>)TLbuildFromMetaObject:(std::tr1::shared_ptr<TLMetaObject>)__unused metaObject
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)__unused metaObject
 {
     TGLog(@"TLbuildFromMetaObject is not implemented for base type");
     return nil;
@@ -48,7 +48,7 @@
     return (int32_t)0x1c50d52c;
 }
 
-- (id<TLObject>)TLbuildFromMetaObject:(std::tr1::shared_ptr<TLMetaObject>)metaObject
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)metaObject
 {
     TLPageBlock$pageBlockTitle *object = [[TLPageBlock$pageBlockTitle alloc] init];
     object.text = metaObject->getObject((int32_t)0x94f1580d);
@@ -81,7 +81,7 @@
     return (int32_t)0xc128b427;
 }
 
-- (id<TLObject>)TLbuildFromMetaObject:(std::tr1::shared_ptr<TLMetaObject>)metaObject
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)metaObject
 {
     TLPageBlock$pageBlockSubtitle *object = [[TLPageBlock$pageBlockSubtitle alloc] init];
     object.text = metaObject->getObject((int32_t)0x94f1580d);
@@ -114,7 +114,7 @@
     return (int32_t)0x2a05cd39;
 }
 
-- (id<TLObject>)TLbuildFromMetaObject:(std::tr1::shared_ptr<TLMetaObject>)metaObject
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)metaObject
 {
     TLPageBlock$pageBlockHeader *object = [[TLPageBlock$pageBlockHeader alloc] init];
     object.text = metaObject->getObject((int32_t)0x94f1580d);
@@ -147,7 +147,7 @@
     return (int32_t)0x5724a932;
 }
 
-- (id<TLObject>)TLbuildFromMetaObject:(std::tr1::shared_ptr<TLMetaObject>)metaObject
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)metaObject
 {
     TLPageBlock$pageBlockSubheader *object = [[TLPageBlock$pageBlockSubheader alloc] init];
     object.text = metaObject->getObject((int32_t)0x94f1580d);
@@ -180,7 +180,7 @@
     return (int32_t)0xf763f6;
 }
 
-- (id<TLObject>)TLbuildFromMetaObject:(std::tr1::shared_ptr<TLMetaObject>)metaObject
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)metaObject
 {
     TLPageBlock$pageBlockParagraph *object = [[TLPageBlock$pageBlockParagraph alloc] init];
     object.text = metaObject->getObject((int32_t)0x94f1580d);
@@ -213,7 +213,7 @@
     return (int32_t)0xb42c6a2e;
 }
 
-- (id<TLObject>)TLbuildFromMetaObject:(std::tr1::shared_ptr<TLMetaObject>)metaObject
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)metaObject
 {
     TLPageBlock$pageBlockPreformatted *object = [[TLPageBlock$pageBlockPreformatted alloc] init];
     object.text = metaObject->getObject((int32_t)0x94f1580d);
@@ -253,7 +253,7 @@
     return (int32_t)0x5cd504e7;
 }
 
-- (id<TLObject>)TLbuildFromMetaObject:(std::tr1::shared_ptr<TLMetaObject>)metaObject
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)metaObject
 {
     TLPageBlock$pageBlockFooter *object = [[TLPageBlock$pageBlockFooter alloc] init];
     object.text = metaObject->getObject((int32_t)0x94f1580d);
@@ -286,7 +286,7 @@
     return (int32_t)0x71a070b;
 }
 
-- (id<TLObject>)TLbuildFromMetaObject:(std::tr1::shared_ptr<TLMetaObject>)__unused metaObject
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)__unused metaObject
 {
     TLPageBlock$pageBlockDivider *object = [[TLPageBlock$pageBlockDivider alloc] init];
     return object;
@@ -312,7 +312,7 @@
     return (int32_t)0xf4ace92d;
 }
 
-- (id<TLObject>)TLbuildFromMetaObject:(std::tr1::shared_ptr<TLMetaObject>)metaObject
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)metaObject
 {
     TLPageBlock$pageBlockList *object = [[TLPageBlock$pageBlockList alloc] init];
     object.ordered = metaObject->getBool((int32_t)0x6fd9c719);
@@ -352,7 +352,7 @@
     return (int32_t)0x8ebaca59;
 }
 
-- (id<TLObject>)TLbuildFromMetaObject:(std::tr1::shared_ptr<TLMetaObject>)metaObject
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)metaObject
 {
     TLPageBlock$pageBlockBlockquote *object = [[TLPageBlock$pageBlockBlockquote alloc] init];
     object.text = metaObject->getObject((int32_t)0x94f1580d);
@@ -392,7 +392,7 @@
     return (int32_t)0x9d8ee9fd;
 }
 
-- (id<TLObject>)TLbuildFromMetaObject:(std::tr1::shared_ptr<TLMetaObject>)metaObject
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)metaObject
 {
     TLPageBlock$pageBlockPullquote *object = [[TLPageBlock$pageBlockPullquote alloc] init];
     object.text = metaObject->getObject((int32_t)0x94f1580d);
@@ -432,7 +432,7 @@
     return (int32_t)0x4c5df270;
 }
 
-- (id<TLObject>)TLbuildFromMetaObject:(std::tr1::shared_ptr<TLMetaObject>)metaObject
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)metaObject
 {
     TLPageBlock$pageBlockPhoto *object = [[TLPageBlock$pageBlockPhoto alloc] init];
     object.photo_id = metaObject->getInt64((int32_t)0xa4b26129);
@@ -472,7 +472,7 @@
     return (int32_t)0x9a2d2fce;
 }
 
-- (id<TLObject>)TLbuildFromMetaObject:(std::tr1::shared_ptr<TLMetaObject>)metaObject
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)metaObject
 {
     TLPageBlock$pageBlockVideo *object = [[TLPageBlock$pageBlockVideo alloc] init];
     object.flags = metaObject->getInt32((int32_t)0x81915c23);
@@ -519,7 +519,7 @@
     return (int32_t)0xfcc73ba5;
 }
 
-- (id<TLObject>)TLbuildFromMetaObject:(std::tr1::shared_ptr<TLMetaObject>)metaObject
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)metaObject
 {
     TLPageBlock$pageBlockCover *object = [[TLPageBlock$pageBlockCover alloc] init];
     object.cover = metaObject->getObject((int32_t)0x7c051309);
@@ -552,7 +552,7 @@
     return (int32_t)0x10b2cd34;
 }
 
-- (id<TLObject>)TLbuildFromMetaObject:(std::tr1::shared_ptr<TLMetaObject>)metaObject
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)metaObject
 {
     TLPageBlock$pageBlockEmbedPost *object = [[TLPageBlock$pageBlockEmbedPost alloc] init];
     object.url = metaObject->getString((int32_t)0xeaf7861e);
@@ -627,7 +627,7 @@
     return (int32_t)0x4bc2a414;
 }
 
-- (id<TLObject>)TLbuildFromMetaObject:(std::tr1::shared_ptr<TLMetaObject>)metaObject
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)metaObject
 {
     TLPageBlock$pageBlockCollage *object = [[TLPageBlock$pageBlockCollage alloc] init];
     object.items = metaObject->getArray((int32_t)0x18406025);
@@ -667,7 +667,7 @@
     return (int32_t)0x1974634a;
 }
 
-- (id<TLObject>)TLbuildFromMetaObject:(std::tr1::shared_ptr<TLMetaObject>)metaObject
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)metaObject
 {
     TLPageBlock$pageBlockSlideshow *object = [[TLPageBlock$pageBlockSlideshow alloc] init];
     object.items = metaObject->getArray((int32_t)0x18406025);
@@ -707,7 +707,7 @@
     return (int32_t)0xc81baebc;
 }
 
-- (id<TLObject>)TLbuildFromMetaObject:(std::tr1::shared_ptr<TLMetaObject>)__unused metaObject
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)__unused metaObject
 {
     TLPageBlock$pageBlockUnsupported *object = [[TLPageBlock$pageBlockUnsupported alloc] init];
     return object;
@@ -733,7 +733,7 @@
     return (int32_t)0xebe5709d;
 }
 
-- (id<TLObject>)TLbuildFromMetaObject:(std::tr1::shared_ptr<TLMetaObject>)metaObject
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)metaObject
 {
     TLPageBlock$pageBlockAnchor *object = [[TLPageBlock$pageBlockAnchor alloc] init];
     object.name = metaObject->getString((int32_t)0x798b364a);
@@ -766,7 +766,7 @@
     return (int32_t)0x9211319e;
 }
 
-- (id<TLObject>)TLbuildFromMetaObject:(std::tr1::shared_ptr<TLMetaObject>)metaObject
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)metaObject
 {
     TLPageBlock$pageBlockEmbedMeta *object = [[TLPageBlock$pageBlockEmbedMeta alloc] init];
     object.flags = metaObject->getInt32((int32_t)0x81915c23);
@@ -841,7 +841,7 @@
     return (int32_t)0x33f71e25;
 }
 
-- (id<TLObject>)TLbuildFromMetaObject:(std::tr1::shared_ptr<TLMetaObject>)metaObject
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)metaObject
 {
     TLPageBlock$pageBlockAuthorDate *object = [[TLPageBlock$pageBlockAuthorDate alloc] init];
     object.author = metaObject->getObject((int32_t)0x476841e7);

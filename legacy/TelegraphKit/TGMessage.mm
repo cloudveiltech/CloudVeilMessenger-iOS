@@ -9,7 +9,12 @@
 
 #import "TGTextCheckingResult.h"
 
+#ifdef __MAC_10_9
+#include <unordered_map>
+#else
 #include <tr1/unordered_map>
+#endif
+
 
 static void *NSTextCheckingResultTelegramHiddenLinkKey = &NSTextCheckingResultTelegramHiddenLinkKey;
 
@@ -25,7 +30,7 @@ static void *NSTextCheckingResultTelegramHiddenLinkKey = &NSTextCheckingResultTe
 
 @end
 
-static std::tr1::unordered_map<int, id<TGMediaAttachmentParser> > mediaAttachmentParsers;
+static std::unordered_map<int, id<TGMediaAttachmentParser> > mediaAttachmentParsers;
 
 typedef enum {
     TGMessageFlagBroadcast = 1,
@@ -961,7 +966,7 @@ typedef enum {
         int type = 0;
         [is read:(uint8_t *)&type maxLength:4];
         
-        std::tr1::unordered_map<int, id<TGMediaAttachmentParser> >::iterator it = mediaAttachmentParsers.find(type);
+        std::unordered_map<int, id<TGMediaAttachmentParser> >::iterator it = mediaAttachmentParsers.find(type);
         if (it == mediaAttachmentParsers.end())
         {
             TGLog(@"***** Unknown media attachment type %d", type);

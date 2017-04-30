@@ -73,9 +73,12 @@ typedef struct {
 #ifdef __cplusplus
 #include <map>
 #include <vector>
-#include <tr1/memory>
 #include <set>
 #endif
+
+//#include <tr1/memory>
+
+
 
 typedef enum {
     TGDatabaseMessageFlagDeliveryState = 2,
@@ -241,7 +244,7 @@ typedef void (^TGDatabaseCleanupEverythingBlock)();
 - (int)loadUsersOnlineCount:(NSArray *)uids alwaysOnlineUid:(int)alwaysOnlineUid;
 #ifdef __cplusplus
 - (void)loadCachedUsersWithContactIds:(std::set<int> const &)contactIds resultMap:(std::map<int, TGUser *> &)resultMap;
-- (std::tr1::shared_ptr<std::map<int, TGUser *> >)loadUsers:(std::vector<int> const &)uidList;
+- (std::shared_ptr<std::map<int, TGUser *> >)loadUsers:(std::vector<int> const &)uidList;
 - (void)storeUsersPresences:(std::map<int, TGUserPresence> *)presenceMap;
 #endif
 

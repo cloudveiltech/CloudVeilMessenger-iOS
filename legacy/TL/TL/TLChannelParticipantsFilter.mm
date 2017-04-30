@@ -19,7 +19,7 @@
     return 0;
 }
 
-- (id<TLObject>)TLbuildFromMetaObject:(std::tr1::shared_ptr<TLMetaObject>)__unused metaObject
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)__unused metaObject
 {
     TGLog(@"TLbuildFromMetaObject is not implemented for base type");
     return nil;
@@ -46,7 +46,7 @@
     return (int32_t)0x3299c20;
 }
 
-- (id<TLObject>)TLbuildFromMetaObject:(std::tr1::shared_ptr<TLMetaObject>)__unused metaObject
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)__unused metaObject
 {
     TLChannelParticipantsFilter$channelParticipantsRecent *object = [[TLChannelParticipantsFilter$channelParticipantsRecent alloc] init];
     return object;
@@ -72,7 +72,7 @@
     return (int32_t)0x981d1035;
 }
 
-- (id<TLObject>)TLbuildFromMetaObject:(std::tr1::shared_ptr<TLMetaObject>)__unused metaObject
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)__unused metaObject
 {
     TLChannelParticipantsFilter$channelParticipantsAdmins *object = [[TLChannelParticipantsFilter$channelParticipantsAdmins alloc] init];
     return object;
@@ -98,7 +98,7 @@
     return (int32_t)0xb6bbfc3a;
 }
 
-- (id<TLObject>)TLbuildFromMetaObject:(std::tr1::shared_ptr<TLMetaObject>)__unused metaObject
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)__unused metaObject
 {
     TLChannelParticipantsFilter$channelParticipantsKicked *object = [[TLChannelParticipantsFilter$channelParticipantsKicked alloc] init];
     return object;

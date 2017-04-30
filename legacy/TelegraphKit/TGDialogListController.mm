@@ -188,6 +188,8 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
     {
         self.automaticallyManageScrollViewInsets = true;
         self.ignoreKeyboardWhenAdjustingScrollViewInsets = true;
+        self.ignoreBots = true;
+    
         
         _actionHandle = [[ASHandle alloc] initWithDelegate:self releaseOnMainThread:true];
         
@@ -1167,7 +1169,31 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
     
     if ([(NSArray *)items[@"global"] count] != 0)
     {
+        
+        // remporary leave it here
+        NSMutableArray *globalItems = (NSMutableArray *)items[@"global"];
+        NSUInteger count = [globalItems count];
+        for (NSUInteger i = 0; i < count; i++) {
+        
+            if(i==0){
+            TGConversation *conversation = [globalItems objectAtIndex: i];
+            if(conversation.isChannel)
+            {
+                //[globalItems removeObjectAtIndex:i]
+            }
+            }else{
+            TGUser *user = [globalItems objectAtIndex: i];
+            
+            }
+            
+            
+        }
+        // removing bots and channels
+        
+        // removing global search
+        /*
         [searchResultsSections addObject:@{@"title": TGLocalized(@"DialogList.SearchSectionGlobal"), @"items": items[@"global"], @"type": @"global"}];
+         */
     }
     
     if ([(NSArray *)items[@"messages"] count] != 0)

@@ -76,7 +76,13 @@
 #include <vector>
 #include <map>
 #include <algorithm>
+
+#ifdef __MAC_10_9
+#include <memory>
+#else
 #include <tr1/memory>
+#endif
+
 #include <set>
 
 #import <objc/message.h>
@@ -225,7 +231,7 @@ public:
 
 @interface TGContactListSectionListHolder : NSObject
 
-@property (nonatomic) std::vector<std::tr1::shared_ptr<TGContactListSection> > sectionList;
+@property (nonatomic) std::vector<std::shared_ptr<TGContactListSection> > sectionList;
 
 @end
 
@@ -235,7 +241,7 @@ public:
 
 @end
 
-static bool TGContactListSectionComparator(std::tr1::shared_ptr<TGContactListSection> section1, std::tr1::shared_ptr<TGContactListSection> section2)
+static bool TGContactListSectionComparator(std::shared_ptr<TGContactListSection> section1, std::shared_ptr<TGContactListSection> section2)
 {
     unichar letter1 = section1->sortLetter;
     unichar letter2 = section2->sortLetter;
@@ -258,7 +264,7 @@ static bool TGContactListSectionComparator(std::tr1::shared_ptr<TGContactListSec
 
 @interface TGContactsController () <UITableViewDelegate, UITableViewDataSource, UISearchDisplayDelegate, MFMessageComposeViewControllerDelegate, TGTokenFieldViewDelegate, TGSearchDisplayMixinDelegate, TGCreateContactControllerDelegate, TGKeyCommandResponder>
 {
-    std::vector<std::tr1::shared_ptr<TGContactListSection> > _sectionList;
+    std::vector<std::shared_ptr<TGContactListSection> > _sectionList;
     
     std::map<int, TGUser *> _selectedUsers;
     
@@ -340,6 +346,8 @@ static bool TGContactListSectionComparator(std::tr1::shared_ptr<TGContactListSec
         _phonebookVersion = -1;
         
         _contactsMode = contactsMode;
+        
+        self.ignoreBots = true;
         
         _reusableSectionHeaders = [[NSArray alloc] initWithObjects:[[NSMutableArray alloc] init], [[NSMutableArray alloc] init], nil];
         
@@ -1803,6 +1811,12 @@ static inline NSString *subtitleStringForUser(TGUser *user, bool &subtitleActive
 {
     if ((_contactsMode & TGContactsModeInvite) != TGContactsModeInvite)
     {
+        
+        if (user.isContextBot){
+            return;
+        }
+        
+        
         if (user.uid > 0)
         {
             [[TGInterfaceManager instance] navigateToConversationWithId:user.uid conversation:nil performActions:nil atMessage:nil clearStack:true openKeyboard:(_contactsMode & TGContactsModeCreateGroupOption) canOpenKeyboardWhileInTransition:false animated:true];
@@ -1822,7 +1836,7 @@ static inline NSString *subtitleStringForUser(TGUser *user, bool &subtitleActive
 - (void)deleteUserFromList:(int)uid
 {
     int sectionIndex = -1;
-    for (std::vector<std::tr1::shared_ptr<TGContactListSection> >::iterator section = _sectionList.begin(); section != _sectionList.end(); section++)
+    for (std::vector<std::shared_ptr<TGContactListSection> >::iterator section = _sectionList.begin(); section != _sectionList.end(); section++)
     {
         sectionIndex++;
         
@@ -2055,7 +2069,7 @@ static inline NSString *subtitleStringForUser(TGUser *user, bool &subtitleActive
 
 - (TGUser *)findUser:(int)uid
 {
-    for (std::vector<std::tr1::shared_ptr<TGContactListSection> >::iterator sectionIt = _sectionList.begin(); sectionIt != _sectionList.end(); sectionIt++)
+    for (std::vector<std::shared_ptr<TGContactListSection> >::iterator sectionIt = _sectionList.begin(); sectionIt != _sectionList.end(); sectionIt++)
     {
         std::vector<TGUser *>::iterator itemsEnd = sectionIt->get()->items.end();
         for (std::vector<TGUser *>::iterator itemIt = sectionIt->get()->items.begin(); itemIt != itemsEnd; itemIt++)
@@ -2286,7 +2300,7 @@ static inline NSString *subtitleStringForUser(TGUser *user, bool &subtitleActive
 - (int)contactsCount
 {
     int count = 0;
-    for (std::vector<std::tr1::shared_ptr<TGContactListSection> >::iterator sectionIt = _sectionList.begin(); sectionIt != _sectionList.end(); sectionIt++)
+    for (std::vector<std::shared_ptr<TGContactListSection> >::iterator sectionIt = _sectionList.begin(); sectionIt != _sectionList.end(); sectionIt++)
     {
         count += (*sectionIt)->items.size();
     }
@@ -2320,7 +2334,7 @@ static inline NSString *subtitleStringForUser(TGUser *user, bool &subtitleActive
         bool found = false;
         
         int uid = it->first;
-        for (std::vector<std::tr1::shared_ptr<TGContactListSection> >::iterator sectionIt = _sectionList.begin(); sectionIt != _sectionList.end(); sectionIt++)
+        for (std::vector<std::shared_ptr<TGContactListSection> >::iterator sectionIt = _sectionList.begin(); sectionIt != _sectionList.end(); sectionIt++)
         {
             std::vector<TGUser *>::iterator itemsEnd = sectionIt->get()->items.end();
             for (std::vector<TGUser *>::iterator itemIt = sectionIt->get()->items.begin(); itemIt != itemsEnd; itemIt++)
@@ -2400,7 +2414,7 @@ static inline NSString *subtitleStringForUser(TGUser *user, bool &subtitleActive
         NSMutableArray *users = [[NSMutableArray alloc] init];
         NSMutableArray *selectedArray = [[NSMutableArray alloc] init];
         
-        for (std::vector<std::tr1::shared_ptr<TGContactListSection> >::iterator sectionIt = _sectionList.begin(); sectionIt != _sectionList.end(); sectionIt++)
+        for (std::vector<std::shared_ptr<TGContactListSection> >::iterator sectionIt = _sectionList.begin(); sectionIt != _sectionList.end(); sectionIt++)
         {
             for (std::vector<TGUser *>::iterator it = (*sectionIt)->items.begin(); it != (*sectionIt)->items.end(); it++)
             {
@@ -2438,6 +2452,7 @@ static inline NSString *subtitleStringForUser(TGUser *user, bool &subtitleActive
 {
     TGContactsController *contactsController = [[TGContactsController alloc] initWithContactsMode:TGContactsModeInvite | TGContactsModeModalInvite | TGContactsModeModalInviteWithBack];
     contactsController.loginStyle = false;
+    contactsController.ignoreBots = true;
     contactsController.customTitle = TGLocalized(@"Contacts.InviteFriends");
     contactsController.watcherHandle = _actionHandle;
     [self.navigationController pushViewController:contactsController animated:true];
@@ -2448,6 +2463,7 @@ static inline NSString *subtitleStringForUser(TGUser *user, bool &subtitleActive
     TGContactsController *contactsController = [[TGContactsController alloc] initWithContactsMode:TGContactsModeInvite | TGContactsModeModalInvite];
     contactsController.customTitle = TGLocalized(@"Contacts.InviteFriends");
     contactsController.watcherHandle = _actionHandle;
+    contactsController.ignoreBots = true;
     
     TGNavigationController *navigationController = [TGNavigationController navigationControllerWithRootController:contactsController];
     
@@ -2582,14 +2598,14 @@ static inline NSString *subtitleStringForUser(TGUser *user, bool &subtitleActive
 
 #pragma mark - Data logic
 
-- (NSArray *)generateIndices:(const std::vector<std::tr1::shared_ptr<TGContactListSection> > &)sections
+- (NSArray *)generateIndices:(const std::vector<std::shared_ptr<TGContactListSection> > &)sections
 {
     NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:sections.size()];
     
     if ((_contactsMode & TGContactsModeSearchDisabled) != TGContactsModeSearchDisabled)
         [result addObject:UITableViewIndexSearch];
     
-    for (std::vector<std::tr1::shared_ptr<TGContactListSection> >::const_iterator it = sections.begin(); it != sections.end(); it++)
+    for (std::vector<std::shared_ptr<TGContactListSection> >::const_iterator it = sections.begin(); it != sections.end(); it++)
     {
         if (it->get()->letter != nil)
             [result addObject:it->get()->letter];
@@ -2638,7 +2654,7 @@ static inline NSString *subtitleStringForUser(TGUser *user, bool &subtitleActive
     {
         int itemId = [[options objectForKey:@"itemId"] intValue];
         
-        for (std::vector<std::tr1::shared_ptr<TGContactListSection> >::iterator section = _sectionList.begin(); section != _sectionList.end(); section++)
+        for (std::vector<std::shared_ptr<TGContactListSection> >::iterator section = _sectionList.begin(); section != _sectionList.end(); section++)
         {
             for (std::vector<TGUser *>::iterator item = (*section)->items.begin(); item != (*section)->items.end(); item++)
             {
@@ -2687,7 +2703,7 @@ static inline NSString *subtitleStringForUser(TGUser *user, bool &subtitleActive
     else if ([path isEqualToString:@"/tg/userdatachanges"] || [path isEqualToString:@"/tg/userpresencechanges"])
     {
         NSArray *users = ((SGraphObjectNode *)resource).object;
-        std::tr1::shared_ptr<std::map<int, int> > changedUidToIndex(new std::map<int, int>());
+        std::shared_ptr<std::map<int, int> > changedUidToIndex(new std::map<int, int>());
         int index = -1;
         for (TGUser *user in users)
         {
@@ -2726,7 +2742,7 @@ static inline NSString *subtitleStringForUser(TGUser *user, bool &subtitleActive
             if (!changedAnyPresence)
             {
                 int sectionIndex = -1;
-                for (std::vector<std::tr1::shared_ptr<TGContactListSection> >::iterator section = _sectionList.begin(); section != _sectionList.end(); section++)
+                for (std::vector<std::shared_ptr<TGContactListSection> >::iterator section = _sectionList.begin(); section != _sectionList.end(); section++)
                 {
                     sectionIndex++;
                     
@@ -2957,8 +2973,8 @@ static inline NSString *subtitleStringForUser(TGUser *user, bool &subtitleActive
     
     std::map<unichar, unichar> uppercaseMap;
     
-    std::vector<std::tr1::shared_ptr<TGContactListSection> > newSectionListAll;
-    std::vector<std::tr1::shared_ptr<TGContactListSection> > newSectionListTelegraph;
+    std::vector<std::shared_ptr<TGContactListSection> > newSectionListAll;
+    std::vector<std::shared_ptr<TGContactListSection> > newSectionListTelegraph;
     
     int clientUserId = TGTelegraphInstance.clientUserId;
     
@@ -3026,7 +3042,7 @@ static inline NSString *subtitleStringForUser(TGUser *user, bool &subtitleActive
                 sectionLetter = uppercaseIt->second;
             
             bool found = false;
-            for (std::vector<std::tr1::shared_ptr<TGContactListSection> >::iterator it = newSectionListTelegraph.begin(); it != newSectionListTelegraph.end(); it++)
+            for (std::vector<std::shared_ptr<TGContactListSection> >::iterator it = newSectionListTelegraph.begin(); it != newSectionListTelegraph.end(); it++)
             {
                 if (!(_contactsMode & TGContactsModePhonebook) || (_contactsMode & TGContactsModeCombineSections))
                 {
@@ -3049,7 +3065,7 @@ static inline NSString *subtitleStringForUser(TGUser *user, bool &subtitleActive
             
             if (!found)
             {
-                std::tr1::shared_ptr<TGContactListSection> newSection(new TGContactListSection());
+                std::shared_ptr<TGContactListSection> newSection(new TGContactListSection());
                 newSection->addItem(user);
                 newSection->setSortLetter(sectionLetter);
                 newSectionListTelegraph.push_back(newSection);
@@ -3132,7 +3148,7 @@ static inline NSString *subtitleStringForUser(TGUser *user, bool &subtitleActive
                     if (_contactsMode & TGContactsModeCombineSections)
                     {
                         bool found = false;
-                        for (std::vector<std::tr1::shared_ptr<TGContactListSection> >::iterator it = newSectionListTelegraph.begin(); it != newSectionListTelegraph.end(); it++)
+                        for (std::vector<std::shared_ptr<TGContactListSection> >::iterator it = newSectionListTelegraph.begin(); it != newSectionListTelegraph.end(); it++)
                         {
                             if (it->get()->sortLetter == sectionLetter)
                             {
@@ -3145,7 +3161,7 @@ static inline NSString *subtitleStringForUser(TGUser *user, bool &subtitleActive
                         
                         if (!found)
                         {
-                            std::tr1::shared_ptr<TGContactListSection> newSection(new TGContactListSection());
+                            std::shared_ptr<TGContactListSection> newSection(new TGContactListSection());
                             newSection->addItem(phonebookUser);
                             newSection->setSortLetter(sectionLetter);
                             newSectionListTelegraph.push_back(newSection);
@@ -3154,7 +3170,7 @@ static inline NSString *subtitleStringForUser(TGUser *user, bool &subtitleActive
                     else
                     {
                         bool found = false;
-                        for (std::vector<std::tr1::shared_ptr<TGContactListSection> >::iterator it = newSectionListAll.begin(); it != newSectionListAll.end(); it++)
+                        for (std::vector<std::shared_ptr<TGContactListSection> >::iterator it = newSectionListAll.begin(); it != newSectionListAll.end(); it++)
                         {
                             if (it->get()->sortLetter == sectionLetter)
                             {
@@ -3167,7 +3183,7 @@ static inline NSString *subtitleStringForUser(TGUser *user, bool &subtitleActive
                         
                         if (!found)
                         {
-                            std::tr1::shared_ptr<TGContactListSection> newSection(new TGContactListSection());
+                            std::shared_ptr<TGContactListSection> newSection(new TGContactListSection());
                             newSection->addItem(phonebookUser);
                             newSection->setSortLetter(sectionLetter);
                             newSectionListAll.push_back(newSection);
@@ -3239,7 +3255,7 @@ static inline NSString *subtitleStringForUser(TGUser *user, bool &subtitleActive
                 if (_contactsMode & TGContactsModeCombineSections)
                 {
                     bool found = false;
-                    for (std::vector<std::tr1::shared_ptr<TGContactListSection> >::iterator it = newSectionListTelegraph.begin(); it != newSectionListTelegraph.end(); it++)
+                    for (std::vector<std::shared_ptr<TGContactListSection> >::iterator it = newSectionListTelegraph.begin(); it != newSectionListTelegraph.end(); it++)
                     {
                         if (it->get()->sortLetter == sectionLetter)
                         {
@@ -3252,7 +3268,7 @@ static inline NSString *subtitleStringForUser(TGUser *user, bool &subtitleActive
                     
                     if (!found)
                     {
-                        std::tr1::shared_ptr<TGContactListSection> newSection(new TGContactListSection());
+                        std::shared_ptr<TGContactListSection> newSection(new TGContactListSection());
                         newSection->addItem(phonebookUser);
                         newSection->setSortLetter(sectionLetter);
                         newSectionListTelegraph.push_back(newSection);
@@ -3261,7 +3277,7 @@ static inline NSString *subtitleStringForUser(TGUser *user, bool &subtitleActive
                 else
                 {
                     bool found = false;
-                    for (std::vector<std::tr1::shared_ptr<TGContactListSection> >::iterator it = newSectionListAll.begin(); it != newSectionListAll.end(); it++)
+                    for (std::vector<std::shared_ptr<TGContactListSection> >::iterator it = newSectionListAll.begin(); it != newSectionListAll.end(); it++)
                     {
                         if (it->get()->sortLetter == sectionLetter)
                         {
@@ -3274,7 +3290,7 @@ static inline NSString *subtitleStringForUser(TGUser *user, bool &subtitleActive
                     
                     if (!found)
                     {
-                        std::tr1::shared_ptr<TGContactListSection> newSection(new TGContactListSection());
+                        std::shared_ptr<TGContactListSection> newSection(new TGContactListSection());
                         newSection->addItem(phonebookUser);
                         newSection->setSortLetter(sectionLetter);
                         newSectionListAll.push_back(newSection);
@@ -3284,7 +3300,7 @@ static inline NSString *subtitleStringForUser(TGUser *user, bool &subtitleActive
         }
     }
 
-    for (std::vector<std::tr1::shared_ptr<TGContactListSection> >::iterator it = newSectionListAll.begin(); it != newSectionListAll.end(); it++)
+    for (std::vector<std::shared_ptr<TGContactListSection> >::iterator it = newSectionListAll.begin(); it != newSectionListAll.end(); it++)
     {
         if (sortOrder & TGContactListSortOrderFirst)
             it->get()->sortByFirstName();
@@ -3292,7 +3308,7 @@ static inline NSString *subtitleStringForUser(TGUser *user, bool &subtitleActive
             it->get()->sortByLastName();
     }
     
-    for (std::vector<std::tr1::shared_ptr<TGContactListSection> >::iterator it = newSectionListTelegraph.begin(); it != newSectionListTelegraph.end(); it++)
+    for (std::vector<std::shared_ptr<TGContactListSection> >::iterator it = newSectionListTelegraph.begin(); it != newSectionListTelegraph.end(); it++)
     {
         if (_contactsMode & TGContactsModeSortByLastSeen)
             it->get()->sortByLastSeen();
@@ -3313,12 +3329,12 @@ static inline NSString *subtitleStringForUser(TGUser *user, bool &subtitleActive
     
     if (_contactsMode & TGContactsModeManualFirstSection)
     {
-        std::tr1::shared_ptr<TGContactListSection> serviceSection(new TGContactListSection());
+        std::shared_ptr<TGContactListSection> serviceSection(new TGContactListSection());
         newSectionListTelegraph.insert(newSectionListTelegraph.begin(), serviceSection);
     }
     else if ((_contactsMode & TGContactsModeMainContacts) == TGContactsModeMainContacts || ((_contactsMode & TGContactsModeCreateGroupOption) == TGContactsModeCreateGroupOption))
     {
-        std::tr1::shared_ptr<TGContactListSection> serviceSection(new TGContactListSection());
+        std::shared_ptr<TGContactListSection> serviceSection(new TGContactListSection());
         TGUser *serviceUser = [[TGUser alloc] init];
         serviceUser.uid = INT_MAX;
         serviceSection->addItem(serviceUser);
@@ -3343,7 +3359,7 @@ static inline NSString *subtitleStringForUser(TGUser *user, bool &subtitleActive
         }
         
         if ((_contactsMode & TGContactsModeMainContacts) == TGContactsModeMainContacts) {
-            std::tr1::shared_ptr<TGContactListSection> meSection(new TGContactListSection());
+            std::shared_ptr<TGContactListSection> meSection(new TGContactListSection());
             TGUser *serviceUser = [[TGUser alloc] init];
             serviceUser.uid = INT_MAX - 10;
             meSection->addItem(serviceUser);
@@ -3397,7 +3413,7 @@ static inline NSString *subtitleStringForUser(TGUser *user, bool &subtitleActive
             if (selectedUid != 0)
             {
                 int sectionIndex = -1;
-                for (std::vector<std::tr1::shared_ptr<TGContactListSection> >::iterator it = _sectionList.begin(); it != _sectionList.end(); it++)
+                for (std::vector<std::shared_ptr<TGContactListSection> >::iterator it = _sectionList.begin(); it != _sectionList.end(); it++)
                 {
                     sectionIndex++;
                     bool found = false;

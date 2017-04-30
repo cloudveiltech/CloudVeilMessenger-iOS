@@ -76,18 +76,18 @@ struct TLMetaTypeArgumentWithName : public TLMetaTypeArgument
     std::vector<char> name;
 };
 
-static std::tr1::unordered_map<int32_t, NSString *> hashToStringMap;
+static std::unordered_map<int32_t, NSString *> hashToStringMap;
 
-std::tr1::unordered_map<int32_t, std::tr1::shared_ptr<TLMetaConstructor> > TLMetaClassStore::constructorsBySignature;
-std::tr1::unordered_map<int32_t, std::tr1::shared_ptr<TLMetaConstructor> > TLMetaClassStore::constructorsByName;
-std::tr1::unordered_map<int32_t, std::tr1::shared_ptr<TLMetaType> > TLMetaClassStore::typesByName;
-std::tr1::unordered_map<int32_t, TLMetaTypeArgument> TLMetaClassStore::vectorElementTypesByConstructor;
+std::unordered_map<int32_t, std::shared_ptr<TLMetaConstructor> > TLMetaClassStore::constructorsBySignature;
+std::unordered_map<int32_t, std::shared_ptr<TLMetaConstructor> > TLMetaClassStore::constructorsByName;
+std::unordered_map<int32_t, std::shared_ptr<TLMetaType> > TLMetaClassStore::typesByName;
+std::unordered_map<int32_t, TLMetaTypeArgument> TLMetaClassStore::vectorElementTypesByConstructor;
 
-std::tr1::unordered_map<int32_t, id<TLObject> > TLMetaClassStore::objectClassesByConstructorNames;
-std::tr1::unordered_map<int32_t, id<TLVector> > TLMetaClassStore::vectorClassesBySignature;
+std::unordered_map<int32_t, id<TLObject> > TLMetaClassStore::objectClassesByConstructorNames;
+std::unordered_map<int32_t, id<TLVector> > TLMetaClassStore::vectorClassesBySignature;
 
-std::tr1::unordered_map<int32_t, id<TLObject> > TLMetaClassStore::manualObjectParsers;
-std::tr1::unordered_map<int32_t, id<TLObject> > TLMetaClassStore::manualObjectSerializers;
+std::unordered_map<int32_t, id<TLObject> > TLMetaClassStore::manualObjectParsers;
+std::unordered_map<int32_t, id<TLObject> > TLMetaClassStore::manualObjectSerializers;
 
 static void addHashToString(int32_t hash, NSString *string)
 {
@@ -96,7 +96,7 @@ static void addHashToString(int32_t hash, NSString *string)
 
 static NSString *stringForHash(int32_t hash)
 {
-    std::tr1::unordered_map<int32_t, NSString *>::iterator it = hashToStringMap.find(hash);
+    std::unordered_map<int32_t, NSString *>::iterator it = hashToStringMap.find(hash);
     if (it == hashToStringMap.end())
         return [NSString stringWithFormat:@"#%.8x", hash];
     return it->second;
@@ -110,7 +110,7 @@ void TLMetaClassStore::registerObjectClass(id<TLObject> objectClass)
 void TLMetaClassStore::registerVectorClass(id<TLVector> vectorClass)
 {
 #if TARGET_IPHONE_SIMULATOR
-    std::tr1::unordered_map<int32_t, id<TLVector> >::iterator it = vectorClassesBySignature.find([vectorClass TLconstructorSignature]);
+    std::unordered_map<int32_t, id<TLVector> >::iterator it = vectorClassesBySignature.find([vectorClass TLconstructorSignature]);
     if (it != vectorClassesBySignature.end())
         TGLog(@"***** Overriding constructor 0x%x with %@ (was %@)", [vectorClass TLconstructorSignature], [vectorClass class], [it->second class]);
     
@@ -120,7 +120,7 @@ void TLMetaClassStore::registerVectorClass(id<TLVector> vectorClass)
 
 id<TLObject> TLMetaClassStore::getObjectClass(int32_t name)
 {
-    std::tr1::unordered_map<int32_t, id<TLObject> >::iterator it = objectClassesByConstructorNames.find(name);
+    std::unordered_map<int32_t, id<TLObject> >::iterator it = objectClassesByConstructorNames.find(name);
     if (it == objectClassesByConstructorNames.end())
     {
         TGLog(@"%.8x -> %@", name, stringForHash(name));
@@ -386,14 +386,14 @@ TLMetaTypeArgument createTypeArgumentFromString(NSString *desc, std::set<int32_t
         typesToResolve.insert(typeName);
     }
     
-    std::tr1::shared_ptr<TLMetaType> metaType(new TLMetaType(typeName, category, typeArguments));
+    std::shared_ptr<TLMetaType> metaType(new TLMetaType(typeName, category, typeArguments));
     
     type.type = metaType;
     
     return type;
 }
 
-bool resolveUnboxedTypes(TLMetaTypeArgument *type, std::tr1::unordered_map<int32_t, std::tr1::shared_ptr<TLMetaConstructor> > const &constructorsByName, std::tr1::unordered_map<int32_t, TLMetaTypeArgument> const &vectorElementTypes)
+bool resolveUnboxedTypes(TLMetaTypeArgument *type, std::unordered_map<int32_t, std::shared_ptr<TLMetaConstructor> > const &constructorsByName, std::unordered_map<int32_t, TLMetaTypeArgument> const &vectorElementTypes)
 {
     for (std::vector<TLMetaTypeArgument>::iterator it = type->type->getArguments().begin(); it != type->type->getArguments().end(); it++)
     {
@@ -403,7 +403,7 @@ bool resolveUnboxedTypes(TLMetaTypeArgument *type, std::tr1::unordered_map<int32
     
     if (!type->boxed && type->unboxedConstructorSignature == 0)
     {
-        std::tr1::unordered_map<int32_t, std::tr1::shared_ptr<TLMetaConstructor> >::const_iterator foundIt = constructorsByName.find(type->unboxedConstructorName);
+        std::unordered_map<int32_t, std::shared_ptr<TLMetaConstructor> >::const_iterator foundIt = constructorsByName.find(type->unboxedConstructorName);
         if (foundIt != constructorsByName.end())
         {
             type->unboxedConstructorSignature = foundIt->second->getSignature();
@@ -418,7 +418,7 @@ bool resolveUnboxedTypes(TLMetaTypeArgument *type, std::tr1::unordered_map<int32
     return true;
 }
 
-std::tr1::shared_ptr<TLMetaType> createTypeFromString(NSString *desc, std::set<int32_t> &typesToResolve, std::map<int32_t, TLMetaTypeArgumentWithName> &vectorTypeMap)
+std::shared_ptr<TLMetaType> createTypeFromString(NSString *desc, std::set<int32_t> &typesToResolve, std::map<int32_t, TLMetaTypeArgumentWithName> &vectorTypeMap)
 {
     bool hasUnresolvedTypes = false;
     TLMetaTypeArgument type = createTypeArgumentFromString(desc, typesToResolve, vectorTypeMap, hasUnresolvedTypes);
@@ -429,10 +429,10 @@ void TLMetaClassStore::mergeScheme(TLScheme *scheme)
 {
     if ([scheme isKindOfClass:[TLScheme$scheme class]])
     {   
-        std::tr1::unordered_map<int32_t, std::pair<TLMetaTypeArgument, bool> > cachedFieldTypes;
+        std::unordered_map<int32_t, std::pair<TLMetaTypeArgument, bool> > cachedFieldTypes;
         std::map<int32_t, TLMetaTypeArgumentWithName> vectorTypeMap;
         std::set<int32_t> typesToResolve;
-        std::vector<std::tr1::shared_ptr<TLMetaConstructor> > constructorsWithUnresolvedTypes;
+        std::vector<std::shared_ptr<TLMetaConstructor> > constructorsWithUnresolvedTypes;
         
         NSMutableArray *types = [[NSMutableArray alloc] initWithArray:((TLScheme$scheme *)scheme).types];
         NSArray *methods = ((TLScheme$scheme *)scheme).methods;
@@ -575,7 +575,7 @@ void TLMetaClassStore::mergeScheme(TLScheme *scheme)
                 continue;
             }
             
-            std::tr1::shared_ptr<std::vector<TLMetaField> > fields(new std::vector<TLMetaField>());
+            std::shared_ptr<std::vector<TLMetaField> > fields(new std::vector<TLMetaField>());
             
             bool hasUnresolvedTypes = false;
             
@@ -587,7 +587,7 @@ void TLMetaClassStore::mergeScheme(TLScheme *scheme)
                 NSString *typeName = argDesc.type;
                 
                 int32_t fieldTypeName = murMurHash32(typeName);
-                std::tr1::unordered_map<int32_t, std::pair<TLMetaTypeArgument, bool> >::iterator it = cachedFieldTypes.find(fieldTypeName);
+                std::unordered_map<int32_t, std::pair<TLMetaTypeArgument, bool> >::iterator it = cachedFieldTypes.find(fieldTypeName);
                 if (it == cachedFieldTypes.end())
                 {
                     bool fieldUnresolvedTypes = false;
@@ -606,10 +606,10 @@ void TLMetaClassStore::mergeScheme(TLScheme *scheme)
                 fields->push_back(field);
             }
             
-            std::tr1::shared_ptr<TLMetaType> resultType = createTypeFromString(name, typesToResolve, vectorTypeMap);
+            std::shared_ptr<TLMetaType> resultType = createTypeFromString(name, typesToResolve, vectorTypeMap);
             typesByName[resultType->getName()] = resultType;
             
-            std::tr1::shared_ptr<TLMetaConstructor> constructor(new TLMetaConstructor(murMurHash32(typeDesc.predicate), typeDesc.n_id, fields, resultType));
+            std::shared_ptr<TLMetaConstructor> constructor(new TLMetaConstructor(murMurHash32(typeDesc.predicate), typeDesc.n_id, fields, resultType));
             constructorsBySignature[constructor->getSignature()] = constructor;
             constructorsByName[constructor->getName()] = constructor;
             
@@ -654,7 +654,7 @@ void TLMetaClassStore::mergeScheme(TLScheme *scheme)
             NSString *resultTypeName = methodDesc.type;
             NSString *method = methodDesc.method;
             
-            std::tr1::shared_ptr<std::vector<TLMetaField> > fields(new std::vector<TLMetaField>());
+            std::shared_ptr<std::vector<TLMetaField> > fields(new std::vector<TLMetaField>());
             
             bool hasUnresolvedTypes = false;
             
@@ -666,7 +666,7 @@ void TLMetaClassStore::mergeScheme(TLScheme *scheme)
                 NSString *typeName = argDesc.type;
                 
                 int32_t fieldTypeName = murMurHash32(typeName);
-                std::tr1::unordered_map<int32_t, std::pair<TLMetaTypeArgument, bool> >::iterator it = cachedFieldTypes.find(fieldTypeName);
+                std::unordered_map<int32_t, std::pair<TLMetaTypeArgument, bool> >::iterator it = cachedFieldTypes.find(fieldTypeName);
                 if (it == cachedFieldTypes.end())
                 {
                     bool fieldUnresolvedTypes = false;
@@ -685,7 +685,7 @@ void TLMetaClassStore::mergeScheme(TLScheme *scheme)
                 fields->push_back(field);
             }
             
-            std::tr1::shared_ptr<TLMetaType> resultType = createTypeFromString(resultTypeName, typesToResolve, vectorTypeMap);
+            std::shared_ptr<TLMetaType> resultType = createTypeFromString(resultTypeName, typesToResolve, vectorTypeMap);
             
             if (!([resultTypeName isEqualToString:@"Bool"] || [resultTypeName hasPrefix:@"Vector<"]))
             {
@@ -695,7 +695,7 @@ void TLMetaClassStore::mergeScheme(TLScheme *scheme)
                 }
             }
             
-            std::tr1::shared_ptr<TLMetaConstructor> constructor(new TLMetaConstructor(murMurHash32(method), methodDesc.n_id, fields, resultType));
+            std::shared_ptr<TLMetaConstructor> constructor(new TLMetaConstructor(murMurHash32(method), methodDesc.n_id, fields, resultType));
             constructorsBySignature[constructor->getSignature()] = constructor;
             constructorsByName[constructor->getName()] = constructor;
             
@@ -713,16 +713,16 @@ void TLMetaClassStore::mergeScheme(TLScheme *scheme)
             }
         }
         
-        for (std::vector<std::tr1::shared_ptr<TLMetaConstructor> >::iterator it = constructorsWithUnresolvedTypes.begin(); it != constructorsWithUnresolvedTypes.end(); it++)
+        for (std::vector<std::shared_ptr<TLMetaConstructor> >::iterator it = constructorsWithUnresolvedTypes.begin(); it != constructorsWithUnresolvedTypes.end(); it++)
         {
-            std::tr1::shared_ptr<std::vector<TLMetaField> > fields = (*it)->getFields();
+            std::shared_ptr<std::vector<TLMetaField> > fields = (*it)->getFields();
             for (std::vector<TLMetaField>::iterator fieldIt = fields->begin(); fieldIt != fields->end(); fieldIt++)
             {
                 resolveUnboxedTypes(&fieldIt->type, constructorsByName, vectorElementTypesByConstructor);
             }
         }
         
-        for (std::tr1::unordered_map<int32_t, TLMetaTypeArgument>::iterator it = vectorElementTypesByConstructor.begin(); it != vectorElementTypesByConstructor.end(); it++)
+        for (std::unordered_map<int32_t, TLMetaTypeArgument>::iterator it = vectorElementTypesByConstructor.begin(); it != vectorElementTypesByConstructor.end(); it++)
         {
             resolveUnboxedTypes(&it->second, constructorsByName, vectorElementTypesByConstructor);
         }
@@ -897,16 +897,16 @@ TLConstructedValue TLMetaClassStore::constructValue(NSInputStream *is, int32_t s
         return value;
     }
     
-    std::tr1::shared_ptr<TLMetaConstructor> constructor = getConstructorBySignature(signature);
+    std::shared_ptr<TLMetaConstructor> constructor = getConstructorBySignature(signature);
     
     if (constructor == NULL)
     {
-        std::tr1::unordered_map<int32_t, TLMetaTypeArgument>::iterator it = vectorElementTypesByConstructor.find(signature);
+        std::unordered_map<int32_t, TLMetaTypeArgument>::iterator it = vectorElementTypesByConstructor.find(signature);
         if (it != vectorElementTypesByConstructor.end())
         {
             int32_t count = [is readInt32];
             
-            std::tr1::unordered_map<int32_t, id<TLVector> >::iterator classIt = vectorClassesBySignature.find(signature);
+            std::unordered_map<int32_t, id<TLVector> >::iterator classIt = vectorClassesBySignature.find(signature);
             
             NSMutableArray *array = nil;
             if (classIt != vectorClassesBySignature.end())
@@ -1008,7 +1008,7 @@ void TLMetaClassStore::serializeObject(NSOutputStream *os, id<TLObject> object, 
         if (boxed)
             [os writeInt32:[object TLconstructorSignature]];
         
-        std::tr1::shared_ptr<TLMetaConstructor> constructor = getConstructorByName([object TLconstructorName]);
+        std::shared_ptr<TLMetaConstructor> constructor = getConstructorByName([object TLconstructorName]);
         
         std::map<int32_t, TLConstructedValue> fieldValues;
         [object TLfillFieldsWithValues:&fieldValues];
@@ -1042,7 +1042,7 @@ void TLMetaClassStore::serializeObject(NSOutputStream *os, id<TLObject> object, 
         }
         else
         {
-            std::tr1::shared_ptr<TLMetaConstructor> constructor = getConstructorByName([object TLconstructorName]);
+            std::shared_ptr<TLMetaConstructor> constructor = getConstructorByName([object TLconstructorName]);
             if (constructor != NULL)
             {
                 if (boxed)

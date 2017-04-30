@@ -11,7 +11,13 @@
 
 #include <Foundation/Foundation.h>
 
+//#include <tr1/memory>
+#ifdef __MAC_10_9
+#include <memory>
+#else
 #include <tr1/memory>
+#endif
+
 #include <vector>
 
 typedef enum {
@@ -34,9 +40,9 @@ struct TLMetaTypeArgument
     bool boxed;
     int32_t unboxedConstructorSignature;
     int32_t unboxedConstructorName;
-    
-    std::tr1::shared_ptr<TLMetaType> type;
-};
+    //std::shared_ptr<<#class _Tp#>>
+    //std::shared_ptr<TLMetaType> type;
+    std::shared_ptr<TLMetaType> type;};
 
 class TLMetaType
 {

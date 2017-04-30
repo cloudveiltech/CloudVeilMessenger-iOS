@@ -35,8 +35,19 @@
 
 #include <map>
 #include <set>
+
+#ifdef __MAC_10_9
+#include <unordered_map>
+#else
 #include <tr1/unordered_map>
+#endif
+
+#ifdef __MAC_10_9
+#include <memory>
+#else
 #include <tr1/memory>
+#endif
+
 
 #include <fcntl.h>
 #import <sys/mman.h>
@@ -335,7 +346,7 @@ static TGFutureAction *futureActionDeserializer(int type)
     TG_SYNCHRONIZED_DEFINE(_cachedConversations);
     TG_SYNCHRONIZED_DEFINE(_conversationInputStates);
     
-    std::tr1::unordered_map<int, TGUser *> _userByUid;
+    std::unordered_map<int, TGUser *> _userByUid;
     std::map<int, TGContactBinding *> _contactsByPhoneId;
     std::map<int, int> _phoneIdByUid;
     std::set<int> _remoteContactUids;
@@ -2611,13 +2622,13 @@ inline static TGUser *loadUserFromDatabase(FMResultSet *result, PSKeyValueDecode
 - (void)storeUsersPresences:(std::map<int, TGUserPresence> *)presenceMap
 {
     NSMutableArray *usersToStore = nil;
-    std::tr1::shared_ptr<std::map<int, TGUserPresence> > unloadedUsersPresenceMap;
+    std::shared_ptr<std::map<int, TGUserPresence> > unloadedUsersPresenceMap;
     
     TG_SYNCHRONIZED_BEGIN(_userByUid);
     {
         for (std::map<int, TGUserPresence>::iterator it = presenceMap->begin(); it != presenceMap->end(); it++)
         {
-            std::tr1::unordered_map<int, TGUser *>::iterator userIt = _userByUid.find(it->first);
+            std::unordered_map<int, TGUser *>::iterator userIt = _userByUid.find(it->first);
             if (userIt != _userByUid.end())
             {
                 bool lastSeenChanged = userIt->second.presence.lastSeen != it->second.lastSeen;
@@ -2638,7 +2649,7 @@ inline static TGUser *loadUserFromDatabase(FMResultSet *result, PSKeyValueDecode
             else
             {
                 if (unloadedUsersPresenceMap == NULL)
-                    unloadedUsersPresenceMap = std::tr1::shared_ptr<std::map<int, TGUserPresence> >(new std::map<int, TGUserPresence>());
+                    unloadedUsersPresenceMap = std::shared_ptr<std::map<int, TGUserPresence> >(new std::map<int, TGUserPresence>());
                 
                 unloadedUsersPresenceMap->insert(std::pair<int, TGUserPresence>(it->first, it->second));
             }
@@ -2716,7 +2727,7 @@ inline static TGUser *loadUserFromDatabase(FMResultSet *result, PSKeyValueDecode
     {
         //NSTimeInterval currentTime = (CFAbsoluteTimeGetCurrent() + kCFAbsoluteTimeIntervalSince1970 + _timeDifferenceFromUTC);
         
-        std::tr1::unordered_map<int, TGUser *>::iterator it = _userByUid.find(uid);
+        std::unordered_map<int, TGUser *>::iterator it = _userByUid.find(uid);
         if (it != _userByUid.end())
         {
             user = [it->second copy];//[[it->second copy] applyPrivacyRules:_privacySettings currentTime:currentTime];
@@ -2800,7 +2811,7 @@ inline static TGUser *loadUserFromDatabase(FMResultSet *result, PSKeyValueDecode
 {   
     TG_SYNCHRONIZED_BEGIN(_userByUid);
     {
-        for (std::tr1::unordered_map<int, TGUser *>::iterator it = _userByUid.begin(); it != _userByUid.end(); it++)
+        for (std::unordered_map<int, TGUser *>::iterator it = _userByUid.begin(); it != _userByUid.end(); it++)
         {
             if (it->second.phoneNumber.length != 0)
             {
@@ -2831,7 +2842,7 @@ inline static TGUser *loadUserFromDatabase(FMResultSet *result, PSKeyValueDecode
         }
         else
         {
-            std::tr1::unordered_map<int, TGUser *>::iterator userIt = _userByUid.find(uid);
+            std::unordered_map<int, TGUser *>::iterator userIt = _userByUid.find(uid);
             if (userIt != _userByUid.end())
             {
                 if (userIt->second.presence.online)
@@ -2904,16 +2915,16 @@ inline static TGUser *loadUserFromDatabase(FMResultSet *result, PSKeyValueDecode
     return count;
 }
 
-- (std::tr1::shared_ptr<std::map<int, TGUser *> >)loadUsers:(std::vector<int> const &)uidList
+- (std::shared_ptr<std::map<int, TGUser *> >)loadUsers:(std::vector<int> const &)uidList
 {
-    std::tr1::shared_ptr<std::map<int, TGUser *> > users(new std::map<int, TGUser *>());
+    std::shared_ptr<std::map<int, TGUser *> > users(new std::map<int, TGUser *>());
     
     std::vector<int> unknownUsers;
     
     TG_SYNCHRONIZED_BEGIN(_userByUid);
     for (std::vector<int>::const_iterator it = uidList.begin(); it != uidList.end(); it++)
     {
-        std::tr1::unordered_map<int, TGUser *>::iterator userIt = _userByUid.find(*it);
+        std::unordered_map<int, TGUser *>::iterator userIt = _userByUid.find(*it);
         if (userIt != _userByUid.end())
         {
             users->insert(std::pair<int, TGUser *>(*it, userIt->second));
@@ -3880,7 +3891,7 @@ bool searchDialogsResultComparator(const std::pair<id, int> &obj1, const std::pa
             
             if (latinQueryParts.count != 0)
             {
-                std::tr1::shared_ptr<std::map<int, TGUser *> > pUsers = [self loadUsers:usersToLoad];
+                std::shared_ptr<std::map<int, TGUser *> > pUsers = [self loadUsers:usersToLoad];
                 bool useCache = pUsers->size() < 1500;
                 
                 for (auto it : *pUsers)
@@ -5144,7 +5155,7 @@ static NSMutableDictionary *transliterationPartsCache()
         std::vector<int> uids;
         [self loadRemoteContactUids:uids];
         
-        std::tr1::shared_ptr<std::map<int, TGUser *> > userMap = [self loadUsers:uids];
+        std::shared_ptr<std::map<int, TGUser *> > userMap = [self loadUsers:uids];
         for (std::map<int, TGUser *>::iterator it = userMap->begin(); it != userMap->end(); it++)
         {
             [users addObject:it->second];
@@ -5183,7 +5194,7 @@ static NSMutableDictionary *transliterationPartsCache()
         std::vector<int> uids;
         [self loadRemoteContactUids:uids];
         
-        std::tr1::shared_ptr<std::map<int, TGUser *> > userMap = [self loadUsers:uids];
+        std::shared_ptr<std::map<int, TGUser *> > userMap = [self loadUsers:uids];
         for (std::map<int, TGUser *>::iterator it = userMap->begin(); it != userMap->end(); it++)
         {
             int contactId = it->second.contactId;
@@ -16665,7 +16676,7 @@ forceReplacePinnedConversations:(bool)forceReplacePinnedConversations
         bool playNotification = false;
         bool needsSound = false;
         
-        std::tr1::shared_ptr<std::map<int64_t, std::set<int> > > pProcessedUsersStoppedTyping(new std::map<int64_t, std::set<int> >());
+        std::shared_ptr<std::map<int64_t, std::set<int> > > pProcessedUsersStoppedTyping(new std::map<int64_t, std::set<int> >());
         
         NSMutableDictionary *messagesByConversation = [[NSMutableDictionary alloc] init];
         std::set<int64_t> conversationsWithNotification;

@@ -1064,12 +1064,12 @@ typedef std::map<int, std::pair<TGUser *, int > >::iterator UserDataToDispatchIt
 
 - (void)dispatchUserPresenceChanges:(int64_t)userId presence:(TGUserPresence)presence
 {
-    std::tr1::shared_ptr<std::map<int, TGUserPresence> > presenceMap(new std::map<int, TGUserPresence>());
+    std::shared_ptr<std::map<int, TGUserPresence> > presenceMap(new std::map<int, TGUserPresence>());
     presenceMap->insert(std::make_pair((int)userId, presence));
     [self dispatchMultipleUserPresenceChanges:presenceMap];
 }
 
-- (void)dispatchMultipleUserPresenceChanges:(std::tr1::shared_ptr<std::map<int, TGUserPresence> >)presenceMap
+- (void)dispatchMultipleUserPresenceChanges:(std::shared_ptr<std::map<int, TGUserPresence> >)presenceMap
 {
     [ActionStageInstance() dispatchOnStageQueue:^
     {

@@ -31,8 +31,15 @@
 
 #ifdef __cplusplus
 #include <map>
+#endif
+
+/*
+#ifdef __MAC_10_9
+#include <memory>
+#else
 #include <tr1/memory>
 #endif
+*/
 
 @protocol TGTransport;
 
@@ -155,7 +162,7 @@ extern TGTelegraph *TGTelegraphInstance;
 - (void)dispatchUserDataChanges:(TGUser *)user changes:(int)changes;
 - (void)dispatchUserPresenceChanges:(int64_t)userId presence:(TGUserPresence)presence;
 #ifdef __cplusplus
-- (void)dispatchMultipleUserPresenceChanges:(std::tr1::shared_ptr<std::map<int, TGUserPresence> >)presenceMap;
+- (void)dispatchMultipleUserPresenceChanges:(std::shared_ptr<std::map<int, TGUserPresence> >)presenceMap;
 #endif
 - (void)dispatchUserActivity:(int)uid inConversation:(int64_t)conversationId type:(NSString *)type;
 - (NSDictionary *)typingUserActivitiesInConversationFromMainThread:(int64_t)conversationId;
