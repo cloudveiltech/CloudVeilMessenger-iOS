@@ -1185,11 +1185,8 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
             TGUser *user = [globalItems objectAtIndex: i];
             
             }
-            
-            
         }
         // removing bots and channels
-        
         // removing global search
         /*
         [searchResultsSections addObject:@{@"title": TGLocalized(@"DialogList.SearchSectionGlobal"), @"items": items[@"global"], @"type": @"global"}];

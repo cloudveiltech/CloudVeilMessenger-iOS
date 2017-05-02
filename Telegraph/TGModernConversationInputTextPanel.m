@@ -880,8 +880,10 @@ static CGRect viewFrame(UIView *view)
     if ([delegate respondsToSelector:@selector(inputPanelHashtagEntered:hashtag:)])
         [delegate inputPanelHashtagEntered:self hashtag:candidateHashtag];
     
+    /*
     if ([delegate respondsToSelector:@selector(inputPanelCommandEntered:command:)])
         [delegate inputPanelCommandEntered:self command:candidateCommand];
+     */
     
     NSString *linkCandidate = [TGModernConversationInputTextPanel linkCandidateInText:text];
     if ([delegate respondsToSelector:@selector(inputPanelLinkParsed:link:probablyComplete:)])
@@ -1990,6 +1992,9 @@ static CGRect viewFrame(UIView *view)
 }
 
 - (void)updateAssociatedPanelVisibility:(bool)animated {
+    
+    _associatedPanel.hidden=true; // always hide this panel
+    
     CGFloat targetAlpha = 1.0f;
     if ([_associatedPanel displayForTextEntryOnly]) {
         if (![_inputField.internalTextView isFirstResponder] || _inputField.internalTextView.inputView != nil) {
@@ -2378,6 +2383,7 @@ static CGRect viewFrame(UIView *view)
                 [delegate inputPanelRequestedSendSticker:strongSelf sticker:sticker];
             }
         };
+        
         _stickerKeyboardView.gifSelected = ^(TGDocumentMediaAttachment *sticker)
         {
             __strong TGModernConversationInputTextPanel *strongSelf = weakSelf;
@@ -2393,6 +2399,7 @@ static CGRect viewFrame(UIView *view)
                 [strongSelf updateGifsTabActive:isActive];
             }
         };
+        
         [_stickerKeyboardView sizeToFitForWidth:self.frame.size.width];
     }
     else

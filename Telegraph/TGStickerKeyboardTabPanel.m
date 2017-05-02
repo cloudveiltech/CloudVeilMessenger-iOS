@@ -43,7 +43,7 @@
     if (self != nil)
     {
         _style = style;
-        
+        _showGifs = false; // always false
         _collectionLayout = [[UICollectionViewFlowLayout alloc] init];
         _collectionLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
         _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, frame.size.width, frame.size.height) collectionViewLayout:_collectionLayout];
@@ -234,7 +234,7 @@
 - (void)setStickerPacks:(NSArray *)stickerPacks showRecent:(bool)showRecent showGifs:(bool)showGifs showTrendingFirst:(bool)showTrendingFirst showTrendingLast:(bool)showTrendingLast {
     _stickerPacks = stickerPacks;
     _showRecent = showRecent;
-    _showGifs = showGifs;
+    _showGifs = false;//showGifs;
     _showTrendingFirst = showTrendingFirst;
     _showTrendingLast = showTrendingLast;
     

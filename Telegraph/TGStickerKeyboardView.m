@@ -180,6 +180,7 @@ typedef enum {
         _gifsCollectionView.showsHorizontalScrollIndicator = false;
         _gifsCollectionView.showsVerticalScrollIndicator = false;
         _gifsCollectionView.alwaysBounceVertical = true;
+        _gifsCollectionView.hidden=true; // always hide this GIF panels in search
         _gifsCollectionView.delaysContentTouches = false;
         _gifsCollectionView.contentInset = UIEdgeInsetsMake(45.0f + gifInset, 0.0f, gifInset, 0.0f);
         [_gifsCollectionView registerClass:[TGGifKeyboardCell class] forCellWithReuseIdentifier:@"TGGifKeyboardCell"];
@@ -204,6 +205,7 @@ typedef enum {
                 [strongSelf scrollToSection:index];
             }
         };
+        
         _tabPanel.navigateToGifs = ^{
             __strong TGStickerKeyboardView *strongSelf = weakSelf;
             if (strongSelf != nil) {

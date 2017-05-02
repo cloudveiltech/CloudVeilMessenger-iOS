@@ -3875,8 +3875,10 @@ typedef enum {
         TGModernGalleryController *modernGallery = [[TGModernGalleryController alloc] init];
         modernGallery.previewMode = previewMode;
         
+        
         if (animatedDocument != nil)
         {
+            
             modernGallery.model = [[TGGifGalleryModel alloc] initWithMessage:mediaMessageItem->_message];
             
             __weak TGModernConversationController *weakSelf = self;
@@ -4803,7 +4805,8 @@ typedef enum {
         {
             if ([action isEqualToString:@"open"])
             {
-                [controller openBrowserFromMessage:0 url:url];
+                // remove in-app browser
+                // [controller openBrowserFromMessage:0 url:url];
             }
             else if ([action isEqualToString:@"openIn"])
             {
@@ -5961,13 +5964,15 @@ typedef enum {
                                 } else if ([result isKindOfClass:[TGBotContextExternalResult class]]) {
                                     TGBotContextExternalResult *concreteResult = (TGBotContextExternalResult *)result;
                                     if ([concreteResult.type isEqualToString:@"gif"]) {
+                                        /*
                                         TGExternalGifSearchResult *externalGifSearchResult = [[TGExternalGifSearchResult alloc] initWithUrl:concreteResult.url originalUrl:concreteResult.originalUrl thumbnailUrl:concreteResult.thumbUrl size:concreteResult.size];
                                         id description = [strongSelf->_companion documentDescriptionFromExternalGifSearchResult:externalGifSearchResult text:concreteMessage.caption botContextResult:botContextResult];
                                         if (description != nil) {
                                             [strongSelf->_companion controllerWantsToSendImagesWithDescriptions:@[description] asReplyToMessageId:[strongSelf currentReplyMessageId] botReplyMarkup:concreteMessage.replyMarkup];
                                             [strongSelf->_inputTextPanel.inputField setText:@"" animated:true];
                                             [TGRecentContextBotsSignal addRecentBot:results.userId];
-                                        }
+                                        }*/
+                                        
                                     } else if ([concreteResult.type isEqualToString:@"photo"]) {
                                         TGExternalImageSearchResult *externalImageSearchResult = [[TGExternalImageSearchResult alloc] initWithUrl:concreteResult.url originalUrl:concreteResult.originalUrl thumbnailUrl:concreteResult.thumbUrl title:concreteResult.title size:concreteResult.size];
                                         id description = [strongSelf->_companion imageDescriptionFromExternalImageSearchResult:externalImageSearchResult text:concreteMessage.caption botContextResult:botContextResult];
@@ -6176,7 +6181,7 @@ typedef enum {
             };
             [_inputTextPanel setAssociatedPanel:panel animated:true];
         }
-        [panel setCommandListSignal:[_companion commandListForCommand:command]];
+    [panel setCommandListSignal:[_companion commandListForCommand:command]];
     }
 }
 
@@ -6454,17 +6459,20 @@ typedef enum {
         id description = [self.companion imageDescriptionFromBingSearchResult:item caption:caption];
         return description;
     }
+    /*
     else if ([item isKindOfClass:[TGGiphySearchResultItem class]])
     {
         id description = [self.companion documentDescriptionFromGiphySearchResult:item caption:caption];
         return description;
     }
+    
     else if ([item isKindOfClass:[TGExternalGifSearchResult class]]) {
         return [self.companion documentDescriptionFromExternalGifSearchResult:item text:nil botContextResult:nil];
     }
+    
     else if ([item isKindOfClass:[TGInternalGifSearchResult class]]) {
         return [self.companion documentDescriptionFromRemoteDocument:((TGInternalGifSearchResult *)item).document];
-    }
+    }*/
     else if ([item isKindOfClass:[TGWebSearchInternalImageResult class]])
     {
         id description = [self.companion imageDescriptionFromInternalSearchImageResult:item caption:caption];
@@ -7452,7 +7460,9 @@ typedef enum {
         NSString *filePath = [NSTemporaryDirectory() stringByAppendingPathComponent:[[NSString alloc] initWithFormat:@"%x%x", (int)arc4random(), (int)arc4random()]];
         [data writeToFile:filePath atomically:true];
         
+        /*
         [_companion controllerWantsToSendDocumentWithTempFileUrl:[NSURL fileURLWithPath:filePath] fileName:@"animation.gif" mimeType:@"image/gif" asReplyToMessageId:[self currentReplyMessageId]];
+         */
     }
 }
 
