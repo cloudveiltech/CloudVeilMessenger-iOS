@@ -12,6 +12,9 @@
 
 #import "TGRootController.h"
 
+#import "URLOpener.h"
+
+
 @interface TGApplication ()
 {
 }
@@ -250,12 +253,24 @@
     if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone && iosMajorVersion() >= 9 && ([url.scheme isEqual:@"http"] || [url.scheme isEqual:@"https"])) {
         if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                SFSafariViewController *controller = [[SFSafariViewController alloc] initWithURL:url entersReaderIfAvailable:false];
-                [TGAppDelegateInstance.window.rootViewController presentViewController:controller animated:true completion:nil];
+                /*
+                            SFSafariViewController *controller = [[SFSafariViewController alloc] initWithURL:url entersReaderIfAvailable:false];
+                            [TGAppDelegateInstance.window.rootViewController presentViewController:controller animated:true completion:nil];
+                 */
+                NSString * userAgent = BROWSER_ICAB;
+                URLOpener * opener = [[URLOpener alloc] initWithURL:url browser:userAgent];
+                [opener openURL];
+                
             });
         } else {
-            SFSafariViewController *controller = [[SFSafariViewController alloc] initWithURL:url entersReaderIfAvailable:false];
-            [TGAppDelegateInstance.window.rootViewController presentViewController:controller animated:true completion:nil];
+            /*
+                            SFSafariViewController *controller = [[SFSafariViewController alloc] initWithURL:url entersReaderIfAvailable:false];
+                            [TGAppDelegateInstance.window.rootViewController presentViewController:controller animated:true completion:nil];
+             */
+            NSString * userAgent = BROWSER_ICAB;
+            URLOpener * opener = [[URLOpener alloc] initWithURL:url browser:userAgent];
+            [opener openURL];
+            
         }
         return true;
     }
