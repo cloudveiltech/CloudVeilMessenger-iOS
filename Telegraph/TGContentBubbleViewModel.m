@@ -616,11 +616,12 @@ bool debugShowMessageIds = false;
             _webPageFooterModel.boundToContainer = _boundToContainer;
             [_contentModel addSubmodel:_webPageFooterModel];
         } else {
+            /*
             _webPageFooterModel = [[TGArticleWebpageFooterModel alloc] initWithContext:_context incoming:_incomingAppearance webPage:webPage imageInText:imageInText invoice:invoice];
             _webPageFooterModel.mediaIsAvailable = _mediaIsAvailable;
             [_webPageFooterModel updateMediaProgressVisible:_mediaProgressVisible mediaProgress:_mediaProgress animated:false];
             _webPageFooterModel.boundToContainer = _boundToContainer;
-            [_contentModel addSubmodel:_webPageFooterModel];
+            [_contentModel addSubmodel:_webPageFooterModel];*/
         }
     }
     
