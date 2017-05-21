@@ -4401,7 +4401,18 @@ typedef enum {
     
     NSString * userAgent = BROWSER_ICAB;
     URLOpener * opener = [[URLOpener alloc] initWithURLString:url browser:userAgent];
-    [opener openURL];
+    bool res = [opener openURL];
+    if(res==false)
+    {
+        //[(TGApplication *)[TGApplication sharedApplication] openURL:[NSURL URLWithString:url] forceNative:true];
+        NSDictionary *options = [[NSDictionary alloc] init];
+        
+        NSString *urlString = [NSString stringWithFormat:@"%@", url];
+        NSURL *url = [NSURL URLWithString:[urlString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        
+        [[UIApplication sharedApplication] openURL:url options:options completionHandler:^(BOOL success){
+        }];
+    }
 }
 
 - (void)showActionsMenuForUnsentMessage:(int32_t)messageId

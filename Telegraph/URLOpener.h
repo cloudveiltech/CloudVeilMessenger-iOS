@@ -13,6 +13,7 @@
 #define BROWSER_CHROME  @"chrome"
 #define BROWSER_OPERA   @"opera"
 #define BROWSER_ICAB   @"icabmobile"
+#define BROWSER_FIREFOX  @"firefox"
 
 @interface URLOpener : NSObject
 
@@ -25,6 +26,11 @@
 - (id) initWithURLString:(NSString *)us browser:(NSString *)b;
 
 - (BOOL)openURL;
+
+- (BOOL)isChromeAvailable;
+- (BOOL)isOperaAvailable;
+- (BOOL)isMozillaAvailable;
+- (BOOL)isICabAvailable;
 
 @end
 

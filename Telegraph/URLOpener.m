@@ -47,6 +47,8 @@
         return [self openInOperaMini];
     } else  if ([BROWSER_ICAB compare:self.browser options:NSCaseInsensitiveSearch] == NSOrderedSame) {
         return [self openInICabMobile];
+    } else  if ([BROWSER_FIREFOX compare:self.browser options:NSCaseInsensitiveSearch] == NSOrderedSame) {
+        return [self openInFirefox];
     }else  if ([[UIApplication sharedApplication] canOpenURL:self.url] )
     {
         return [[UIApplication sharedApplication] openURL:self.url];
@@ -86,6 +88,70 @@
         return false;//[[UIApplication sharedApplication] openURL:self.url];
     }
 }
+
+- (BOOL)isChromeAvailable{
+    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"googlechrome://"]])
+    {
+        return TRUE;
+    }
+    return FALSE;
+}
+- (BOOL)isOperaAvailable{
+    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"ohttp://"]])
+    {
+        return TRUE;
+    }
+    return FALSE;
+}
+
+- (BOOL)isMozillaAvailable{
+    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"firefox://"]])
+    {
+        return TRUE;
+    }
+    return FALSE;
+}
+
+- (BOOL)isICabAvailable{
+    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"icabmobile://"]])
+    {
+        return TRUE;
+    }
+    return FALSE;
+}
+
+
+- (BOOL) openInFirefox
+{
+    // is chrome installed??
+    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"firefox://"]])
+    {
+        NSString *scheme = self.url.scheme;
+        
+        // Replace the URL Scheme with the Chrome equivalent.
+        NSString * chromeScheme = nil;
+        if ([scheme compare:@"http" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
+            chromeScheme = @"firefox";
+        } else if ([scheme compare:@"https" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
+            chromeScheme = @"firefoxs";
+        }
+        
+        if (chromeScheme) {
+            NSString *absoluteString = [self.url absoluteString];
+            NSRange rangeForScheme = [absoluteString rangeOfString:@":"];
+            NSString *urlNoScheme = [absoluteString substringFromIndex:rangeForScheme.location];
+            NSString *chromeURLString = [chromeScheme stringByAppendingString:urlNoScheme];
+            NSURL *chromeURL = [NSURL URLWithString:chromeURLString];
+            return [[UIApplication sharedApplication] openURL:chromeURL];
+        } else {
+            return [[UIApplication sharedApplication] openURL:self.url];
+        }
+        
+    } else {
+        return [[UIApplication sharedApplication] openURL:self.url];
+    }
+}
+
 
 - (BOOL) openInChrome
 {

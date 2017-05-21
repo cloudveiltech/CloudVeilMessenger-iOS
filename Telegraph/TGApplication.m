@@ -256,26 +256,89 @@
                 /*
                             SFSafariViewController *controller = [[SFSafariViewController alloc] initWithURL:url entersReaderIfAvailable:false];
                             [TGAppDelegateInstance.window.rootViewController presentViewController:controller animated:true completion:nil];
-                 */
-                NSString * userAgent = BROWSER_ICAB;
-                URLOpener * opener = [[URLOpener alloc] initWithURL:url browser:userAgent];
-                [opener openURL];
+                            */
+                [self openURLNew:url];
                 
             });
         } else {
             /*
                             SFSafariViewController *controller = [[SFSafariViewController alloc] initWithURL:url entersReaderIfAvailable:false];
                             [TGAppDelegateInstance.window.rootViewController presentViewController:controller animated:true completion:nil];
-             */
-            NSString * userAgent = BROWSER_ICAB;
-            URLOpener * opener = [[URLOpener alloc] initWithURL:url browser:userAgent];
-            [opener openURL];
-            
+                    */
+            [self openURLNew:url];
         }
         return true;
     }
     
     return [super openURL:url];
+}
+
+- (void)openURLNew:(NSURL *)url{
+    
+    NSString * userAgent = BROWSER_ICAB;
+    URLOpener * opener = [[URLOpener alloc] initWithURL:url browser:userAgent];
+    bool res = [opener openURL];
+    if(res == false) {
+        
+        bool isSingle = TRUE;
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+        
+        UIAlertAction* actionDefault = [UIAlertAction actionWithTitle:@"Default Browser" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            NSDictionary *options = [[NSDictionary alloc] init];
+            [[UIApplication sharedApplication] openURL:url options:options completionHandler:^(BOOL success){
+            }];
+        }];
+        [alert addAction:actionDefault];
+        
+        if([opener isChromeAvailable]==TRUE){
+            UIAlertAction* actionChrome = [UIAlertAction actionWithTitle:@"Chrome" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                [[[URLOpener alloc] initWithURL:url browser:BROWSER_CHROME] openURL];
+            }];
+            isSingle = FALSE;
+            [alert addAction:actionChrome];
+        };
+        
+        if([opener isOperaAvailable]==TRUE){
+            UIAlertAction* actionOpera = [UIAlertAction actionWithTitle:@"Opera mini" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                [[[URLOpener alloc] initWithURL:url browser:BROWSER_OPERA] openURL];
+            }];
+            isSingle = FALSE;
+            [alert addAction:actionOpera];
+        };
+        
+        if([opener isMozillaAvailable]==TRUE){
+            UIAlertAction* actionFirefox = [UIAlertAction actionWithTitle:@"Firefox Mozilla" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                [[[URLOpener alloc] initWithURL:url browser:BROWSER_FIREFOX] openURL];
+            }];
+            isSingle = FALSE;
+            [alert addAction:actionFirefox];
+        };
+        
+        if([opener isICabAvailable]==TRUE){
+            UIAlertAction* actionICab = [UIAlertAction actionWithTitle:@"ICab Mobile" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                [[[URLOpener alloc] initWithURL:url browser:BROWSER_ICAB] openURL];
+            }];
+            isSingle = FALSE;
+            [alert addAction:actionICab];
+        };
+        
+        UIAlertAction* actionCancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+            
+        }];
+        [alert addAction:actionCancel];
+        
+        UIViewController *viewController = [[[[UIApplication sharedApplication] delegate] window] rootViewController];
+        
+        if(isSingle==TRUE){
+            NSDictionary *options = [[NSDictionary alloc] init];
+            [[UIApplication sharedApplication] openURL:url options:options completionHandler:^(BOOL success){
+            }];
+        }else {
+            [viewController presentViewController:alert animated:YES completion:nil];
+        }
+        
+    }
+
 }
 
 - (BOOL)openURL:(NSURL *)url
