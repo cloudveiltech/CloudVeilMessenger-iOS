@@ -3346,9 +3346,10 @@ static inline NSString *subtitleStringForUser(TGUser *user, bool &subtitleActive
         
         {
             if ((_contactsMode & TGContactsModeMainContacts) != TGContactsModeMainContacts) {
-                TGUser *serviceUser1 = [[TGUser alloc] init];
-                serviceUser1.uid = INT_MAX - 1;
-                serviceSection->addItem(serviceUser1);
+                // remove secret chats
+                //TGUser *serviceUser1 = [[TGUser alloc] init];
+                //serviceUser1.uid = INT_MAX - 1;
+                //serviceSection->addItem(serviceUser1);
             }
             
             if ((_contactsMode & TGContactsModeCreateGroupOption) == TGContactsModeCreateGroupOption) {

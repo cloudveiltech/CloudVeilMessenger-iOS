@@ -73,8 +73,9 @@ static UIImage *plusImage() {
         _titleLabel.text = TGLocalized(@"Contacts.InviteFriends");
     else if (mode == TGFlatActionCellModeCreateGroup || mode == TGFlatActionCellModeCreateGroupContacts)
         _titleLabel.text = TGLocalized(@"Compose.NewGroup");
-    else if (mode == TGFlatActionCellModeCreateEncrypted)
+    else if (mode == TGFlatActionCellModeCreateEncrypted){
         _titleLabel.text = TGLocalized(@"Compose.NewEncryptedChat");
+    }
     else if (mode == TGFlatActionCellModeChannels)
         _titleLabel.text = TGLocalized(@"Channels.Title");
     else if (mode == TGFlatActionCellModeCreateChannel)
@@ -118,6 +119,7 @@ static UIImage *plusImage() {
     }
     else if (mode == TGFlatActionCellModeCreateEncrypted)
     {
+        
         _iconView.image = encryptedIcon;
         [_iconView sizeToFit];
         

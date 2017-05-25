@@ -264,8 +264,11 @@
 
 - (void)encryptionItemSelected
 {
+    // hard remove encrypted chats
+    /*
     TGSelectContactController *selectContactController = [[TGSelectContactController alloc] initWithCreateGroup:false createEncrypted:true createBroadcast:false createChannel:false inviteToChannel:false showLink:false];
     [self.navigationController pushViewController:selectContactController animated:true];
+     */
 }
 
 - (NSString *)baseTitle
