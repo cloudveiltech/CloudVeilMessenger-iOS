@@ -6,7 +6,6 @@
 #import "TGPhotoEditorUtils.h"
 #import "TGImageUtils.h"
 #import "TGTimer.h"
-#import "TGBlurEffect.h"
 
 #import "TGPhotoCropScrollView.h"
 #import "TGPhotoCropAreaView.h"
@@ -112,7 +111,7 @@ const CGFloat TGPhotoCropViewOverscreenSize = 1000;
         
         if (iosMajorVersion() >= 9)
         {
-            _blurView = [[UIVisualEffectView alloc] initWithEffect:[TGBlurEffect cropBlurEffect]];
+            _blurView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleDark]];
             _blurView.alpha = 0.0f;
             _blurView.userInteractionEnabled = false;
             [_areaWrapperView addSubview:_blurView];
@@ -122,20 +121,21 @@ const CGFloat TGPhotoCropViewOverscreenSize = 1000;
         _overlayWrapperView.userInteractionEnabled = false;
         [_areaWrapperView addSubview:_overlayWrapperView];
         
+        UIColor *overlayColor = iosMajorVersion() >= 9 ? UIColorRGBA(0x000000, 0.45f) : [TGPhotoEditorInterfaceAssets cropTransparentOverlayColor];
         _topOverlayView = [[UIView alloc] initWithFrame:CGRectZero];
-        _topOverlayView.backgroundColor = [TGPhotoEditorInterfaceAssets cropTransparentOverlayColor];
+        _topOverlayView.backgroundColor = overlayColor;
         [_overlayWrapperView addSubview:_topOverlayView];
         
         _leftOverlayView = [[UIView alloc] initWithFrame:CGRectZero];
-        _leftOverlayView.backgroundColor = [TGPhotoEditorInterfaceAssets cropTransparentOverlayColor];
+        _leftOverlayView.backgroundColor = overlayColor;
         [_overlayWrapperView addSubview:_leftOverlayView];
         
         _rightOverlayView = [[UIView alloc] initWithFrame:CGRectZero];
-        _rightOverlayView.backgroundColor = [TGPhotoEditorInterfaceAssets cropTransparentOverlayColor];
+        _rightOverlayView.backgroundColor = overlayColor;
         [_overlayWrapperView addSubview:_rightOverlayView];
         
         _bottomOverlayView = [[UIView alloc] initWithFrame:CGRectZero];
-        _bottomOverlayView.backgroundColor = [TGPhotoEditorInterfaceAssets cropTransparentOverlayColor];
+        _bottomOverlayView.backgroundColor = overlayColor;
         [_overlayWrapperView addSubview:_bottomOverlayView];
         
         _areaView = [[TGPhotoCropAreaView alloc] initWithFrame:self.bounds];
@@ -460,7 +460,7 @@ const CGFloat TGPhotoCropViewOverscreenSize = 1000;
 
 #pragma mark - Backdrop
 
-- (void)showBackdropViewAnimated:(bool)animated
+- (void)_layoutBackdrop
 {
     if (iosMajorVersion() < 9 || _imageView.image == nil)
         return;
@@ -471,6 +471,14 @@ const CGFloat TGPhotoCropViewOverscreenSize = 1000;
     UIView *snapshotView = [_scrollView setSnapshotViewEnabled:true];
     snapshotView.frame = _scrollView.frame;
     [_areaWrapperView insertSubview:snapshotView aboveSubview:_blurView];
+}
+
+- (void)showBackdropViewAnimated:(bool)animated
+{
+    if (iosMajorVersion() < 9 || _imageView.image == nil)
+        return;
+    
+    [self _layoutBackdrop];
     
     if (animated)
     {
@@ -554,8 +562,7 @@ const CGFloat TGPhotoCropViewOverscreenSize = 1000;
     _confirmTimer = nil;
     
     _cropRect = [_scrollView zoomedRect];
-    CGSize minimumSizes = CGSizeMake(_originalSize.width / _scrollView.maximumZoomScale,
-                                     _originalSize.height / _scrollView.maximumZoomScale);
+    CGSize minimumSizes = CGSizeMake(_originalSize.width / _scrollView.maximumZoomScale, _originalSize.height / _scrollView.maximumZoomScale);
     
     CGRect constrainedCropRect = _cropRect;
     if (_cropRect.size.width < minimumSizes.width && _cropRect.size.height < minimumSizes.height)
@@ -727,7 +734,13 @@ const CGFloat TGPhotoCropViewOverscreenSize = 1000;
 
 - (UIView *)cropSnapshotView
 {
-    UIView *snapshotView = [_scrollView snapshotViewAfterScreenUpdates:false];
+    bool update = false;
+    if (_imageView.alpha < FLT_EPSILON)
+    {
+        _imageView.alpha = 1.0f;
+        update = true;
+    }
+    UIView *snapshotView = [_scrollView snapshotViewAfterScreenUpdates:update];
     snapshotView.transform = CGAffineTransformMakeRotation(TGRotationForOrientation(_cropOrientation));
     return snapshotView;
 }
@@ -1073,6 +1086,12 @@ const CGFloat TGPhotoCropViewOverscreenSize = 1000;
 
 - (void)layoutSubviews
 {
+    void (^layoutBackdrop)(void) = ^
+    {
+        if (!_animatingRotation)
+            [self _layoutBackdrop];
+    };
+    
     if (_imageView == nil)
     {
         [self setup];
@@ -1092,7 +1111,7 @@ const CGFloat TGPhotoCropViewOverscreenSize = 1000;
         void (^layoutBlock)(void) = ^
         {
             if (!_areaView.isTracking && !_animatingConfirm)
-                [self _layoutAreaViewAnimated:false completion:nil];
+                [self _layoutAreaViewAnimated:false completion:layoutBackdrop];
             
             [self _zoomToCropRectWithFrame:_scrollView.bounds animated:false completion:nil];
         };
@@ -1105,7 +1124,7 @@ const CGFloat TGPhotoCropViewOverscreenSize = 1000;
     else
     {
         if (!_areaView.isTracking && !_animatingConfirm)
-            [self _layoutAreaViewAnimated:false completion:nil];
+            [self _layoutAreaViewAnimated:false completion:layoutBackdrop];
         
         if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad)
             [self _zoomToCropRectWithFrame:_scrollView.bounds animated:false completion:nil];

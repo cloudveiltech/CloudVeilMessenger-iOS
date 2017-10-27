@@ -6,18 +6,8 @@
 
 #import "NSObject+TGLock.h"
 
-#ifdef __MAC_10_9
 #include <unordered_map>
-#else
-#include <tr1/unordered_map>
-#endif
-
-#ifdef __MAC_10_9
 #include <unordered_set>
-#else
-#include <tr1/unordered_set>
-#endif
-
 #include <vector>
 
 #import "TGDateUtils.h"

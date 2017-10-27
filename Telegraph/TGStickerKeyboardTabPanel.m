@@ -26,6 +26,9 @@
     UIView *_bottomStripe;
     
     NSString *_trendingStickersBadge;
+    CGFloat _innerAlpha;
+    
+    bool _expanded;
 }
 
 @end
@@ -43,6 +46,7 @@
     if (self != nil)
     {
         _style = style;
+        
         _showGifs = false; // always false
         _collectionLayout = [[UICollectionViewFlowLayout alloc] init];
         _collectionLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
@@ -82,17 +86,39 @@
                 
             default:
             {
-                self.backgroundColor = UIColorRGB(0xfafafa);
+                self.backgroundColor = UIColorRGB(0xf7f7f7);
                 
                 CGFloat stripeHeight = TGScreenPixel;
-                _bottomStripe = [[UIView alloc] initWithFrame:CGRectMake(0.0f, frame.size.height - stripeHeight, frame.size.width, stripeHeight)];
-                _bottomStripe.backgroundColor = UIColorRGB(0xd8d8d8);
+                _bottomStripe = [[UIView alloc] initWithFrame:CGRectMake(0.0f, frame.size.height, frame.size.width, stripeHeight)];
+                _bottomStripe.backgroundColor = UIColorRGB(0xbec2c6);
                 [self addSubview:_bottomStripe];
             }
                 break;
         }
+        
+        _innerAlpha = 1.0f;
     }
+    
+    if (@available(iOS 11.0, *))
+    {
+        _collectionView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    }
+    
     return self;
+}
+
+- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event
+{
+    if (_expanded)
+        return CGRectContainsPoint(CGRectMake(0, -15.0f, self.bounds.size.width, self.bounds.size.height + 15.0f), point);
+    
+    return [super pointInside:point withEvent:event];
+}
+
+- (void)arrowTapped
+{
+    if (self.toggleExpanded != nil)
+        self.toggleExpanded();
 }
 
 - (void)setFrame:(CGRect)frame
@@ -102,6 +128,24 @@
     
     if (sizeUpdated && frame.size.width > FLT_EPSILON && frame.size.height > FLT_EPSILON)
         [self layoutForSize:frame.size];
+}
+
+- (void)setInnerAlpha:(CGFloat)alpha
+{
+    _innerAlpha = alpha;
+    _collectionView.alpha = _innerAlpha;
+    for (TGStickerKeyboardTabCell *cell in _collectionView.visibleCells)
+    {
+        if ([cell respondsToSelector:@selector(setInnerAlpha:)])
+        {
+            NSIndexPath *indexPath = [_collectionView indexPathForCell:cell];
+            if (!_expanded || indexPath.row != 0 || !_showGifs)
+                [cell setInnerAlpha:_innerAlpha];
+        }
+    }
+    
+    CGAffineTransform transform = CGAffineTransformMakeTranslation(0.0f, 36.0f * (1.0f - alpha));
+    transform = CGAffineTransformScale(transform, alpha, alpha);
 }
 
 - (void)setBounds:(CGRect)bounds
@@ -115,11 +159,11 @@
 
 - (void)layoutForSize:(CGSize)size
 {
-    _collectionView.frame = CGRectMake(0.0f, 0.0f, size.width, size.height);
+    _collectionView.frame = CGRectMake(0.0f, 0.0f, size.width, _collectionView.frame.size.height);
     [_collectionLayout invalidateLayout];
     
     CGFloat stripeHeight = TGScreenPixel;
-    _bottomStripe.frame = CGRectMake(0.0f, size.height - stripeHeight, size.width, stripeHeight);
+    _bottomStripe.frame = CGRectMake(0.0f, size.height, size.width, stripeHeight);
 }
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)__unused collectionView
@@ -143,8 +187,12 @@
 - (CGSize)collectionView:(UICollectionView *)__unused collectionView layout:(UICollectionViewLayout*)__unused collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)__unused indexPath
 {
     if (indexPath.section == 1 && indexPath.item == 0 && !_showRecent)
-        return CGSizeMake(1.0f, 45.0f);
-    return CGSizeMake(52.0f, 45.0f);
+        return CGSizeMake(1.0f, _collectionView.frame.size.height);
+    
+    CGFloat width = 52.0f;
+    if (_style == TGStickerKeyboardViewDefaultStyle)
+        width = 48.0f;
+    return CGSizeMake(width, _collectionView.frame.size.height);
 }
 
 - (UIEdgeInsets)collectionView:(UICollectionView *)__unused collectionView layout:(UICollectionViewLayout *)__unused collectionViewLayout insetForSectionAtIndex:(NSInteger)__unused section
@@ -166,13 +214,20 @@
 {
     if (indexPath.section == 0) {
         TGStickerKeyboardTabSettingsCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"TGStickerKeyboardTabSettingsCell" forIndexPath:indexPath];
+        [cell setStyle:_style];
+        [cell setInnerAlpha:_innerAlpha];
+        
         if (indexPath.item == 0 && _showGifs) {
             [cell setMode:TGStickerKeyboardTabSettingsCellGifs];
             [cell setBadge:nil];
+            
+            if (_expanded)
+                [cell setInnerAlpha:0.0f];
         } else {
             [cell setMode:TGStickerKeyboardTabSettingsCellTrending];
             [cell setBadge:_trendingStickersBadge];
         }
+        
         return cell;
     } else if (indexPath.section == 1) {
         TGStickerKeyboardTabCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"TGStickerKeyboardTabCell" forIndexPath:indexPath];
@@ -193,9 +248,13 @@
                 [cell setNone];
         }
         
+        [cell setInnerAlpha:_innerAlpha];
+        
         return cell;
     } else if (indexPath.section == 2) {
         TGStickerKeyboardTabSettingsCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"TGStickerKeyboardTabSettingsCell" forIndexPath:indexPath];
+        [cell setStyle:_style];
+
         if (_showTrendingLast && indexPath.item == 0) {
             [cell setBadge:_trendingStickersBadge];
             [cell setMode:TGStickerKeyboardTabSettingsCellTrending];
@@ -203,13 +262,69 @@
         } else {
             [cell setBadge:nil];
             [cell setMode:TGStickerKeyboardTabSettingsCellSettings];
-            cell.pressed = ^{
-                [TGAppDelegateInstance.rootController presentViewController:[TGNavigationController navigationControllerWithControllers:@[[[TGStickerPacksSettingsController alloc] initWithEditing:true masksMode:false]]] animated:true completion:nil];
-            };
+            cell.pressed = self.openSettings;
         }
+        
+        [cell setInnerAlpha:_innerAlpha];
+        
         return cell;
     } else {
         return nil;
+    }
+}
+
+- (void)collectionView:(UICollectionView *)__unused collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (iosMajorVersion() < 8)
+        return;
+    
+    if (indexPath.section == 0) {
+        if (indexPath.item == 0 && _showGifs) {
+            if ([cell isKindOfClass:[TGStickerKeyboardTabSettingsCell class]])
+            {
+                TGStickerKeyboardTabSettingsCell *settingsCell = (TGStickerKeyboardTabSettingsCell *)cell;
+                [settingsCell setInnerAlpha:_expanded && settingsCell.mode == TGStickerKeyboardTabSettingsCellGifs ? 0.0f : 1.0f];
+            }
+        }
+    }
+}
+
+- (void)collectionView:(UICollectionView *)__unused collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (iosMajorVersion() < 8)
+        return;
+    
+    if (indexPath.section == 0) {
+        if (indexPath.item == 0 && _showGifs) {
+            if ([cell isKindOfClass:[TGStickerKeyboardTabSettingsCell class]])
+            {
+                TGStickerKeyboardTabSettingsCell *settingsCell = (TGStickerKeyboardTabSettingsCell *)cell;
+                [settingsCell setInnerAlpha:_expanded && settingsCell.mode == TGStickerKeyboardTabSettingsCellGifs ? 0.0f : 1.0f];
+            }
+        }
+    }
+}
+
+- (void)updateCellsVisibility
+{
+    if (!_expanded)
+        return;
+    
+    for (UICollectionViewCell *cell in _collectionView.visibleCells)
+    {
+        if ([cell isKindOfClass:[TGStickerKeyboardTabSettingsCell class]])
+        {
+            TGStickerKeyboardTabSettingsCell *settingsCell = (TGStickerKeyboardTabSettingsCell *)cell;
+            [settingsCell setInnerAlpha:settingsCell.mode == TGStickerKeyboardTabSettingsCellGifs ? 0.0f : 1.0f];
+        }
+        else
+        {
+            if ([cell isKindOfClass:[TGStickerKeyboardTabCell class]])
+            {
+                TGStickerKeyboardTabCell *tabCell = (TGStickerKeyboardTabCell *)cell;
+                [tabCell setInnerAlpha:1.0f];
+            }
+        }
     }
 }
 
@@ -232,9 +347,11 @@
 }
 
 - (void)setStickerPacks:(NSArray *)stickerPacks showRecent:(bool)showRecent showGifs:(bool)showGifs showTrendingFirst:(bool)showTrendingFirst showTrendingLast:(bool)showTrendingLast {
+    
+    _showGifs = showGifs;
     _stickerPacks = stickerPacks;
     _showRecent = showRecent;
-    _showGifs = false;//showGifs;
+    _showGifs = showGifs;
     _showTrendingFirst = showTrendingFirst;
     _showTrendingLast = showTrendingLast;
     
@@ -300,9 +417,7 @@
         if (!CGRectContainsRect(_collectionView.bounds, attributes.frame))
         {
             if (attributes.frame.origin.x < _collectionView.bounds.origin.x + _collectionView.bounds.size.width / 2.0f)
-            {
                 scrollPosition = UICollectionViewScrollPositionLeft;
-            }
             else
                 scrollPosition = UICollectionViewScrollPositionRight;
         }
@@ -337,4 +452,34 @@
     }
 }
 
+- (void)setExpanded:(bool)expanded
+{
+    _expanded = expanded;
+    
+    [self updateExpanded:expanded];
+}
+
+- (void)updateExpanded:(bool)expanded
+{
+    if (iosMajorVersion() < 8)
+        return;
+    
+    [UIView animateWithDuration:0.2 animations:^
+    {
+        _collectionView.contentInset = expanded ? UIEdgeInsetsMake(0.0f, -48.0f, 0.0f, 0.0f) : UIEdgeInsetsZero;
+        
+        if (!expanded && _collectionView.contentOffset.x <= 60.0f)
+            [_collectionView setContentOffset:CGPointZero];
+        
+        TGStickerKeyboardTabSettingsCell *cell = (TGStickerKeyboardTabSettingsCell *)[_collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+        if ([cell isKindOfClass:[TGStickerKeyboardTabSettingsCell class]] && _showGifs && !expanded)
+            [cell setInnerAlpha:1.0f];
+    } completion:^(BOOL finished)
+    {
+        if (expanded && finished)
+            [self updateCellsVisibility];
+    }];
+}
+
 @end
+

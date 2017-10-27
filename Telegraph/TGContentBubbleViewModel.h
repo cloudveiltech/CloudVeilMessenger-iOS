@@ -72,7 +72,7 @@ extern bool debugShowMessageIds;
 - (instancetype)initWithMessage:(TGMessage *)message authorPeer:(id)authorPeer viaUser:(TGUser *)viaUser context:(TGModernViewContext *)context;
 
 - (void)setAuthorNameColor:(UIColor *)authorNameColor;
-- (void)setForwardHeader:(id)forwardPeer forwardAuthor:(id)forwardAuthor messageId:(int32_t)messageId;
+- (void)setForwardHeader:(id)forwardPeer forwardAuthor:(id)forwardAuthor messageId:(int32_t)messageId forwardSignature:(NSString *)forwardSignature;
 - (void)setReplyHeader:(TGMessage *)replyHeader peer:(id)peer;
 - (void)setWebPageFooter:(TGWebPageMediaAttachment *)webPage invoice:(TGInvoiceMediaAttachment *)invoice viewStorage:(TGModernViewStorage *)viewStorage;
 
@@ -82,6 +82,7 @@ extern bool debugShowMessageIds;
 - (bool)gestureRecognizerShouldHandleLongTap:(TGDoubleTapGestureRecognizer *)recognizer;
 - (int)gestureRecognizer:(TGDoubleTapGestureRecognizer *)recognizer shouldFailTap:(CGPoint)point;
 - (void)doubleTapGestureRecognizerSingleTapped:(TGDoubleTapGestureRecognizer *)recognizer;
+- (void)instantPageButtonPressed;
 
 - (void)layoutContentForHeaderHeight:(CGFloat)headerHeight;
 - (void)layoutContentForHeaderHeight:(CGFloat)headerHeight containerSize:(CGSize)containerSize;

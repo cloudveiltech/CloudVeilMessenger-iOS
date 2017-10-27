@@ -21,6 +21,7 @@
 
 + (NSUInteger)estimatedSizeForPreset:(TGMediaVideoConversionPreset)preset duration:(NSTimeInterval)duration hasAudio:(bool)hasAudio;
 + (TGMediaVideoConversionPreset)bestAvailablePresetForDimensions:(CGSize)dimensions;
++ (CGSize)_renderSizeWithCropSize:(CGSize)cropSize;
 
 @end
 
@@ -35,5 +36,26 @@
 @property (nonatomic, readonly) id liveUploadData;
 
 - (NSDictionary *)dictionary;
+
+@end
+
+
+@interface TGMediaVideoConversionPresetSettings : NSObject
+
++ (CGSize)maximumSizeForPreset:(TGMediaVideoConversionPreset)preset;
++ (NSDictionary *)videoSettingsForPreset:(TGMediaVideoConversionPreset)preset dimensions:(CGSize)dimensions;
++ (NSDictionary *)audioSettingsForPreset:(TGMediaVideoConversionPreset)preset;
+
+
+//REMOVE
+
++ (bool)showVMSize;
++ (void)setShowVMSize:(bool)on;
+
++ (NSInteger)vmSide;
++ (NSInteger)vmBitrate;
+
++ (void)setVMSide:(NSInteger)side;
++ (void)setVMBitrate:(NSInteger)bitrate;
 
 @end

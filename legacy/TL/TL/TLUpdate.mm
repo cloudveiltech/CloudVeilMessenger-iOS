@@ -22,6 +22,8 @@
 #import "TLmessages_StickerSet.h"
 #import "TLDraftMessage.h"
 #import "TLMessageMedia.h"
+#import "TLLangPackDifference.h"
+#import "TLLangPackLanguage.h"
 
 @implementation TLUpdate
 
@@ -2483,6 +2485,98 @@
         value.type = TLConstructedValueTypeVector;
         value.nativeObject = self.order;
         values->insert(std::pair<int32_t, TLConstructedValue>((int32_t)0x40fe6817, value));
+    }
+}
+
+
+@end
+
+@implementation TLUpdate$updateLangPackTooLong : TLUpdate
+
+
+- (int32_t)TLconstructorSignature
+{
+    return (int32_t)0x10c2404b;
+}
+
+- (int32_t)TLconstructorName
+{
+    return (int32_t)0x3a1c6b8a;
+}
+
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)__unused metaObject
+{
+    TLUpdate$updateLangPackTooLong *object = [[TLUpdate$updateLangPackTooLong alloc] init];
+    return object;
+}
+
+- (void)TLfillFieldsWithValues:(std::map<int32_t, TLConstructedValue> *)__unused values
+{
+}
+
+
+@end
+
+@implementation TLUpdate$updateLangPack : TLUpdate
+
+
+- (int32_t)TLconstructorSignature
+{
+    return (int32_t)0x56022f4d;
+}
+
+- (int32_t)TLconstructorName
+{
+    return (int32_t)0xf23b0fdd;
+}
+
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)metaObject
+{
+    TLUpdate$updateLangPack *object = [[TLUpdate$updateLangPack alloc] init];
+    object.difference = metaObject->getObject((int32_t)0x780dfc2a);
+    return object;
+}
+
+- (void)TLfillFieldsWithValues:(std::map<int32_t, TLConstructedValue> *)values
+{
+    {
+        TLConstructedValue value;
+        value.type = TLConstructedValueTypeObject;
+        value.nativeObject = self.difference;
+        values->insert(std::pair<int32_t, TLConstructedValue>((int32_t)0x780dfc2a, value));
+    }
+}
+
+
+@end
+
+@implementation TLUpdate$updateLangPackLanguageSuggested : TLUpdate
+
+
+- (int32_t)TLconstructorSignature
+{
+    return (int32_t)0xe99a0a35;
+}
+
+- (int32_t)TLconstructorName
+{
+    return (int32_t)0x26b51897;
+}
+
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)metaObject
+{
+    TLUpdate$updateLangPackLanguageSuggested *object = [[TLUpdate$updateLangPackLanguageSuggested alloc] init];
+    object.language = metaObject->getObject((int32_t)0x672497b4);
+    return object;
+}
+
+- (void)TLfillFieldsWithValues:(std::map<int32_t, TLConstructedValue> *)values
+{
+    {
+        TLConstructedValue value;
+        value.type = TLConstructedValueTypeObject;
+        value.nativeObject = self.language;
+        values->insert(std::pair<int32_t, TLConstructedValue>((int32_t)0x672497b4, value));
     }
 }
 

@@ -92,12 +92,14 @@
 
 #import "TGMenuView.h"
 #import "TGAlertView.h"
+#import "TGCallAlertView.h"
 
 #import "TGWallpaperManager.h"
 
 #import <CommonCrypto/CommonDigest.h>
 #import <AVFoundation/AVFoundation.h>
 #import <MobileCoreServices/MobileCoreServices.h>
+#import <PassKit/PassKit.h>
 
 #import "TGGiphySearchResultItem.h"
 #import "TGBingSearchResultItem.h"
@@ -173,6 +175,7 @@
 
 #import "TGModernConversationGenericContextResultsAssociatedPanel.h"
 #import "TGModernConversationMediaContextResultsAssociatedPanel.h"
+#import "TGModernConversationRestrictedInlineAssociatedPanel.h"
 
 #import "TGBotContextResultAttachment.h"
 
@@ -223,6 +226,7 @@
 #import "TGNavigationBar.h"
 
 #import "TGFastCameraController.h"
+#import "TGVideoMessageCaptureController.h"
 
 #import "TGModernConversationEditingMessageInputPanel.h"
 
@@ -232,6 +236,8 @@
 
 #import "TGBotSignals.h"
 
+#import "TGExternalShareSignals.h"
+
 #import "TGWebAppController.h"
 
 #import "TGPickerSheet.h"
@@ -240,6 +246,21 @@
 
 #import "TGEmbedPIPController.h"
 #import "TGInstantPageController.h"
+
+#import "TGTooltipView.h"
+
+#import "TGAdminLogConversationCompanion.h"
+
+#import "TGLocalization.h"
+
+#import "TGModernConversationInputMicButton.h"
+
+#import "TGChannelManagementSignals.h"
+
+#import "TGCallController.h"
+
+#import "TGSecretPeerMediaGalleryImageItem.h"
+#import "TGSecretPeerMediaGalleryVideoItem.h"
 
 #import "URLOpener.h"
 
@@ -283,6 +304,9 @@ typedef enum {
     
     bool _editingMode;
     
+    bool _bannedStickers;
+    bool _bannedMedia;
+    
     NSMutableArray *_items;
     
     NSMutableSet *_collectionRegisteredIdentifiers;
@@ -306,6 +330,7 @@ typedef enum {
     TGModernConversationInputTextPanel *_inputTextPanel;
     TGModernConversationInputPanel *_currentInputPanel;
     TGModernConversationInputPanel *_customInputPanel;
+    TGModernConversationInputPanel *_defaultInputPanel;
     
     UIView *_titlePanelWrappingView;
     TGModernConversationTitlePanel *_primaryTitlePanel;
@@ -318,6 +343,7 @@ typedef enum {
     CGFloat _keyboardHeight;
     CGFloat _halfTransitionKeyboardHeight;
     bool _collectionViewIgnoresNextKeyboardHeightChange;
+    NSInteger _collectionViewDontStopNextScrollAnimation;
     TGObserverProxy *_keyboardWillHideProxy;
     TGObserverProxy *_keyboardWillChangeFrameProxy;
     TGObserverProxy *_keyboardDidChangeFrameProxy;
@@ -400,7 +426,8 @@ typedef enum {
     int32_t _messageIdForVisibleHoleDirection;
     
     bool _loadingMessages;
-    UIActivityIndicatorView *_loadingMessagesIndicator;
+    //UIActivityIndicatorView *_loadingMessagesIndicator;
+    TGProgressWindowController *_loadingMessagesController;
     
     SMetaDisposable *_mentionTextResultsDisposable;
     SMetaDisposable *_recentGifsDisposable;
@@ -428,10 +455,12 @@ typedef enum {
     bool _ignoreStackOperations;
     
     SMetaDisposable *_currentMentionDisposable;
+    SMetaDisposable *_musicPlayerStatusDisposable;
     
     TGNavigationBar *_previewNavigationBar;
     
     __weak TGFastCameraController *_fastCameraController;
+    __weak TGVideoMessageCaptureController *_videoMessageCaptureController;
     
     bool _fastScrolling;
     
@@ -439,6 +468,24 @@ typedef enum {
     TGPickerSheet *_pickerSheet;
     
     SMetaDisposable *_requestDateJumpDisposable;
+    
+    SVariable *_viewVisible;
+    SPipe *_bindingPipe;
+    int32_t _positionMonitoredForMessageWithMid;
+    void (^_visibilityChanged)(bool visible);
+    
+    CFAbsoluteTime _lastScrollTime;
+    NSNumber *_scrollToMid;
+    SPipe *_scrollToFinishedPipe;
+    
+    TGTooltipContainerView *_recordTooltipContainerView;
+    TGTooltipContainerView *_bannedStickersTooltipContainerView;
+    TGTooltipContainerView *_bannedMediaTooltipContainerView;
+    
+    bool _isRecording;
+    
+    SMetaDisposable *_callInForegroundDisposable;
+    __weak UINavigationController *_weakNavController;
 }
 
 @end
@@ -456,9 +503,11 @@ typedef enum {
         self.automaticallyManageScrollViewInsets = false;
         self.adjustControllerInsetWhenStartingRotation = true;
         
+        self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:TGLocalized(@"Common.Back") style:UIBarButtonItemStylePlain target:self action:@selector(backPressed)];
+        
         _items = [[NSMutableArray alloc] init];
         
-        _keyboardWillHideProxy = [[TGObserverProxy alloc] initWithTarget:self targetSelector:@selector(keyboardWillHide:) name:@"UIDeviceOrientationDidChangeNotification"];
+        _keyboardWillHideProxy = [[TGObserverProxy alloc] initWithTarget:self targetSelector:@selector(keyboardDidHide:) name:UIKeyboardDidHideNotification];
         _keyboardWillChangeFrameProxy = [[TGObserverProxy alloc] initWithTarget:self targetSelector:@selector(keyboardWillChangeFrame:) name:UIKeyboardWillChangeFrameNotification];
         _keyboardDidChangeFrameProxy = [[TGObserverProxy alloc] initWithTarget:self targetSelector:@selector(keyboardDidChangeFrame:) name:UIKeyboardDidChangeFrameNotification];
         
@@ -490,9 +539,9 @@ typedef enum {
         
         _disposable = [[SDisposableSet alloc] init];
         
+        __weak TGModernConversationController *weakSelf = self;
         if (iosMajorVersion() >= 7)
         {
-            __weak TGModernConversationController *weakSelf = self;
             [_disposable add:[[TGModernConversationControllerDynamicTypeSignals dynamicTypeBaseFontPointSize] startWithNext:^(NSNumber *pointSize)
             {
                 TGUpdateMessageViewModelLayoutConstants([pointSize floatValue]);
@@ -505,8 +554,22 @@ typedef enum {
         
         _processMediaDisposable = [[SMetaDisposable alloc] init];
         _inputPlaceholderForTextDisposable = [[SMetaDisposable alloc] init];
+        _musicPlayerStatusDisposable = [[SMetaDisposable alloc] init];
+        _tooltipDismissDisposable = [[SMetaDisposable alloc] init];
+        _callInForegroundDisposable = [[SMetaDisposable alloc] init];
         
         _scrollStack = [[TGConversationScrollMessageStack alloc] init];
+        
+        _bindingPipe = [[SPipe alloc] init];
+        _scrollToFinishedPipe = [[SPipe alloc] init];
+        _viewVisible = [[SVariable alloc] init];
+        
+        _callInForegroundDisposable = [[SMetaDisposable alloc] init];
+        [_callInForegroundDisposable setDisposable:[[[TGInterfaceManager instance] callControllerInForeground] startWithNext:^(__unused id next) {
+            __strong TGModernConversationController *strongSelf = weakSelf;
+            if (strongSelf != nil && strongSelf->_inputTextPanel.isCustomKeyboardExpanded)
+                [strongSelf->_inputTextPanel setCustomKeyboardExpanded:false animated:true];
+        }]];
     }
     return self;
 }
@@ -531,6 +594,8 @@ typedef enum {
     if (_shareSheetWindow != nil)
         _shareSheetWindow.rootViewController = nil;
     
+    [_tooltipDismissDisposable dispose];
+    [_musicPlayerStatusDisposable dispose];
     [_mentionTextResultsDisposable dispose];
     [_recentGifsDisposable dispose];
     [_inputPlaceholderForTextDisposable dispose];
@@ -540,6 +605,7 @@ typedef enum {
     [_editingContextDisposable dispose];
     [_tooltipDismissDisposable dispose];
     [_requestDateJumpDisposable dispose];
+    [_callInForegroundDisposable dispose];
 }
 
 - (NSInteger)_indexForCollectionView
@@ -580,6 +646,7 @@ typedef enum {
     CGSize collectionViewSize = _view.bounds.size;
     
     _collectionLayout = [[TGModernConversationViewLayout alloc] init];
+    _collectionLayout.viewStorage = _viewStorage;
     _collectionView = [[TGModernConversationCollectionView alloc] initWithFrame:CGRectMake(0, -210.0f, collectionViewSize.width, collectionViewSize.height + 210.0f) collectionViewLayout:_collectionLayout];
     _collectionView.hidden = _loadingMessages;
     [_companion _setControllerWidthForItemCalculation:_collectionView.frame.size.width];
@@ -607,7 +674,7 @@ typedef enum {
     
     UIEdgeInsets contentInset = _collectionView.contentInset;
     contentInset.bottom = 210.0f + [_collectionView implicitTopInset];
-    contentInset.top = _keyboardHeight + _currentInputPanel.frame.size.height;
+    contentInset.top = _keyboardHeight + [_currentInputPanel currentHeight];
     _ignoreStackOperations = true;
     _collectionView.contentInset = contentInset;
     [self _adjustCollectionInset];
@@ -708,8 +775,10 @@ typedef enum {
 
 - (void)setInitialSnapshot:(CGImageRef)image backgroundView:(TGModernTemporaryView *)backgroundView viewStorage:(TGModernViewStorage *)viewStorage topEdge:(CGFloat)topEdge displayScrollDownButton:(bool)displayScrollDownButton
 {
-    if (_viewStorage == nil && viewStorage != nil)
+    if (_viewStorage == nil && viewStorage != nil) {
         _viewStorage = viewStorage;
+        _collectionLayout.viewStorage = viewStorage;
+    }
     
     if (_snapshotImage != NULL)
     {
@@ -808,22 +877,23 @@ typedef enum {
 
 - (UIBarButtonItem *)defaultRightBarButtonItem
 {
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone)
-        return _avatarButtonItem;
-    else
-    {
-        if (_infoButtonItem == nil && _companion != nil)
-        {
-            _infoButtonItem = [[UIBarButtonItem alloc] initWithTitle:[_companion _controllerInfoButtonText] style:UIBarButtonItemStylePlain target:self action:@selector(infoButtonPressed)];
+    if ([_companion isKindOfClass:[TGAdminLogConversationCompanion class]]) {
+        if (_infoButtonItem == nil) {
+            _infoButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:@selector(searchPressed)];
         }
-        
         return _infoButtonItem;
+    } else {
+        return _avatarButtonItem;
     }
 }
 
 - (void)loadView
 {
     [super loadView];
+    
+    if ([_companion isKindOfClass:[TGAdminLogConversationCompanion class]]) {
+        [_titleView setShowStatus:false];
+    }
     
     _view = [[TGModernConversationControllerView alloc] initWithFrame:self.view.bounds];
     _view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -878,6 +948,32 @@ typedef enum {
     [_view addSubview:_backgroundView];
     
     _inputTextPanel = [[TGModernConversationInputTextPanel alloc] initWithFrame:CGRectMake(0, _view.frame.size.height - 45, _view.frame.size.width, 45) accessoryView:[_companion _controllerInputTextPanelAccessoryView]];
+    _inputTextPanel.canOpenStickersPanel = ^{
+        __strong TGModernConversationController *strongSelf = weakSelf;
+        if (strongSelf != nil) {
+            NSNumber *banTimeout = [strongSelf->_companion stickerRestrictionTimeout];
+            if (banTimeout != nil) {
+                [strongSelf showBannedStickersTooltip:[banTimeout intValue]];
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return false;
+        }
+    };
+    
+    _inputTextPanel.stickerButton.fadeDisabled = _bannedStickers;
+    _inputTextPanel.micButton.fadeDisabled = _bannedMedia;
+
+    bool videoMessage = false;
+    if (_isChannel)
+        videoMessage = ![[[NSUserDefaults standardUserDefaults] objectForKey:@"TG_lastChannelRecordModeIsAudio_v0"] boolValue];
+    else
+        videoMessage = [[[NSUserDefaults standardUserDefaults] objectForKey:@"TG_lastPrivateRecordModeIsVideo_v0"] boolValue];
+    
+    [_inputTextPanel setVideoMessage:videoMessage];
+    [_inputTextPanel setVideoMessageAvailable:[_companion allowVideoMessages]];
     
     _inputTextPanel.delegate = self;
 
@@ -935,7 +1031,7 @@ typedef enum {
     if (![self _updateControllerInset:false])
         [self controllerInsetUpdated:UIEdgeInsetsZero];
     
-    [_emptyListPlaceholder adjustLayoutForSize:_view.bounds.size contentInsets:UIEdgeInsetsMake(self.controllerInset.top, 0.0f, _currentInputPanel.frame.size.height, 0.0f) duration:0.0f curve:0];
+    [_emptyListPlaceholder adjustLayoutForSize:_view.bounds.size contentInsets:UIEdgeInsetsMake(self.controllerInset.top, 0.0f, [_currentInputPanel currentHeight], 0.0f) duration:0.0f curve:0];
     
     if (self.companion.previewMode)
     {
@@ -947,6 +1043,11 @@ typedef enum {
 
         [_titleView disableUnreadCount];
     }
+    
+    if (@available(iOS 11.0, *))
+    {
+        _collectionView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    }
 }
 
 - (CGFloat)contentAreaHeight {
@@ -957,7 +1058,8 @@ typedef enum {
 {
     TGLog(@"willAppear");
     
-    [self setRightBarButtonItem:[self defaultRightBarButtonItem]];
+    if (!_editingMode)
+        [self setRightBarButtonItem:[self defaultRightBarButtonItem]];
     
     if (self.navigationController.viewControllers.count >= 2)
     {
@@ -1005,12 +1107,12 @@ typedef enum {
         else
         {
             [_currentInputPanel adjustForSize:collectionViewSize keyboardHeight:_keyboardHeight duration:0.0 animationCurve:0 contentAreaHeight:[self contentAreaHeight]];
-            [self _adjustCollectionViewForSize:collectionViewSize keyboardHeight:_keyboardHeight inputContainerHeight:_currentInputPanel.frame.size.height duration:0.0 animationCurve:0];
+            [self _adjustCollectionViewForSize:collectionViewSize keyboardHeight:_keyboardHeight inputContainerHeight:[_currentInputPanel currentHeight] duration:0.0 animationCurve:0];
         }
     }
     else {
         [_currentInputPanel adjustForSize:collectionViewSize keyboardHeight:_keyboardHeight duration:0.0 animationCurve:0  contentAreaHeight:[self contentAreaHeight]];
-        [self _adjustCollectionViewForSize:collectionViewSize keyboardHeight:_keyboardHeight inputContainerHeight:_currentInputPanel.frame.size.height duration:0.0 animationCurve:0];
+        [self _adjustCollectionViewForSize:collectionViewSize keyboardHeight:_keyboardHeight inputContainerHeight:[_currentInputPanel currentHeight] duration:0.0 animationCurve:0];
     }
     
     if (_alreadyHadWillAppear)
@@ -1038,10 +1140,16 @@ typedef enum {
         _raiseToListenActivator = [[TGRaiseToListenActivator alloc] initWithShouldActivate:^bool {
             __strong TGModernConversationController *strongSelf = weakSelf;
             if (strongSelf != nil) {
+                if ([strongSelf.companion mediaRestrictionTimeout] != nil) {
+                    return false;
+                }
                 if (strongSelf.associatedWindowStack.count != 0 || TGAppDelegateInstance.rootController.associatedWindowStack.count != 0) {
                     return false;
                 }
                 if (strongSelf->_shareSheetWindow != nil || strongSelf->_attachmentSheetWindow != nil) {
+                    return false;
+                }
+                if (strongSelf->_inputDisabled) {
                     return false;
                 }
                 return true;
@@ -1085,6 +1193,8 @@ typedef enum {
             }
         }];
     }
+    
+    [_viewVisible set:[SSignal single:@true]];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -1119,9 +1229,59 @@ typedef enum {
     _inputTextPanel.canShowKeyboardAutomatically = true;
     _inputTextPanel.enableKeyboard = true;
     
-    [self maybeDisplayGifTooltip];
-    
     [_disposable add:[[TGRecentPeersSignals updateRecentPeers] startWithNext:nil]];
+    
+    if (!_didDisappearBeforeAppearing)
+        [self maybeShowRecordTooltip];
+    
+    __weak TGModernConversationController *weakSelf = self;
+    [_musicPlayerStatusDisposable setDisposable:[[[[TGTelegraphInstance.musicPlayer.playingStatus map:^TGMusicPlayerItem *(TGMusicPlayerStatus *status) {
+        return status.item;
+    }] filter:^bool(TGMusicPlayerItem *item)
+    {
+        __strong TGModernConversationController *strongSelf = weakSelf;
+        if (strongSelf == nil)
+            return false;
+        
+        return item.peerId == [strongSelf peerId];
+    }] reduceLeftWithPassthrough:nil with:^id(TGMusicPlayerItem *current, TGMusicPlayerItem *next, void (^emit)(id))
+    {
+        bool isNext = next.peerId != current.peerId || ![next.key isEqual:current.key];
+        if (current != nil && next != nil && isNext)
+            emit(@{@"previous": current, @"next": next });
+        
+        return next;
+    }] startWithNext:^(NSDictionary *value)
+    {
+        __strong TGModernConversationController *strongSelf = weakSelf;
+        if (strongSelf == nil)
+            return;
+        
+        CFAbsoluteTime currentTime = CFAbsoluteTimeGetCurrent();
+        if (strongSelf->_collectionView.isTracking || strongSelf->_collectionView.isDragging || strongSelf->_collectionView.isDecelerating || fabs(currentTime - strongSelf->_lastScrollTime) < 1.0)
+            return;
+        
+        TGMusicPlayerItem *previous = value[@"previous"];
+        TGMusicPlayerItem *next = value[@"next"];
+        
+        int32_t previousMid = [(NSNumber *)previous.key int32Value];
+        int32_t nextMid = [(NSNumber *)next.key int32Value];
+        
+        [[SSignal combineSignals:@[[[strongSelf messageVisibleInViewportSignal:previousMid once:true wholeVisible:false] take:1], [[strongSelf messageVisibleInViewportSignal:nextMid once:true wholeVisible:true] take:1]]] startWithNext:^(NSArray *next)
+        {
+            __strong TGModernConversationController *strongSelf = weakSelf;
+            if (strongSelf == nil)
+                return;
+            
+            bool previousVisible = [next.firstObject boolValue];
+            bool nextVisible = [next.lastObject boolValue];
+            
+            if (previousVisible && !nextVisible)
+                [strongSelf scrollToMessage:nextMid sourceMessageId:0 highlight:false animated:true];
+        }];
+    }]];
+    
+    _weakNavController = self.navigationController;
 }
 
 - (void)previewAudioWithDataItem:(TGDataItem *)dataItem duration:(NSTimeInterval)duration liveUploadData:(TGLiveUploadActorData *)liveUploadData waveform:(TGAudioWaveform *)waveform {
@@ -1168,6 +1328,13 @@ typedef enum {
 - (void)applicationDidEnterBackground:(NSNotification *)__unused notification
 {
     [self _updateCanReadHistory:TGModernConversationActivityChangeInactive];
+    
+    __autoreleasing NSArray *entities = nil;
+    NSString *text = [_inputTextPanel.maybeInputField textWithEntities:&entities];
+    if ([text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length == 0) {
+        text = @"";
+    }
+    [_companion updateControllerInputText:text entities:entities messageEditingContext:_inputTextPanel.messageEditingContext];
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)__unused notification
@@ -1211,6 +1378,12 @@ typedef enum {
 
 - (void)viewWillDisappear:(BOOL)animated
 {
+    if (iosMajorVersion() >= 7)
+    {
+        if (self.transitionCoordinator.interactive)
+            _inputTextPanel.keepInputPanel = true;
+    }
+    
     _inputTextPanel.enableKeyboard = false;
     _inputTextPanel.canShowKeyboardAutomatically = true;
     
@@ -1225,7 +1398,7 @@ typedef enum {
     
     [self _updateCanReadHistory:TGModernConversationActivityChangeInactive];
     
-    [self stopInlineMedia];
+    [self stopInlineMedia:0];
     
     _companion.viewContext.animationsEnabled = false;
     [self _updateItemsAnimationsEnabled];
@@ -1245,6 +1418,9 @@ typedef enum {
     [_tooltipContainerView removeFromSuperview];
     _tooltipContainerView = nil;
     
+    [_recordTooltipContainerView removeFromSuperview];
+    _recordTooltipContainerView = nil;
+    
     if (self.isMovingFromParentViewController && _menuController != nil)
         [_menuController dismissAnimated:false];
     
@@ -1254,11 +1430,21 @@ typedef enum {
         if ([text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length == 0) {
             text = @"";
         }
-        if (_inputTextPanel.maybeInputField.internalTextView.inputView != nil && [text isEqualToString:@"@gif "]) {
+        if ([text isEqualToString:@"@gif "]) {
             text = @"";
         }
         [_companion updateControllerInputText:text entities:entities messageEditingContext:_inputTextPanel.messageEditingContext];
     }
+    
+    bool pop = ![self.navigationController.viewControllers containsObject:self];
+    bool interactive = iosMajorVersion() >= 7 ? self.transitionCoordinator.interactive : false;
+    [_viewVisible set:[SSignal single:pop && !interactive ? nil : @false]];
+    
+    if (iosMajorVersion() >= 7)
+        _weakNavController.interactivePopGestureRecognizer.enabled = true;
+    _weakNavController.navigationBar.userInteractionEnabled = true;
+    
+    [_inputTextPanel willDisappear];
     
     [super viewWillDisappear:animated];
 }
@@ -1274,7 +1460,7 @@ typedef enum {
     
     [_currentInputPanel adjustForSize:_view.bounds.size keyboardHeight:_keyboardHeight duration:0.0 animationCurve:0 contentAreaHeight:[self contentAreaHeight]];
     
-    [self _adjustCollectionViewForSize:_view.bounds.size keyboardHeight:_keyboardHeight inputContainerHeight:_currentInputPanel.frame.size.height duration:0.0 animationCurve:0];
+    [self _adjustCollectionViewForSize:_view.bounds.size keyboardHeight:_keyboardHeight inputContainerHeight:[_currentInputPanel currentHeight] duration:0.0 animationCurve:0];
     
     [_inputTextPanel.maybeInputField.internalTextView resignFirstResponder];
     
@@ -1285,6 +1471,9 @@ typedef enum {
     __autoreleasing NSArray *entities = nil;
     NSString *text = [_inputTextPanel.maybeInputField textWithEntities:&entities];
     if ([text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length == 0) {
+        text = @"";
+    }
+    if ([text isEqualToString:@"@gif "]) {
         text = @"";
     }
     [_companion updateControllerInputText:text entities:entities messageEditingContext:_inputTextPanel.messageEditingContext];
@@ -1299,7 +1488,7 @@ typedef enum {
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
-{
+{    
     [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
     
     _isRotating = true;
@@ -1307,6 +1496,12 @@ typedef enum {
     if (_keyboardHeight < FLT_EPSILON) {
         //[self _performSizeChangesWithDuration:duration size:_view.bounds.size];
     }
+    
+    [_tooltipContainerView removeFromSuperview];
+    _tooltipContainerView = nil;
+    
+    [_recordTooltipContainerView removeFromSuperview];
+    _recordTooltipContainerView = nil;
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
@@ -1321,6 +1516,9 @@ typedef enum {
     [_avatarButton setOrientation:self.interfaceOrientation];
     
     [super willAnimateRotationToInterfaceOrientation:toInterfaceOrientation duration:duration];
+    
+    [_currentInputPanel adjustForSize:_view.bounds.size keyboardHeight:_keyboardHeight duration:duration animationCurve:0 contentAreaHeight:[self contentAreaHeight]];
+    [self _adjustCollectionViewForSize:_view.bounds.size keyboardHeight:_keyboardHeight inputContainerHeight:[_currentInputPanel currentHeight] duration:duration animationCurve:0];
 }
 
 - (void)controllerInsetUpdated:(UIEdgeInsets)previousInset
@@ -1408,8 +1606,7 @@ typedef enum {
     if (_menuContainerView.isShowingMenu)
         return;
     
-    if ([_inputTextPanel.maybeInputField.internalTextView isFirstResponder])
-        [_inputTextPanel.maybeInputField.internalTextView resignFirstResponder];
+    [self endEditing];
     [_searchBar resignFirstResponder];
 }
 
@@ -1427,6 +1624,7 @@ typedef enum {
 {
     [_menuContainerView hideMenu];
     [_tooltipContainerView hideMenu];
+    [_recordTooltipContainerView hideTooltip];
 }
 
 - (void)avatarPressed
@@ -1771,6 +1969,12 @@ typedef enum {
     {
         [self _performOnItemDisplayAction];
     }
+    
+    if ([item isKindOfClass:[TGMessageModernConversationItem class]])
+    {
+        TGMessageModernConversationItem *messageItem = (TGMessageModernConversationItem *)item;
+        _bindingPipe.sink(@{ @"type": @"bind", @"mid": @(messageItem->_message.mid) });
+    }
 }
 
 - (void)_performOnItemDisplayAction
@@ -1803,6 +2007,12 @@ typedef enum {
 #endif
             TGModernConversationItem *item = cell.boundItem;
             [item unbindCell:_viewStorage];
+            
+            if ([item isKindOfClass:[TGMessageModernConversationItem class]])
+            {
+                TGMessageModernConversationItem *messageItem = (TGMessageModernConversationItem *)item;
+                _bindingPipe.sink(@{ @"type": @"unbind", @"mid": @(messageItem->_message.mid) });
+            }
         }
         else
         {
@@ -1821,6 +2031,11 @@ typedef enum {
 {
     if (scrollView == _collectionView)
     {
+        if (_scrollToMid != nil)
+        {
+            _scrollToMid = nil;
+            _scrollToFinishedPipe.sink(@true);
+        }
         //if (!_disableScrollProcessing)
         //    _disableScrollProcessing = false;
     }
@@ -1851,12 +2066,61 @@ typedef enum {
             [_scrollStack clearStack];
             _unseenMessagesButton.badgeCount = 0;
         }
+        
+        if (!_scrollToMid)
+            [self updateMessageVisibilitySubscriber];
     }
+}
+
+- (void)updateMessageVisibilitySubscriber
+{
+    if (_positionMonitoredForMessageWithMid != 0)
+    {
+        for (TGModernCollectionCell *cell in _collectionView.visibleCells)
+        {
+            TGMessageModernConversationItem *messageItem = cell.boundItem;
+            if (messageItem != nil && messageItem->_message.mid == _positionMonitoredForMessageWithMid)
+            {
+                CGRect rect = [_collectionView convertRect:cell.frame toView:self.view];
+                if (_visibilityChanged != nil)
+                {
+                    TGNavigationController *navController = (TGNavigationController *)self.navigationController;
+                    _visibilityChanged(rect.origin.y < _currentInputPanel.frame.origin.y && CGRectGetMaxY(rect) > CGRectGetMaxY(navController.navigationBar.frame) + navController.currentAdditionalNavigationBarHeight);
+                }
+                break;
+            }
+        }
+    }
+}
+
+- (void)updateLastScrollTime
+{
+    CFAbsoluteTime currentTime = CFAbsoluteTimeGetCurrent();
+    if (fabs(currentTime - _lastScrollTime) > 1.5)
+        _lastScrollTime = currentTime;
 }
 
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)__unused scrollView
 {
     _scrollingToBottom = nil;
+    [self updateLastScrollTime];
+    
+    if (_scrollToMid != nil)
+    {
+        _scrollToMid = nil;
+        _scrollToFinishedPipe.sink(@true);
+    }
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)__unused scrollView willDecelerate:(BOOL)decelerate
+{
+    if (!decelerate)
+        [self updateLastScrollTime];
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)__unused scrollView
+{
+    [self updateLastScrollTime];
 }
 
 - (BOOL)scrollViewShouldScrollToTop:(UIScrollView *)scrollView
@@ -2837,7 +3101,9 @@ typedef enum {
                             _inputTextPanel.maybeInputField.oneTimeLongAnimation = true;
                             [self setPrimaryExtendedPanel:nil animated:true skipHeightAnimation:_inputTextPanel.maybeInputField.text.length != 0];
                             [self setSecondaryExtendedPanel:nil animated:true skipHeightAnimation:_inputTextPanel.maybeInputField.text.length != 0];
+                            [_inputTextPanel updateModeButtonVisibility:true reset:true];
                             [_inputTextPanel.maybeInputField setText:@""];
+                            [_inputTextPanel updateModeButtonVisibility:true reset:false];
                         }
                         else if (intent == TGModernConversationInsertItemIntentSendOtherMessage)
                         {
@@ -2954,10 +3220,10 @@ typedef enum {
 }
 
 - (void)updateItemAtIndex:(NSUInteger)index toItem:(TGModernConversationItem *)updatedItem delayAvailability:(bool)delayAvailability {
-    [self updateItemAtIndex:index toItem:updatedItem delayAvailability:delayAvailability animated:true];
+    [self updateItemAtIndex:index toItem:updatedItem delayAvailability:delayAvailability animated:true animateTransition:false];
 }
 
-- (void)updateItemAtIndex:(NSUInteger)index toItem:(TGModernConversationItem *)updatedItem delayAvailability:(bool)delayAvailability animated:(bool)animated
+- (void)updateItemAtIndex:(NSUInteger)index toItem:(TGModernConversationItem *)updatedItem delayAvailability:(bool)delayAvailability animated:(bool)animated animateTransition:(bool)animateTransition
 {
     CGFloat containerWidth = _collectionView == nil ? _view.frame.size.width : _collectionView.frame.size.width;
     
@@ -2968,12 +3234,12 @@ typedef enum {
     }
     
     bool sizeChanged = false;
-    CGSize lastSize = [(TGMessageModernConversationItem *)_items[index] sizeForContainerSize:CGSizeMake(containerWidth, CGFLOAT_MAX)];
-    [_items[index] updateToItem:updatedItem viewStorage:_viewStorage sizeChanged:&sizeChanged delayAvailability:delayAvailability];
+    CGSize lastSize = [(TGMessageModernConversationItem *)_items[index] sizeForContainerSize:CGSizeMake(containerWidth, CGFLOAT_MAX) viewStorage:_viewStorage];
+    [_items[index] updateToItem:updatedItem viewStorage:_viewStorage sizeChanged:&sizeChanged delayAvailability:delayAvailability containerSize:CGSizeMake(containerWidth, CGFLOAT_MAX)];
     CGSize updatedSize = lastSize;
     if (sizeChanged)
     {
-        updatedSize = [(TGMessageModernConversationItem *)_items[index] sizeForContainerSize:CGSizeMake(containerWidth, CGFLOAT_MAX)];
+        updatedSize = [(TGMessageModernConversationItem *)_items[index] sizeForContainerSize:CGSizeMake(containerWidth, CGFLOAT_MAX) viewStorage:_viewStorage];
     }
     
     if (sizeChanged && ABS(lastSize.height - updatedSize.height) > FLT_EPSILON)
@@ -2986,7 +3252,8 @@ typedef enum {
         }
         else
         {
-            if (animated && [_collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0]] != nil) {
+            UICollectionViewCell *cell = [_collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0]];
+            if (animated && cell != nil) {
                 std::vector<TGDecorationViewAttrubutes> decorationAttributes;
                 
                 CGPoint contentOffset = _collectionView.contentOffset;
@@ -3115,7 +3382,7 @@ typedef enum {
 
 - (void)setScrollBackButtonVisible:(bool)scrollBackButtonVisible
 {
-    if (self.companion.previewMode)
+    if (self.companion.previewMode || _isRecording)
         return;
     
     if (scrollBackButtonVisible)
@@ -3161,7 +3428,7 @@ typedef enum {
         if (_collectionView != nil) {
             topInset = _collectionView.contentInset.top;
         } else {
-            topInset = _keyboardHeight + _currentInputPanel.frame.size.height;
+            topInset = _keyboardHeight + [_currentInputPanel currentHeight];
         }
         _unseenMessagesButton.frame = CGRectMake(collectionViewSize.width - buttonSize.width - 6, collectionViewSize.height - buttonSize.height - topInset - 6, buttonSize.width, buttonSize.height);
     }
@@ -3175,6 +3442,7 @@ typedef enum {
         [editingPanel setActionsEnabled:[_companion checkedMessageCount] != 0];
         [editingPanel setDeleteEnabled:[self canDeleteSelectedMessages]];
         [editingPanel setForwardingEnabled:[_companion allowMessageForwarding] && [self canForwardAllSelectedMessages]];
+        [editingPanel setShareEnabled:[_companion allowMessageExternalSharing] && [self canShareAllSelectedMessages]];
     }
 }
 
@@ -3241,12 +3509,20 @@ typedef enum {
     for (NSNumber *nIndex in indices)
     {
         index++;
-        [(TGModernConversationItem *)_items[[nIndex intValue]] updateToItem:updatedItems[index] viewStorage:_viewStorage sizeChanged:&sizeChanged delayAvailability:false];
+        [(TGModernConversationItem *)_items[[nIndex intValue]] updateToItem:updatedItems[index] viewStorage:_viewStorage sizeChanged:&sizeChanged delayAvailability:false containerSize:_collectionView.bounds.size];
     }
 }
 
 - (void)scrollToMessage:(int32_t)messageId sourceMessageId:(int32_t)sourceMessageId animated:(bool)animated
 {
+    [self scrollToMessage:messageId sourceMessageId:sourceMessageId highlight:true animated:animated];
+}
+
+- (void)scrollToMessage:(int32_t)messageId sourceMessageId:(int32_t)sourceMessageId highlight:(bool)highlight animated:(bool)animated
+{
+    if (animated && !highlight)
+        _scrollToMid = @(messageId);
+    
     TGMessageModernConversationItem *selectedItem = nil;
     for (TGMessageModernConversationItem *messageItem in _items)
     {
@@ -3270,7 +3546,7 @@ typedef enum {
             }
         }
         
-        if (animated)
+        if (animated && highlight)
         {
             if (foundCell)
             {
@@ -3324,7 +3600,7 @@ typedef enum {
 }
 
 - (void)openMediaFromMessage:(int32_t)messageId cancelPIP:(bool)cancelPIP
-{
+{    
     bool foundCell = false;
     for (TGModernCollectionCell *cell in _collectionView.visibleCells)
     {
@@ -3434,17 +3710,6 @@ typedef enum {
                     if (webPage.document != nil && !isVideo) {
                         TGDocumentController *documentController = [[TGDocumentController alloc] initWithURL:[_companion fileUrlForDocumentMedia:webPage.document] messageId:mediaMessageItem->_message.mid];
                         documentController.useDefaultAction = [_companion encryptUploads];
-                        if ([_companion allowMessageForwarding])
-                        {
-                            documentController.shareAction = ^(NSArray *peerIds, NSString *caption)
-                            {
-                                __strong TGModernConversationController *strongSelf = self;
-                                if (strongSelf == nil)
-                                    return;
-                                
-                                [strongSelf broadcastForwardMessages:@[ @(mediaMessageItem->_message.mid) ] caption:caption toPeerIds:peerIds];
-                            };
-                        }
                         
                         if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone)
                             [self.navigationController pushViewController:documentController animated:true];
@@ -3546,6 +3811,8 @@ typedef enum {
                             [strongSelf broadcastForwardMessages:@[ @(mediaMessageItem->_message.mid) ] caption:caption toPeerIds:peerIds];
                         else
                             [[TGShareSignals shareLocation:mapAttachment toPeerIds:peerIds caption:caption] startWithNext:nil];
+                        
+                        [[[TGProgressWindow alloc] init] dismissWithSuccess];
                     };
                     
                     if (!previewMode)
@@ -3574,6 +3841,19 @@ typedef enum {
                 {
                     TGDocumentMediaAttachment *documentAttachment = (TGDocumentMediaAttachment *)attachment;
                     
+                    if ([[[documentAttachment.fileName pathExtension] lowercaseString] isEqualToString:@"pkpass"] || [documentAttachment.mimeType isEqualToString:@"application/vnd.apple.pkpass"])
+                    {
+                        NSData *passData = [[NSData alloc] initWithContentsOfFile:[_companion fileUrlForDocumentMedia:documentAttachment].path];
+                        NSError *error;
+                        PKPass *pass = [[PKPass alloc] initWithData:passData error:&error];
+                        
+                        if (error == nil)
+                        {
+                            [self presentViewController:[[PKAddPassesViewController alloc] initWithPass:pass] animated:true completion:nil];
+                            return nil;
+                        }
+                    }
+                    
                     if (documentAttachment.isVoice) {
                         break;
                     }
@@ -3588,238 +3868,190 @@ typedef enum {
                     if ([[[documentAttachment.fileName pathExtension] lowercaseString] isEqualToString:@"strings"])
                     {
                         [[[TGActionSheet alloc] initWithTitle:nil actions:@[
-                            [[TGActionSheetAction alloc] initWithTitle:TGLocalized(@"Conversation.ApplyLocalization") action:@"applyLocalization"],
-                            [[TGActionSheetAction alloc] initWithTitle:TGLocalized(@"Conversation.OpenFile") action:@"open"],
-                            [[TGActionSheetAction alloc] initWithTitle:TGLocalized(@"Common.Cancel") action:@"cancel" type:TGActionSheetActionTypeCancel],
-                        ] actionBlock:^(TGModernConversationController *controller, NSString *action)
-                        {
-                            if ([action isEqualToString:@"applyLocalization"])
-                            {
-                                NSBundle *referenceBundle = [NSBundle bundleWithPath:[[NSBundle mainBundle] pathForResource:@"en" ofType:@"lproj"]];
-                                NSDictionary *referenceDict = [NSDictionary dictionaryWithContentsOfFile:[referenceBundle pathForResource:@"Localizable" ofType:@"strings"]];
-                                
-                                NSDictionary *localizationDict = [NSDictionary dictionaryWithContentsOfFile:[_companion fileUrlForDocumentMedia:documentAttachment].path];
-                                
-                                __block bool valid = true;
-                                NSMutableArray *missingKeys = [[NSMutableArray alloc] init];
-                                NSMutableArray *invalidFormatKeys = [[NSMutableArray alloc] init];
-                                NSString *invalidFileString = nil;
-                                
-                                if (localizationDict != nil && referenceDict != nil)
-                                {
-                                    [referenceDict enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *sourceValue, __unused BOOL *stop)
-                                    {
-                                        NSString *targetValue = localizationDict[key];
-                                        if (targetValue == nil)
-                                        {
-                                            [missingKeys addObject:key];
-                                        }
-                                        else
-                                        {
-                                            for (int i = 0; i < 2; i++)
-                                            {
-                                                NSString *firstValue = i == 0 ? sourceValue : targetValue;
-                                                NSString *secondValue = i == 0 ? targetValue : sourceValue;
-                                                
-                                                NSRange firstRange = NSMakeRange(0, firstValue.length);
-                                                NSRange secondRange = NSMakeRange(0, secondValue.length);
-                                                
-                                                while (firstRange.length != 0)
-                                                {
-                                                    NSRange range = [firstValue rangeOfString:@"%" options:0 range:firstRange];
-                                                    if (range.location == NSNotFound || range.location == firstValue.length - 1)
-                                                        break;
-                                                    else
-                                                    {
-                                                        firstRange.location = range.location + range.length;
-                                                        firstRange.length = firstValue.length - firstRange.location;
-                                                        
-                                                        NSString *findPositionalString = nil;
-                                                        NSString *findFreeString = nil;
-                                                        
-                                                        unichar c = [firstValue characterAtIndex:range.location + 1];
-                                                        if (c == 'd' || c == 'f')
-                                                            findPositionalString = [[NSString alloc] initWithFormat:@"%%%c", (char)c];
-                                                        else if (c >= '0' && c <= '9')
-                                                        {
-                                                            if (range.location + 3 < firstValue.length)
-                                                            {
-                                                                if ([firstValue characterAtIndex:range.location + 2] == '$')
-                                                                {
-                                                                    unichar formatChar = [firstValue characterAtIndex:range.location + 3];
-                                                                    
-                                                                    findFreeString = [[NSString alloc] initWithFormat:@"%%%c$%c", (char)c, (char)formatChar];
-                                                                }
-                                                            }
-                                                        }
-                                                        
-                                                        if (findPositionalString != nil)
-                                                        {
-                                                            NSRange foundRange = [secondValue rangeOfString:findPositionalString options:0 range:secondRange];
-                                                            if (foundRange.location != NSNotFound)
-                                                            {
-                                                                secondRange.location = foundRange.location + foundRange.length;
-                                                                secondRange.length = secondValue.length - secondRange.location;
-                                                            }
-                                                            else
-                                                            {
-                                                                valid = false;
-                                                                [invalidFormatKeys addObject:key];
-                                                                
-                                                                break;
-                                                            }
-                                                        }
-                                                        else if (findFreeString != nil)
-                                                        {
-                                                            if ([secondValue rangeOfString:findFreeString].location == NSNotFound)
-                                                            {
-                                                                valid = false;
-                                                                [invalidFormatKeys addObject:key];
-                                                                
-                                                                break;
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }];
-                                }
-                                else
-                                {
-                                    valid = false;
-                                    
-                                    invalidFileString = @"invalid localization file format";
-                                }
-                                
-                                if (valid)
-                                {
-                                    NSMutableString *missingKeysString = [[NSMutableString alloc] init];
-                                    static const int maxKeys = 5;
-                                    for (int i = 0; i < maxKeys && i < (int)missingKeys.count; i++)
-                                    {
-                                        if (missingKeysString.length != 0)
-                                            [missingKeysString appendString:@", "];
-                                        [missingKeysString appendString:missingKeys[i]];
-                                        
-                                        if (i == maxKeys - 1 && maxKeys < (int)missingKeys.count)
-                                            [missingKeysString appendFormat:@" and %d more", (int)(missingKeys.count - maxKeys)];
-                                    }
-                                    
-                                    if (missingKeysString.length != 0)
-                                    {
-                                        TGAlertView *alertView = [[TGAlertView alloc] initWithTitle:nil message:[[NSString alloc] initWithFormat:@"Localization file is valid, but the following keys are missing: %@", missingKeysString] delegate:nil cancelButtonTitle:TGLocalized(@"Common.OK") otherButtonTitles:nil];
-                                        [alertView show];
-                                    }
-                                    
-                                    [controller.companion controllerWantsToApplyLocalization:[_companion fileUrlForDocumentMedia:documentAttachment].path];
-                                }
-                                else
-                                {
-                                    NSString *reasonString = nil;
-                                    
-                                    if (invalidFileString.length != 0)
-                                        reasonString = invalidFileString;
-                                    else if (invalidFormatKeys.count != 0)
-                                    {
-                                        NSMutableString *invalidFormatKeysString = [[NSMutableString alloc] init];
-                                        static const int maxKeys = 5;
-                                        for (int i = 0; i < maxKeys && i < (int)invalidFormatKeys.count; i++)
-                                        {
-                                            if (invalidFormatKeysString.length != 0)
-                                                [invalidFormatKeysString appendString:@", "];
-                                            [invalidFormatKeysString appendString:invalidFormatKeys[i]];
-                                            
-                                            if (i == maxKeys - 1 && maxKeys < (int)invalidFormatKeys.count)
-                                                [invalidFormatKeysString appendFormat:@" and %d more", (int)(invalidFormatKeys.count - maxKeys)];
-                                        }
-                                        reasonString = [[NSString alloc] initWithFormat:@"invalid value format for keys %@", invalidFormatKeysString];
-                                    }
-                                    
-                                    TGAlertView *alertView = [[TGAlertView alloc] initWithTitle:nil message:[[NSString alloc] initWithFormat:@"Invalid localization file: %@", reasonString] delegate:nil cancelButtonTitle:TGLocalized(@"Common.OK") otherButtonTitles:nil];
-                                    [alertView show];
-                                }
-                            }
-                            else if ([action isEqualToString:@"open"])
-                            {
-                                TGDocumentController *documentController = [[TGDocumentController alloc] initWithURL:[controller.companion fileUrlForDocumentMedia:documentAttachment] messageId:mediaMessageItem->_message.mid];
-                                documentController.useDefaultAction = [_companion encryptUploads];
-                                if ([controller.companion allowMessageForwarding])
-                                {
-                                    documentController.shareAction = ^(NSArray *peerIds, NSString *caption)
-                                    {
-                                        __strong TGModernConversationController *strongSelf = self;
-                                        if (strongSelf == nil)
-                                            return;
-                                        
-                                        bool isInlineBotMessage = false;
-                                        for (TGDocumentMediaAttachment *attachment in mediaMessageItem->_message.mediaAttachments)
-                                        {
-                                            if (attachment.type == TGViaUserAttachmentType)
-                                            {
-                                                isInlineBotMessage = true;
-                                                break;
-                                            }
-                                        }
-                                        
-                                        if (strongSelf->_isChannel || isInlineBotMessage)
-                                            [strongSelf broadcastForwardMessages:@[ @(mediaMessageItem->_message.mid) ] caption:caption toPeerIds:peerIds];
-                                        else
-                                            [[TGShareSignals shareDocument:documentAttachment toPeerIds:peerIds caption:caption] startWithNext:nil];
-                                    };
-                                }
-                                
-                                if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone)
-                                    [controller.navigationController pushViewController:documentController animated:true];
-                                else
-                                {
-                                    if (iosMajorVersion() >= 8)
-                                    {
-                                        documentController.modalPresentationStyle = UIModalPresentationFormSheet;
-                                        [controller presentViewController:documentController animated:false completion:nil];
-                                    }
-                                    else
-                                    {
-                                        TGNavigationController *navigationController = [TGNavigationController navigationControllerWithControllers:@[documentController]];
-                                        navigationController.presentationStyle = TGNavigationControllerPresentationStyleInFormSheet;
-                                        navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
-                                        [controller presentViewController:navigationController animated:true completion:nil];
-                                    }
-                                }
-                                
-                                [controller.companion updateMediaAccessTimeForMessageId:messageId];
-                            }
-                        } target:self] showInView:_view];
+                                                                            [[TGActionSheetAction alloc] initWithTitle:TGLocalized(@"Conversation.ApplyLocalization") action:@"applyLocalization"],
+                                                                            [[TGActionSheetAction alloc] initWithTitle:TGLocalized(@"Conversation.OpenFile") action:@"open"],
+                                                                            [[TGActionSheetAction alloc] initWithTitle:TGLocalized(@"Common.Cancel") action:@"cancel" type:TGActionSheetActionTypeCancel],
+                                                                            ] actionBlock:^(TGModernConversationController *controller, NSString *action)
+                          {
+                              if ([action isEqualToString:@"applyLocalization"])
+                              {
+                                  NSBundle *referenceBundle = [NSBundle bundleWithPath:[[NSBundle mainBundle] pathForResource:@"en" ofType:@"lproj"]];
+                                  NSDictionary *referenceDict = [NSDictionary dictionaryWithContentsOfFile:[referenceBundle pathForResource:@"Localizable" ofType:@"strings"]];
+                                  
+                                  NSDictionary *localizationDict = [NSDictionary dictionaryWithContentsOfFile:[_companion fileUrlForDocumentMedia:documentAttachment].path];
+                                  
+                                  __block bool valid = true;
+                                  NSMutableArray *missingKeys = [[NSMutableArray alloc] init];
+                                  NSMutableArray *invalidFormatKeys = [[NSMutableArray alloc] init];
+                                  NSString *invalidFileString = nil;
+                                  
+                                  if (localizationDict != nil && referenceDict != nil)
+                                  {
+                                      [referenceDict enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *sourceValue, __unused BOOL *stop)
+                                       {
+                                           NSString *targetValue = localizationDict[key];
+                                           if (targetValue == nil)
+                                           {
+                                               [missingKeys addObject:key];
+                                           }
+                                           else
+                                           {
+                                               for (int i = 0; i < 2; i++)
+                                               {
+                                                   NSString *firstValue = i == 0 ? sourceValue : targetValue;
+                                                   NSString *secondValue = i == 0 ? targetValue : sourceValue;
+                                                   
+                                                   NSRange firstRange = NSMakeRange(0, firstValue.length);
+                                                   NSRange secondRange = NSMakeRange(0, secondValue.length);
+                                                   
+                                                   while (firstRange.length != 0)
+                                                   {
+                                                       NSRange range = [firstValue rangeOfString:@"%" options:0 range:firstRange];
+                                                       if (range.location == NSNotFound || range.location == firstValue.length - 1)
+                                                       break;
+                                                       else
+                                                       {
+                                                           firstRange.location = range.location + range.length;
+                                                           firstRange.length = firstValue.length - firstRange.location;
+                                                           
+                                                           NSString *findPositionalString = nil;
+                                                           NSString *findFreeString = nil;
+                                                           
+                                                           unichar c = [firstValue characterAtIndex:range.location + 1];
+                                                           if (c == 'd' || c == 'f')
+                                                           findPositionalString = [[NSString alloc] initWithFormat:@"%%%c", (char)c];
+                                                           else if (c >= '0' && c <= '9')
+                                                           {
+                                                               if (range.location + 3 < firstValue.length)
+                                                               {
+                                                                   if ([firstValue characterAtIndex:range.location + 2] == '$')
+                                                                   {
+                                                                       unichar formatChar = [firstValue characterAtIndex:range.location + 3];
+                                                                       
+                                                                       findFreeString = [[NSString alloc] initWithFormat:@"%%%c$%c", (char)c, (char)formatChar];
+                                                                   }
+                                                               }
+                                                           }
+                                                           
+                                                           if (findPositionalString != nil)
+                                                           {
+                                                               NSRange foundRange = [secondValue rangeOfString:findPositionalString options:0 range:secondRange];
+                                                               if (foundRange.location != NSNotFound)
+                                                               {
+                                                                   secondRange.location = foundRange.location + foundRange.length;
+                                                                   secondRange.length = secondValue.length - secondRange.location;
+                                                               }
+                                                               else
+                                                               {
+                                                                   valid = false;
+                                                                   [invalidFormatKeys addObject:key];
+                                                                   
+                                                                   break;
+                                                               }
+                                                           }
+                                                           else if (findFreeString != nil)
+                                                           {
+                                                               if ([secondValue rangeOfString:findFreeString].location == NSNotFound)
+                                                               {
+                                                                   valid = false;
+                                                                   [invalidFormatKeys addObject:key];
+                                                                   
+                                                                   break;
+                                                               }
+                                                           }
+                                                       }
+                                                   }
+                                               }
+                                           }
+                                       }];
+                                  }
+                                  else
+                                  {
+                                      valid = false;
+                                      
+                                      invalidFileString = @"invalid localization file format";
+                                  }
+                                  
+                                  if (valid)
+                                  {
+                                      NSMutableString *missingKeysString = [[NSMutableString alloc] init];
+                                      static const int maxKeys = 5;
+                                      for (int i = 0; i < maxKeys && i < (int)missingKeys.count; i++)
+                                      {
+                                          if (missingKeysString.length != 0)
+                                          [missingKeysString appendString:@", "];
+                                          [missingKeysString appendString:missingKeys[i]];
+                                          
+                                          if (i == maxKeys - 1 && maxKeys < (int)missingKeys.count)
+                                          [missingKeysString appendFormat:@" and %d more", (int)(missingKeys.count - maxKeys)];
+                                      }
+                                      
+                                      if (missingKeysString.length != 0)
+                                      {
+                                          TGAlertView *alertView = [[TGAlertView alloc] initWithTitle:nil message:[[NSString alloc] initWithFormat:@"Localization file is valid, but the following keys are missing: %@", missingKeysString] delegate:nil cancelButtonTitle:TGLocalized(@"Common.OK") otherButtonTitles:nil];
+                                          [alertView show];
+                                      }
+                                      
+                                      [controller.companion controllerWantsToApplyLocalization:[_companion fileUrlForDocumentMedia:documentAttachment].path];
+                                  }
+                                  else
+                                  {
+                                      NSString *reasonString = nil;
+                                      
+                                      if (invalidFileString.length != 0)
+                                      reasonString = invalidFileString;
+                                      else if (invalidFormatKeys.count != 0)
+                                      {
+                                          NSMutableString *invalidFormatKeysString = [[NSMutableString alloc] init];
+                                          static const int maxKeys = 5;
+                                          for (int i = 0; i < maxKeys && i < (int)invalidFormatKeys.count; i++)
+                                          {
+                                              if (invalidFormatKeysString.length != 0)
+                                              [invalidFormatKeysString appendString:@", "];
+                                              [invalidFormatKeysString appendString:invalidFormatKeys[i]];
+                                              
+                                              if (i == maxKeys - 1 && maxKeys < (int)invalidFormatKeys.count)
+                                              [invalidFormatKeysString appendFormat:@" and %d more", (int)(invalidFormatKeys.count - maxKeys)];
+                                          }
+                                          reasonString = [[NSString alloc] initWithFormat:@"invalid value format for keys %@", invalidFormatKeysString];
+                                      }
+                                      
+                                      TGAlertView *alertView = [[TGAlertView alloc] initWithTitle:nil message:[[NSString alloc] initWithFormat:@"Invalid localization file: %@", reasonString] delegate:nil cancelButtonTitle:TGLocalized(@"Common.OK") otherButtonTitles:nil];
+                                      [alertView show];
+                                  }
+                              }
+                              else if ([action isEqualToString:@"open"])
+                              {
+                                  TGDocumentController *documentController = [[TGDocumentController alloc] initWithURL:[controller.companion fileUrlForDocumentMedia:documentAttachment] messageId:mediaMessageItem->_message.mid];
+                                  documentController.useDefaultAction = [_companion encryptUploads];
+                                  
+                                  if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone)
+                                  [controller.navigationController pushViewController:documentController animated:true];
+                                  else
+                                  {
+                                      if (iosMajorVersion() >= 8)
+                                      {
+                                          documentController.modalPresentationStyle = UIModalPresentationFormSheet;
+                                          [controller presentViewController:documentController animated:false completion:nil];
+                                      }
+                                      else
+                                      {
+                                          TGNavigationController *navigationController = [TGNavigationController navigationControllerWithControllers:@[documentController]];
+                                          navigationController.presentationStyle = TGNavigationControllerPresentationStyleInFormSheet;
+                                          navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
+                                          [controller presentViewController:navigationController animated:true completion:nil];
+                                      }
+                                  }
+                                  
+                                  [controller.companion updateMediaAccessTimeForMessageId:messageId];
+                              }
+                          } target:self] showInView:_view];
                         
                         break;
                     }
                     
                     TGDocumentController *documentController = [[TGDocumentController alloc] initWithURL:[_companion fileUrlForDocumentMedia:documentAttachment] messageId:mediaMessageItem->_message.mid];
                     documentController.useDefaultAction = [_companion encryptUploads];
-                    if ([_companion allowMessageForwarding])
-                    {
-                        documentController.shareAction = ^(NSArray *peerIds, NSString *caption)
-                        {
-                            __strong TGModernConversationController *strongSelf = self;
-                            if (strongSelf == nil)
-                                return;
-                            
-                            bool isInlineBotMessage = false;
-                            for (TGDocumentMediaAttachment *attachment in mediaMessageItem->_message.mediaAttachments)
-                            {
-                                if (attachment.type == TGViaUserAttachmentType)
-                                {
-                                    isInlineBotMessage = true;
-                                    break;
-                                }
-                            }
-                            
-                            if (strongSelf->_isChannel || isInlineBotMessage)
-                                [strongSelf broadcastForwardMessages:@[ @(mediaMessageItem->_message.mid) ] caption:caption toPeerIds:peerIds];
-                            else
-                                [[TGShareSignals shareDocument:documentAttachment toPeerIds:peerIds caption:caption] startWithNext:nil];
-                        };
-                    }
                     
                     [_companion updateMediaAccessTimeForMessageId:messageId];
                     
@@ -3878,10 +4110,8 @@ typedef enum {
         TGModernGalleryController *modernGallery = [[TGModernGalleryController alloc] init];
         modernGallery.previewMode = previewMode;
         
-        
         if (animatedDocument != nil)
         {
-            
             modernGallery.model = [[TGGifGalleryModel alloc] initWithMessage:mediaMessageItem->_message];
             
             __weak TGModernConversationController *weakSelf = self;
@@ -3906,6 +4136,8 @@ typedef enum {
                 {
                     [strongSelf broadcastForwardMessages:@[ @([message mid]) ] caption:caption toPeerIds:peerIds];
                 }
+                
+                [[[TGProgressWindow alloc] init] dismissWithSuccess];
             };
         }
         else if (webPage != nil)
@@ -3914,9 +4146,13 @@ typedef enum {
         }
         else if (isGallery)
         {
-            if (mediaMessageItem->_message.messageLifetime > 0 && mediaMessageItem->_message.messageLifetime <= 60 && mediaMessageItem->_message.layer >= 17)
+            if ([_companion isKindOfClass:[TGAdminLogConversationCompanion class]]) {
+                modernGallery.model = [[TGGenericPeerMediaGalleryModel alloc] initWithPeerId:mediaMessageItem->_message.cid allowActions:false messages:@[mediaMessageItem->_message] atMessageId:mediaMessageItem->_message.mid];
+                ((TGGenericPeerMediaGalleryModel *)modernGallery.model).disableActions = true;
+            } else if (mediaMessageItem->_message.messageLifetime > 0 && mediaMessageItem->_message.messageLifetime <= 60 && (mediaMessageItem->_message.layer >= 17 || _companion.allowMessageForwarding))
             {
                 modernGallery.model = [[TGSecretPeerMediaGalleryModel alloc] initWithPeerId:((TGGenericModernConversationCompanion *)_companion).conversationId messageId:mediaMessageItem->_message.mid];
+                modernGallery.isImportant = true;
             }
             else if (!_companion.allowMessageForwarding)
             {
@@ -3973,6 +4209,8 @@ typedef enum {
                     {   
                         [strongSelf broadcastForwardMessages:@[ @([message mid]) ] caption:caption toPeerIds:peerIds];
                     }
+                    
+                    [[[TGProgressWindow alloc] init] dismissWithSuccess];
                 };
             }
         }
@@ -4038,6 +4276,27 @@ typedef enum {
                 else if ([item isKindOfClass:[TGGroupAvatarGalleryItem class]])
                 {
                     int32_t messageId = ((TGGroupAvatarGalleryItem *)item).messageId;
+                    strongSelf.companion.mediaHiddenMessageId = messageId;
+                    
+                    for (TGModernCollectionCell *cell in strongSelf->_collectionView.visibleCells)
+                    {
+                        [(TGMessageModernConversationItem *)[cell boundItem] updateMediaVisibility];
+                    }
+                }
+                else if ([item isKindOfClass:[TGSecretPeerMediaGalleryImageItem class]]) {
+                    TGSecretPeerMediaGalleryImageItem *concreteItem = (TGSecretPeerMediaGalleryImageItem *)item;
+                    int32_t messageId = [strongSelf convertMessageId:[concreteItem messageId] fromPeerId:peerId];
+                    
+                    strongSelf.companion.mediaHiddenMessageId = messageId;
+                    
+                    for (TGModernCollectionCell *cell in strongSelf->_collectionView.visibleCells)
+                    {
+                        [(TGMessageModernConversationItem *)[cell boundItem] updateMediaVisibility];
+                    }
+                }
+                else if ([item isKindOfClass:[TGSecretPeerMediaGalleryVideoItem class]]) {
+                    TGSecretPeerMediaGalleryVideoItem *concreteItem = (TGSecretPeerMediaGalleryVideoItem *)item;
+                    int32_t messageId = [strongSelf convertMessageId:[concreteItem messageId] fromPeerId:peerId];
                     strongSelf.companion.mediaHiddenMessageId = messageId;
                     
                     for (TGModernCollectionCell *cell in strongSelf->_collectionView.visibleCells)
@@ -4122,6 +4381,34 @@ typedef enum {
                         }
                     }
                 }
+                else if ([item isKindOfClass:[TGSecretPeerMediaGalleryImageItem class]]) {
+                    TGSecretPeerMediaGalleryImageItem *concreteItem = (TGSecretPeerMediaGalleryImageItem *)item;
+                    int32_t messageId = [strongSelf convertMessageId:[concreteItem messageId] fromPeerId:peerId];
+                    
+                    for (TGModernCollectionCell *cell in strongSelf->_collectionView.visibleCells)
+                    {
+                        TGMessageModernConversationItem *cellItem = [cell boundItem];
+                        if (cellItem != nil && cellItem->_message.mid == messageId)
+                        {
+                            return [cellItem referenceViewForImageTransition];
+                        }
+                    }
+                }
+                else if ([item isKindOfClass:[TGSecretPeerMediaGalleryVideoItem class]]) {
+                    TGSecretPeerMediaGalleryVideoItem *concreteItem = (TGSecretPeerMediaGalleryVideoItem *)item;
+                    int32_t messageId = [strongSelf convertMessageId:[concreteItem messageId] fromPeerId:peerId];
+                    
+                    [((TGModernGalleryVideoItemView *)itemView) hidePlayButton];
+                    
+                    for (TGModernCollectionCell *cell in strongSelf->_collectionView.visibleCells)
+                    {
+                        TGMessageModernConversationItem *cellItem = [cell boundItem];
+                        if (cellItem != nil && cellItem->_message.mid == messageId)
+                        {
+                            return [cellItem referenceViewForImageTransition];
+                        }
+                    }
+                }
                 else
                 {
                     int32_t messageId = webPageMessageId;
@@ -4176,6 +4463,32 @@ typedef enum {
                         }
                     }
                 }
+                else if ([item isKindOfClass:[TGSecretPeerMediaGalleryImageItem class]]) {
+                    TGSecretPeerMediaGalleryImageItem *concreteItem = (TGSecretPeerMediaGalleryImageItem *)item;
+                    int32_t messageId = [strongSelf convertMessageId:[concreteItem messageId] fromPeerId:peerId];
+                    
+                    for (TGModernCollectionCell *cell in strongSelf->_collectionView.visibleCells)
+                    {
+                        TGMessageModernConversationItem *cellItem = [cell boundItem];
+                        if (cellItem != nil && cellItem->_message.mid == messageId)
+                        {
+                            return [cellItem referenceViewForImageTransition];
+                        }
+                    }
+                }
+                else if ([item isKindOfClass:[TGSecretPeerMediaGalleryVideoItem class]]) {
+                    TGSecretPeerMediaGalleryVideoItem *concreteItem = (TGSecretPeerMediaGalleryVideoItem *)item;
+                    int32_t messageId = [strongSelf convertMessageId:[concreteItem messageId] fromPeerId:peerId];
+                    
+                    for (TGModernCollectionCell *cell in strongSelf->_collectionView.visibleCells)
+                    {
+                        TGMessageModernConversationItem *cellItem = [cell boundItem];
+                        if (cellItem != nil && cellItem->_message.mid == messageId)
+                        {
+                            return [cellItem referenceViewForImageTransition];
+                        }
+                    }
+                }
                 else
                 {
                     int32_t messageId = webPageMessageId;
@@ -4207,17 +4520,17 @@ typedef enum {
             }
         };
         
-        modernGallery.animateTransition = !instant;
-        modernGallery.showInterface = !instant && !previewMode;
+        modernGallery.animateTransition = true;
+        modernGallery.showInterface = !previewMode;
         
         [self closeExistingMediaGallery];
         
         if (!previewMode)
         {
-            TGOverlayControllerWindow *controllerWindow = [[TGOverlayControllerWindow alloc] initWithParentController:self contentController:modernGallery keepKeyboard:instant];
-            if (instant) {
+            TGOverlayControllerWindow *controllerWindow = [[TGOverlayControllerWindow alloc] initWithParentController:self contentController:modernGallery keepKeyboard:false];
+            /*if (instant) {
                 controllerWindow.windowLevel = 10000000000.0f;
-            }
+            }*/
             controllerWindow.hidden = false;
         }
         
@@ -4253,6 +4566,12 @@ typedef enum {
                 }
                 break;
             }
+            else if ([attachment isKindOfClass:[TGVideoMediaAttachment class]]) {
+                if (((TGVideoMediaAttachment *)attachment).roundMessage) {
+                    isVoice = true;
+                }
+                break;
+            }
         }
         
         if (isVoice) {
@@ -4272,74 +4591,6 @@ typedef enum {
     
     return false;
 }
-
-/*- (void)audioPlayerDidFinish
-{
-    int32_t currentStreamingAudioMessageId = _currentStreamingAudioMessageId;
-    
-    [self stopInlineMediaIfPlaying];
-    
-    if ((true || _streamAudioItems) && currentStreamingAudioMessageId != 0)
-    {
-        int32_t lastIncomingAudioMessageId = 0;
-        TGAudioMediaAttachment *lastIncomingAudioMessageMedia = nil;
-        for (TGMessageModernConversationItem *item in _items)
-        {
-            if (item->_message.outgoing)
-                continue;
-            
-            if (item->_message.mid <= currentStreamingAudioMessageId)
-                break;
-            
-            for (id attachment in item->_message.mediaAttachments)
-            {
-                if ([attachment isKindOfClass:[TGAudioMediaAttachment class]])
-                {
-                    lastIncomingAudioMessageId = item->_message.mid;
-                    if (item->_mediaAvailabilityStatus)
-                        lastIncomingAudioMessageMedia = attachment;
-                    
-                    break;
-                }
-                else if ([attachment isKindOfClass:[TGDocumentMediaAttachment class]]) {
-                    for (id attribute in ((TGDocumentMediaAttachment *)attachment).attributes) {
-                        if ([attribute isKindOfClass:[TGDocumentAttributeAudio class]]) {
-                            if (((TGDocumentAttributeAudio *)attribute).isVoice) {
-                                lastIncomingAudioMessageId = item->_message.mid;
-                                if (item->_mediaAvailabilityStatus)
-                                    lastIncomingAudioMessageMedia = attachment;
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        
-        if (lastIncomingAudioMessageId != 0)
-        {
-            _currentStreamingAudioMessageId = lastIncomingAudioMessageId;
-            if (lastIncomingAudioMessageMedia != nil)
-                [self playAudioFromMessage:lastIncomingAudioMessageId media:lastIncomingAudioMessageMedia];
-        }
-        else
-            _currentStreamingAudioMessageId = 0;
-    }
-    
-    if (_currentStreamingAudioMessageId == 0) {
-        [_raiseToListenRecordAfterPlaybackTimer invalidate];
-        __weak TGModernConversationController *weakSelf = self;
-        _raiseToListenRecordAfterPlaybackTimer = [[TGTimer alloc] initWithTimeout:1.0 repeat:false completion:^{
-            __strong TGModernConversationController *strongSelf = weakSelf;
-            if (strongSelf != nil) {
-                if (strongSelf->_raiseToListenActivator.activated) {
-                    [strongSelf startAudioRecording:true completion:^{}];
-                }
-            }
-        } queue:dispatch_get_main_queue()];
-        [_raiseToListenRecordAfterPlaybackTimer start];
-    }
-}*/
 
 - (void)closeExistingMediaGallery
 {
@@ -4369,11 +4620,11 @@ typedef enum {
     }
 }
 
-- (void)stopInlineMedia
+- (void)stopInlineMedia:(int32_t)excludeMid
 {
     for (TGMessageModernConversationItem *item in _items)
     {
-        [item stopInlineMedia];
+        [item stopInlineMedia:excludeMid];
     }
 }
 
@@ -4396,8 +4647,8 @@ typedef enum {
 - (void)openBrowserFromMessage:(int32_t)__unused messageId url:(NSString *)url
 {
     // this method calls from popup menu
-    
-    // [(TGApplication *)[TGApplication sharedApplication] openURL:[NSURL URLWithString:url] forceNative:true];
+ 
+    //[(TGApplication *)[TGApplication sharedApplication] openURL:[NSURL URLWithString:url] forceNative:true];
     
     NSString * userAgent = BROWSER_ICAB;
     URLOpener * opener = [[URLOpener alloc] initWithURLString:url browser:userAgent];
@@ -4485,6 +4736,9 @@ typedef enum {
 
 - (void)highlightAndShowActionsMenuForMessage:(int32_t)messageId
 {
+    if (_isRecording)
+        return;
+    
     TGMessageModernConversationItem *highlightedItem = nil;
     
     for (TGModernCollectionCell *cell in _collectionView.visibleCells)
@@ -4517,6 +4771,9 @@ typedef enum {
             if (![_companion allowMessageForwarding]) {
                 canReply = actionInfo == nil;
             }
+            if (_inputDisabled) {
+                canReply = false;
+            }
             
             if (_currentInputPanel != _inputTextPanel) {
                 if (!([self defaultInputPanel] == _inputTextPanel && [_currentInputPanel isKindOfClass:[TGModernConversationSearchInputPanel class]])) {
@@ -4538,16 +4795,23 @@ typedef enum {
             
             NSDictionary *replyAction = nil;
             NSDictionary *copyAction = nil;
-            NSDictionary *copyTextAction = nil;
             NSDictionary *saveAction = nil;
             NSDictionary *moreAction = nil;
             NSDictionary *editAction = nil;
             NSDictionary *deleteAction = nil;
             NSDictionary *pinAction = nil;
+            NSDictionary *sendCallLogAction = nil;
+            NSDictionary *banAction = nil;
             
             if ([_companion canDeleteMessage:messageItem->_message])
             {
                 deleteAction = [[NSDictionary alloc] initWithObjectsAndKeys:TGLocalized(@"Conversation.ContextMenuDelete"), @"title", canModerate ? @"moderate" : @"delete", @"action", nil];
+            }
+            
+            if (messageItem->_message.fromUid != messageItem->_message.cid) {
+                if ([_companion isKindOfClass:[TGAdminLogConversationCompanion class]] && [((TGAdminLogConversationCompanion *)_companion) canBanUser:(int32_t)messageItem->_message.fromUid]) {
+                    banAction = [[NSDictionary alloc] initWithObjectsAndKeys:TGLocalized(@"Conversation.ContextMenuBan"), @"title", @"ban", @"action", nil];
+                }
             }
             
             if (canReply && [_companion allowReplies] && messageItem->_message.cid == [self peerId] && (messageItem->_message.mid < TGMessageLocalMidBaseline || ![_companion allowMessageForwarding]))
@@ -4615,6 +4879,26 @@ typedef enum {
                     }
                     break;
                 }
+                else if ([attachment isKindOfClass:[TGActionMediaAttachment class]])
+                {
+                    TGActionMediaAttachment *action = (TGActionMediaAttachment *)attachment;
+                    TGCallDiscardReason reason = (TGCallDiscardReason)[action.actionData[@"reason"] intValue];
+                    if (action.actionType == TGMessageActionPhoneCall && action.actionData[@"callId"] != nil && reason != TGCallDiscardReasonBusy && reason != TGCallDiscardReasonMissed)
+                    {
+                        NSString *path = [[TGAppDelegate documentsPath] stringByAppendingPathComponent:@"calls"];
+                        NSMutableArray *logs = [[[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil] mutableCopy];
+                        NSString *logPrefix = [NSString stringWithFormat:@"%lld-", [action.actionData[@"callId"] int64Value]];
+                        for (NSString *log in logs)
+                        {
+                            if ([log hasPrefix:logPrefix])
+                            {
+                                NSString *accessHash = [log substringWithRange:NSMakeRange(logPrefix.length, log.length - logPrefix.length - 4)];
+                                sendCallLogAction = [[NSDictionary alloc] initWithObjectsAndKeys:TGLocalized(@"Call.RateCall"), @"title", @"sendCallLog", @"action", @ {@"accessHash": @([accessHash integerValue]) }, @"userInfo", nil];
+                                break;
+                            }
+                        }
+                    }
+                }
             }
             
             bool addedForward = false;
@@ -4622,7 +4906,7 @@ typedef enum {
                 addedForward = true;
             }
             
-            if (!addedForward && TGPeerIdIsChannel(messageItem->_message.fromUid) && messageItem->_message.actionInfo == nil) {
+            if (!addedForward && TGPeerIdIsChannel(messageItem->_message.fromUid) && messageItem->_message.actionInfo == nil && messageItem->_message.messageLifetime == 0) {
                 addedForward = true;
                 copyAction = [[NSDictionary alloc] initWithObjectsAndKeys:TGLocalized(@"Conversation.ContextMenuForward"), @"title", @"forward", @"action", nil];
             }
@@ -4650,11 +4934,11 @@ typedef enum {
                     saveAction = [[NSDictionary alloc] initWithObjectsAndKeys:TGLocalized(@"Conversation.ContextMenuStickerPackAdd"), @"title", @"stickerPackInfo", @"action", nil];
                 }
             }
-            else if (messageItem->_message.actionInfo == nil && [_companion allowMessageForwarding] && !addedForward) {
+            else if (messageItem->_message.actionInfo == nil && [_companion allowMessageForwarding] && !addedForward && messageItem->_message.messageLifetime == 0) {
                 copyAction = [[NSDictionary alloc] initWithObjectsAndKeys:TGLocalized(@"Conversation.ContextMenuForward"), @"title", @"forward", @"action", nil];
             }
             
-            if (messageItem->_message.actionInfo == nil) {
+            if (messageItem->_message.actionInfo == nil && ![_companion isKindOfClass:[TGAdminLogConversationCompanion class]]) {
                 moreAction = [[NSDictionary alloc] initWithObjectsAndKeys:TGLocalized(@"Conversation.ContextMenuMore"), @"title", @"select", @"action", nil];
             }
             
@@ -4664,6 +4948,22 @@ typedef enum {
             }
             
             NSMutableArray *actions = [[NSMutableArray alloc] init];
+            
+            if ([messageItem->_message hasExpiredMedia]) {
+                replyAction = nil;
+                copyAction = nil;
+                saveAction = nil;
+                moreAction = nil;
+                editAction = nil;
+                pinAction = nil;
+                sendCallLogAction = nil;
+                banAction = nil;
+            }
+            
+            if (messageItem->_message.messageLifetime > 0 && messageItem->_message.messageLifetime <= 60) {
+                copyAction = nil;
+                saveAction = nil;
+            }
             
             if (moreAction != nil) {
                 NSMutableDictionary *updatedMoreAction = [[NSMutableDictionary alloc] initWithDictionary:moreAction];
@@ -4692,13 +4992,21 @@ typedef enum {
                 [actions addObject:editAction];
             }
             
+            if (sendCallLogAction != nil) {
+                [actions addObject:sendCallLogAction];
+            }
+            
             if (deleteAction != nil) {
                 NSMutableDictionary *updatedDeleteAction = [[NSMutableDictionary alloc] initWithDictionary:deleteAction];
-                if (actions.count != 0) {
+                if (actions.count != 0 && sendCallLogAction == nil) {
                     updatedDeleteAction[@"optional"] = @true;
                 }
                 deleteAction = updatedDeleteAction;
                 [actions addObject:deleteAction];
+            }
+            
+            if (banAction != nil) {
+                [actions addObject:banAction];
             }
             
             if (TGIsArabic())
@@ -4757,7 +5065,7 @@ typedef enum {
     if ([url hasPrefix:@"tel:"])
     {
         TGActionSheet *actionSheet = [[TGActionSheet alloc] initWithTitle:url.length < 70 ? url : [[url substringToIndex:70] stringByAppendingString:@"..."] actions:@[
-            [[TGActionSheetAction alloc] initWithTitle:TGLocalized(@"Conversation.Call") action:@"call"],
+            [[TGActionSheetAction alloc] initWithTitle:TGLocalized(@"UserInfo.PhoneCall") action:@"call"],
             [[TGActionSheetAction alloc] initWithTitle:TGLocalized(@"Conversation.LinkDialogCopy") action:@"copy"],
             [[TGActionSheetAction alloc] initWithTitle:TGLocalized(@"Common.Cancel") action:@"cancel" type:TGActionSheetActionTypeCancel]
         ] actionBlock:^(__unused TGModernConversationController *controller, NSString *action)
@@ -4854,6 +5162,7 @@ typedef enum {
             }
             else if ([action isEqualToString:@"saveGif"]) {
                 [TGRecentGifsSignal addRecentGifFromDocument:webPage.document];
+                [controller maybeDisplayGifTooltip];
             }
         } target:self];
         [actionSheet showInView:self.view];
@@ -4867,10 +5176,12 @@ typedef enum {
     if (!isContact)
         [actions addObject:[[TGActionSheetAction alloc] initWithTitle:TGLocalized(@"Conversation.AddContact") action:@"addContact"]];
     
-    if (contact.uid > 0)
+    if (contact.uid > 0) {
         [actions addObject:[[TGActionSheetAction alloc] initWithTitle:TGLocalized(@"Conversation.SendMessage") action:@"sendMessage"]];
+        [actions addObject:[[TGActionSheetAction alloc] initWithTitle:TGLocalized(@"UserInfo.TelegramCall") action:@"telegramCall"]];
+    }
     
-    [actions addObject:[[TGActionSheetAction alloc] initWithTitle:TGLocalized(@"Conversation.Call") action:@"call"]];
+    [actions addObject:[[TGActionSheetAction alloc] initWithTitle:TGLocalized(@"UserInfo.PhoneCall") action:@"call"]];
     [actions addObject:[[TGActionSheetAction alloc] initWithTitle:TGLocalized(@"Common.Cancel") action:@"cancel" type:TGActionSheetActionTypeCancel]];
     
     TGActionSheet *actionSheet = [[TGActionSheet alloc] initWithTitle:nil actions:actions actionBlock:^(TGModernConversationController *controller, NSString *action)
@@ -4883,6 +5194,10 @@ typedef enum {
         {
             NSString *url = [[NSString alloc] initWithFormat:@"tel:%@", [TGPhoneUtils formatPhoneUrl:contact.phoneNumber]];
             [TGAppDelegateInstance performPhoneCall:[NSURL URLWithString:url]];
+        }
+        else if ([action isEqualToString:@"telegramCall"])
+        {
+            [[TGInterfaceManager instance] callPeerWithId:contact.uid];
         }
     } target:self];
     [actionSheet showInView:self.view];
@@ -5012,7 +5327,7 @@ typedef enum {
         }
         else
         {
-            [_emptyListPlaceholder adjustLayoutForSize:_view.bounds.size contentInsets:UIEdgeInsetsMake(self.controllerInset.top, 0.0f, _currentInputPanel.frame.size.height, 0.0f) duration:0.0f curve:0];
+            [_emptyListPlaceholder adjustLayoutForSize:_view.bounds.size contentInsets:UIEdgeInsetsMake(self.controllerInset.top, 0.0f, [_currentInputPanel currentHeight], 0.0f) duration:0.0f curve:0];
         }
     }
 }
@@ -5028,8 +5343,22 @@ typedef enum {
 
 - (void)setReplyMessage:(TGMessage *)replyMessage animated:(bool)animated
 {
+    [self setReplyMessage:replyMessage openKeyboard:false animated:animated];
+}
+
+- (void)setReplyMessage:(TGMessage *)replyMessage openKeyboard:(bool)openKeyboard animated:(bool)animated
+{
+    [self endMessageEditing:false];
+    
     TGModenConcersationReplyAssociatedPanel *panel = [[TGModenConcersationReplyAssociatedPanel alloc] initWithMessage:replyMessage];
     __weak TGModernConversationController *weakSelf = self;
+    panel.pressed = ^{
+        __strong TGModernConversationController *strongSelf = weakSelf;
+        if (strongSelf != nil)
+        {
+            [strongSelf scrollToMessage:replyMessage.mid sourceMessageId:0 animated:true];
+        }
+    };
     panel.dismiss = ^
     {
         __strong TGModernConversationController *strongSelf = weakSelf;
@@ -5040,6 +5369,9 @@ typedef enum {
         }
     };
     [self setPrimaryExtendedPanel:panel animated:animated];
+    
+    if (openKeyboard && _currentInputPanel == _inputTextPanel && (replyMessage.replyMarkup.isInline || replyMessage.replyMarkup.rows.count == 0))
+        [self openKeyboard];
 }
 
 - (void)setEditMessageWithText:(NSString *)text entities:(NSArray *)entities isCaption:(bool)isCaption messageId:(int32_t)messageId animated:(bool)animated {
@@ -5057,6 +5389,7 @@ typedef enum {
             [strongSelf.companion navigateToMessageId:messageId scrollBackMessageId:0 animated:true];
         }
     };
+    [self setInputPanel:_inputTextPanel animated:true];
     [self setPrimaryExtendedPanel:panel animated:true];
     [self setSecondaryExtendedPanel:nil animated:true];
     [_inputTextPanel setAssociatedPanel:nil animated:true];
@@ -5070,6 +5403,7 @@ typedef enum {
     [_inputTextPanel setMessageEditingContext:nil animated:animated];
     [self setPrimaryExtendedPanel:nil animated:true];
     [_saveEditedMessageDisposable setDisposable:nil];
+    [self setCustomInputPanel:nil force:true];
 }
 
 - (void)setForwardMessages:(NSArray *)forwardMessages animated:(bool)animated
@@ -5180,13 +5514,21 @@ typedef enum {
     if (_companion.previewMode || [_companion _controllerShouldHideInputTextByDefault]) {
         return nil;
     } else {
-        return _inputTextPanel;
+        if (_defaultInputPanel != nil) {
+            return _defaultInputPanel;
+        } else {
+            return _inputTextPanel;
+        }
     }
 }
 
-- (void)setCustomInputPanel:(TGModernConversationInputPanel *)customInputPanel
+- (void)setCustomInputPanel:(TGModernConversationInputPanel *)customInputPanel {
+    [self setCustomInputPanel:customInputPanel force:false];
+}
+
+- (void)setCustomInputPanel:(TGModernConversationInputPanel *)customInputPanel force:(bool)force
 {
-    if (_customInputPanel != customInputPanel)
+    if (_customInputPanel != customInputPanel || force)
     {
         _customInputPanel = customInputPanel;
         if (!_editingMode)
@@ -5194,6 +5536,17 @@ typedef enum {
             [self setInputPanel:_customInputPanel != nil ? _customInputPanel : [self defaultInputPanel] animated:ABS(CFAbsoluteTimeGetCurrent() - _willAppearTimestamp) > 0.18];
         }
     }
+}
+
+- (void)setDefaultInputPanel:(TGModernConversationInputPanel *)defaultInputPanel {
+    _defaultInputPanel = defaultInputPanel;
+    if (_searchPanel == nil) {
+        [self setCustomInputPanel:nil force:true];
+    }
+}
+
+- (bool)hasNonTextInputPanel {
+    return _currentInputPanel != _inputTextPanel;
 }
 
 - (TGModernConversationInputPanel *)customInputPanel {
@@ -5244,7 +5597,7 @@ typedef enum {
 
 - (void)setCurrentTitlePanel:(TGModernConversationTitlePanel *)currentTitlePanel animation:(TGModernConversationPanelAnimation)animation
 {
-    if (_companion.previewMode) {
+    if (_companion.previewMode || _inputTextPanel.isCustomKeyboardExpanded) {
         return;
     }
     
@@ -5308,7 +5661,11 @@ typedef enum {
             {
                 _titlePanelWrappingView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, self.controllerInset.top, _view.frame.size.width, 44.0f)];
                 _titlePanelWrappingView.clipsToBounds = true;
-                [_view addSubview:_titlePanelWrappingView];
+                
+                if (_currentInputPanel != nil)
+                    [_view insertSubview:_titlePanelWrappingView belowSubview:_currentInputPanel];
+                else
+                    [_view addSubview:_titlePanelWrappingView];
             }
             
             _titlePanelWrappingView.userInteractionEnabled = true;
@@ -5477,7 +5834,7 @@ typedef enum {
         if (canReadHistory) {
             [self resumeInlineMedia];
         } else {
-            [self stopInlineMedia];
+            [self stopInlineMedia:0];
         }
         
         _canReadHistory = canReadHistory;
@@ -5488,7 +5845,7 @@ typedef enum {
 }
 
 - (bool)raiseToListenEnabled {
-    return _canReadHistory && _currentInputPanel == _inputTextPanel && (_currentAudioRecorder == nil || !_currentAudioRecorderIsTouchInitiated) && _attachmentSheetWindow == nil && _menuController == nil;
+    return _canReadHistory && _currentInputPanel == _inputTextPanel && (_currentAudioRecorder == nil || !_currentAudioRecorderIsTouchInitiated) && _attachmentSheetWindow == nil && _menuController == nil && !_inputDisabled;
 }
 
 - (void)updateRaiseToListen {
@@ -5649,6 +6006,11 @@ typedef enum {
     if (_editingMode)
         return;
     
+    if ([_companion isKindOfClass:[TGAdminLogConversationCompanion class]]) {
+        [(TGAdminLogConversationCompanion *)_companion presentFilterController];
+        return;
+    }
+    
     if (_titleView.toggleMode != TGModernConversationControllerTitleToggleNone) {
         [_companion _toggleTitleMode];
     } else {
@@ -5671,112 +6033,185 @@ typedef enum {
 - (void)editingPanelRequestedDeleteMessages:(TGModernConversationEditingPanel *)__unused editingPanel
 {
     TGUser *moderateUser = [_companion checkedMessageModerateUser];
-    if (moderateUser == nil) {
-        int64_t peerId = ((TGGenericModernConversationCompanion *)_companion).conversationId;
-        NSArray *checkedMessageIds = [_companion checkedMessageIds];
-        std::set<int32_t> messageIds;
-        for (NSNumber *nMid in checkedMessageIds)
-        {
-            messageIds.insert([nMid int32Value]);
-        }
-        
-        bool haveOutgoing = false;
-        bool haveIncoming = false;
-        
-        if (TGPeerIdIsUser(peerId) || TGPeerIdIsGroup(peerId)) {
-            int index = -1;
-            for (TGMessageModernConversationItem *messageItem in _items)
-            {
-                index++;
-                if (messageIds.find(messageItem->_message.mid) != messageIds.end())
-                {
-                    if (messageItem->_message.outgoing) {
-                        if ([_companion canDeleteMessageForEveryone:messageItem->_message]) {
-                            haveOutgoing = true;
-                        }
-                    } else {
-                        haveIncoming = true;
-                    }
-                }
-            }
-        }
-        
+    if (moderateUser != nil) {
+        SSignal *memberSignal = [TGChannelManagementSignals channelRole:[_companion requestPeerId] accessHash:[_companion requestAccessHash] user:moderateUser];
+        TGProgressWindow *progressWindow = [[TGProgressWindow alloc] init];
+        [progressWindow showWithDelay:0.15];
         __weak TGModernConversationController *weakSelf = self;
-        _shareSheetWindow = [[TGShareSheetWindow alloc] init];
-        _shareSheetWindow.dismissalBlock = ^
-        {
-            __strong TGModernConversationController *strongSelf = weakSelf;
-            if (strongSelf == nil)
-                return;
-            
-            strongSelf->_shareSheetWindow.rootViewController = nil;
-            strongSelf->_shareSheetWindow = nil;
-        };
-        
-        NSMutableArray *items = [[NSMutableArray alloc] init];
-        
-        int64_t conversationId = ((TGGenericModernConversationCompanion *)_companion).conversationId;
-        
-        NSString *basicDeleteTitle = TGLocalized(@"Common.Delete");
-        if (TGPeerIdIsSecretChat(conversationId)) {
-            TGUser *user = [TGDatabaseInstance() loadUser:((TGPrivateModernConversationCompanion *)_companion)->_uid];
-            if (user != nil) {
-                basicDeleteTitle = [NSString stringWithFormat:TGLocalized(@"Conversation.DeleteMessagesFor"), user.displayFirstName];
-            }
-        } else if (TGPeerIdIsChannel(conversationId)) {
-            basicDeleteTitle = TGLocalized(@"Conversation.DeleteMessagesForEveryone");
-        }
-        TGShareSheetButtonItemView *actionItem = [[TGShareSheetButtonItemView alloc] initWithTitle: (TGPeerIdIsSecretChat(conversationId) || TGPeerIdIsChannel(conversationId) || conversationId == TGTelegraphInstance.clientUserId) ? basicDeleteTitle : TGLocalized(@"Conversation.DeleteMessagesForMe") pressed:^ {
+        [[[memberSignal deliverOn:[SQueue mainQueue]] onDispose:^{
+            TGDispatchOnMainThread(^{
+                [progressWindow dismiss:true];
+            });
+        }] startWithNext:^(TGCachedConversationMember *member) {
             __strong TGModernConversationController *strongSelf = weakSelf;
             if (strongSelf != nil) {
-                [strongSelf->_shareSheetWindow dismissAnimated:true completion:nil];
-                strongSelf->_shareSheetWindow = nil;
-                [strongSelf _commitDeleteCheckedMessages:false];
+                if (member.isCreator || [member.adminRights hasAnyRights]) {
+                    [strongSelf _showDeleteMessagesMenuForSelectedMessageIds];
+                } else {
+                    [strongSelf _showModerateSheetForMessageIds:[strongSelf->_companion checkedMessageIds] author:moderateUser];
+                }
             }
         }];
-        [actionItem setDestructive:true];
-        
-        if (!TGPeerIdIsSecretChat(conversationId) && !TGPeerIdIsChannel(conversationId) && conversationId != TGTelegraphInstance.clientUserId && haveOutgoing && !haveIncoming) {
-            NSString *title = TGLocalized(@"Conversation.DeleteMessagesForEveryone");
-            if (TGPeerIdIsUser(conversationId)) {
-                TGUser *user = [TGDatabaseInstance() loadUser:(int)conversationId];
-                if (user != nil) {
-                    title = [NSString stringWithFormat:TGLocalized(@"Conversation.DeleteMessagesFor"), user.displayFirstName];
+    } else {
+        [self _showDeleteMessagesMenuForSelectedMessageIds];
+    }
+}
+
+- (void)_showDeleteMessagesMenuForSelectedMessageIds {
+    int64_t peerId = ((TGGenericModernConversationCompanion *)_companion).conversationId;
+    NSArray *checkedMessageIds = [_companion checkedMessageIds];
+    std::set<int32_t> messageIds;
+    for (NSNumber *nMid in checkedMessageIds)
+    {
+        messageIds.insert([nMid int32Value]);
+    }
+    
+    bool haveOutgoing = false;
+    bool haveIncoming = false;
+    
+    if (TGPeerIdIsUser(peerId) || TGPeerIdIsGroup(peerId)) {
+        int index = -1;
+        for (TGMessageModernConversationItem *messageItem in _items)
+        {
+            index++;
+            if (messageIds.find(messageItem->_message.mid) != messageIds.end())
+            {
+                if (messageItem->_message.outgoing) {
+                    if ([_companion canDeleteMessageForEveryone:messageItem->_message]) {
+                        haveOutgoing = true;
+                    }
+                } else {
+                    haveIncoming = true;
                 }
             }
-            
-            TGShareSheetButtonItemView *itemView = [[TGShareSheetButtonItemView alloc] initWithTitle: title pressed:^ {
-                __strong TGModernConversationController *strongSelf = weakSelf;
-                if (strongSelf != nil) {
-                    [strongSelf->_shareSheetWindow dismissAnimated:true completion:nil];
-                    strongSelf->_shareSheetWindow = nil;
-                    [strongSelf _commitDeleteCheckedMessages:true];
-                }
-            }];
-            [itemView setDestructive:true];
-            [items addObject:itemView];
+        }
+    }
+    
+    __weak TGModernConversationController *weakSelf = self;
+    _shareSheetWindow = [[TGShareSheetWindow alloc] init];
+    _shareSheetWindow.dismissalBlock = ^
+    {
+        __strong TGModernConversationController *strongSelf = weakSelf;
+        if (strongSelf == nil)
+            return;
+        
+        strongSelf->_shareSheetWindow.rootViewController = nil;
+        strongSelf->_shareSheetWindow = nil;
+    };
+    
+    NSMutableArray *items = [[NSMutableArray alloc] init];
+    
+    int64_t conversationId = ((TGGenericModernConversationCompanion *)_companion).conversationId;
+    
+    NSString *basicDeleteTitle = TGLocalized(@"Common.Delete");
+    if (TGPeerIdIsSecretChat(conversationId)) {
+        TGUser *user = [TGDatabaseInstance() loadUser:((TGPrivateModernConversationCompanion *)_companion)->_uid];
+        if (user != nil) {
+            basicDeleteTitle = [NSString stringWithFormat:TGLocalized(@"Conversation.DeleteMessagesFor"), user.displayFirstName];
+        }
+    } else if (TGPeerIdIsChannel(conversationId)) {
+        basicDeleteTitle = TGLocalized(@"Conversation.DeleteMessagesForEveryone");
+    }
+    TGShareSheetButtonItemView *actionItem = [[TGShareSheetButtonItemView alloc] initWithTitle: (TGPeerIdIsSecretChat(conversationId) || TGPeerIdIsChannel(conversationId) || conversationId == TGTelegraphInstance.clientUserId) ? basicDeleteTitle : TGLocalized(@"Conversation.DeleteMessagesForMe") pressed:^ {
+        __strong TGModernConversationController *strongSelf = weakSelf;
+        if (strongSelf != nil) {
+            [strongSelf->_shareSheetWindow dismissAnimated:true completion:nil];
+            strongSelf->_shareSheetWindow = nil;
+            [strongSelf _commitDeleteCheckedMessages:false];
+        }
+    }];
+    [actionItem setDestructive:true];
+    
+    if (!TGPeerIdIsSecretChat(conversationId) && !TGPeerIdIsChannel(conversationId) && conversationId != TGTelegraphInstance.clientUserId && haveOutgoing && !haveIncoming) {
+        NSString *title = TGLocalized(@"Conversation.DeleteMessagesForEveryone");
+        if (TGPeerIdIsUser(conversationId)) {
+            TGUser *user = [TGDatabaseInstance() loadUser:(int)conversationId];
+            if (user != nil) {
+                title = [NSString stringWithFormat:TGLocalized(@"Conversation.DeleteMessagesFor"), user.displayFirstName];
+            }
         }
         
-        [items addObject:actionItem];
-        
-        _shareSheetWindow.view.cancel = ^{
+        TGShareSheetButtonItemView *itemView = [[TGShareSheetButtonItemView alloc] initWithTitle: title pressed:^ {
             __strong TGModernConversationController *strongSelf = weakSelf;
             if (strongSelf != nil) {
                 [strongSelf->_shareSheetWindow dismissAnimated:true completion:nil];
                 strongSelf->_shareSheetWindow = nil;
+                [strongSelf _commitDeleteCheckedMessages:true];
             }
-        };
-        
-        _shareSheetWindow.view.items = items;
-        [_shareSheetWindow showAnimated:true completion:nil];
-    } else {
-        [self _showModerateSheetForMessageIds:[_companion checkedMessageIds] author:moderateUser];
+        }];
+        [itemView setDestructive:true];
+        [items addObject:itemView];
     }
+    
+    [items addObject:actionItem];
+    
+    _shareSheetWindow.view.cancel = ^{
+        __strong TGModernConversationController *strongSelf = weakSelf;
+        if (strongSelf != nil) {
+            [strongSelf->_shareSheetWindow dismissAnimated:true completion:nil];
+            strongSelf->_shareSheetWindow = nil;
+        }
+    };
+    
+    _shareSheetWindow.view.items = items;
+    [_shareSheetWindow showAnimated:true completion:nil];
 }
 
 - (void)editingPanelRequestedForwardMessages:(TGModernConversationEditingPanel *)__unused editingPanel
 {
     [self forwardMessages:[_companion checkedMessageIds] fastForward:false];
+}
+
+- (void)editingPanelRequestedShareMessages:(TGModernConversationEditingPanel *)__unused editingPanel
+{
+    TGProgressWindow *progressWindow = [[TGProgressWindow alloc] init];
+    [progressWindow showWithDelay:0.2];
+    
+    NSMutableArray *messageIds = [[_companion checkedMessageIds] mutableCopy];
+    
+    NSMutableArray *messages = [[NSMutableArray alloc] init];
+    for (TGMessageModernConversationItem *item in _items) {
+        NSUInteger index = [messageIds indexOfObject:@(item->_message.mid)];
+        if (index != NSNotFound) {
+            [messages addObject:item->_message];
+            [messageIds removeObjectAtIndex:index];
+            
+            if (messageIds.count == 0)
+                break;
+        }
+    }
+    
+    [messages sortUsingComparator:^NSComparisonResult(TGMessage *message1, TGMessage *message2)
+    {
+        if (ABS(message1.date - message2.date) < DBL_EPSILON)
+            return message1.mid > message2.mid ? NSOrderedAscending : NSOrderedDescending;
+        return message1.date > message2.date ? NSOrderedAscending : NSOrderedDescending;
+    }];
+        
+    __weak TGModernConversationController *weakSelf = self;
+    [[[TGExternalShareSignals shareItemsForMessages:messages] onDispose:^
+    {
+        [progressWindow dismiss:true];
+    }] startWithNext:^(id next)
+    {
+        __strong TGModernConversationController *strongSelf = weakSelf;
+        if (next == nil || strongSelf == nil)
+            return;
+        
+        UIActivityViewController *activityController = [[UIActivityViewController alloc] initWithActivityItems:next applicationActivities:nil];
+        [strongSelf presentViewController:activityController animated:true completion:^{
+            __strong TGModernConversationController *strongSelf = weakSelf;
+            if (strongSelf != nil)
+                [strongSelf _leaveEditingModeAnimated:true];
+        }];
+        if (iosMajorVersion() >= 8 && [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad)
+        {
+            activityController.popoverPresentationController.sourceView = strongSelf.view;
+            activityController.popoverPresentationController.sourceRect = strongSelf.view.bounds;
+            activityController.popoverPresentationController.permittedArrowDirections = 0;
+        }
+        [progressWindow dismiss:true];
+    }];
 }
 
 - (void)inputTextPanelHasIndicatedTypingActivity:(TGModernConversationInputTextPanel *)__unused inputTextPanel
@@ -5867,7 +6302,7 @@ typedef enum {
                                 }
                             }
                         };
-                        [_inputTextPanel setAssociatedPanel:panel animated:true];
+                        [strongSelf->_inputTextPanel setAssociatedPanel:panel animated:true];
                     }
                     
                     
@@ -5982,17 +6417,15 @@ typedef enum {
                                     }
                                 } else if ([result isKindOfClass:[TGBotContextExternalResult class]]) {
                                     TGBotContextExternalResult *concreteResult = (TGBotContextExternalResult *)result;
-                                    if ([concreteResult.type isEqualToString:@"gif"]) {
-                                        /*
+                                    /* if ([concreteResult.type isEqualToString:@"gif"]) {
                                         TGExternalGifSearchResult *externalGifSearchResult = [[TGExternalGifSearchResult alloc] initWithUrl:concreteResult.url originalUrl:concreteResult.originalUrl thumbnailUrl:concreteResult.thumbUrl size:concreteResult.size];
                                         id description = [strongSelf->_companion documentDescriptionFromExternalGifSearchResult:externalGifSearchResult text:concreteMessage.caption botContextResult:botContextResult];
                                         if (description != nil) {
                                             [strongSelf->_companion controllerWantsToSendImagesWithDescriptions:@[description] asReplyToMessageId:[strongSelf currentReplyMessageId] botReplyMarkup:concreteMessage.replyMarkup];
                                             [strongSelf->_inputTextPanel.inputField setText:@"" animated:true];
                                             [TGRecentContextBotsSignal addRecentBot:results.userId];
-                                        }*/
-                                        
-                                    } else if ([concreteResult.type isEqualToString:@"photo"]) {
+                                        }
+                                    } else */ if ([concreteResult.type isEqualToString:@"photo"]) {
                                         TGExternalImageSearchResult *externalImageSearchResult = [[TGExternalImageSearchResult alloc] initWithUrl:concreteResult.url originalUrl:concreteResult.originalUrl thumbnailUrl:concreteResult.thumbUrl title:concreteResult.title size:concreteResult.size];
                                         id description = [strongSelf->_companion imageDescriptionFromExternalImageSearchResult:externalImageSearchResult text:concreteMessage.caption botContextResult:botContextResult];
                                         if (description != nil) {
@@ -6008,10 +6441,10 @@ typedef enum {
                                             [TGRecentContextBotsSignal addRecentBot:results.userId];
                                         }
                                     } else {
-                                        if (![_companion allowMessageForwarding] && !TGAppDelegateInstance.allowSecretWebpages) {
+                                        if (![strongSelf->_companion allowMessageForwarding] && !TGAppDelegateInstance.allowSecretWebpages) {
                                             for (id result in [TGMessage textCheckingResultsForText:concreteMessage.caption highlightMentionsAndTags:false highlightCommands:false entities:nil]) {
                                                 if ([result isKindOfClass:[NSTextCheckingResult class]] && ((NSTextCheckingResult *)result).resultType == NSTextCheckingTypeLink) {
-                                                    [_companion maybeAskForSecretWebpages];
+                                                    [strongSelf->_companion maybeAskForSecretWebpages];
                                                     return;
                                                 }
                                             }
@@ -6023,10 +6456,10 @@ typedef enum {
                             } else if ([result.sendMessage isKindOfClass:[TGBotContextResultSendMessageText class]]) {
                                 TGBotContextResultSendMessageText *concreteMessage = (TGBotContextResultSendMessageText *)result.sendMessage;
                                 
-                                if (![_companion allowMessageForwarding] && !TGAppDelegateInstance.allowSecretWebpages) {
+                                if (![strongSelf->_companion allowMessageForwarding] && !TGAppDelegateInstance.allowSecretWebpages) {
                                     for (id result in [TGMessage textCheckingResultsForText:concreteMessage.message highlightMentionsAndTags:false highlightCommands:false entities:nil]) {
                                         if ([result isKindOfClass:[NSTextCheckingResult class]] && ((NSTextCheckingResult *)result).resultType == NSTextCheckingTypeLink) {
-                                            [_companion maybeAskForSecretWebpages];
+                                            [strongSelf->_companion maybeAskForSecretWebpages];
                                             return;
                                         }
                                     }
@@ -6049,64 +6482,87 @@ typedef enum {
                         }
                     };
                     
-                    TGBotContextResults *results = next;
-                    if (results.results.count == 0 && results.switchPm == nil) {
-                        [strongSelf->_inputTextPanel setDisplayProgress:false];
-                        if ([[strongSelf->_inputTextPanel associatedPanel] isKindOfClass:[TGModernConversationGenericContextResultsAssociatedPanel class]] || [[strongSelf->_inputTextPanel associatedPanel] isKindOfClass:[TGModernConversationComplexMediaContextResultsAssociatedPanel class]] || [[strongSelf->_inputTextPanel associatedPanel] isKindOfClass:[TGModernConversationMediaContextResultsAssociatedPanel class]]) {
-                            [strongSelf->_inputTextPanel setAssociatedPanel:nil animated:true];
-                        }
-                        
-                        [strongSelf->_tooltipContainerView removeFromSuperview];
-                        strongSelf->_tooltipContainerView = nil;
-                    } else if (results.isMedia) {
-                        TGModernConversationMediaContextResultsAssociatedPanel *panel = nil;
-                        if ([[strongSelf->_inputTextPanel associatedPanel] isKindOfClass:[TGModernConversationMediaContextResultsAssociatedPanel class]]) {
-                            TGModernConversationMediaContextResultsAssociatedPanel *currentPanel = (TGModernConversationMediaContextResultsAssociatedPanel *)[strongSelf->_inputTextPanel associatedPanel];
-                            if (currentPanel.botId == results.userId) {
-                                panel = currentPanel;
-                            }
+                    NSNumber *banTimeout = [strongSelf->_companion inlineMediaRestrictionTimeout];
+                    if (banTimeout != nil) {
+                        TGModernConversationRestrictedInlineAssociatedPanel *panel = nil;
+                        if ([[strongSelf->_inputTextPanel associatedPanel] isKindOfClass:[TGModernConversationRestrictedInlineAssociatedPanel class]]) {
+                            TGModernConversationRestrictedInlineAssociatedPanel *currentPanel = (TGModernConversationRestrictedInlineAssociatedPanel *)[strongSelf->_inputTextPanel associatedPanel];
+                            panel = currentPanel;
                         }
                         
                         if (panel == nil) {
-                            panel = [[TGModernConversationMediaContextResultsAssociatedPanel alloc] initWithStyle:TGModernConversationAssociatedInputPanelDefaultStyle];
-                            panel.botId = results.userId;
-                            panel.controller = self;
-                            panel.resultSelected = resultSelected;
-                            int64_t peerId = ((TGGenericModernConversationCompanion *)strongSelf->_companion).conversationId;
-                            panel.activateSwitchPm = ^(NSString *startParam) {
-                                if (startParam != nil) {
-                                    [[TGInterfaceManager instance] navigateToConversationWithId:results.userId conversation:nil performActions:@{@"botAutostartPayload": startParam, @"contextPeerId": @(peerId)}];
-                                }
-                            };
-                            
+                            panel = [[TGModernConversationRestrictedInlineAssociatedPanel alloc] initWithStyle:TGModernConversationAssociatedInputPanelDefaultStyle];
                             [strongSelf->_inputTextPanel setAssociatedPanel:panel animated:true];
                         }
-                        
-                        [panel setResults:results reload:true];
+                        panel.timeout = [banTimeout intValue];
                     } else {
-                        TGModernConversationGenericContextResultsAssociatedPanel *panel = nil;
-                        if ([[strongSelf->_inputTextPanel associatedPanel] isKindOfClass:[TGModernConversationGenericContextResultsAssociatedPanel class]]) {
-                            TGModernConversationGenericContextResultsAssociatedPanel *currentPanel = (TGModernConversationGenericContextResultsAssociatedPanel *)[strongSelf->_inputTextPanel associatedPanel];
-                            if (currentPanel.botId == results.userId) {
-                                panel = currentPanel;
+                        TGBotContextResults *results = next;
+                        if (results.results.count == 0 && results.switchPm == nil) {
+                            [strongSelf->_inputTextPanel setDisplayProgress:false];
+                            if ([[strongSelf->_inputTextPanel associatedPanel] isKindOfClass:[TGModernConversationGenericContextResultsAssociatedPanel class]] || [[strongSelf->_inputTextPanel associatedPanel] isKindOfClass:[TGModernConversationComplexMediaContextResultsAssociatedPanel class]] || [[strongSelf->_inputTextPanel associatedPanel] isKindOfClass:[TGModernConversationMediaContextResultsAssociatedPanel class]]) {
+                                [strongSelf->_inputTextPanel setAssociatedPanel:nil animated:true];
                             }
-                        }
-                        
-                        if (panel == nil) {
-                            panel = [[TGModernConversationGenericContextResultsAssociatedPanel alloc] initWithStyle:TGModernConversationAssociatedInputPanelDefaultStyle];
-                            panel.botId = results.userId;
-                            panel.controller = self;
-                            panel.resultSelected = resultSelected;
-                            int64_t peerId = ((TGGenericModernConversationCompanion *)strongSelf->_companion).conversationId;
-                            panel.activateSwitchPm = ^(NSString *startParam) {
-                                if (startParam != nil) {
-                                    [[TGInterfaceManager instance] navigateToConversationWithId:results.userId conversation:nil performActions:@{@"botAutostartPayload": startParam, @"contextPeerId": @(peerId)}];
+                            
+                            [strongSelf->_tooltipContainerView removeFromSuperview];
+                            strongSelf->_tooltipContainerView = nil;
+                        } else if (results.isMedia) {
+                            TGModernConversationMediaContextResultsAssociatedPanel *panel = nil;
+                            if ([[strongSelf->_inputTextPanel associatedPanel] isKindOfClass:[TGModernConversationMediaContextResultsAssociatedPanel class]]) {
+                                TGModernConversationMediaContextResultsAssociatedPanel *currentPanel = (TGModernConversationMediaContextResultsAssociatedPanel *)[strongSelf->_inputTextPanel associatedPanel];
+                                if (currentPanel.botId == results.userId) {
+                                    panel = currentPanel;
                                 }
-                            };
-                            [strongSelf->_inputTextPanel setAssociatedPanel:panel animated:true];
+                            }
+                            
+                            if (panel == nil) {
+                                panel = [[TGModernConversationMediaContextResultsAssociatedPanel alloc] initWithStyle:TGModernConversationAssociatedInputPanelDefaultStyle];
+                                panel.botId = results.userId;
+                                panel.controller = self;
+                                panel.resultSelected = resultSelected;
+                                int64_t peerId = ((TGGenericModernConversationCompanion *)strongSelf->_companion).conversationId;
+                                __weak TGModernConversationController *weakSelf = self;
+                                panel.activateSwitchPm = ^(NSString *startParam) {
+                                    if (startParam != nil) {
+                                        __strong TGModernConversationController *strongSelf = weakSelf;
+                                        if (strongSelf != nil) {
+                                            if (results.userId == peerId) {
+                                                [((TGPrivateModernConversationCompanion *)strongSelf->_companion) standaloneSendBotStartPayload:startParam];
+                                            } else {
+                                                [[TGInterfaceManager instance] navigateToConversationWithId:results.userId conversation:nil performActions:@{@"botAutostartPayload": startParam, @"contextPeerId": @(peerId)}];
+                                            }
+                                        }
+                                    }
+                                };
+                                
+                                [strongSelf->_inputTextPanel setAssociatedPanel:panel animated:true];
+                            }
+                            
+                            [panel setResults:results reload:true];
+                        } else {
+                            TGModernConversationGenericContextResultsAssociatedPanel *panel = nil;
+                            if ([[strongSelf->_inputTextPanel associatedPanel] isKindOfClass:[TGModernConversationGenericContextResultsAssociatedPanel class]]) {
+                                TGModernConversationGenericContextResultsAssociatedPanel *currentPanel = (TGModernConversationGenericContextResultsAssociatedPanel *)[strongSelf->_inputTextPanel associatedPanel];
+                                if (currentPanel.botId == results.userId) {
+                                    panel = currentPanel;
+                                }
+                            }
+                            
+                            if (panel == nil) {
+                                panel = [[TGModernConversationGenericContextResultsAssociatedPanel alloc] initWithStyle:TGModernConversationAssociatedInputPanelDefaultStyle];
+                                panel.botId = results.userId;
+                                panel.controller = self;
+                                panel.resultSelected = resultSelected;
+                                int64_t peerId = ((TGGenericModernConversationCompanion *)strongSelf->_companion).conversationId;
+                                panel.activateSwitchPm = ^(NSString *startParam) {
+                                    if (startParam != nil) {
+                                        [[TGInterfaceManager instance] navigateToConversationWithId:results.userId conversation:nil performActions:@{@"botAutostartPayload": startParam, @"contextPeerId": @(peerId)}];
+                                    }
+                                };
+                                [strongSelf->_inputTextPanel setAssociatedPanel:panel animated:true];
+                            }
+                            
+                            [panel setResults:results];
                         }
-                        
-                        [panel setResults:results];
                     }
                 }
             }
@@ -6115,7 +6571,7 @@ typedef enum {
         } completed:nil]];
     } else {
         [_inputTextPanel setDisplayProgress:false];
-        if ([[_inputTextPanel associatedPanel] isKindOfClass:[TGModernConversationGenericContextResultsAssociatedPanel class]] || [[_inputTextPanel associatedPanel] isKindOfClass:[TGModernConversationComplexMediaContextResultsAssociatedPanel class]] || [[_inputTextPanel associatedPanel] isKindOfClass:[TGModernConversationMediaContextResultsAssociatedPanel class]]) {
+        if ([[_inputTextPanel associatedPanel] isKindOfClass:[TGModernConversationGenericContextResultsAssociatedPanel class]] || [[_inputTextPanel associatedPanel] isKindOfClass:[TGModernConversationComplexMediaContextResultsAssociatedPanel class]] || [[_inputTextPanel associatedPanel] isKindOfClass:[TGModernConversationMediaContextResultsAssociatedPanel class]] || [[_inputTextPanel associatedPanel] isKindOfClass:[TGModernConversationRestrictedInlineAssociatedPanel class]]) {
             [_inputTextPanel setAssociatedPanel:nil animated:true];
         }
         
@@ -6200,7 +6656,7 @@ typedef enum {
             };
             [_inputTextPanel setAssociatedPanel:panel animated:true];
         }
-    [panel setCommandListSignal:[_companion commandListForCommand:command]];
+        [panel setCommandListSignal:[_companion commandListForCommand:command]];
     }
 }
 
@@ -6208,6 +6664,10 @@ typedef enum {
 {
     if (link.length != 0 && ![_companion allowMessageForwarding] && !TGAppDelegateInstance.allowSecretWebpages) {
         [_companion maybeAskForSecretWebpages];
+        return;
+    }
+    
+    if (![_companion canAttachLinkPreviews]) {
         return;
     }
     
@@ -6233,7 +6693,6 @@ typedef enum {
             {
                 [_inputTextPanel setSecondaryExtendedPanel:nil animated:true];
             }
-            
         }
         else
         {
@@ -6264,28 +6723,27 @@ typedef enum {
                     }
                     else
                     {
-                        
-                        //TGModernConversationWebPreviewInputPanel *panel = nil;
-                        //if ([[strongSelf->_inputTextPanel secondaryExtendedPanel] isKindOfClass:[TGModernConversationWebPreviewInputPanel class]])
-                        //{
-                        //    panel = (TGModernConversationWebPreviewInputPanel *)[strongSelf->_inputTextPanel secondaryExtendedPanel];
-                        //}
-                        //else
-                        //{
-                        //    panel = [[TGModernConversationWebPreviewInputPanel alloc] init];
-                        //    panel.dismiss = ^
-                         //   {
-                         //       __strong TGModernConversationController *strongSelf = weakSelf;
-                         //       if (strongSelf != nil)
-                         //       {
-                         //           [strongSelf->_inputTextPanel setSecondaryExtendedPanel:nil animated:true];
-                         //           strongSelf->_disableLinkPreviewsForMessage = true;
-                          //      }
-                          //  };
-                         //   [strongSelf->_inputTextPanel setSecondaryExtendedPanel:panel animated:true];
-                        //}
-                        
-                        //[panel setLink:link webPage:webPage];
+//                        TGModernConversationWebPreviewInputPanel *panel = nil;
+//                        if ([[strongSelf->_inputTextPanel secondaryExtendedPanel] isKindOfClass:[TGModernConversationWebPreviewInputPanel class]])
+//                        {
+//                            panel = (TGModernConversationWebPreviewInputPanel *)[strongSelf->_inputTextPanel secondaryExtendedPanel];
+//                        }
+//                        else
+//                        {
+//                            panel = [[TGModernConversationWebPreviewInputPanel alloc] init];
+//                            panel.dismiss = ^
+//                            {
+//                                __strong TGModernConversationController *strongSelf = weakSelf;
+//                                if (strongSelf != nil)
+//                                {
+//                                    [strongSelf->_inputTextPanel setSecondaryExtendedPanel:nil animated:true];
+//                                    strongSelf->_disableLinkPreviewsForMessage = true;
+//                                }
+//                            };
+//                            [strongSelf->_inputTextPanel setSecondaryExtendedPanel:panel animated:true];
+//                        }
+//
+//                        [panel setLink:link webPage:webPage];
                     }
                 }
             }]];
@@ -6383,7 +6841,7 @@ typedef enum {
                 [strongSelf endMessageEditing:true];
             }
         }]];
-        _disableLinkPreviewsForMessage = false;
+        _disableLinkPreviewsForMessage = true;
     } else {
         [_companion controllerWantsToSendTextMessage:text entities:entities asReplyToMessageId:[self currentReplyMessageId] withAttachedMessages:[self currentForwardMessages] disableLinkPreviews:_disableLinkPreviewsForMessage botContextResult:nil botReplyMarkup:nil];
         _disableLinkPreviewsForMessage = true;
@@ -6440,61 +6898,72 @@ typedef enum {
     }]];
 }
 
-- (NSDictionary *)_descriptionForItem:(id)item caption:(NSString *)caption hash:(NSString *)hash
+- (NSDictionary *)_descriptionForItem:(id)item caption:(NSString *)caption hash:(NSString *)hash allowRemoteCache:(bool)allowRemoteCache
 {
     if (item == nil)
         return nil;
     
     if ([item isKindOfClass:[UIImage class]])
     {
-        return [self.companion imageDescriptionFromImage:(UIImage *)item stickers:nil caption:caption optionalAssetUrl:hash != nil ? [[NSString alloc] initWithFormat:@"image-%@", hash] : nil];
+        return [self.companion imageDescriptionFromImage:(UIImage *)item stickers:nil caption:caption optionalAssetUrl:hash != nil ? [[NSString alloc] initWithFormat:@"image-%@", hash] : nil allowRemoteCache:allowRemoteCache timer:0];
     }
     else if ([item isKindOfClass:[NSDictionary class]])
     {
         NSDictionary *dict = (NSDictionary *)item;
         NSString *type = dict[@"type"];
         
-        if ([type isEqualToString:@"editedPhoto"]) {
-            return [self.companion imageDescriptionFromImage:dict[@"image"] stickers:dict[@"stickers"] caption:caption optionalAssetUrl:hash != nil ? [[NSString alloc] initWithFormat:@"image-%@", hash] : nil];
+        int32_t timer = [dict[@"timer"] intValue];
+        if (timer > 0) {
+            allowRemoteCache = false;
         }
-        if ([type isEqualToString:@"cloudPhoto"])
+        
+        NSDictionary *description = nil;
+        if ([type isEqualToString:@"editedPhoto"]) {
+            description = [self.companion imageDescriptionFromImage:dict[@"image"] stickers:dict[@"stickers"] caption:caption optionalAssetUrl:hash != nil ? [[NSString alloc] initWithFormat:@"image-%@", hash] : nil allowRemoteCache:allowRemoteCache timer:[dict[@"timer"] intValue]];
+        }
+        else if ([type isEqualToString:@"cloudPhoto"])
         {
-            return [self.companion imageDescriptionFromMediaAsset:dict[@"asset"] previewImage:dict[@"previewImage"] document:[dict[@"document"] boolValue] fileName:dict[@"fileName"] caption:caption];
+            description = [self.companion imageDescriptionFromMediaAsset:dict[@"asset"] previewImage:dict[@"previewImage"] document:[dict[@"document"] boolValue] fileName:dict[@"fileName"] caption:caption allowRemoteCache:allowRemoteCache];
         }
         else if ([type isEqualToString:@"video"])
         {
-            return [self.companion videoDescriptionFromMediaAsset:dict[@"asset"] previewImage:dict[@"previewImage"] adjustments:dict[@"adjustments"] document:[dict[@"document"] boolValue] fileName:dict[@"fileName"] stickers:dict[@"stickers"] caption:caption];
-            return dict;
+            description = [self.companion videoDescriptionFromMediaAsset:dict[@"asset"] previewImage:dict[@"previewImage"] adjustments:dict[@"adjustments"] document:[dict[@"document"] boolValue] fileName:dict[@"fileName"] stickers:dict[@"stickers"] caption:caption timer:timer];
         }
         else if ([type isEqualToString:@"file"])
         {
-            return [self.companion documentDescriptionFromFileAtTempUrl:dict[@"tempFileUrl"] fileName:dict[@"fileName"] mimeType:dict[@"mimeType"] isAnimation:dict[@"isAnimation"] caption:caption];
+            description = [self.companion documentDescriptionFromFileAtTempUrl:dict[@"tempFileUrl"] fileName:dict[@"fileName"] mimeType:dict[@"mimeType"] isAnimation:dict[@"isAnimation"] caption:caption];
         }
         else if ([type isEqualToString:@"webPhoto"])
         {
-            return [self.companion imageDescriptionFromImage:dict[@"image"] stickers:dict[@"stickers"] caption:caption optionalAssetUrl:nil];
+            description = [self.companion imageDescriptionFromImage:dict[@"image"] stickers:dict[@"stickers"] caption:caption optionalAssetUrl:nil allowRemoteCache:allowRemoteCache && timer == 0 timer:timer];
         }
+        
+        if (dict[@"timer"] != nil)
+        {
+            NSMutableDictionary *timedDescription = [description mutableCopy];
+            timedDescription[@"timer"] = dict[@"timer"];
+            description = timedDescription;
+        }
+        
+        return description;
     }
     if ([item isKindOfClass:[TGBingSearchResultItem class]])
     {
         id description = [self.companion imageDescriptionFromBingSearchResult:item caption:caption];
         return description;
     }
-    /*
-    else if ([item isKindOfClass:[TGGiphySearchResultItem class]])
+    else /* if ([item isKindOfClass:[TGGiphySearchResultItem class]])
     {
         id description = [self.companion documentDescriptionFromGiphySearchResult:item caption:caption];
         return description;
     }
-    
     else if ([item isKindOfClass:[TGExternalGifSearchResult class]]) {
         return [self.companion documentDescriptionFromExternalGifSearchResult:item text:nil botContextResult:nil];
     }
-    
     else if ([item isKindOfClass:[TGInternalGifSearchResult class]]) {
         return [self.companion documentDescriptionFromRemoteDocument:((TGInternalGifSearchResult *)item).document];
-    }*/
-    else if ([item isKindOfClass:[TGWebSearchInternalImageResult class]])
+    }
+    else */ if ([item isKindOfClass:[TGWebSearchInternalImageResult class]])
     {
         id description = [self.companion imageDescriptionFromInternalSearchImageResult:item caption:caption];
         return description;
@@ -6513,12 +6982,23 @@ typedef enum {
     [[TGInterfaceManager instance] dismissBannerForConversationId:[self peerId]];
 }
 
+- (void)inputPanelExpandedKeyboard:(TGModernConversationInputTextPanel *)__unused inputTextPanel expanded:(bool)expanded
+{
+    if (iosMajorVersion() >= 7)
+        self.navigationController.interactivePopGestureRecognizer.enabled = !expanded;
+    
+    self.navigationController.navigationBar.userInteractionEnabled = !expanded;
+}
+
 - (void)inputPanelRequestedFastCamera:(TGModernConversationInputTextPanel *)inputTextPanel
 {
     if (iosMajorVersion() < 8 || TGIsPad() || ![PGCamera cameraAvailable] || !UIInterfaceOrientationIsPortrait(self.interfaceOrientation))
         return;
     
-    if (![TGAccessChecker checkCameraAuthorizationStatusWithAlertDismissComlpetion:nil])
+    if (_inputTextPanel.isCustomKeyboardExpanded)
+        return;
+    
+    if (![TGAccessChecker checkCameraAuthorizationStatusForIntent:TGCameraAccessIntentDefault alertDismissCompletion:nil])
         return;
     
     CGRect attachmentButtonFrame = [inputTextPanel convertRect:[inputTextPanel attachmentButtonFrame] toView:nil];
@@ -6527,44 +7007,60 @@ typedef enum {
     controller.allowCaptions = [_companion allowCaptionedMedia];
     controller.inhibitDocumentCaptions = [_companion encryptUploads];
     controller.suggestionContext = [self _suggestionContext];
+    controller.recipientName = [_companion title];
+    controller.hasTimer = [_companion allowSelfDescructingMedia];
     
     _fastCameraController = controller;
     
     __weak TGModernConversationController *weakSelf = self;
-    controller.finishedWithPhoto = ^(UIImage *resultImage, NSString *caption, NSArray *stickers)
+    controller.finishedWithPhoto = ^(UIImage *resultImage, NSString *caption, NSArray *stickers, NSNumber *timer)
     {
         __strong TGModernConversationController *strongSelf = weakSelf;
         if (strongSelf == nil)
             return;
         
         __autoreleasing NSString *disabledMessage = nil;
-        if (![TGApplicationFeatures isPhotoUploadEnabledForPeerType:[_companion applicationFeaturePeerType] disabledMessage:&disabledMessage])
+        if (![TGApplicationFeatures isPhotoUploadEnabledForPeerType:[strongSelf->_companion applicationFeaturePeerType] disabledMessage:&disabledMessage])
         {
             [[[TGAlertView alloc] initWithTitle:TGLocalized(@"FeatureDisabled.Oops") message:disabledMessage cancelButtonTitle:TGLocalized(@"Common.OK") okButtonTitle:nil completionBlock:nil] show];
             return;
         }
         
-        NSDictionary *imageDescription = [strongSelf->_companion imageDescriptionFromImage:resultImage stickers:stickers caption:caption optionalAssetUrl:nil];
+        NSDictionary *imageDescription = [strongSelf->_companion imageDescriptionFromImage:resultImage stickers:stickers caption:caption optionalAssetUrl:nil allowRemoteCache:false timer:[timer intValue]];
+        if (timer != nil)
+        {
+            NSMutableDictionary *timedDescription = [imageDescription mutableCopy];
+            timedDescription[@"timer"] = timer;
+            imageDescription = timedDescription;
+        }
+        
         NSMutableArray *descriptions = [[NSMutableArray alloc] init];
         if (imageDescription != nil)
             [descriptions addObject:imageDescription];
         [strongSelf->_companion controllerWantsToSendImagesWithDescriptions:descriptions asReplyToMessageId:[strongSelf currentReplyMessageId] botReplyMarkup:nil];
     };
 
-    controller.finishedWithVideo = ^(NSURL *videoURL, UIImage *previewImage, NSTimeInterval duration, CGSize dimensions, TGVideoEditAdjustments *adjustments, NSString *caption, NSArray *stickers)
+    controller.finishedWithVideo = ^(NSURL *videoURL, UIImage *previewImage, NSTimeInterval duration, CGSize dimensions, TGVideoEditAdjustments *adjustments, NSString *caption, NSArray *stickers, NSNumber *timer)
     {
         __strong TGModernConversationController *strongSelf = weakSelf;
         if (strongSelf == nil)
             return;
         
         __autoreleasing NSString *disabledMessage = nil;
-        if (![TGApplicationFeatures isFileUploadEnabledForPeerType:[_companion applicationFeaturePeerType] disabledMessage:&disabledMessage])
+        if (![TGApplicationFeatures isFileUploadEnabledForPeerType:[strongSelf->_companion applicationFeaturePeerType] disabledMessage:&disabledMessage])
         {
             [[[TGAlertView alloc] initWithTitle:TGLocalized(@"FeatureDisabled.Oops") message:disabledMessage cancelButtonTitle:TGLocalized(@"Common.OK") okButtonTitle:nil completionBlock:nil] show];
             return;
         }
         
-        NSDictionary *desc = [strongSelf->_companion videoDescriptionFromVideoURL:videoURL previewImage:previewImage dimensions:dimensions duration:duration adjustments:adjustments stickers:stickers caption:caption];
+        NSDictionary *desc = [strongSelf->_companion videoDescriptionFromVideoURL:videoURL previewImage:previewImage dimensions:dimensions duration:duration adjustments:adjustments stickers:stickers caption:caption roundMessage:false liveUploadData:nil timer:[timer intValue]];
+        if (timer != nil)
+        {
+            NSMutableDictionary *timedDescription = [desc mutableCopy];
+            timedDescription[@"timer"] = timer;
+            desc = timedDescription;
+        }
+        
         [strongSelf->_companion controllerWantsToSendImagesWithDescriptions:@[ desc ] asReplyToMessageId:[strongSelf currentReplyMessageId] botReplyMarkup:nil];
     };
 }
@@ -6592,6 +7088,40 @@ typedef enum {
 - (void)_displayAttachmentsMenu
 {
     __weak TGModernConversationController *weakSelf = self;
+    
+    NSNumber *banTimeout = [_companion mediaRestrictionTimeout];
+    if (banTimeout != nil) {
+        NSString *text = @"";
+        
+        if (banTimeout.intValue == 0 || banTimeout.intValue == INT32_MAX) {
+            text = TGLocalized(@"Conversation.RestrictedMedia");
+        } else {
+            NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+            [formatter setDateFormat:@"E, d MMM HH:mm"];
+            formatter.locale = [NSLocale localeWithLocaleIdentifier:effectiveLocalization().code];
+            NSString *dateStringPlain = [formatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:banTimeout.intValue]];
+            
+            text = [NSString stringWithFormat:TGLocalized(@"Conversation.RestrictedMediaTimed"), dateStringPlain];
+        }
+        
+        [[[TGActionSheet alloc] initWithTitle:text actions:@[
+            [[TGActionSheetAction alloc] initWithTitle:TGLocalized(@"Conversation.Location") action:@"location"],
+            [[TGActionSheetAction alloc] initWithTitle:TGLocalized(@"Conversation.Contact") action:@"contact"],
+            [[TGActionSheetAction alloc] initWithTitle:TGLocalized(@"Common.Cancel") action:@"cancel" type:TGActionSheetActionTypeCancel]
+        ] actionBlock:^(__unused id target, NSString *action) {
+            __strong TGModernConversationController *strongSelf = weakSelf;
+            if (strongSelf == nil)
+                return;
+            
+            if ([action isEqualToString:@"location"]) {
+                [strongSelf _displayLocationPicker];
+            } else if ([action isEqualToString:@"contact"]) {
+                [strongSelf _displayContactPicker];
+            }
+        } target:self] showInView:self.view];
+        
+        return;
+    }
 
     TGMenuSheetController *controller = [[TGMenuSheetController alloc] init];
     controller.dismissesByOutsideTap = true;
@@ -6608,7 +7138,9 @@ typedef enum {
     carouselItem.condensed = !hasContactItem;
     carouselItem.parentController = self;
     carouselItem.allowCaptions = [_companion allowCaptionedMedia];
+    carouselItem.hasTimer = [_companion allowSelfDescructingMedia];
     carouselItem.inhibitDocumentCaptions = [_companion encryptUploads];
+    carouselItem.recipientName = [_companion title];
     
     __weak TGAttachmentCarouselItemView *weakCarouselItem = carouselItem;
     carouselItem.suggestionContext = [self _suggestionContext];
@@ -6640,6 +7172,7 @@ typedef enum {
         
         [strongController dismissAnimated:true];
         
+        bool allowRemoteCache = [strongSelf->_companion controllerShouldCacheServerAssets];
         TGMediaAssetsControllerIntent intent = asFiles ? TGMediaAssetsControllerSendFileIntent : TGMediaAssetsControllerSendMediaIntent;
         [strongSelf _asyncProcessMediaAssetSignals:[TGMediaAssetsController resultSignalsForSelectionContext:strongCarouselItem.selectionContext editingContext:strongCarouselItem.editingContext intent:intent currentItem:currentItem storeAssets:[strongSelf->_companion controllerShouldStoreCapturedAssets] useMediaCache:[strongSelf->_companion controllerShouldCacheServerAssets] descriptionGenerator:^id(id result, NSString *caption, NSString *hash)
         {
@@ -6647,7 +7180,7 @@ typedef enum {
             if (strongSelf == nil)
                 return nil;
             
-            return [strongSelf _descriptionForItem:result caption:caption hash:hash];
+            return [strongSelf _descriptionForItem:result caption:caption hash:hash allowRemoteCache:allowRemoteCache];
         }]];
     };
     carouselItem.editorOpened = ^
@@ -6708,6 +7241,19 @@ typedef enum {
         
         [strongSelf _displayFileMenuWithController:strongController];
     }];
+    fileItem.longPressAction = ^
+    {
+        __strong TGModernConversationController *strongSelf = weakSelf;
+        if (strongSelf == nil)
+            return;
+        
+        __strong TGMenuSheetController *strongController = weakController;
+        if (strongController == nil)
+            return;
+        
+        [strongController dismissAnimated:true];
+        [strongSelf _displayMediaPicker:true fromFileMenu:false];
+    };
     [itemViews addObject:fileItem];
     
     carouselItem.underlyingViews = @[ galleryItem, fileItem ];
@@ -6746,7 +7292,7 @@ typedef enum {
     }
     
     if (!TGIsPad()) {
-        NSArray<TGUser *> *inlineBots = [TGDatabaseInstance() _syncCachedRecentInlineBots];
+        NSArray<TGUser *> *inlineBots = [TGDatabaseInstance() _syncCachedRecentInlineBots:0.14f];
         NSUInteger counter = 0;
         for (TGUser *user in inlineBots) {
             if (user.userName.length == 0)
@@ -6794,7 +7340,7 @@ typedef enum {
     
     [controller setItemViews:itemViews];
     
-    [self.view endEditing:true];
+    [self endEditing];
     [controller presentInViewController:self sourceView:_inputTextPanel.attachButton animated:true];
     
     _menuController = controller;
@@ -6823,7 +7369,7 @@ typedef enum {
         if ([action isEqualToString:@"cancel"])
             return;
         
-        [controller.view endEditing:true];
+        [controller endEditing];
         
         if ([action isEqualToString:@"camera"])
             [controller _displayCameraWithView:nil menuController:nil];
@@ -6906,7 +7452,7 @@ typedef enum {
             return;
 
         TGMediaAssetsControllerIntent intent = file ? TGMediaAssetsControllerSendFileIntent : TGMediaAssetsControllerSendMediaIntent;
-        TGMediaAssetsController *assetsController = [TGMediaAssetsController controllerWithAssetGroup:group intent:intent];
+        TGMediaAssetsController *assetsController = [TGMediaAssetsController controllerWithAssetGroup:group intent:intent recipientName:[strongSelf->_companion title]];
         assetsController.captionsEnabled = [strongSelf->_companion allowCaptionedMedia];
         assetsController.inhibitDocumentCaptions = [strongSelf->_companion encryptUploads];
         assetsController.suggestionContext = [strongSelf _suggestionContext];
@@ -6914,13 +7460,15 @@ typedef enum {
         assetsController.localMediaCacheEnabled = [strongSelf->_companion controllerShouldCacheServerAssets];
         assetsController.shouldStoreAssets = [strongSelf->_companion controllerShouldStoreCapturedAssets];
         assetsController.shouldShowFileTipIfNeeded = (file && !fromFileMenu);
+        bool allowRemoteCache = [strongSelf->_companion controllerShouldCacheServerAssets];
+        assetsController.hasTimer = [strongSelf->_companion allowSelfDescructingMedia];
         assetsController.descriptionGenerator = ^NSDictionary *(id result, NSString *caption, NSString *hash)
         {
             __strong TGModernConversationController *strongSelf = weakSelf;
             if (strongSelf == nil)
                 return nil;
             
-            return [strongSelf _descriptionForItem:result caption:caption hash:hash];
+            return [strongSelf _descriptionForItem:result caption:caption hash:hash allowRemoteCache:allowRemoteCache];
         };
         assetsController.completionBlock = ^(NSArray *signals)
         {
@@ -6965,7 +7513,7 @@ typedef enum {
         return;
     }
     
-    if (![TGAccessChecker checkCameraAuthorizationStatusWithAlertDismissComlpetion:nil])
+    if (![TGAccessChecker checkCameraAuthorizationStatusForIntent:TGCameraAccessIntentDefault alertDismissCompletion:nil])
         return;
     
     if (TGAppDelegateInstance.rootController.isSplitView)
@@ -6995,6 +7543,8 @@ typedef enum {
     controller.allowCaptions = [_companion allowCaptionedMedia];
     controller.inhibitDocumentCaptions = [_companion encryptUploads];
     controller.suggestionContext = [self _suggestionContext];
+    controller.recipientName = [_companion title];
+    controller.hasTimer = [_companion allowSelfDescructingMedia];
     
     TGCameraControllerWindow *controllerWindow = [[TGCameraControllerWindow alloc] initWithParentController:self contentController:controller];
     controllerWindow.hidden = false;
@@ -7048,20 +7598,27 @@ typedef enum {
         [strongCameraView attachPreviewViewAnimated:true];
     };
     
-    controller.finishedWithPhoto = ^(UIImage *resultImage, NSString *caption, NSArray *stickers)
+    controller.finishedWithPhoto = ^(__unused TGOverlayController *controller, UIImage *resultImage, NSString *caption, NSArray *stickers, NSNumber *timer)
     {
         __strong TGModernConversationController *strongSelf = weakSelf;
         if (strongSelf == nil)
             return;
         
         __autoreleasing NSString *disabledMessage = nil;
-        if (![TGApplicationFeatures isPhotoUploadEnabledForPeerType:[_companion applicationFeaturePeerType] disabledMessage:&disabledMessage])
+        if (![TGApplicationFeatures isPhotoUploadEnabledForPeerType:[strongSelf->_companion applicationFeaturePeerType] disabledMessage:&disabledMessage])
         {
             [[[TGAlertView alloc] initWithTitle:TGLocalized(@"FeatureDisabled.Oops") message:disabledMessage cancelButtonTitle:TGLocalized(@"Common.OK") okButtonTitle:nil completionBlock:nil] show];
             return;
         }
         
-        NSDictionary *imageDescription = [strongSelf->_companion imageDescriptionFromImage:resultImage stickers:stickers caption:caption optionalAssetUrl:nil];
+        NSDictionary *imageDescription = [strongSelf->_companion imageDescriptionFromImage:resultImage stickers:stickers caption:caption optionalAssetUrl:nil allowRemoteCache:false timer:[timer intValue]];
+        if (timer != nil)
+        {
+            NSMutableDictionary *timedDescription = [imageDescription mutableCopy];
+            timedDescription[@"timer"] = timer;
+            imageDescription = timedDescription;
+        }
+        
         NSMutableArray *descriptions = [[NSMutableArray alloc] init];
         if (imageDescription != nil)
             [descriptions addObject:imageDescription];
@@ -7070,20 +7627,27 @@ typedef enum {
         [menuController dismissAnimated:false];
     };
     
-    controller.finishedWithVideo = ^(NSURL *videoURL, UIImage *previewImage, NSTimeInterval duration, CGSize dimensions, TGVideoEditAdjustments *adjustments, NSString *caption, NSArray *stickers)
+    controller.finishedWithVideo = ^(__unused TGOverlayController *controller, NSURL *videoURL, UIImage *previewImage, NSTimeInterval duration, CGSize dimensions, TGVideoEditAdjustments *adjustments, NSString *caption, NSArray *stickers, NSNumber *timer)
     {
         __strong TGModernConversationController *strongSelf = weakSelf;
         if (strongSelf == nil)
             return;
         
         __autoreleasing NSString *disabledMessage = nil;
-        if (![TGApplicationFeatures isFileUploadEnabledForPeerType:[_companion applicationFeaturePeerType] disabledMessage:&disabledMessage])
+        if (![TGApplicationFeatures isFileUploadEnabledForPeerType:[strongSelf->_companion applicationFeaturePeerType] disabledMessage:&disabledMessage])
         {
             [[[TGAlertView alloc] initWithTitle:TGLocalized(@"FeatureDisabled.Oops") message:disabledMessage cancelButtonTitle:TGLocalized(@"Common.OK") okButtonTitle:nil completionBlock:nil] show];
             return;
         }
 
-        NSDictionary *desc = [strongSelf->_companion videoDescriptionFromVideoURL:videoURL previewImage:previewImage dimensions:dimensions duration:duration adjustments:adjustments stickers:stickers caption:caption];
+        NSDictionary *desc = [strongSelf->_companion videoDescriptionFromVideoURL:videoURL previewImage:previewImage dimensions:dimensions duration:duration adjustments:adjustments stickers:stickers caption:caption roundMessage:false liveUploadData:nil timer:[timer intValue]];
+        if (timer != nil)
+        {
+            NSMutableDictionary *timedDescription = [desc mutableCopy];
+            timedDescription[@"timer"] = timer;
+            desc = timedDescription;
+        }
+        
         [strongSelf->_companion controllerWantsToSendImagesWithDescriptions:@[ desc ] asReplyToMessageId:[strongSelf currentReplyMessageId] botReplyMarkup:nil];
         
         [menuController dismissAnimated:true];
@@ -7349,7 +7913,7 @@ typedef enum {
         {
             @autoreleasepool
             {
-                NSDictionary *imageDescription = [_companion imageDescriptionFromImage:abstractAsset stickers:nil caption:nil optionalAssetUrl:nil];
+                NSDictionary *imageDescription = [_companion imageDescriptionFromImage:abstractAsset stickers:nil caption:nil optionalAssetUrl:nil allowRemoteCache:false timer:0];
                 if (imageDescription != nil)
                     [imageDescriptions addObject:imageDescription];
             }
@@ -7362,7 +7926,7 @@ typedef enum {
                 
                 if (image != nil)
                 {
-                    NSDictionary *imageDescription = [_companion imageDescriptionFromImage:image stickers:nil caption:nil optionalAssetUrl:nil];
+                    NSDictionary *imageDescription = [_companion imageDescriptionFromImage:image stickers:nil caption:nil optionalAssetUrl:nil allowRemoteCache:false timer:0];
                     if (imageDescription != nil)
                         [imageDescriptions addObject:imageDescription];
                 }
@@ -7391,6 +7955,7 @@ typedef enum {
     TGWebSearchController *searchController = [[TGWebSearchController alloc] init];
     searchController.captionsEnabled = [_companion allowCaptionedMedia];
     searchController.suggestionContext = [self _suggestionContext];
+    searchController.recipientName = [_companion title];
     searchController.dismiss = ^
     {
         __strong TGModernConversationController *strongSelf = weakSelf;
@@ -7406,12 +7971,13 @@ typedef enum {
         if (strongSelf == nil)
             return;
         
+        bool allowRemoteCache = [strongSelf->_companion controllerShouldCacheServerAssets];
         [strongSelf _asyncProcessMediaAssetSignals:[sender selectedItemSignals:^id (id item, NSString *caption)
         {
             if (item == nil)
                 return nil;
             
-            return [strongSelf _descriptionForItem:item caption:caption hash:nil];
+            return [strongSelf _descriptionForItem:item caption:caption hash:nil allowRemoteCache:allowRemoteCache];
         }]];
     };
     
@@ -7463,7 +8029,7 @@ typedef enum {
         {
             @autoreleasepool
             {
-                NSDictionary *imageDescription = [_companion imageDescriptionFromImage:abstractAsset stickers:nil caption:nil optionalAssetUrl:nil];
+                NSDictionary *imageDescription = [_companion imageDescriptionFromImage:abstractAsset stickers:nil caption:nil optionalAssetUrl:nil allowRemoteCache:false timer:0];
                 if (imageDescription != nil)
                     [imageDescriptions addObject:imageDescription];
             }
@@ -7481,9 +8047,7 @@ typedef enum {
         NSString *filePath = [NSTemporaryDirectory() stringByAppendingPathComponent:[[NSString alloc] initWithFormat:@"%x%x", (int)arc4random(), (int)arc4random()]];
         [data writeToFile:filePath atomically:true];
         
-        /*
-        [_companion controllerWantsToSendDocumentWithTempFileUrl:[NSURL fileURLWithPath:filePath] fileName:@"animation.gif" mimeType:@"image/gif" asReplyToMessageId:[self currentReplyMessageId]];
-         */
+//        [_companion controllerWantsToSendDocumentWithTempFileUrl:[NSURL fileURLWithPath:filePath] fileName:@"animation.gif" mimeType:@"image/gif" asReplyToMessageId:[self currentReplyMessageId]];
     }
 }
 
@@ -7608,8 +8172,165 @@ typedef enum {
     return string;
 }
 
+- (void)startVideoMessageWithCompletion:(void (^)(void))completion
+{
+    bool (^checkAuthorizationStatus)(void) = ^bool
+    {
+        if (![TGAccessChecker checkCameraAuthorizationStatusForIntent:TGCameraAccessIntentVideoMessage alertDismissCompletion:nil])
+            return false;
+        
+        if (![TGAccessChecker checkMicrophoneAuthorizationStatusForIntent:TGMicrophoneAccessIntentVideoMessage alertDismissCompletion:nil])
+            return false;
+        
+        return true;
+    };
+
+    if (!checkAuthorizationStatus())
+        return;
+    
+    __block bool shouldSkip = false;
+    
+    [TGVideoMessageCaptureController requestCameraAccess:^(bool granted, bool wasNotDetermined)
+    {
+        if (granted)
+        {
+            shouldSkip = wasNotDetermined;
+            
+            [TGVideoMessageCaptureController requestMicrophoneAccess:^(bool granted, bool wasNotDetermined)
+            {
+                if (granted)
+                    shouldSkip = shouldSkip || wasNotDetermined;
+                
+                if (granted && !shouldSkip)
+                {
+                    [self stopInlineMedia:0];
+                    
+                    CGRect controlsFrame = [_inputTextPanel convertRect:_inputTextPanel.bounds toView:nil];
+                    
+                    if (TGTelegraphInstance.musicPlayer != nil)
+                        [TGTelegraphInstance.musicPlayer controlPause];
+                    
+                    [TGEmbedPIPController dismissPictureInPicture];
+                    
+                    __weak TGModernConversationController *weakSelf = self;
+                    TGVideoMessageCaptureController *controller = [[TGVideoMessageCaptureController alloc] initWithParentController:self controlsFrame:controlsFrame isAlreadyLocked:^bool
+                    {
+                        __strong TGModernConversationController *strongSelf = weakSelf;
+                        if (strongSelf == nil)
+                            return false;
+                        
+                        return strongSelf->_inputTextPanel.isLocked;
+                    }];
+                    controller.finishedWithVideo = ^(NSURL *videoURL, UIImage *previewImage, __unused NSUInteger fileSize, NSTimeInterval duration, CGSize dimensions, TGLiveUploadActorData *liveUploadData, TGVideoEditAdjustments *adjustments)
+                    {
+                        __strong TGModernConversationController *strongSelf = weakSelf;
+                        if (strongSelf != nil)
+                        {
+                            NSDictionary *desc = [strongSelf->_companion videoDescriptionFromVideoURL:videoURL previewImage:previewImage dimensions:dimensions duration:duration adjustments:adjustments stickers:nil caption:nil roundMessage:true liveUploadData:liveUploadData timer:0];
+                            [strongSelf->_companion controllerWantsToSendImagesWithDescriptions:@[ desc ] asReplyToMessageId:[strongSelf currentReplyMessageId] botReplyMarkup:nil];
+                        }
+                    };
+                    controller.micLevel = ^(CGFloat level)
+                    {
+                        __strong TGModernConversationController *strongSelf = weakSelf;
+                        if (strongSelf != nil)
+                            [strongSelf->_inputTextPanel addMicLevel:level];
+                    };
+                    controller.requestActivityHolder = ^id
+                    {
+                        __strong TGModernConversationController *strongSelf = weakSelf;
+                        if (strongSelf != nil) {
+                            return [strongSelf->_companion acquireVideoMessageRecordingActivityHolder];
+                        }
+                        return nil;
+                    };
+                    controller.onDismiss = ^(bool isAuto)
+                    {
+                        __strong TGModernConversationController *strongSelf = weakSelf;
+                        if (strongSelf != nil)
+                        {
+                            strongSelf->_isRecording = false;
+                            [strongSelf resumeInlineMedia];
+                            
+                            if (isAuto)
+                                [strongSelf->_inputTextPanel recordingFinished];
+                        }
+                    };
+                    controller.onStop = ^
+                    {
+                        __strong TGModernConversationController *strongSelf = weakSelf;
+                        if (strongSelf != nil)
+                        {
+                            if (!strongSelf->_inputTextPanel.isLocked)
+                                strongSelf->_inputTextPanel.ignoreNextMicButtonEvent = true;
+                            
+                            [strongSelf->_inputTextPanel recordingStopped];
+                        }
+                    };
+                    controller.onCancel = ^
+                    {
+                        __strong TGModernConversationController *strongSelf = weakSelf;
+                        if (strongSelf != nil)
+                        {
+                            [strongSelf inputPanelAudioRecordingCancel:strongSelf->_inputTextPanel];
+                        }
+                    };
+                    
+                    _videoMessageCaptureController = controller;
+                    if (completion != nil)
+                        completion();
+                    
+                    if (_inputTextPanel.isLocked)
+                        [_videoMessageCaptureController setLocked];
+                }
+                else
+                {
+                    checkAuthorizationStatus();
+                }
+            }];
+        }
+        else
+        {
+            checkAuthorizationStatus();
+        }
+    }];
+}
+
+- (bool)maybeShowDiscardRecordingAlert
+{
+    if (!_isRecording)
+        return false;
+    
+    __weak TGModernConversationController *weakSelf = self;
+    [TGCallAlertView presentAlertWithTitle:TGLocalized(@"Conversation.DiscardVoiceMessageTitle") message:TGLocalized(@"Conversation.DiscardVoiceMessageDescription") customView:nil cancelButtonTitle:TGLocalized(@"Common.Cancel") doneButtonTitle:TGLocalized(@"Conversation.DiscardVoiceMessageAction") completionBlock:^(bool done)
+    {
+        __strong TGModernConversationController *strongSelf = weakSelf;
+        if (strongSelf == nil)
+            return;
+        
+        if (done)
+        {
+            [strongSelf inputPanelAudioRecordingCancel:strongSelf->_inputTextPanel];
+            [strongSelf->_inputTextPanel recordingFinished];
+        }
+    }];
+    
+    return true;
+}
+
+- (void)inputPanelAudioButtonInteractionUpdate:(TGModernConversationInputTextPanel *)__unused inputTextPanel value:(CGPoint)value
+{
+    [_videoMessageCaptureController buttonInteractionUpdate:value];
+}
+
 - (bool)inputPanelAudioRecordingEnabled:(TGModernConversationInputTextPanel *)__unused inputTextPanel
 {
+    NSNumber *banTimeout = [self->_companion mediaRestrictionTimeout];
+    if (banTimeout != nil) {
+        [self showBannedMediaTooltip:[banTimeout intValue]];
+        return false;
+    }
+    
     __autoreleasing NSString *disabledMessage = nil;
     if (![TGApplicationFeatures isAudioUploadEnabledForPeerType:[_companion applicationFeaturePeerType] disabledMessage:&disabledMessage])
     {
@@ -7626,28 +8347,123 @@ typedef enum {
     return true;
 }
 
-- (void)inputPanelAudioRecordingStart:(TGModernConversationInputTextPanel *)__unused inputTextPanel completion:(void (^)())completion
+- (void)inputPanelAudioRecordingStart:(TGModernConversationInputTextPanel *)inputTextPanel video:(bool)video completion:(void (^)())completion
 {
-    [self startAudioRecording:false completion:completion];
+    [_recordTooltipContainerView removeFromSuperview];
+    _recordTooltipContainerView = nil;
+    
+    if (video)
+    {
+        [self startVideoMessageWithCompletion:completion];
+        
+        CGSize screenSize = TGScreenSize();
+        if ((TGIsPad() || UIInterfaceOrientationIsLandscape(self.interfaceOrientation) || (int)screenSize.height == 480) && inputTextPanel.isActive)
+        {
+            [self endEditing];
+            inputTextPanel.lockImmediately = true;
+        }
+    }
+    else
+    {
+        [self startAudioRecording:false completion:completion];
+    }
+    
+    [self setScrollBackButtonVisible:false];
+    _isRecording = true;
+    
+    if (iosMajorVersion() >= 7 && !video)
+        self.navigationController.interactivePopGestureRecognizer.enabled = false;
 }
 
 - (void)inputPanelAudioRecordingCancel:(TGModernConversationInputTextPanel *)__unused inputTextPanel
 {
-    [self stopAudioRecording];
-    [_inputTextPanel audioRecordingFinished];
+    _isRecording = false;
     
-    [[UIApplication sharedApplication] setIdleTimerDisabled:false];
+    if (_videoMessageCaptureController != nil)
+    {
+        [_videoMessageCaptureController dismiss];
+    }
+    else
+    {
+        [self stopAudioRecording];
+        [_inputTextPanel audioRecordingFinished];
+    
+        [[UIApplication sharedApplication] setIdleTimerDisabled:false];
+    }
+    
+    if (iosMajorVersion() >= 7)
+        self.navigationController.interactivePopGestureRecognizer.enabled = true;
 }
 
 - (void)inputPanelAudioRecordingComplete:(TGModernConversationInputTextPanel *)__unused inputTextPanel
 {
-#if false && TARGET_IPHONE_SIMULATOR
-    if (true) {
-        [self finishAudioRecording:true];
-        return;
+    _isRecording = false;
+    
+    if (iosMajorVersion() >= 7)
+        self.navigationController.interactivePopGestureRecognizer.enabled = true;
+    
+    if (_videoMessageCaptureController != nil)
+    {
+        [_videoMessageCaptureController complete];
     }
+    else
+    {
+#if TARGET_IPHONE_SIMULATOR
+        if (true) {
+            [self finishAudioRecording:true];
+            return;
+        }
 #endif
-    [self finishAudioRecording:false];
+        [self finishAudioRecording:false];
+    }
+}
+
+- (void)inputPanelRecordingModeChanged:(TGModernConversationInputTextPanel *)__unused inputTextPanel video:(bool)video
+{
+    [self showRecordButtonTooltip:video duration:2.0];
+    
+    if (_isChannel)
+    {
+        [[NSUserDefaults standardUserDefaults] setObject:@(!video) forKey:@"TG_lastChannelRecordModeIsAudio_v0"];
+        if (!video)
+            [[NSUserDefaults standardUserDefaults] setObject:@true forKey:@"TG_displayedChannelRecordModeTooltip_v0"];
+        else
+            [[NSUserDefaults standardUserDefaults] setObject:@true forKey:@"TG_displayedChannelRevertRecordModeTooltip_v0"];
+    }
+    else
+    {
+        [[NSUserDefaults standardUserDefaults] setObject:@(video) forKey:@"TG_lastPrivateRecordModeIsVideo_v0"];
+        if (video)
+            [[NSUserDefaults standardUserDefaults] setObject:@true forKey:@"TG_displayedPrivateRecordModeTooltip_v0"];
+        else
+            [[NSUserDefaults standardUserDefaults] setObject:@true forKey:@"TG_displayedPrivateRevertRecordModeTooltip_v0"];
+    }
+}
+
+- (void)inputPanelRecordingLocked:(TGModernConversationInputTextPanel *)__unused inputTextPanel video:(bool)video
+{
+    if (video)
+        [_videoMessageCaptureController setLocked];
+    else
+        [self endEditing];
+}
+
+- (void)inputPanelRecordingRequestedLockedAction:(TGModernConversationInputTextPanel *)__unused inputTextPanel
+{
+    [self maybeShowDiscardRecordingAlert];
+}
+
+- (void)inputPanelRecordingStopped:(TGModernConversationInputTextPanel *)__unused inputTextPanel
+{
+    if (_videoMessageCaptureController != nil)
+    {
+        [_videoMessageCaptureController stop];
+    }
+    else
+    {
+        _isRecording = false;
+        [self finishAudioRecording:true];
+    }
 }
 
 - (void)startAudioRecording:(bool)speaker completion:(void (^)())completion {
@@ -7725,11 +8541,13 @@ typedef enum {
                     {
                         if (preview) {
                             [self previewAudioWithDataItem:dataItem duration:duration liveUploadData:liveData waveform:waveform];
+                            [_inputTextPanel recordingFinished];
                         } else {
                             [_companion controllerWantsToSendLocalAudioWithDataItem:dataItem duration:duration liveData:liveData waveform:waveform asReplyToMessageId:[self currentReplyMessageId] botReplyMarkup:nil];
                         }
                     }
-                    else {
+                    else if (!_companion.allowVideoMessages)
+                    {
                         [_inputTextPanel shakeControls];
                         
                         if (!preview && [self->_inputTextPanel micButtonFrame].size.width > FLT_EPSILON)
@@ -7758,6 +8576,7 @@ typedef enum {
                             }]];
                         }
                     }
+
                 });
             }];
             
@@ -7785,6 +8604,181 @@ typedef enum {
     } else {
         block();
     }
+    
+    TGDispatchOnMainThread(^
+    {
+        if (iosMajorVersion() >= 7)
+            self.navigationController.interactivePopGestureRecognizer.enabled = true;
+    });
+}
+
+- (void)maybeShowRecordTooltip
+{
+    if ([self hasNonTextInputPanel] || !self.companion.canPostMessages) {
+        return;
+    }
+    
+    bool video = _inputTextPanel.videoMessage;
+    
+    NSString *key = nil;
+    if (video)
+        key = _isChannel ? @"TG_displayedChannelRevertRecordModeTooltip_v0" : @"TG_displayedPrivateRevertRecordModeTooltip_v0";
+    else
+        key = _isChannel ? @"TG_displayedChannelRecordModeTooltip_v0" : @"TG_displayedPrivateRecordModeTooltip_v0";
+    
+    bool alreadyDisplayed = [[[NSUserDefaults standardUserDefaults] objectForKey:key] boolValue];
+    bool available = (_customInputPanel == nil) && [_companion allowVideoMessages];
+    
+    if (alreadyDisplayed || !available)
+        return;
+    
+    CGFloat value = arc4random() / (CGFloat)UINT32_MAX;
+    if (value < 0.2)
+    {
+        [self showRecordButtonTooltip:_inputTextPanel.videoMessage duration:4.0];
+        [[NSUserDefaults standardUserDefaults] setObject:@true forKey:key];
+    }
+}
+
+- (void)showBannedStickersTooltip:(int32_t)timeout
+{
+    if ([_inputTextPanel micButtonFrame].size.width < FLT_EPSILON)
+        return;
+    
+    if ([self hasNonTextInputPanel]) {
+        return;
+    }
+    
+    NSString *text = @"";
+    
+    if (timeout == 0 || timeout == INT32_MAX) {
+        text = TGLocalized(@"Conversation.RestrictedStickers");
+    } else {
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        [formatter setDateFormat:@"E, d MMM HH:mm"];
+        formatter.locale = [NSLocale localeWithLocaleIdentifier:effectiveLocalization().code];
+        NSString *dateStringPlain = [formatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:timeout]];
+        
+        text = [NSString stringWithFormat:TGLocalized(@"Conversation.RestrictedStickersTimed"), dateStringPlain];
+    }
+    
+    if (_bannedStickersTooltipContainerView.isShowingTooltip)
+    {
+        [_bannedStickersTooltipContainerView.tooltipView setText:text animated:true];
+    }
+    else
+    {
+        [_tooltipContainerView removeFromSuperview];
+        [_bannedStickersTooltipContainerView removeFromSuperview];
+        
+        _bannedStickersTooltipContainerView = [[TGTooltipContainerView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.view.frame.size.width, self.view.frame.size.height)];
+        _bannedStickersTooltipContainerView.tooltipView.numberOfLines = 0;
+        [self.view addSubview:_bannedStickersTooltipContainerView];
+        
+        [_bannedStickersTooltipContainerView.tooltipView setText:text animated:false];
+        _bannedStickersTooltipContainerView.tooltipView.sourceView = _inputTextPanel.stickerButton;
+        
+        CGRect recordButtonFrame = [_inputTextPanel convertRect:[_inputTextPanel stickerButtonFrame] toView:_bannedStickersTooltipContainerView];
+        recordButtonFrame.origin.y += 8.0f;
+        [_bannedStickersTooltipContainerView showTooltipFromRect:recordButtonFrame animated:false];
+    }
+    
+    __weak TGTooltipContainerView *weakContainerView = _bannedStickersTooltipContainerView;
+    [_tooltipDismissDisposable setDisposable:[[[SSignal complete] delay:5.0 onQueue:[SQueue mainQueue]] startWithNext:nil completed:^{
+        __strong TGTooltipContainerView *strongContainerView = weakContainerView;
+        if (strongContainerView != nil)
+            [strongContainerView hideTooltip];
+    }]];
+}
+
+- (void)showBannedMediaTooltip:(int32_t)timeout
+{
+    if ([_inputTextPanel micButtonFrame].size.width < FLT_EPSILON)
+        return;
+    
+    if ([self hasNonTextInputPanel]) {
+        return;
+    }
+    
+    NSString *text = @"";
+    
+    if (timeout == 0 || timeout == INT32_MAX) {
+        text = TGLocalized(@"Conversation.RestrictedMedia");
+    } else {
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        [formatter setDateFormat:@"E, d MMM HH:mm"];
+        formatter.locale = [NSLocale localeWithLocaleIdentifier:effectiveLocalization().code];
+        NSString *dateStringPlain = [formatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:timeout]];
+        
+        text = [NSString stringWithFormat:TGLocalized(@"Conversation.RestrictedMediaTimed"), dateStringPlain];
+    }
+    
+    if (_bannedMediaTooltipContainerView.isShowingTooltip)
+    {
+        [_bannedMediaTooltipContainerView.tooltipView setText:text animated:true];
+    }
+    else
+    {
+        [_tooltipContainerView removeFromSuperview];
+        [_bannedMediaTooltipContainerView removeFromSuperview];
+        
+        _bannedMediaTooltipContainerView = [[TGTooltipContainerView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.view.frame.size.width, self.view.frame.size.height)];
+        _bannedMediaTooltipContainerView.tooltipView.numberOfLines = 0;
+        [self.view addSubview:_bannedMediaTooltipContainerView];
+        
+        [_bannedMediaTooltipContainerView.tooltipView setText:text animated:false];
+        _bannedMediaTooltipContainerView.tooltipView.sourceView = _inputTextPanel.micButton;
+        
+        CGRect recordButtonFrame = [_inputTextPanel convertRect:[_inputTextPanel micButtonFrame] toView:_recordTooltipContainerView];
+        recordButtonFrame.origin.y += 15.0f;
+        [_bannedMediaTooltipContainerView showTooltipFromRect:recordButtonFrame animated:false];
+    }
+    
+    __weak TGTooltipContainerView *weakContainerView = _bannedMediaTooltipContainerView;
+    [_tooltipDismissDisposable setDisposable:[[[SSignal complete] delay:5.0 onQueue:[SQueue mainQueue]] startWithNext:nil completed:^{
+        __strong TGTooltipContainerView *strongContainerView = weakContainerView;
+        if (strongContainerView != nil)
+            [strongContainerView hideTooltip];
+    }]];
+}
+
+- (void)showRecordButtonTooltip:(bool)video duration:(NSTimeInterval)duration
+{
+    if ([self hasNonTextInputPanel]) {
+        return;
+    }
+    
+    if ([_inputTextPanel micButtonFrame].size.width < FLT_EPSILON)
+        return;
+    
+    NSString *tooltipText = TGLocalized(video ? @"Conversation.HoldForVideo" : @"Conversation.HoldForAudio");
+    
+    if (_recordTooltipContainerView.isShowingTooltip && _recordTooltipContainerView.tooltipView.sourceView == _inputTextPanel.micButton)
+    {
+        [_recordTooltipContainerView.tooltipView setText:tooltipText animated:true];
+    }
+    else
+    {
+        [_tooltipContainerView removeFromSuperview];
+        [_recordTooltipContainerView removeFromSuperview];
+        
+        _recordTooltipContainerView = [[TGTooltipContainerView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.view.frame.size.width, self.view.frame.size.height)];
+        [self.view addSubview:_recordTooltipContainerView];
+        
+        [_recordTooltipContainerView.tooltipView setText:tooltipText animated:false];
+        _recordTooltipContainerView.tooltipView.sourceView = _inputTextPanel.micButton;
+        
+        CGRect recordButtonFrame = [_inputTextPanel convertRect:[_inputTextPanel micButtonFrame] toView:_recordTooltipContainerView];
+        recordButtonFrame.origin.y += 15.0f;
+        [_recordTooltipContainerView showTooltipFromRect:recordButtonFrame animated:false];
+    }
+    
+    __weak TGTooltipContainerView *weakContainerView = _recordTooltipContainerView;
+    [_tooltipDismissDisposable setDisposable:[[[SSignal complete] delay:duration onQueue:[SQueue mainQueue]] startWithNext:nil completed:^{
+        __strong TGTooltipContainerView *strongContainerView = weakContainerView;
+        if (strongContainerView != nil)
+            [strongContainerView hideTooltip];
+    }]];
 }
 
 - (NSTimeInterval)inputPanelAudioRecordingDuration:(TGModernConversationInputTextPanel *)__unused inputTextPanel
@@ -7815,26 +8809,43 @@ typedef enum {
 }
 
 - (void)inputPanelToggleBroadcastMode:(TGModernConversationInputTextPanel *)__unused inputTextPanel {
+    if ([self hasNonTextInputPanel]) {
+        return;
+    }
+    
     [_companion _toggleBroadcastMode];
     
-    TGModernConversationController *strongSelf = self;
-    [strongSelf->_tooltipContainerView removeFromSuperview];
-    strongSelf->_tooltipContainerView = nil;
-    if ([strongSelf->_inputTextPanel broadcastModeButtonFrame].size.width > FLT_EPSILON)
+    [_tooltipContainerView removeFromSuperview];
+    _tooltipContainerView = nil;
+    
+    NSString *tooltipText = !_inputTextPanel.isBroadcasting ? TGLocalized(@"Conversation.SilentBroadcastTooltipOff") : TGLocalized(@"Conversation.SilentBroadcastTooltipOn")
+    ;
+    if (_recordTooltipContainerView.isShowingTooltip && _recordTooltipContainerView.tooltipView.sourceView == _inputTextPanel.broadcastButton)
     {
-        strongSelf->_tooltipContainerView = [[TGMenuContainerView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, strongSelf.view.frame.size.width, strongSelf.view.frame.size.height)];
-        [strongSelf.view addSubview:strongSelf->_tooltipContainerView];
-        
-        NSMutableArray *actions = [[NSMutableArray alloc] init];
-        [actions addObject:[[NSDictionary alloc] initWithObjectsAndKeys:!_inputTextPanel.isBroadcasting ? TGLocalized(@"Conversation.SilentBroadcastTooltipOff") : TGLocalized(@"Conversation.SilentBroadcastTooltipOn"), @"title", nil]];
-        
-        [strongSelf->_tooltipContainerView.menuView setButtonsAndActions:actions watcherHandle:nil];
-        [strongSelf->_tooltipContainerView.menuView sizeToFit];
-        strongSelf->_tooltipContainerView.menuView.userInteractionEnabled = false;
-        CGRect titleLockIconViewFrame = [strongSelf->_inputTextPanel convertRect:[strongSelf->_inputTextPanel broadcastModeButtonFrame] toView:strongSelf->_tooltipContainerView];
-        titleLockIconViewFrame.origin.y += 12.0f;
-        [strongSelf->_tooltipContainerView showMenuFromRect:titleLockIconViewFrame animated:false];
+        [_recordTooltipContainerView.tooltipView setText:tooltipText animated:true];
     }
+    else
+    {
+        [_tooltipContainerView removeFromSuperview];
+        [_recordTooltipContainerView removeFromSuperview];
+        
+        _recordTooltipContainerView = [[TGTooltipContainerView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.view.frame.size.width, self.view.frame.size.height)];
+        [self.view addSubview:_recordTooltipContainerView];
+        
+        [_recordTooltipContainerView.tooltipView setText:tooltipText animated:false];
+        _recordTooltipContainerView.tooltipView.sourceView = _inputTextPanel.broadcastButton;
+        
+        CGRect buttonFrame = [_inputTextPanel convertRect:[_inputTextPanel broadcastModeButtonFrame] toView:_tooltipContainerView];
+        buttonFrame.origin.y += 12.0f;
+        [_recordTooltipContainerView showTooltipFromRect:buttonFrame animated:false];
+    }
+    
+    __weak TGTooltipContainerView *weakContainerView = _recordTooltipContainerView;
+    [_tooltipDismissDisposable setDisposable:[[[SSignal complete] delay:2.0 onQueue:[SQueue mainQueue]] startWithNext:nil completed:^{
+        __strong TGTooltipContainerView *strongContainerView = weakContainerView;
+        if (strongContainerView != nil)
+            [strongContainerView hideTooltip];
+    }]];
 }
 
 - (void)_enterEditingMode:(int32_t)animateFromMessageId
@@ -7909,6 +8920,7 @@ typedef enum {
         editPanel.delegate = self;
         [editPanel setForwardingEnabled:[_companion allowMessageForwarding]];
         [editPanel setDeleteEnabled:[self canDeleteSelectedMessages]];
+        [editPanel setShareEnabled:[_companion allowMessageExternalSharing]];
         [self setInputPanel:editPanel animated:true];
         [self _updateEditingPanel];
         
@@ -7949,6 +8961,28 @@ typedef enum {
             if ([nMid intValue] == mid) {
                 if (message.actionInfo.actionType == TGMessageActionPhoneCall)
                     return false;
+                if (message.messageLifetime != 0) {
+                    return false;
+                }
+            }
+        }
+    }
+    return true;
+}
+
+- (bool)canShareAllSelectedMessages {
+    NSArray *checkedMessageIds = [_companion checkedMessageIds];
+    
+    for (TGMessageModernConversationItem *item in _items) {
+        int32_t mid = item->_message.mid;
+        TGMessage *message = item->_message;
+        for (NSNumber *nMid in checkedMessageIds) {
+            if ([nMid intValue] == mid) {
+                if (message.actionInfo.actionType == TGMessageActionPhoneCall)
+                    return false;
+                if (message.messageLifetime != 0) {
+                    return false;
+                }
             }
         }
     }
@@ -8113,7 +9147,7 @@ static UIView *_findBackArrow(UIView *view)
     if (inputPanel == _currentInputPanel)
     {
         [_currentInputPanel adjustForSize:_view.bounds.size keyboardHeight:_keyboardHeight duration:duration animationCurve:animationCurve contentAreaHeight:[self contentAreaHeight]];
-        [self _adjustCollectionViewForSize:_view.bounds.size keyboardHeight:_keyboardHeight inputContainerHeight:height duration:duration animationCurve:0];
+        [self _adjustCollectionViewForSize:_view.bounds.size keyboardHeight:_keyboardHeight inputContainerHeight:height duration:duration animationCurve:animationCurve];
     }
 }
 
@@ -8199,11 +9233,11 @@ static UIView *_findBackArrow(UIView *view)
         
         [self _updateUnseenMessagesButton];
         
-        [_emptyListPlaceholder adjustLayoutForSize:_view.bounds.size contentInsets:UIEdgeInsetsMake(_collectionView == nil ? self.controllerInset.top : (_collectionView.contentInset.bottom - 210.0f - [_collectionView implicitTopInset]), 0.0f, _collectionView == nil ? _currentInputPanel.frame.size.height : _collectionView.contentInset.top, 0.0f) duration:0.0 curve:0];
+        [_emptyListPlaceholder adjustLayoutForSize:_view.bounds.size contentInsets:UIEdgeInsetsMake(_collectionView == nil ? self.controllerInset.top : (_collectionView.contentInset.bottom - 210.0f - [_collectionView implicitTopInset]), 0.0f, _collectionView == nil ? [_currentInputPanel currentHeight] : _collectionView.contentInset.top, 0.0f) duration:0.0 curve:0];
     }
 }
 
-- (void)keyboardWillHide:(NSNotification *)__unused notification
+- (void)keyboardDidHide:(NSNotification *)__unused notification
 {
 }
 
@@ -8221,7 +9255,7 @@ static UIView *_findBackArrow(UIView *view)
     CGSize collectionViewSize = _view.frame.size;
     
     NSTimeInterval duration = notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] == nil ? 0.3 : [notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
-    int curve = [notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] intValue];
+    int curve = [notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] intValue] << 16;
     UIView *keyboardTransitionView = nil;
     if (_inputTextPanel.changingKeyboardMode)
     {
@@ -8326,7 +9360,7 @@ static UIView *_findBackArrow(UIView *view)
                     return;
                 }
                 
-                [self _adjustCollectionViewForSize:_view.bounds.size keyboardHeight:keyboardHeight inputContainerHeight:_currentInputPanel.frame.size.height duration:duration animationCurve:curve];
+                [self _adjustCollectionViewForSize:_view.bounds.size keyboardHeight:keyboardHeight inputContainerHeight:[_currentInputPanel currentHeight] duration:duration animationCurve:curve];
             };
             
             if (duration < DBL_EPSILON) {
@@ -8357,7 +9391,7 @@ static UIView *_findBackArrow(UIView *view)
         _keyboardHeight = keyboardHeight;
         
         [_currentInputPanel adjustForSize:_view.bounds.size keyboardHeight:keyboardHeight duration:duration animationCurve:curve contentAreaHeight:[self contentAreaHeight]];
-        [self _adjustCollectionViewForSize:_view.bounds.size keyboardHeight:keyboardHeight inputContainerHeight:_currentInputPanel.frame.size.height duration:duration animationCurve:curve];
+        [self _adjustCollectionViewForSize:_view.bounds.size keyboardHeight:keyboardHeight inputContainerHeight:[_currentInputPanel currentHeight] duration:duration animationCurve:curve];
     }
 }
 
@@ -8403,7 +9437,7 @@ static UIView *_findBackArrow(UIView *view)
     NSMutableSet *previousVisibleItemIndices = [[NSMutableSet alloc] init];
     
     std::vector<TGDecorationViewAttrubutes> previousDecorationAttributes;
-    NSArray *previousLayoutAttributes = [_collectionLayout layoutAttributesForItems:_items containerWidth:previousCollectionFrame.size.width maxHeight:FLT_MAX decorationViewAttributes:&previousDecorationAttributes contentHeight:NULL];
+    NSArray *previousLayoutAttributes = [_collectionLayout layoutAttributesForItems:_items containerWidth:previousCollectionFrame.size.width maxHeight:FLT_MAX decorationViewAttributes:&previousDecorationAttributes contentHeight:NULL viewStorage:_viewStorage];
     
     int collectionItemCount = (int)_items.count;
     for (int i = 0; i < collectionItemCount; i++)
@@ -8437,7 +9471,7 @@ static UIView *_findBackArrow(UIView *view)
     
     UIEdgeInsets originalInset = _collectionView.contentInset;
     UIEdgeInsets inset = originalInset;
-    inset.top = keyboardHeight + _currentInputPanel.frame.size.height;
+    inset.top = keyboardHeight + [_currentInputPanel currentHeight];
     inset.bottom = self.controllerInset.top + 210.0f + [_collectionView implicitTopInset];
     _collectionView.contentInset = inset;
     [self _updateUnseenMessagesButton];
@@ -8446,7 +9480,7 @@ static UIView *_findBackArrow(UIView *view)
     
     CGFloat newContentHeight = 0.0f;
     std::vector<TGDecorationViewAttrubutes> newDecorationAttributes;
-    NSArray *newLayoutAttributes = [_collectionLayout layoutAttributesForItems:_items containerWidth:_collectionView.frame.size.width maxHeight:FLT_MAX decorationViewAttributes:&newDecorationAttributes contentHeight:&newContentHeight];
+    NSArray *newLayoutAttributes = [_collectionLayout layoutAttributesForItems:_items containerWidth:_collectionView.frame.size.width maxHeight:FLT_MAX decorationViewAttributes:&newDecorationAttributes contentHeight:&newContentHeight viewStorage:_viewStorage];
     
     CGPoint newContentOffset = _collectionView.contentOffset;
     newContentOffset.y = - _collectionView.contentInset.top;
@@ -8534,7 +9568,7 @@ static UIView *_findBackArrow(UIView *view)
                 cell.frame = CGRectOffset(previousFrame, widthDifference, contentOffsetDifference);
                 
                 TGModernConversationItem *item = _items[i];
-                [item sizeForContainerSize:CGSizeMake(previousFrame.size.width, 0.0f)];
+                [item sizeForContainerSize:CGSizeMake(previousFrame.size.width, 0.0f) viewStorage:_viewStorage];
             }
         }
         
@@ -8555,7 +9589,7 @@ static UIView *_findBackArrow(UIView *view)
                 cell.frame = [frameDesc[1] CGRectValue];
                 
                 TGModernConversationItem *item = _items[[frameDesc[0] intValue]];
-                [item sizeForContainerSize:CGSizeMake(_collectionView.frame.size.width, 0.0f)];
+                [item sizeForContainerSize:CGSizeMake(_collectionView.frame.size.width, 0.0f) viewStorage:_viewStorage];
             }
             
             for (auto it = newDecorationAttributes.begin(); it != newDecorationAttributes.end(); it++)
@@ -8672,6 +9706,8 @@ static UIView *_findBackArrow(UIView *view)
                         }
                     }
                 }
+                
+                [self maybeDisplayGifTooltip];
             }
             else if ([menuAction isEqualToString:@"delete"])
             {
@@ -8684,6 +9720,12 @@ static UIView *_findBackArrow(UIView *view)
                 TGUser *user = [TGDatabaseInstance() loadUser:(int32_t)menuMessageItem->_message.fromUid];
                 if (user != nil) {
                     [self _showModerateSheetForMessageIds:@[@(menuMessageItem->_message.mid)] author:user];
+                }
+            }
+            else if ([menuAction isEqualToString:@"ban"]) {
+                TGUser *user = [TGDatabaseInstance() loadUser:(int32_t)menuMessageItem->_message.fromUid];
+                if (user != nil && [_companion isKindOfClass:[TGAdminLogConversationCompanion class]]) {
+                    [((TGAdminLogConversationCompanion *)_companion) banUser:user];
                 }
             }
             else if ([menuAction isEqualToString:@"reply"])
@@ -8856,6 +9898,38 @@ static UIView *_findBackArrow(UIView *view)
                     }
                 }
             }
+            else if ([menuAction isEqualToString:@"sendCallLog"])
+            {
+                for (id attachment in menuMessageItem->_message.mediaAttachments)
+                {
+                    if ([attachment isKindOfClass:[TGActionMediaAttachment class]])
+                    {
+                        TGActionMediaAttachment *action = (TGActionMediaAttachment *)attachment;
+                        if (action.actionType == TGMessageActionPhoneCall)
+                        {
+                            int64_t callId = [action.actionData[@"callId"] int64Value];
+                            int64_t accessHash = 0;
+                            
+                            NSString *path = [[TGAppDelegate documentsPath] stringByAppendingPathComponent:@"calls"];
+                            NSMutableArray *logs = [[[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil] mutableCopy];
+                            NSString *logPrefix = [NSString stringWithFormat:@"%lld-", callId];
+                            for (NSString *log in logs)
+                            {
+                                if ([log hasPrefix:logPrefix])
+                                {
+                                    NSString *accessHashString = [log substringWithRange:NSMakeRange(logPrefix.length, log.length - logPrefix.length - 4)];
+                                    accessHash = [accessHashString integerValue];
+                                    break;
+                                }
+                            }
+
+                            if (callId != 0 && accessHash != 0)
+                                [TGCallController presentRatingAlertView:callId accessHash:accessHash presentTabAlert:false];
+                        }
+                        break;
+                    }
+                }
+            }
         }
     }
     else if ([action isEqualToString:@"menuWillHide"])
@@ -8991,7 +10065,7 @@ static UIView *_findBackArrow(UIView *view)
     if (webPage.url.length == 0)
         return;
     
-    [self.view endEditing:true];
+    [self endEditing];
     
     _menuController = [TGEmbedMenu presentInParentController:self attachment:webPage peerId:_companion.requestPeerId messageId:messageId cancelPIP:cancelPIP sourceView:_view sourceRect:sourceRect];
 }
@@ -9001,7 +10075,7 @@ static UIView *_findBackArrow(UIView *view)
     if (webPage.url.length == 0)
         return;
     
-    [self.view endEditing:true];
+    [self endEditing];
     
     _menuController = [TGEmbedMenu presentInParentController:self attachment:webPage peerId:0 messageId:0 cancelPIP:false sourceView:_view sourceRect:sourceRectSource];
 }
@@ -9074,7 +10148,7 @@ static UIView *_findBackArrow(UIView *view)
     if (packReference == nil)
         return;
     
-    [self.view endEditing:true];
+    [self endEditing];
    
     __weak TGModernConversationController *weakSelf = self;
     void (^sendSticker)(TGDocumentMediaAttachment *) = ^(TGDocumentMediaAttachment *sticker)
@@ -9143,7 +10217,7 @@ static UIView *_findBackArrow(UIView *view)
         _searchBar.delegate = self;
         [_searchBar setShowsCancelButton:true animated:false];
         [_searchBar setAlwaysExtended:true];
-        _searchBar.placeholder = TGLocalized(@"Conversation.SearchPlaceholder");
+        _searchBar.placeholder = [_companion isKindOfClass:[TGAdminLogConversationCompanion class]] ? TGLocalized(@"Common.Search") : TGLocalized(@"Conversation.SearchPlaceholder");
         [_searchBar sizeToFit];
         _searchBar.delayActivity = false;
         [_view insertSubview:_searchBar aboveSubview:_collectionView];
@@ -9179,6 +10253,10 @@ static UIView *_findBackArrow(UIView *view)
             if (strongSelf != nil)
                 [strongSelf searchBarCalendarPressed];
         };
+        bool isAdminLog = [_companion isKindOfClass:[TGAdminLogConversationCompanion class]];
+        if (isAdminLog) {
+            [_searchPanel setNone];
+        }
         _searchPanel.delegate = self;
     }
     _searchBar.hidden = false;
@@ -9188,6 +10266,10 @@ static UIView *_findBackArrow(UIView *view)
     
     [self setCurrentTitlePanel:nil animation:TGModernConversationPanelAnimationSlideFar];
     [self setNavigationBarHidden:true withAnimation:TGViewControllerNavigationBarAnimationSlide];
+    _searchBar.userInteractionEnabled = false;
+    TGDispatchAfter(0.3, dispatch_get_main_queue(), ^{
+        _searchBar.userInteractionEnabled = true;
+    });
     [self setCustomInputPanel:_searchPanel];
     
     [_searchBar becomeFirstResponder];
@@ -9232,7 +10314,7 @@ static UIView *_findBackArrow(UIView *view)
             }]];
             
         }
-    }];
+    } banTimeout:false];
     _pickerSheet.emptyValue = TGLocalized(@"PrivacySettings.DeleteAccountNever");
     
     if (TGAppDelegateInstance.rootController.currentSizeClass == UIUserInterfaceSizeClassCompact) {
@@ -9256,10 +10338,18 @@ static UIView *_findBackArrow(UIView *view)
     if (_searchDisposable == nil)
         _searchDisposable = [[SMetaDisposable alloc] init];
     
-    _companion.viewContext.searchText = query.length == 0 ? nil : query;
-    for (TGMessageModernConversationItem *item in _items)
-    {
-        [item updateSearchText:false];
+    bool isAdminLog = [_companion isKindOfClass:[TGAdminLogConversationCompanion class]];
+    
+    if (!isAdminLog) {
+        _companion.viewContext.searchText = query.length == 0 ? nil : query;
+        for (TGMessageModernConversationItem *item in _items)
+        {
+            [item updateSearchText:false];
+        }
+    }
+    
+    if (isAdminLog) {
+        [_searchPanel setNone];
     }
     
     _query = query;
@@ -9268,52 +10358,62 @@ static UIView *_findBackArrow(UIView *view)
         [_searchDisposable setDisposable:nil];
         [self setSearchResultsIds:nil];
         [_searchPanel setInProgress:false];
+        
+        if (isAdminLog) {
+            [(TGAdminLogConversationCompanion *)_companion updateSearchQuery:_query];
+        }
     }
     else
     {
         __weak TGModernConversationController *weakSelf = self;
-        _searchBar.showActivity = true;
-        [_searchPanel setInProgress:true];
-        [_searchDisposable setDisposable:[[[[TGGlobalMessageSearchSignals searchMessages:query peerId:((TGGenericModernConversationCompanion *)_companion).conversationId accessHash:[_companion requestAccessHash] itemMapping:^id(id item)
-        {
-            if ([item isKindOfClass:[TGConversation class]])
+        
+        if (isAdminLog) {
+            [(TGAdminLogConversationCompanion *)_companion updateSearchQuery:_query];
+        } else {
+            _searchBar.showActivity = true;
+            [_searchPanel setInProgress:true];
+            
+            [_searchDisposable setDisposable:[[[[TGGlobalMessageSearchSignals searchMessages:query peerId:((TGGenericModernConversationCompanion *)_companion).conversationId accessHash:[_companion requestAccessHash] itemMapping:^id(id item)
             {
-                TGConversation *conversation = item;
-                return conversation;
-            }
-            return nil;
-        }] deliverOn:[SQueue mainQueue]] onDispose:^
-        {
-            TGDispatchOnMainThread(^
+                if ([item isKindOfClass:[TGConversation class]])
+                {
+                    TGConversation *conversation = item;
+                    return conversation;
+                }
+                return nil;
+            }] deliverOn:[SQueue mainQueue]] onDispose:^
+            {
+                TGDispatchOnMainThread(^
+                {
+                    __strong TGModernConversationController *strongSelf = weakSelf;
+                    if (strongSelf != nil)
+                    {
+                        strongSelf->_searchBar.showActivity = false;
+                        [strongSelf->_searchPanel setInProgress:false];
+                    }
+                });
+            }] startWithNext:^(id next)
             {
                 __strong TGModernConversationController *strongSelf = weakSelf;
                 if (strongSelf != nil)
                 {
-                    strongSelf->_searchBar.showActivity = false;
-                    [strongSelf->_searchPanel setInProgress:false];
-                }
-            });
-        }] startWithNext:^(id next)
-        {
-            __strong TGModernConversationController *strongSelf = weakSelf;
-            if (strongSelf != nil)
-            {
-                NSMutableArray *searchResultsIds = [[NSMutableArray alloc] init];
-                
-                for (TGConversation *conversation in next)
-                {
-                    if (conversation.additionalProperties[@"searchMessageId"] != nil)
+                    NSMutableArray *searchResultsIds = [[NSMutableArray alloc] init];
+                    
+                    for (TGConversation *conversation in next)
                     {
-                        [searchResultsIds addObject:conversation.additionalProperties[@"searchMessageId"]];
+                        if (conversation.additionalProperties[@"searchMessageId"] != nil)
+                        {
+                            [searchResultsIds addObject:conversation.additionalProperties[@"searchMessageId"]];
+                        }
                     }
+                    [strongSelf setSearchResultsIds:searchResultsIds];
                 }
-                [strongSelf setSearchResultsIds:searchResultsIds];
-            }
-        } error:^(__unused id error)
-        {
-        } completed:^
-        {
-        }]];
+            } error:^(__unused id error)
+            {
+            } completed:^
+            {
+            }]];
+        }
     }
     
     _searchPanel.isSearching = query.length != 0;
@@ -9435,12 +10535,15 @@ static UIView *_findBackArrow(UIView *view)
     if (self.navigationController != nil && self.navigationController.viewControllers.lastObject != self)
         return nil;
     
+    if (_isRecording)
+        return nil;
+    
     if (previewingContext.sourceView == _avatarButton)
     {
         TGModernGalleryController *modernGallery = [self.companion galleryControllerForAvatar];
         if (modernGallery != nil)
         {
-            if (_inputTextPanel.maybeInputField.isFirstResponder)
+            if (_inputTextPanel.isActive)
                 _collectionViewIgnoresNextKeyboardHeightChange = true;
             
             CGFloat side = MIN(self.view.frame.size.width, self.view.frame.size.height);
@@ -9463,22 +10566,18 @@ static UIView *_findBackArrow(UIView *view)
                         previewingContext.sourceRect = CGRectMake(location.x, location.y, 1.0f, 1.0f);
                         
                         if ([[link lowercaseString] hasPrefix:@"http://"] || [[link lowercaseString] hasPrefix:@"https://"] || [link rangeOfString:@"://"].location == NSNotFound) {
-                            
-                            // removing preview for links
-                            //NSURL *url = nil;
-                            //@try {
-                            //    url = [NSURL URLWithString:link];
-                            //} @catch (NSException *e) {}
-                            //if (url != nil && [[url.scheme lowercaseString] hasPrefix:@"http"]) {
-                            //   if (_inputTextPanel.maybeInputField.isFirstResponder)
-                            //        _collectionViewIgnoresNextKeyboardHeightChange = true;
-                            //
-                            //    SFSafariViewController *controller = [[SFSafariViewController alloc] initWithURL:url];
-                             //   return controller;
-                            //}
-                            
+//                            NSURL *url = nil;
+//                            @try {
+//                                 url = [NSURL URLWithString:link];
+//                            } @catch (NSException *e) {}
+//                            if (url != nil && [[url.scheme lowercaseString] hasPrefix:@"http"]) {
+//                                if (_inputTextPanel.isActive)
+//                                    _collectionViewIgnoresNextKeyboardHeightChange = true;
+//
+//                                SFSafariViewController *controller = [[SFSafariViewController alloc] initWithURL:url];
+//                                return controller;
+//                            }
                         }
-                        
                     }
                     else if ([(TGMessageViewModel *)item.viewModel isPreviewableAtPoint:[_collectionView convertPoint:collectionPoint toView:[cell contentViewForBinding]]])
                     {
@@ -9512,7 +10611,7 @@ static UIView *_findBackArrow(UIView *view)
                         UIViewController *controller = [self openMediaFromMessage:mid instant:false previewMode:true previewActions:&actions cancelPIP:false];
                         if (controller != nil)
                         {
-                            if (_inputTextPanel.maybeInputField.isFirstResponder)
+                            if (_inputTextPanel.isActive)
                                 _collectionViewIgnoresNextKeyboardHeightChange = true;
                             return controller;
                         }
@@ -9648,7 +10747,7 @@ static UIView *_findBackArrow(UIView *view)
 }
 
 - (void)forwardMessages:(NSArray *)messageIds fastForward:(bool)fastForward {
-    [self.view endEditing:true];
+    [self endEditing];
     
     if (fastForward)
     {
@@ -9656,6 +10755,7 @@ static UIView *_findBackArrow(UIView *view)
         
         NSString *fixedSharedLink = nil;
         bool isGame = false;
+        bool isRoundMessage = false;
         NSString *invoiceStartParam = nil;
         
         TGWebAppControllerShareGameData *shareGameData = nil;
@@ -9680,6 +10780,8 @@ static UIView *_findBackArrow(UIView *view)
                     botUser = [TGDatabaseInstance() loadUser:((TGViaUserAttachment *)attachment).userId];
                 } else if ([attachment isKindOfClass:[TGInvoiceMediaAttachment class]]) {
                     invoiceStartParam = ((TGInvoiceMediaAttachment *)attachment).invoiceStartParam;
+                } else if ([attachment isKindOfClass:[TGVideoMediaAttachment class]]) {
+                    isRoundMessage = ((TGVideoMediaAttachment *)attachment).roundMessage;
                 }
             }
             if (botUser == nil) {
@@ -9718,9 +10820,10 @@ static UIView *_findBackArrow(UIView *view)
         };
         
         NSString *actionButtonTitle = TGLocalized(@"ShareMenu.CopyShareLink");
-        if (isGame) {
+        if (isGame)
             actionButtonTitle = TGLocalized(@"ShareMenu.CopyShareLinkGame");
-        }
+        else if (isRoundMessage)
+            actionButtonTitle = TGLocalized(@"Web.OpenExternal");
         SSignal *externalSignal = [linkSignal map:^NSURL *(NSString *linkString)
         {
             return [NSURL URLWithString:linkString];
@@ -9747,8 +10850,13 @@ static UIView *_findBackArrow(UIView *view)
             }] startWithNext:^(id next)
             {
                 if (next != nil) {
-                    [[UIPasteboard generalPasteboard] setString:next];
-                    [progressWindow dismissWithSuccess];
+                    if (isRoundMessage) {
+                        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:next]];
+                        [progressWindow dismiss:false];
+                    } else {
+                        [[UIPasteboard generalPasteboard] setString:next];
+                        [progressWindow dismissWithSuccess];
+                    }
                 }
             }];
         } shareAction:^(NSArray *peerIds, NSString *caption)
@@ -9788,6 +10896,8 @@ static UIView *_findBackArrow(UIView *view)
             } else {
                 [strongSelf broadcastForwardMessages:messageIds caption:caption toPeerIds:peerIds];
             }
+            
+            [[[TGProgressWindow alloc] init] dismissWithSuccess];
         } externalShareItemSignal:externalSignal sourceView:_view sourceRect:sourceRect barButtonItem:nil];
     } else {
         [_companion controllerWantsToForwardMessages:messageIds];
@@ -9805,13 +10915,20 @@ static UIView *_findBackArrow(UIView *view)
 - (void)setLoadingMessages:(bool)loadingMessages {
     _loadingMessages = loadingMessages;
     if (loadingMessages) {
-        if (_loadingMessagesIndicator == nil) {
+        if (_loadingMessagesController == nil) {
+            _loadingMessagesController = [[TGProgressWindowController alloc] init:true];
+            _loadingMessagesController.view.frame = self.view.bounds;
+            _loadingMessagesController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+            [_loadingMessagesController show:false];
+            [self.view addSubview:_loadingMessagesController.view];
+        }
+        /*if (_loadingMessagesIndicator == nil) {
             _loadingMessagesIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
             _loadingMessagesIndicator.frame = CGRectMake(CGFloor((self.view.frame.size.width - _loadingMessagesIndicator.frame.size.width) / 2.0f), CGFloor((self.view.frame.size.height - _loadingMessagesIndicator.frame.size.height) / 2.0f), _loadingMessagesIndicator.frame.size.width, _loadingMessagesIndicator.frame.size.height);
             _loadingMessagesIndicator.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
             [self.view addSubview:_loadingMessagesIndicator];
             [_loadingMessagesIndicator startAnimating];
-        }
+        }*/
         
         _snapshotImageView.hidden = true;
         _collectionView.hidden = true;
@@ -9821,16 +10938,31 @@ static UIView *_findBackArrow(UIView *view)
         _collectionView.hidden = false;
         _snapshotBackgroundView.hidden = false;
         
-        if (_loadingMessagesIndicator != nil) {
+        if (_loadingMessagesController != nil) {
+            __weak UIView *loadingView = _loadingMessagesController.view;
+            [_loadingMessagesController dismiss:true completion:^{
+                __strong UIView *strongView = loadingView;
+                if (strongView != nil) {
+                    [strongView removeFromSuperview];
+                }
+            }];
+            _loadingMessagesController = nil;
+        }
+        
+        /*if (_loadingMessagesIndicator != nil) {
             [_loadingMessagesIndicator stopAnimating];
             [_loadingMessagesIndicator removeFromSuperview];
             _loadingMessagesIndicator = nil;
-        }
+        }*/
     }
 }
 
 - (void)maybeDisplayGifTooltip {
-    if (iosMajorVersion() < 8 || TGIsPad()) {
+    if (iosMajorVersion() < 8 || TGIsPad() || _isChannel) {
+        return;
+    }
+    
+    if ([self hasNonTextInputPanel]) {
         return;
     }
     
@@ -9852,7 +10984,7 @@ static UIView *_findBackArrow(UIView *view)
                 if (recentGifs.count != 0) {
                     [[NSUserDefaults standardUserDefaults] setObject:@true forKey:key];
                     displayed = true;
-                     
+                    
                     if (strongSelf->_tooltipContainerView == nil && [strongSelf->_inputTextPanel stickerButtonFrame].size.width > FLT_EPSILON)
                     {
                         strongSelf->_tooltipContainerView = [[TGMenuContainerView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, strongSelf.view.frame.size.width, strongSelf.view.frame.size.height)];
@@ -10139,6 +11271,212 @@ static UIView *_findBackArrow(UIView *view)
     if (_unseenMessagesButton.superview != nil && _unseenMessagesButton.alpha > FLT_EPSILON) {
         _unseenMessagesButton.badgeCount += count;
     }
+}
+
+- (void)_updateItemForReplySwipeInteraction:(int32_t)mid ended:(bool)ended
+{    
+    for (TGModernCollectionCell *cell in _collectionView.visibleCells)
+    {
+        if ([cell.boundItem isKindOfClass:[TGMessageModernConversationItem class]] && ((TGMessageModernConversationItem *)cell.boundItem)->_message.mid == mid)
+            [(TGMessageModernConversationItem *)cell.boundItem updateReplySwipeInteraction:_viewStorage ended:ended];
+    }
+}
+
+- (SSignal *)messageVisiblitySignalForMessageId:(int32_t)messageId
+{
+    SSignal *initialSignal = [[SSignal alloc] initWithGenerator:^id<SDisposable>(SSubscriber *subscriber)
+    {
+        bool found = false;
+        for (TGModernCollectionCell *cell in _collectionView.visibleCells)
+        {
+            TGMessageModernConversationItem *messageItem = cell.boundItem;
+            if (messageItem != nil && messageItem->_message.mid == messageId)
+            {
+                found = true;
+                break;
+            }
+        }
+        
+        [subscriber putNext:@{ @"type": found ? @"bind" : @"unbind", @"mid": @(messageId) }];
+        [subscriber putCompletion];
+        
+        return nil;
+    }];
+    
+    SSignal *viewVisibleSignal = _viewVisible.signal;
+    SSignal *signal = [[SSignal alloc] initWithGenerator:^id<SDisposable>(SSubscriber *subscriber)
+    {
+        return [viewVisibleSignal startWithNext:^(id next)
+        {
+            if (next == nil)
+            {
+                [subscriber putNext:@false];
+                [subscriber putCompletion];
+            }
+            else
+            {
+                [subscriber putNext:next];
+            }
+        }];
+    }];
+    
+    SSignal *scrollingToMessageSignal = [[[SSignal alloc] initWithGenerator:^id<SDisposable>(SSubscriber *subscriber)
+    {
+        TGDispatchOnMainThread(^
+        {
+            [subscriber putNext:@(_scrollToMid != nil)];
+            [subscriber putCompletion];
+        });
+        
+        return nil;
+    }] startOn:[SQueue concurrentDefaultQueue]];
+    
+    __weak TGModernConversationController *weakSelf = self;
+    return [signal mapToSignal:^SSignal *(NSNumber *value)
+    {
+        __strong TGModernConversationController *strongSelf = weakSelf;
+        if (strongSelf == nil)
+            return [SSignal single:@false];
+        
+        if (value.boolValue)
+        {
+            SSignal *bindingSignal = [[[initialSignal then:strongSelf->_bindingPipe.signalProducer()] filter:^bool(NSDictionary *value)
+            {
+                return [value[@"mid"] isEqual:@(messageId)];
+            }] mapToSignal:^SSignal *(NSDictionary *value)
+            {
+                if ([value[@"type"] isEqualToString:@"bind"])
+                    return [strongSelf messageVisibleInViewportSignal:messageId once:false wholeVisible:false];
+                else
+                    return [SSignal single:@false];
+            }];
+            
+            return [scrollingToMessageSignal mapToSignal:^SSignal *(NSNumber *value)
+            {
+                if (value.boolValue)
+                {
+                    return [[[strongSelf->_scrollToFinishedPipe.signalProducer() take:1] mapToSignal:^SSignal *(id)
+                    {
+                        return [SSignal complete];
+                    }] then:bindingSignal];
+                }
+                else
+                {
+                    return bindingSignal;
+                }
+            }];
+        }
+        else
+        {
+            return [SSignal single:@false];
+        }
+    }];
+}
+
+- (SSignal *)messageVisibleInViewportSignal:(int32_t)messageId once:(bool)once wholeVisible:(bool)wholeVisible
+{
+    if (!once)
+        _positionMonitoredForMessageWithMid = messageId;
+    
+    __weak TGModernConversationController *weakSelf = self;
+    return [[[SSignal alloc] initWithGenerator:^id<SDisposable>(SSubscriber *subscriber)
+    {
+        __strong TGModernConversationController *strongSelf = weakSelf;
+        if (strongSelf != nil)
+        {
+            bool found = false;
+            
+            if (strongSelf->_scrollToMid == nil)
+            {
+                for (TGModernCollectionCell *cell in strongSelf->_collectionView.visibleCells)
+                {
+                    TGMessageModernConversationItem *messageItem = cell.boundItem;
+                    if (messageItem != nil && messageItem->_message.mid == messageId)
+                    {
+                        found = true;
+                        CGRect rect = [strongSelf->_collectionView convertRect:cell.frame toView:strongSelf.view];
+
+                        TGNavigationController *navController = (TGNavigationController *)strongSelf.navigationController;
+                        bool visible = false;
+                        
+                        CGFloat topLimit = CGRectGetMaxY(navController.navigationBar.frame) + navController.currentAdditionalNavigationBarHeight;
+                        CGFloat bottomLimit = strongSelf->_currentInputPanel.frame.origin.y;
+                        if (wholeVisible)
+                            visible = CGRectGetMinY(rect) > topLimit && CGRectGetMaxY(rect) < bottomLimit;
+                        else
+                            visible = CGRectGetMaxY(rect) > topLimit && CGRectGetMinY(rect) < bottomLimit;
+                        
+                        [subscriber putNext:@(visible)];
+                        if (visible)
+                        {
+                            [[SQueue concurrentDefaultQueue] dispatch:^
+                            {
+                                TGDispatchOnMainThread(^
+                                {
+                                    [messageItem updateMessageVisibility];
+                                });
+                            }];
+                        }
+                        
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                found = true;
+            }
+            
+            if (!once)
+            {
+                strongSelf->_visibilityChanged = ^(bool visible)
+                {
+                    [subscriber putNext:@(visible)];
+                };
+            }
+            
+            if (!found)
+                [subscriber putNext:@(false)];
+        }
+        
+        return [[SBlockDisposable alloc] initWithBlock:^
+        {
+            if (!once)
+            {
+                __strong TGModernConversationController *strongSelf = weakSelf;
+                strongSelf->_positionMonitoredForMessageWithMid = 0;
+                strongSelf->_visibilityChanged = nil;
+            }
+        }];
+    }] ignoreRepeated];
+}
+
+- (void)updateFeaturesAvailability
+{
+    [_inputTextPanel setVideoMessageAvailable:[_companion allowVideoMessages]];
+}
+
+- (void)searchPressed {
+    [self activateSearch];
+}
+
+- (void)setBannedStickers:(bool)bannedStickers {
+    _bannedStickers = bannedStickers;
+    _inputTextPanel.stickerButton.fadeDisabled = _bannedStickers;
+}
+
+- (void)setBannedMedia:(bool)bannedMedia {
+    _bannedMedia = bannedMedia;
+    _inputTextPanel.micButton.fadeDisabled = _bannedMedia;
+}
+
+- (void)backPressed {
+    [self.navigationController popViewControllerAnimated:true];
+}
+
+- (void)endEditing
+{
+    [_inputTextPanel endEditing:true];
 }
 
 @end

@@ -5,6 +5,7 @@
 
 #import "TLRichText.h"
 #import "TLPageBlock.h"
+#import "TLChat.h"
 
 @implementation TLPageBlock
 
@@ -862,6 +863,79 @@
         value.type = TLConstructedValueTypePrimitiveInt32;
         value.primitive.int32Value = self.published_date;
         values->insert(std::pair<int32_t, TLConstructedValue>((int32_t)0x1e4acaf, value));
+    }
+}
+
+
+@end
+
+@implementation TLPageBlock$pageBlockChannel : TLPageBlock
+
+
+- (int32_t)TLconstructorSignature
+{
+    return (int32_t)0xef1751b5;
+}
+
+- (int32_t)TLconstructorName
+{
+    return (int32_t)0xdc17e55d;
+}
+
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)metaObject
+{
+    TLPageBlock$pageBlockChannel *object = [[TLPageBlock$pageBlockChannel alloc] init];
+    object.channel = metaObject->getObject((int32_t)0xe11f3d41);
+    return object;
+}
+
+- (void)TLfillFieldsWithValues:(std::map<int32_t, TLConstructedValue> *)values
+{
+    {
+        TLConstructedValue value;
+        value.type = TLConstructedValueTypeObject;
+        value.nativeObject = self.channel;
+        values->insert(std::pair<int32_t, TLConstructedValue>((int32_t)0xe11f3d41, value));
+    }
+}
+
+
+@end
+
+@implementation TLPageBlock$pageBlockAudio : TLPageBlock
+
+
+- (int32_t)TLconstructorSignature
+{
+    return (int32_t)0x31b81a7f;
+}
+
+- (int32_t)TLconstructorName
+{
+    return (int32_t)0x6f27310a;
+}
+
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)metaObject
+{
+    TLPageBlock$pageBlockAudio *object = [[TLPageBlock$pageBlockAudio alloc] init];
+    object.audio_id = metaObject->getInt64((int32_t)0xda4b2e15);
+    object.caption = metaObject->getObject((int32_t)0x9bcfcf5a);
+    return object;
+}
+
+- (void)TLfillFieldsWithValues:(std::map<int32_t, TLConstructedValue> *)values
+{
+    {
+        TLConstructedValue value;
+        value.type = TLConstructedValueTypePrimitiveInt64;
+        value.primitive.int64Value = self.audio_id;
+        values->insert(std::pair<int32_t, TLConstructedValue>((int32_t)0xda4b2e15, value));
+    }
+    {
+        TLConstructedValue value;
+        value.type = TLConstructedValueTypeObject;
+        value.nativeObject = self.caption;
+        values->insert(std::pair<int32_t, TLConstructedValue>((int32_t)0x9bcfcf5a, value));
     }
 }
 

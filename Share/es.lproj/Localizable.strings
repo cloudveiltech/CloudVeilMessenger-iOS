@@ -2,6 +2,7 @@
 "Share.Next" = "Siguiente";
 "Share.OK" = "OK";
 "Share.Search" = "Buscar";
+"Share.Send" = "Enviar";
 
 "Share.Title" = "Compartir";
 "Share.ShareWithPerson" = "¿Compartir con %@?";
@@ -16,12 +17,16 @@
 "Share.Select" = "Elegir";
 "Share.Done" = "Hecho";
 
-"Share.AuthTitle" = "Iniciar sesión en Telegram";
-"Share.AuthText" = "Abre Telegram e inicia sesión para compartir.";
+"Share.AuthTitle" = "Iniciar sesión en CloudVeil Messenger";
+"Share.AuthText" = "Abre CloudVeil Messenger e inicia sesión para compartir.";
 
 "Share.ChoosePhoneNumber" = "Elige un número de teléfono para compartir";
 
 "Share.RecentSection" = "Recientes";
 "Share.RecentSectionClear" = "Borrar";
 
+"Share.PeopleSection" = "Personas";
+
 "Share.TouchId" = "Pon tu código de acceso";
+
+"Share.AddCaption" = "Escribe un comentario...";

@@ -31,15 +31,8 @@
 
 #ifdef __cplusplus
 #include <map>
-#endif
-
-/*
-#ifdef __MAC_10_9
 #include <memory>
-#else
-#include <tr1/memory>
 #endif
-*/
 
 @protocol TGTransport;
 
@@ -137,6 +130,8 @@ extern TGTelegraph *TGTelegraphInstance;
 @property (nonatomic, strong, readonly) SMulticastSignalManager *genericTasksSignalManager;
 @property (nonatomic, strong, readonly) SMulticastSignalManager *channelStatesSignalManager;
 @property (nonatomic, strong, readonly) SDisposableSet *disposeOnLogout;
+@property (nonatomic, strong, readonly) SMetaDisposable *checkLocalizationDisposable;
+@property (nonatomic) bool checkedLocalization;
 
 @property (nonatomic, strong, readonly) TGCallManager *callManager;
 @property (nonatomic, strong, readonly) MediaBox *mediaBox;
@@ -152,6 +147,9 @@ extern TGTelegraph *TGTelegraphInstance;
 
 - (int)serviceUserUid;
 - (int)createServiceUserIfNeeded;
+
+- (int)voipSupportUserUid;
+- (int)createVoipSupportUserIfNeeded;
 
 - (void)locationTranslationSettingsUpdated;
 
@@ -181,8 +179,6 @@ extern TGTelegraph *TGTelegraphInstance;
 
 - (NSObject *)doUploadFilePart:(int64_t)fileId partId:(int)partId data:(NSData *)data actor:(id<TGFileUploadActor>)actor;
 - (NSObject *)doUploadBigFilePart:(int64_t)fileId partId:(int)partId data:(NSData *)data totalParts:(int)totalParts actor:(id<TGFileUploadActor>)actor;
-- (NSObject *)doDownloadFile:(int)datacenterId volumeId:(int64_t)volumeId fileId:(int)fileId secret:(int64_t)secret actor:(id<TGFileDownloadActor>)actor;
-- (id)doDownloadFilePart:(int)datacenterId location:(TLInputFileLocation *)location offset:(int)offset length:(int)length actor:(id<TGFileDownloadActor>)actor;
 
 - (NSObject *)doSendConfirmationCode:(NSString *)phoneNumber requestBuilder:(TGSendCodeRequestBuilder *)requestBuilder;
 - (NSObject *)doSendConfirmationSms:(NSString *)phoneNumber phoneHash:(NSString *)phoneHash requestBuilder:(TGSendCodeRequestBuilder *)requestBuilder;

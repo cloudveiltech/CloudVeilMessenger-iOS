@@ -38,7 +38,7 @@
 
 - (int32_t)TLconstructorSignature
 {
-    return (int32_t)0xad524315;
+    return (int32_t)0x77d01c3b;
 }
 
 - (int32_t)TLconstructorName
@@ -50,6 +50,7 @@
 {
     TLcontacts_ImportedContacts$contacts_importedContacts *object = [[TLcontacts_ImportedContacts$contacts_importedContacts alloc] init];
     object.imported = metaObject->getArray((int32_t)0xbdf8ab20);
+    object.popular_invites = metaObject->getArray((int32_t)0xa1ffd45);
     object.retry_contacts = metaObject->getArray((int32_t)0x22de4fcc);
     object.users = metaObject->getArray((int32_t)0x933e5ff3);
     return object;
@@ -62,6 +63,12 @@
         value.type = TLConstructedValueTypeVector;
         value.nativeObject = self.imported;
         values->insert(std::pair<int32_t, TLConstructedValue>((int32_t)0xbdf8ab20, value));
+    }
+    {
+        TLConstructedValue value;
+        value.type = TLConstructedValueTypeVector;
+        value.nativeObject = self.popular_invites;
+        values->insert(std::pair<int32_t, TLConstructedValue>((int32_t)0xa1ffd45, value));
     }
     {
         TLConstructedValue value;

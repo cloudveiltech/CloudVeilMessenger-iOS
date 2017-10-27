@@ -66,6 +66,9 @@
 #import "TGRecentCallsController.h"
 
 #import "TGStickersSignals.h"
+#import "TGUserSignal.h"
+
+#import "TGLocalizationSelectionController.h"
 
 @interface TGAccountSettingsController () <TGWallpaperControllerDelegate>
 {
@@ -83,6 +86,7 @@
     TGVariantCollectionItem *_usernameItem;
     TGVariantCollectionItem *_phoneNumberItem;
     TGVariantCollectionItem *_aboutItem;
+    TGVariantCollectionItem *_languageItem;
     
     TGDisclosureActionCollectionItem *_notificationsItem;
     TGDisclosureActionCollectionItem *_privacySettingsItem;
@@ -101,6 +105,7 @@
     
     id<SDisposable> _stickerPacksDisposable;
     id<SDisposable> _updatedFeaturedStickerPacksDisposable;
+    id<SDisposable> _userCachedDataDisposable;
     
     TGMediaAvatarMenuMixin *_avatarMixin;
 }
@@ -142,6 +147,7 @@
         
         _wallpapersItem = [[TGWallpapersCollectionItem alloc] initWithAction:@selector(wallpapersPressed) title:TGLocalized(@"Settings.ChatBackground")];
         _wallpapersItem.interfaceHandle = _actionHandle;
+        _languageItem = [[TGVariantCollectionItem alloc] initWithTitle:TGLocalized(@"Settings.AppLanguage") variant:TGLocalized(@"Localization.LanguageName") action:@selector(languagePressed)];
         
         NSMutableArray *settingsItems = [[NSMutableArray alloc] init];
         [settingsItems addObject:(_notificationsItem = [[TGDisclosureActionCollectionItem alloc] initWithTitle:TGLocalized(@"Settings.NotificationsAndSounds") action:@selector(notificationsAndSoundsPressed)])];
@@ -149,6 +155,7 @@
         [settingsItems addObject:(_chatSettingsItem = [[TGDisclosureActionCollectionItem alloc] initWithTitle:TGLocalized(@"Settings.ChatSettings") action:@selector(chatSettingsPressed)])];
         [settingsItems addObject:(_stickerSettingsItem = [[TGDisclosureActionCollectionItem alloc] initWithTitle:TGLocalized(@"ChatSettings.Stickers") action:@selector(stickerSettingsPressed)])];
         [settingsItems addObject:_wallpapersItem];
+        [settingsItems addObject:_languageItem];
         
         _settingsSection = [[TGCollectionMenuSection alloc] initWithItems:settingsItems];
         [self.menuSections addSection:_settingsSection];
@@ -201,7 +208,8 @@
         _phoneNumberItem = [[TGVariantCollectionItem alloc] initWithTitle:TGLocalized(@"Settings.PhoneNumber") action:@selector(phoneNumberPressed)];
         _usernameItem = [[TGVariantCollectionItem alloc] initWithTitle:TGLocalized(@"Settings.Username") action:@selector(usernamePressed)];
         _aboutItem = [[TGVariantCollectionItem alloc] initWithTitle:TGLocalized(@"Settings.About") action:@selector(aboutPressed)];
-        TGCollectionMenuSection *usernameSection = [[TGCollectionMenuSection alloc] initWithItems:@[_phoneNumberItem, _usernameItem/*, _aboutItem*/]];
+        _aboutItem.flexibleLayout = true;
+        TGCollectionMenuSection *usernameSection = [[TGCollectionMenuSection alloc] initWithItems:@[_phoneNumberItem, _usernameItem, _aboutItem]];
         [self.menuSections addSection:usernameSection];
         
         _supportItem = [[TGDisclosureActionCollectionItem alloc] initWithTitle:TGLocalized(@"Settings.Support") action:@selector(supportPressed)];
@@ -234,6 +242,7 @@
     [_watchAppInstalledDisposable dispose];
     [_stickerPacksDisposable dispose];
     [_updatedFeaturedStickerPacksDisposable dispose];
+    [_userCachedDataDisposable dispose];
     [_actionHandle reset];
     [ActionStageInstance() removeWatcher:self];
     [_progressWindow dismiss:true];
@@ -267,7 +276,34 @@
         }
     }];
     
+    [[TGUserSignal updatedUserCachedDataWithUserId:_uid] startWithNext:nil];
+    _userCachedDataDisposable = [[[TGDatabaseInstance() userCachedData:_uid] deliverOn:[SQueue mainQueue]] startWithNext:^(TGCachedUserData *next)
+    {
+        __strong TGAccountSettingsController *strongSelf = weakSelf;
+        if (strongSelf != nil)
+        {
+            [strongSelf->_aboutItem setVariant:next.about.length == 0 ? TGLocalized(@"Settings.AboutEmpty") : [strongSelf _shortStringForAbout:next.about]];
+        }
+    }];
+    
     _updatedFeaturedStickerPacksDisposable = [[TGStickersSignals updatedFeaturedStickerPacks] startWithNext:nil];
+}
+
+- (NSString *)_shortStringForAbout:(NSString *)about
+{
+    const NSInteger maxLength = 200;
+    
+    static NSString *tokenString = nil;
+    if (tokenString == nil)
+    {
+        unichar tokenChar = 0x2026;
+        tokenString = [[NSString alloc] initWithCharacters:&tokenChar length:1];
+    }
+
+    if (about.length > maxLength)
+        about = [NSString stringWithFormat:@"%@%@", [[about substringToIndex:maxLength] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]], tokenString];
+    
+    return about;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -981,6 +1017,7 @@
     _privacySettingsItem.title = TGLocalized(@"Settings.PrivacySettings");
     _chatSettingsItem.title = TGLocalized(@"Settings.ChatSettings");
     
+    _stickerSettingsItem.title = TGLocalized(@"ChatSettings.Stickers");
     
     _setProfilePhotoItem.title = TGLocalized(@"Settings.SetProfilePhoto");
     _wallpapersItem.title = TGLocalized(@"Settings.ChatBackground");
@@ -988,6 +1025,12 @@
     _aboutItem.title = TGLocalized(@"Settings.About");
     _phoneNumberItem.title = TGLocalized(@"Settings.PhoneNumber");
     _supportItem.title = TGLocalized(@"Settings.Support");
+    _callSettingsItem.title = TGLocalized(@"CallSettings.RecentCalls");
+    
+    _faqItem.title = TGLocalized(@"Settings.FAQ");
+    
+    _languageItem.title = TGLocalized(@"Settings.AppLanguage");
+    _languageItem.variant = TGLocalized(@"Localization.LanguageName");
     
     [_profileDataItem localizationUpdated];
 }
@@ -1003,6 +1046,10 @@
         navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
     }
     [self presentViewController:navigationController animated:true completion:nil];
+}
+    
+- (void)languagePressed {
+    [self.navigationController pushViewController:[[TGLocalizationSelectionController alloc] init] animated:true];
 }
 
 @end

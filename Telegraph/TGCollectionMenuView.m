@@ -34,6 +34,11 @@
     {
         _allowEditingCells = true;
     }
+    
+    if (@available(iOS 11.0, *)) {
+        self.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    }
+    
     return self;
 }
 
@@ -48,6 +53,19 @@
 - (void)setBounds:(CGRect)bounds
 {
     [super setBounds:bounds];
+    
+    if (isnan(bounds.origin.x)) {
+        bounds.origin.x = 0.0f;
+    }
+    if (isnan(bounds.origin.y)) {
+        bounds.origin.y = 0.0f;
+    }
+    if (isnan(bounds.size.width)) {
+        bounds.size.width = 0.0f;
+    }
+    if (isnan(bounds.size.height)) {
+        bounds.size.height = 0.0f;
+    }
     
     if (!CGSizeEqualToSize(_validSize, bounds.size)) {
         _validSize = bounds.size;

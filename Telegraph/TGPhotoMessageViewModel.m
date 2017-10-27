@@ -22,7 +22,7 @@
 
 @implementation TGPhotoMessageViewModel
 
-- (instancetype)initWithMessage:(TGMessage *)message imageMedia:(TGImageMediaAttachment *)imageMedia authorPeer:(id)authorPeer context:(TGModernViewContext *)context forwardPeer:(id)forwardPeer forwardAuthor:(id)forwardAuthor forwardMessageId:(int32_t)forwardMessageId replyHeader:(TGMessage *)replyHeader replyAuthor:(id)replyAuthor viaUser:(TGUser *)viaUser
+- (instancetype)initWithMessage:(TGMessage *)message imageMedia:(TGImageMediaAttachment *)imageMedia authorPeer:(id)authorPeer context:(TGModernViewContext *)context forwardPeer:(id)forwardPeer forwardAuthor:(id)forwardAuthor forwardMessageId:(int32_t)forwardMessageId replyHeader:(TGMessage *)replyHeader replyAuthor:(id)replyAuthor viaUser:(TGUser *)viaUser webPage:(TGWebPageMediaAttachment *)webPage
 {
     TGImageInfo *previewImageInfo = imageMedia.imageInfo;
     
@@ -74,7 +74,7 @@
         [previewImageInfo addImageWithSize:thumbnailSize url:previewUri];
     }
     
-    self = [super initWithMessage:message imageInfo:previewImageInfo authorPeer:authorPeer context:context forwardPeer:forwardPeer forwardAuthor:forwardAuthor forwardMessageId:forwardMessageId replyHeader:replyHeader replyAuthor:replyAuthor viaUser:viaUser caption:imageMedia.caption textCheckingResults:imageMedia.textCheckingResults];
+    self = [super initWithMessage:message imageInfo:previewImageInfo authorPeer:authorPeer context:context forwardPeer:forwardPeer forwardAuthor:forwardAuthor forwardMessageId:forwardMessageId replyHeader:replyHeader replyAuthor:replyAuthor viaUser:viaUser caption:imageMedia.caption textCheckingResults:imageMedia.textCheckingResults webPage:webPage];
     if (self != nil)
     {
         _imageMedia = imageMedia;
@@ -85,7 +85,7 @@
         {
             self.isSecret = true;
             
-            [self enableInstantPreview];
+            //[self enableInstantPreview];
         }
         
         if (self.isSecret)
@@ -194,6 +194,10 @@
 - (void)layoutForContainerSize:(CGSize)containerSize
 {
     [super layoutForContainerSize:containerSize];
+}
+
+- (bool)isInstant {
+    return self.isSecret;
 }
 
 @end

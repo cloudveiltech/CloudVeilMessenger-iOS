@@ -90,6 +90,12 @@
         
         [_collectionView addGestureRecognizer:_pressGestureRecognizer];
     }
+    
+    if (@available(iOS 11.0, *))
+    {
+        _collectionView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    }
+    
     return self;
 }
 
@@ -215,7 +221,7 @@
             __weak TGStickerAssociatedInputPanel *weakSelf = self;
             __weak TGStickerItemPreviewView *weakPreviewView = previewView;
             NSMutableArray *actions = [[NSMutableArray alloc] init];
-            TGMenuSheetButtonItemView *sendItem = [[TGMenuSheetButtonItemView alloc] initWithTitle:TGLocalized(@"Conversation.Send") type:TGMenuSheetButtonTypeSend action:^
+            TGMenuSheetButtonItemView *sendItem = [[TGMenuSheetButtonItemView alloc] initWithTitle:TGLocalized(@"ShareMenu.Send") type:TGMenuSheetButtonTypeSend action:^
             {
                 __strong TGStickerItemPreviewView *strongPreviewView = weakPreviewView;
                 __strong TGStickerAssociatedInputPanel *strongSelf = weakSelf;

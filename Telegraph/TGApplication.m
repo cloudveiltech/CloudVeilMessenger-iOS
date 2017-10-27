@@ -14,7 +14,6 @@
 
 #import "URLOpener.h"
 
-
 @interface TGApplication ()
 {
 }
@@ -254,17 +253,17 @@
         if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 /*
-                            SFSafariViewController *controller = [[SFSafariViewController alloc] initWithURL:url entersReaderIfAvailable:false];
-                            [TGAppDelegateInstance.window.rootViewController presentViewController:controller animated:true completion:nil];
-                            */
+                 SFSafariViewController *controller = [[SFSafariViewController alloc] initWithURL:url entersReaderIfAvailable:false];
+                 [TGAppDelegateInstance.window.rootViewController presentViewController:controller animated:true completion:nil];
+                 */
                 [self openURLNew:url];
                 
             });
         } else {
             /*
-                            SFSafariViewController *controller = [[SFSafariViewController alloc] initWithURL:url entersReaderIfAvailable:false];
-                            [TGAppDelegateInstance.window.rootViewController presentViewController:controller animated:true completion:nil];
-                    */
+             SFSafariViewController *controller = [[SFSafariViewController alloc] initWithURL:url entersReaderIfAvailable:false];
+             [TGAppDelegateInstance.window.rootViewController presentViewController:controller animated:true completion:nil];
+             */
             [self openURLNew:url];
         }
         return true;
@@ -322,28 +321,24 @@
             [alert addAction:actionICab];
         };
         
-        UIAlertAction* actionCancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-            
-        }];
+        UIAlertAction* actionCancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {}];
         [alert addAction:actionCancel];
         
         UIViewController *viewController = [[[[UIApplication sharedApplication] delegate] window] rootViewController];
         
-        if(isSingle==TRUE){
+        if(isSingle==TRUE) {
+            
             NSDictionary *options = [[NSDictionary alloc] init];
-            [[UIApplication sharedApplication] openURL:url options:options completionHandler:^(BOOL success){
-            }];
-        }else {
+            [[UIApplication sharedApplication] openURL:url];
+        } else {
             [viewController presentViewController:alert animated:YES completion:nil];
         }
-        
     }
-
 }
 
 - (BOOL)openURL:(NSURL *)url
 {
-    return [self openURL:url forceNative:false];
+    return [self nativeOpenURL: url];//[self openURL:url forceNative:false];
 }
 
 - (BOOL)nativeOpenURL:(NSURL *)url
@@ -368,23 +363,7 @@
 - (void)setStatusBarHidden:(BOOL)hidden withAnimation:(UIStatusBarAnimation)animation
 {
     if (_processStatusBarHiddenRequests)
-    {
-        /*if (animation != UIStatusBarAnimationNone)
-         {
-         [TGHacks animateApplicationStatusBarAppearance:hidden ? TGStatusBarAppearanceAnimationSlideUp : TGStatusBarAppearanceAnimationSlideUp duration:0.3 completion:^
-         {
-         if (hidden)
-         [TGHacks setApplicationStatusBarAlpha:0.0f];
-         }];
-         
-         if (!hidden)
-         [TGHacks setApplicationStatusBarAlpha:1.0f];
-         }
-         else
-         {
-         [TGHacks setApplicationStatusBarAlpha:hidden ? 0.0f : 1.0f];
-         }*/
-        
+    {     
         [self forceSetStatusBarHidden:hidden withAnimation:animation];
     }
 }

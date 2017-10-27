@@ -16,8 +16,10 @@
     UILabel *_titleLabel;
     UILabel *_variantLabel;
     UIImageView *_iconView;
+    UIImageView *_variantIconView;
     UIImageView *_disclosureIndicator;
     CGFloat _minLeftPadding;
+    bool _flexibleLayout;
 }
 
 @end
@@ -51,6 +53,7 @@
 {
     _titleLabel.text = title;
     [self setNeedsLayout];
+    [_titleLabel setNeedsDisplay];
 }
 
 - (void)setVariant:(NSString *)variant variantColor:(UIColor *)variantColor
@@ -58,6 +61,7 @@
     _variantLabel.text = variant;
     _variantLabel.textColor = variantColor == nil ? UIColorRGB(0x929297) : variantColor;
     [self setNeedsLayout];
+    [_variantLabel setNeedsDisplay];
 }
 
 - (void)setIcon:(UIImage *)icon
@@ -71,6 +75,21 @@
     
     _iconView.image = icon;
     self.separatorInset = (icon != nil) ? 59.0f : 15.0f;
+    
+    [self setNeedsLayout];
+}
+
+- (void)setVariantIcon:(UIImage *)variantIcon {
+    if (_variantIconView == nil && variantIcon != nil) {
+        _variantIconView = [[UIImageView alloc] init];
+        _variantIconView.contentMode = UIViewContentModeCenter;
+        [self addSubview:_variantIconView];
+    } else if (variantIcon == nil) {
+        [_variantIconView removeFromSuperview];
+        _variantIconView = nil;
+    }
+    
+    _variantIconView.image = variantIcon;
     
     [self setNeedsLayout];
 }
@@ -89,6 +108,11 @@
     [self setNeedsLayout];
 }
 
+- (void)setFlexibleLayout:(bool)flexibleLayout {
+    _flexibleLayout = flexibleLayout;
+    [self setNeedsLayout];
+}
+
 - (void)layoutSubviews
 {
     [super layoutSubviews];
@@ -97,6 +121,11 @@
     
     CGSize titleSize = [_titleLabel sizeThatFits:CGSizeMake(bounds.size.width, CGFLOAT_MAX)];
     CGSize variantSize = [_variantLabel sizeThatFits:CGSizeMake(bounds.size.width, CGFLOAT_MAX)];
+    if (_flexibleLayout) {
+        variantSize = [_variantLabel.text sizeWithFont:_variantLabel.font];
+        variantSize.width = CGCeil(variantSize.width);
+        variantSize.height = CGCeil(variantSize.height);
+    }
     
     _disclosureIndicator.frame = CGRectMake(bounds.size.width - _disclosureIndicator.frame.size.width - 15, CGFloor((bounds.size.height - _disclosureIndicator.frame.size.height) / 2), _disclosureIndicator.frame.size.width, _disclosureIndicator.frame.size.height);
     
@@ -110,7 +139,15 @@
     CGFloat titleY =  CGFloor((bounds.size.height - titleSize.height) / 2.0f) + TGRetinaPixel;
     CGFloat variantY =  CGFloor((bounds.size.height - variantSize.height) / 2.0f) + TGRetinaPixel;
     
-    if (titleSize.width + labelSpacing + variantSize.width <= availableWidth)
+    if (_flexibleLayout) {
+        _titleLabel.frame = CGRectMake(startingX, titleY, titleSize.width, titleSize.height);
+        
+        CGFloat variantWidth = MIN(CGFloor(availableWidth / 2.0f), MIN(availableWidth - titleSize.width - 25.0f, variantSize.width));
+        
+        CGFloat variantOffset = startingX + availableWidth - variantWidth;
+        _variantLabel.frame = CGRectMake(variantOffset, variantY, variantWidth, variantSize.height);
+    }
+    else if (titleSize.width + labelSpacing + variantSize.width <= availableWidth)
     {
         _titleLabel.frame = CGRectMake(startingX, titleY, titleSize.width, titleSize.height);
         CGFloat variantOffset = startingX + availableWidth - variantSize.width;
@@ -137,6 +174,10 @@
     if (_iconView.image != nil)
     {
         _iconView.frame = CGRectMake(_iconView.frame.origin.x, (self.frame.size.height - _iconView.frame.size.height) / 2, _iconView.frame.size.width, _iconView.frame.size.height);
+    }
+    
+    if (_variantIconView.image != nil) {
+        _variantIconView.frame = CGRectMake(CGRectGetMinX(_variantLabel.frame) - 8.0 - _variantIconView.image.size.width, CGFloor(self.frame.size.height - _variantIconView.image.size.height) / 2, _variantIconView.image.size.width, _variantIconView.image.size.height);
     }
 }
 

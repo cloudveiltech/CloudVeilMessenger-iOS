@@ -35,19 +35,8 @@
 
 #include <map>
 #include <set>
-
-#ifdef __MAC_10_9
 #include <unordered_map>
-#else
-#include <tr1/unordered_map>
-#endif
-
-#ifdef __MAC_10_9
 #include <memory>
-#else
-#include <tr1/memory>
-#endif
-
 
 #include <fcntl.h>
 #import <sys/mman.h>
@@ -85,6 +74,8 @@
 #import "TGRecentStickersSignal.h"
 
 #import "TGGroupManagementSignals.h"
+
+#import "TGCdnData.h"
 
 @interface TGDatabaseIndexHolder : NSObject {
     @public std::set<int32_t> _messageIds;
@@ -328,6 +319,7 @@ static TGFutureAction *futureActionDeserializer(int type)
     TG_SYNCHRONIZED_DEFINE(_userByUid);
     TG_SYNCHRONIZED_DEFINE(_contactsByPhoneId);
     TG_SYNCHRONIZED_DEFINE(_phonebookContacts);
+    TG_SYNCHRONIZED_DEFINE(_importersByPhoneId);
     TG_SYNCHRONIZED_DEFINE(_mutedPeers);
     TG_SYNCHRONIZED_DEFINE(_nextLocalMid);
     TG_SYNCHRONIZED_DEFINE(_userLinks);
@@ -345,10 +337,12 @@ static TGFutureAction *futureActionDeserializer(int type)
     TG_SYNCHRONIZED_DEFINE(_messageLifetimeByPeerId);
     TG_SYNCHRONIZED_DEFINE(_cachedConversations);
     TG_SYNCHRONIZED_DEFINE(_conversationInputStates);
+    TG_SYNCHRONIZED_DEFINE(_instantPageStates);
     
     std::unordered_map<int, TGUser *> _userByUid;
     std::map<int, TGContactBinding *> _contactsByPhoneId;
     std::map<int, int> _phoneIdByUid;
+    std::map<int, int> _importersByPhoneId;
     std::set<int> _remoteContactUids;
     
     std::map<int, TGPhonebookContact *> _phonebookContacts;
@@ -377,6 +371,7 @@ static TGFutureAction *futureActionDeserializer(int type)
     std::map<int64_t, int32_t> _messageLifetimeByPeerId;
     
     std::map<int64_t, NSDictionary *> _conversationInputStates;
+    std::map<int64_t, NSDictionary *> _instantPageStates;
     
     std::map<int64_t, NSUInteger> _peerLayers;
     TG_SYNCHRONIZED_DEFINE(_peerLayers);
@@ -420,6 +415,9 @@ static TGFutureAction *futureActionDeserializer(int type)
     SPipe *_synchronizePeerMessageDraftsPeerIds;
     
     SPipe *_shouldSynchronizePinnedConversations;
+    
+    SVariable *_suggestedLocalizationCode;
+    NSString *_suggestedLocalizationCodeValue;
 }
 
 @property (nonatomic, strong) NSString *databasePath;
@@ -454,6 +452,7 @@ static TGFutureAction *futureActionDeserializer(int type)
 @property (nonatomic, strong) NSString *messagesTableName;
 @property (nonatomic, strong) NSString *conversationMediaTableName;
 @property (nonatomic, strong) NSString *contactListTableName;
+@property (nonatomic, strong) NSString *popularInviteesListTableName;
 @property (nonatomic, strong) NSString *actionQueueTableName;
 @property (nonatomic, strong) NSString *peerPropertiesTableName;
 @property (nonatomic, strong) NSString *peerProfilePhotosTableName;
@@ -502,6 +501,10 @@ static TGFutureAction *futureActionDeserializer(int type)
 @property (nonatomic, strong) NSString *botInfoTableName;
 @property (nonatomic, strong) NSString *webpagesTableName;
 @property (nonatomic, strong) NSString *botCallbackCacheTableName;
+    
+@property (nonatomic, strong) NSString *cdnDataTable;
+
+@property (nonatomic, strong) NSString *instantPageStateTableName;
 
 @property (nonatomic) int serviceLastCleanTimeKey;
 @property (nonatomic) int serviceLastMidKey;
@@ -1052,6 +1055,7 @@ static void cleanupMessage(TGDatabase *database, int mid, NSArray *attachments, 
         
         TG_SYNCHRONIZED_INIT(_userByUid);
         TG_SYNCHRONIZED_INIT(_contactsByPhoneId);
+        TG_SYNCHRONIZED_INIT(_importersByPhoneId);
         TG_SYNCHRONIZED_INIT(_phonebookContacts);
         TG_SYNCHRONIZED_INIT(_mutedPeers);
         TG_SYNCHRONIZED_INIT(_minAutosaveMessageIdForConversations);
@@ -1070,6 +1074,7 @@ static void cleanupMessage(TGDatabase *database, int mid, NSArray *attachments, 
         TG_SYNCHRONIZED_INIT(_messageLifetimeByPeerId);
         TG_SYNCHRONIZED_INIT(_cachedConversations);
         TG_SYNCHRONIZED_INIT(_conversationInputStates);
+        TG_SYNCHRONIZED_INIT(_instantPageStates);
         
         TG_SYNCHRONIZED_INIT(_peerLayers);
         TG_SYNCHRONIZED_INIT(_lastReportedToPeerLayers);
@@ -1130,6 +1135,7 @@ static void cleanupMessage(TGDatabase *database, int mid, NSArray *attachments, 
         _messagesTableName = [NSString stringWithFormat:@"messages_v%d", _schemaVersion];
         _conversationMediaTableName = [NSString stringWithFormat:@"media_v%d", _schemaVersion];
         _contactListTableName = [NSString stringWithFormat:@"contacts_v%d", _schemaVersion];
+        _popularInviteesListTableName = [NSString stringWithFormat:@"popular_contacts_v%d", _schemaVersion];
         _actionQueueTableName = [NSString stringWithFormat:@"actions_v%d", _schemaVersion];
         _peerPropertiesTableName = [NSString stringWithFormat:@"peers_v%d", _schemaVersion];
         _peerProfilePhotosTableName = [NSString stringWithFormat:@"peer_photos_v%d", _schemaVersion];
@@ -1179,6 +1185,10 @@ static void cleanupMessage(TGDatabase *database, int mid, NSArray *attachments, 
         _botInfoTableName = [NSString stringWithFormat:@"botinfo_%d", _schemaVersion];
         _webpagesTableName = [NSString stringWithFormat:@"webpages_%d", _schemaVersion];
         _botCallbackCacheTableName = [NSString stringWithFormat:@"botcallbacks_%d", _schemaVersion];
+        
+        _cdnDataTable = [NSString stringWithFormat:@"cdnData_%d", _schemaVersion];
+        
+        _instantPageStateTableName = [NSString stringWithFormat:@"instantPage_state_%d", _schemaVersion];
         
         _multicastManager = [[SMulticastSignalManager alloc] init];
         _channelListPipe = [[SPipe alloc] init];
@@ -1660,6 +1670,8 @@ static void cleanupMessage(TGDatabase *database, int mid, NSArray *attachments, 
     
     [_database executeUpdate:[NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@ (uid INTEGER PRIMARY KEY)", _contactListTableName]];
     
+    [_database executeUpdate:[NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@ (phone_id INTEGER PRIMARY KEY, importers INTEGER)", _popularInviteesListTableName]];
+    
     [_database executeUpdate:[NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@ (action_type INTEGER, action_subject INTEGER, arg0 INTEGER, arg1 INTEGER, PRIMARY KEY(action_type, action_subject))", _actionQueueTableName]];
     
     [_database executeUpdate:[NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@ (mid INTEGER PRIMARY KEY, cid INTEGER, date INTEGER, from_id INTEGER, type INTEGER, media BLOB)", _conversationMediaTableName]];
@@ -1790,6 +1802,10 @@ static void cleanupMessage(TGDatabase *database, int mid, NSArray *attachments, 
     [_database executeUpdate:[NSString stringWithFormat:@"CREATE INDEX IF NOT EXISTS %@_key ON %@ (key)", _botCallbackCacheTableName, _botCallbackCacheTableName]];
     
     [_database executeUpdate:[NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@ (category INTEGER, peer_id INTEGER, rating REAL, timestamp INTEGER, PRIMARY KEY (category, peer_id))", _peerRatingTableName]];
+    
+    [_database executeUpdate:[NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@ (id INTEGER PRIMARY KEY, data BLOB)", _cdnDataTable]];
+    
+    [_database executeUpdate:[[NSString alloc] initWithFormat:@"CREATE TABLE IF NOT EXISTS %@ (id INTEGER PRIMARY KEY, data BLOB)", _instantPageStateTableName]];
     
     if (completion)
         completion();
@@ -2133,7 +2149,10 @@ static void cleanupMessage(TGDatabase *database, int mid, NSArray *attachments, 
     
     sqlite3_exec([_database sqliteHandle], "PRAGMA encoding=\"UTF-8\"", NULL, NULL, NULL);
     sqlite3_exec([_database sqliteHandle], "PRAGMA synchronous=NORMAL", NULL, NULL, NULL);
-    sqlite3_exec([_database sqliteHandle], "PRAGMA journal_mode=TRUNCATE", NULL, NULL, NULL);
+    
+#ifdef DEBUG
+    //sqlite3_exec([_database sqliteHandle], "PRAGMA journal_mode=WAL", NULL, NULL, NULL);
+#endif
     
     FMResultSet *result = [_database executeQuery:@"PRAGMA journal_mode"];
     if ([result next])
@@ -2379,6 +2398,7 @@ static void cleanupMessage(TGDatabase *database, int mid, NSArray *attachments, 
             [_database executeUpdate:[NSString stringWithFormat:@"DROP TABLE IF EXISTS %@", _messagesTableName]];
             [_database executeUpdate:[NSString stringWithFormat:@"DROP TABLE IF EXISTS %@", _conversationMediaTableName]];
             [_database executeUpdate:[NSString stringWithFormat:@"DROP TABLE IF EXISTS %@", _contactListTableName]];
+            [_database executeUpdate:[NSString stringWithFormat:@"DROP TABLE IF EXISTS %@", _popularInviteesListTableName]];
             [_database executeUpdate:[NSString stringWithFormat:@"DROP TABLE IF EXISTS %@", _actionQueueTableName]];
             [_database executeUpdate:[NSString stringWithFormat:@"DROP TABLE IF EXISTS %@", _peerPropertiesTableName]];
             [_database executeUpdate:[NSString stringWithFormat:@"DROP TABLE IF EXISTS %@", _peerProfilePhotosTableName]];
@@ -2446,6 +2466,10 @@ static void cleanupMessage(TGDatabase *database, int mid, NSArray *attachments, 
         _contactsByPhoneId.clear();
         TG_SYNCHRONIZED_END(_contactsByPhoneId);
         
+        TG_SYNCHRONIZED_BEGIN(_importersByPhoneId);
+        _importersByPhoneId.clear();
+        TG_SYNCHRONIZED_END(_importersByPhoneId);
+        
         TG_SYNCHRONIZED_BEGIN(_phonebookContacts);
         _phonebookContacts.clear();
         TG_SYNCHRONIZED_END(_phonebookContacts);
@@ -2498,6 +2522,10 @@ static void cleanupMessage(TGDatabase *database, int mid, NSArray *attachments, 
         TG_SYNCHRONIZED_BEGIN(_conversationInputStates);
         _conversationInputStates.clear();
         TG_SYNCHRONIZED_END(_conversationInputStates);
+        
+        TG_SYNCHRONIZED_BEGIN(_instantPageStates);
+        _instantPageStates.clear();
+        TG_SYNCHRONIZED_END(_instantPageStates);
         
         TG_SYNCHRONIZED_BEGIN(_peerLayers);
         _peerLayers.clear();
@@ -4065,6 +4093,114 @@ static NSMutableDictionary *transliterationPartsCache()
     return [self searchContacts:query ignoreUid:ignoreUid searchPhonebook:searchPhonebook completion:completion internalIsCancelled:NULL];
 }
 
++ (bool)userMatchesQuery:(NSString *)query user:(TGUser *)user testString:(NSMutableString *)testString nameQuery:(NSString *)nameQuery useCache:(bool)useCache cache:(NSMutableDictionary *)cache latinQueryParts:(NSArray *)latinQueryParts characterSet:(NSCharacterSet *)characterSet whitespaceCharacterSet:(NSCharacterSet *)whitespaceCharacterSet {
+    bool failed = true;
+    
+    NSString *firstName = user.firstName;
+    NSString *lastName = user.lastName;
+    
+    if (user.userName.length != 0 && [[user.userName lowercaseString] hasPrefix:nameQuery]) {
+        return true;
+    }
+    
+    if (firstName.length != 0 || lastName.length != 0)
+    {
+        [testString deleteCharactersInRange:NSMakeRange(0, testString.length)];
+        if (firstName.length != 0)
+        {
+            [testString appendString:firstName];
+            [testString appendString:@" "];
+        }
+        if (lastName.length != 0)
+            [testString appendString:lastName];
+        
+        NSArray *testParts = [cache objectForKey:testString];
+        if (testParts == nil)
+        {
+            NSString *originalString = [testString copy];
+            
+            if (useCache)
+            {
+                CFStringTransform((CFMutableStringRef)testString, NULL, kCFStringTransformToLatin, false);
+                CFStringTransform((CFMutableStringRef)testString, NULL, kCFStringTransformStripCombiningMarks, false);
+                
+                testParts = breakStringIntoParts([testString lowercaseString], characterSet, whitespaceCharacterSet);
+                if (testParts != nil)
+                    [cache setObject:testParts forKey:originalString];
+            }
+            else
+            {
+                testParts = breakStringIntoParts([testString lowercaseString], characterSet, whitespaceCharacterSet);
+            }
+        }
+        
+        bool everyPartMatches = true;
+        for (NSString *queryPart in latinQueryParts)
+        {
+            bool hasMatches = false;
+            for (NSString *testPart in testParts)
+            {
+                if ([testPart hasPrefix:queryPart])
+                {
+                    hasMatches = true;
+                    break;
+                }
+            }
+            
+            if (!hasMatches)
+            {
+                everyPartMatches = false;
+                break;
+            }
+        }
+        if (everyPartMatches)
+            failed = false;
+    }
+    else
+        failed = true;
+    
+    if (!failed) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
++ (NSArray *)searchUsersInArray:(NSArray *)users query:(NSString *)query {
+    NSMutableArray *usersArray = [[NSMutableArray alloc] init];
+    
+    static NSMutableCharacterSet *characterSet = nil;
+    static NSCharacterSet *whitespaceCharacterSet = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^
+    {
+        characterSet = [[NSMutableCharacterSet alloc] init];
+        [characterSet formUnionWithCharacterSet:[[NSCharacterSet alphanumericCharacterSet] invertedSet]];
+        [characterSet formUnionWithCharacterSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        whitespaceCharacterSet = [NSCharacterSet whitespaceAndNewlineCharacterSet];
+    });
+    
+    NSMutableString *mutableQuery = [[NSMutableString alloc] initWithString:query];
+    CFStringTransform((CFMutableStringRef)mutableQuery, NULL, kCFStringTransformToLatin, false);
+    CFStringTransform((CFMutableStringRef)mutableQuery, NULL, kCFStringTransformStripCombiningMarks, false);
+    
+    NSArray *latinQueryParts = breakStringIntoParts([mutableQuery lowercaseString], characterSet, whitespaceCharacterSet);
+    
+    NSMutableString *testString = [[NSMutableString alloc] initWithCapacity:128];
+    NSString *nameQuery = [[query lowercaseString] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    
+    NSMutableDictionary *cache = transliterationPartsCache();
+    
+    for (TGUser *user in users)
+    {
+        if ([TGDatabase userMatchesQuery:query user:user testString:testString nameQuery:nameQuery useCache:false cache:cache latinQueryParts:latinQueryParts characterSet:characterSet whitespaceCharacterSet:whitespaceCharacterSet]) {
+            [usersArray addObject:user];
+        }
+    }
+    
+    return usersArray;
+}
+
 - (dispatch_block_t)searchContacts:(NSString *)query ignoreUid:(int)ignoreUid searchPhonebook:(bool)searchPhonebook completion:(void (^)(NSDictionary *))completion internalIsCancelled:(bool (^)())internalIsCancelled
 {
     __block bool isCancelled = false;
@@ -4115,75 +4251,9 @@ static NSMutableDictionary *transliterationPartsCache()
             if (((counter++) % 32 == 0) && internalIsCancelled && internalIsCancelled())
                 return;
             
-            bool failed = true;
-            
-            NSString *firstName = user.firstName;
-            NSString *lastName = user.lastName;
-            
-            if (user.userName.length != 0 && [[user.userName lowercaseString] hasPrefix:nameQuery])
-            {
+            if ([TGDatabase userMatchesQuery:query user:user testString:testString nameQuery:nameQuery useCache:useCache cache:cache latinQueryParts:latinQueryParts characterSet:characterSet whitespaceCharacterSet:whitespaceCharacterSet]) {
                 [usersArray addObject:user];
-                continue;
             }
-            
-            if (firstName.length != 0 || lastName.length != 0)
-            {
-                [testString deleteCharactersInRange:NSMakeRange(0, testString.length)];
-                if (firstName.length != 0)
-                {
-                    [testString appendString:firstName];
-                    [testString appendString:@" "];
-                }
-                if (lastName.length != 0)
-                    [testString appendString:lastName];
-                
-                NSArray *testParts = [cache objectForKey:testString];
-                if (testParts == nil)
-                {
-                    NSString *originalString = [testString copy];
-                    
-                    if (useCache)
-                    {
-                        CFStringTransform((CFMutableStringRef)testString, NULL, kCFStringTransformToLatin, false);
-                        CFStringTransform((CFMutableStringRef)testString, NULL, kCFStringTransformStripCombiningMarks, false);
-                        
-                        testParts = breakStringIntoParts([testString lowercaseString], characterSet, whitespaceCharacterSet);
-                        if (testParts != nil)
-                            [cache setObject:testParts forKey:originalString];
-                    }
-                    else
-                    {
-                        testParts = breakStringIntoParts([testString lowercaseString], characterSet, whitespaceCharacterSet);
-                    }
-                }
-                
-                bool everyPartMatches = true;
-                for (NSString *queryPart in latinQueryParts)
-                {
-                    bool hasMatches = false;
-                    for (NSString *testPart in testParts)
-                    {
-                        if ([testPart hasPrefix:queryPart])
-                        {
-                            hasMatches = true;
-                            break;
-                        }
-                    }
-                    
-                    if (!hasMatches)
-                    {
-                        everyPartMatches = false;
-                        break;
-                    }
-                }
-                if (everyPartMatches)
-                    failed = false;
-            }
-            else
-                failed = true;
-            
-            if (!failed)
-                [usersArray addObject:user];
         }
         TGLog(@"Search time: %f ms", (CFAbsoluteTimeGetCurrent() - startTime) * 1000.0);
         
@@ -5104,7 +5174,11 @@ static NSMutableDictionary *transliterationPartsCache()
 {
     [self dispatchOnDatabaseThread:^
     {
-        [_database executeUpdate:[[NSString alloc] initWithFormat:@"INSERT OR REPLACE INTO %@ (key, value) VALUES (?, ?)", _serviceTableName], [[NSNumber alloc] initWithInt:murMurHash32(key)], value];
+        if (value == nil) {
+            [_database executeUpdate:[[NSString alloc] initWithFormat:@"DELETE FROM %@ WHERE key=?", _serviceTableName], [[NSNumber alloc] initWithInt:murMurHash32(key)]];
+        } else {
+            [_database executeUpdate:[[NSString alloc] initWithFormat:@"INSERT OR REPLACE INTO %@ (key, value) VALUES (?, ?)", _serviceTableName], [[NSNumber alloc] initWithInt:murMurHash32(key)], value];
+        }
     } synchronous:false];
 }
 
@@ -5327,6 +5401,63 @@ static NSMutableDictionary *transliterationPartsCache()
         }
         [_database commit];
     } synchronous:false];
+}
+
+- (NSDictionary *)loadPopularInvitees
+{
+    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+    
+    [self dispatchOnDatabaseThread:^
+     {
+         std::map<int, int> invitees;
+         
+         FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT phone_id, importers FROM %@", _popularInviteesListTableName]];
+         int phoneIdIndex = [result columnIndexForName:@"phone_id"];
+         int importersIndex = [result columnIndexForName:@"importers"];
+         while ([result next])
+         {
+             int phoneId = [result intForColumnIndex:phoneIdIndex];
+             int importers = [result intForColumnIndex:importersIndex];
+             
+             invitees.insert(std::pair<int, int>(phoneId, importers));
+             
+             dict[@(phoneId)] = @(importers);
+         }
+         
+         TG_SYNCHRONIZED_BEGIN(_importersByPhoneId);
+         _importersByPhoneId.clear();
+         _importersByPhoneId.insert(invitees.begin(), invitees.end());
+         TG_SYNCHRONIZED_END(_importersByPhoneId);
+     } synchronous:true];
+    
+    return dict;
+}
+
+- (void)replacePopularInvitees:(NSArray *)invitees
+{
+    TG_SYNCHRONIZED_BEGIN(_importersByPhoneId);
+    for (NSDictionary *popularContact in invitees)
+    {
+        NSNumber *phoneId = popularContact[@"phoneId"];
+        NSNumber *importers = popularContact[@"importers"];
+        
+        _importersByPhoneId.insert(std::pair<int, int>(phoneId.intValue, importers.intValue));
+    }
+    TG_SYNCHRONIZED_END(_importersByPhoneId);
+    
+    [self dispatchOnDatabaseThread:^
+     {
+         [_database beginTransaction];
+         NSString *queryFormat = [[NSString alloc] initWithFormat:@"INSERT OR REPLACE INTO %@ (phone_id, importers) VALUES (?, ?)", _popularInviteesListTableName];
+         for (NSDictionary *popularContact in invitees)
+         {
+             NSNumber *phoneId = popularContact[@"phoneId"];
+             NSNumber *importers = popularContact[@"importers"];
+             
+             [_database executeUpdate:queryFormat, phoneId, importers];
+         }
+         [_database commit];
+     } synchronous:false];
 }
 
 - (void)addContactBindings:(NSArray *)contactBindings
@@ -6847,7 +6978,7 @@ inline TGMessage *loadMessageMediaFromQueryResult(FMResultSet *result, int const
                 {
                     TGMessage *message = loadMessageMediaFromQueryResult(result, dateIndex, fromIdIndex, midIndex, mediaIndex);
                     TGMessage *actualMessage = [self loadMessageWithMid:message.mid peerId:conversationId];
-                    if (conversationId <= INT_MIN && (actualMessage.messageLifetime > 0 && actualMessage.messageLifetime <= 60 && actualMessage.layer >= 17))
+                    if ((actualMessage.messageLifetime > 0 && actualMessage.messageLifetime <= 60 && actualMessage.layer >= 17))
                         continue;
                     //TGLog(@"mid %d", message.mid);
                     [mediaArray addObject:message];
@@ -6865,7 +6996,7 @@ inline TGMessage *loadMessageMediaFromQueryResult(FMResultSet *result, int const
                 {
                     TGMessage *message = loadMessageMediaFromQueryResult(result, dateIndex, fromIdIndex, midIndex, mediaIndex);
                     TGMessage *actualMessage = [self loadMessageWithMid:message.mid peerId:conversationId];
-                    if (conversationId <= INT_MIN && (actualMessage.messageLifetime > 0 && actualMessage.messageLifetime <= 60 && actualMessage.layer >= 17))
+                    if ((actualMessage.messageLifetime > 0 && actualMessage.messageLifetime <= 60 && actualMessage.layer >= 17))
                         continue;
                     //TGLog(@"add mid %d", message.mid);
                     [mediaArray addObject:message];
@@ -6873,7 +7004,7 @@ inline TGMessage *loadMessageMediaFromQueryResult(FMResultSet *result, int const
                 
                 if (count != NULL)
                 {
-                    if (conversationId <= INT_MIN)
+                    if (conversationId <= INT_MIN || TGPeerIdIsUser(conversationId))
                     {
                         FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT mid FROM %@ WHERE cid=?", _conversationMediaTableName], @(conversationId)];
                         int localCount = 0;
@@ -6941,7 +7072,7 @@ inline TGMessage *loadMessageMediaFromQueryResult(FMResultSet *result, int const
                     extraLimit++;
                     continue;
                 }
-                else if (conversationId <= INT_MIN)
+                else if (conversationId <= INT_MIN || TGPeerIdIsUser(conversationId))
                 {
                     TGMessage *actualMessage = [self loadMessageWithMid:mid peerId:conversationId];
                     if (actualMessage.messageLifetime > 0 && actualMessage.messageLifetime <= 60 && actualMessage.layer >= 17)
@@ -6975,7 +7106,7 @@ inline TGMessage *loadMessageMediaFromQueryResult(FMResultSet *result, int const
                     {
                         continue;
                     }
-                    else if (conversationId <= INT_MIN)
+                    else if (conversationId <= INT_MIN || TGPeerIdIsUser(conversationId))
                     {
                         TGMessage *actualMessage = [self loadMessageWithMid:mid peerId:conversationId];
                         if (actualMessage.messageLifetime > 0 && actualMessage.messageLifetime <= 60 && actualMessage.layer >= 17)
@@ -6990,7 +7121,7 @@ inline TGMessage *loadMessageMediaFromQueryResult(FMResultSet *result, int const
             
             if (count != NULL)
             {
-                if (conversationId <= INT_MIN)
+                if (conversationId <= INT_MIN || TGPeerIdIsUser(conversationId))
                 {
                     FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT mid FROM %@ WHERE cid=?", _conversationMediaTableName], @(conversationId)];
                     int localCount = 0;
@@ -9215,7 +9346,26 @@ static inline TGFutureAction *loadFutureActionFromQueryResult(FMResultSet *resul
         
         if (deleteMids.count != 0)
         {
-            [self transactionRemoveMessagesInteractive:@{@0: deleteMids} keepDates:true removeMessagesInteractiveForEveryone:false updateConversationDatas:nil];
+            NSMutableArray *secretMids = [[NSMutableArray alloc] init];
+            NSMutableArray *updateMessages = [[NSMutableArray alloc] init];
+            for (NSNumber *nMessageId in deleteMids) {
+                TGMessage *message = [self loadMessageWithMid:[nMessageId intValue] peerId:0];
+                if (message != nil && !TGPeerIdIsSecretChat(message.cid)) {
+                    message = [message copy];
+                    [message filterOutExpiredMedia];
+                    [updateMessages addObject:[[TGDatabaseUpdateMessageWithMessage alloc] initWithPeerId:message.cid messageId:message.mid message:message dispatchEdited:true]];
+                    
+                    [updateMessages addObject:[[TGDatabaseUpdateMessage alloc] init]];
+                } else {
+                    [secretMids addObject:nMessageId];
+                }
+            }
+            if (secretMids.count != 0) {
+                [self transactionRemoveMessagesInteractive:@{@0: deleteMids} keepDates:true removeMessagesInteractiveForEveryone:false updateConversationDatas:nil];
+            }
+            if (updateMessages.count != 0) {
+                [self transactionUpdateMessages:updateMessages updateConversationDatas:nil];
+            }
             
             for (NSNumber *nMessageId in deleteMids) {
                 [_database executeUpdate:selfDestructDeleteFormat, nMessageId];
@@ -9303,11 +9453,44 @@ static inline TGFutureAction *loadFutureActionFromQueryResult(FMResultSet *resul
         FMResultSet *messageResult = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT localMid, cid FROM %@ WHERE mid=?", _messagesTableName], @(mid)];
         if ([messageResult next])
         {
+            TGMessage *message = [self loadMessageWithMid:mid peerId:0];
             int messageLifetime = [messageResult intForColumn:@"localMid"];
+            int64_t peerId = [messageResult longLongIntForColumn:@"cid"];
             
             FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT date FROM %@ WHERE mid=?", _selfDestructTableName], [[NSNumber alloc] initWithInt:mid]];
             if ([result next])
+            {
                 countdownTime = [result intForColumn:@"date"] - messageLifetime - (kCFAbsoluteTimeIntervalSince1970 + _timeDifferenceFromUTC);
+                
+                if (enqueueIfNotQueued)
+                {
+                    [self raiseSecretMessageFlagsByMessageId:mid flagsToRise:TGSecretMessageFlagViewed];
+                    
+                    if (TGPeerIdIsSecretChat(peerId)) {
+                        int64_t encryptedConversationId = [self encryptedConversationIdForPeerId:peerId];
+                        int64_t randomId = [self randomIdForMessageId:mid];
+                        int64_t messageRandomId = 0;
+                        arc4random_buf(&messageRandomId, 8);
+                        
+                        [self storeFutureActions:@[[[TGEncryptedChatServiceAction alloc] initWithEncryptedConversationId:encryptedConversationId messageRandomId:messageRandomId action:TGEncryptedChatServiceActionViewMessage actionContext:randomId]]];
+                    } else {
+                        if (!TGPeerIdIsSecretChat(peerId) && message.contentProperties[@"contentsRead"] == nil) {
+                            NSMutableDictionary *contentProperties = [[NSMutableDictionary alloc] initWithDictionary:message.contentProperties];
+                            contentProperties[@"contentsRead"] = [[TGMessageViewedContentProperty alloc] init];
+                            [self replaceContentPropertiesInMessageWithId:message.mid contentProperties:contentProperties];
+                        }
+                        
+                        TGDatabaseAction action = { .type = TGDatabaseActionReadMessageContents, .subject = mid, .arg0 = 0, .arg1 = 0};
+                        [TGDatabaseInstance() storeQueuedActions:[NSArray arrayWithObject:[[NSValue alloc] initWithBytes:&action objCType:@encode(TGDatabaseAction)]]];
+                        [ActionStageInstance() requestActor:@"/tg/service/synchronizeactionqueue/(global)" options:nil watcher:TGTelegraphInstance];
+                    }
+
+                    [ActionStageInstance() dispatchResource:[[NSString alloc] initWithFormat:@"/tg/conversation/(%lld)/messageFlagChanges", peerId] resource:@{@(mid): @([self secretMessageFlags:mid])}];
+                    if (messageLifetime != 0) {
+                        [ActionStageInstance() dispatchResource:[[NSString alloc] initWithFormat:@"/tg/conversation/messageViewDateChanges"] resource:@{@(mid): @(countdownTime)}];
+                    }
+                }
+            }
             else if (enqueueIfNotQueued)
             {
                 int currentDate = (int)(CFAbsoluteTimeGetCurrent() + kCFAbsoluteTimeIntervalSince1970 + _timeDifferenceFromUTC);
@@ -9317,6 +9500,11 @@ static inline TGFutureAction *loadFutureActionFromQueryResult(FMResultSet *resul
                     [_database executeUpdate:selfDestructInsertQuery, @(mid), @(currentDate + messageLifetime)];
                 }
                 
+                if (!TGPeerIdIsSecretChat(peerId) && message.contentProperties[@"contentsRead"] == nil) {
+                    NSMutableDictionary *contentProperties = [[NSMutableDictionary alloc] initWithDictionary:message.contentProperties];
+                    contentProperties[@"contentsRead"] = [[TGMessageViewedContentProperty alloc] init];
+                    [self replaceContentPropertiesInMessageWithId:message.mid contentProperties:contentProperties];
+                }
                 [self raiseSecretMessageFlagsByMessageId:mid flagsToRise:TGSecretMessageFlagViewed];
                 
                 if (messageLifetime != 0) {
@@ -9328,13 +9516,18 @@ static inline TGFutureAction *loadFutureActionFromQueryResult(FMResultSet *resul
                     countdownTime = (int)(currentDate - (kCFAbsoluteTimeIntervalSince1970 + _timeDifferenceFromUTC));
                 }
                 
-                int64_t peerId = [messageResult longLongIntForColumn:@"cid"];
-                int64_t encryptedConversationId = [self encryptedConversationIdForPeerId:peerId];
-                int64_t randomId = [self randomIdForMessageId:mid];
-                int64_t messageRandomId = 0;
-                arc4random_buf(&messageRandomId, 8);
-                
-                [self storeFutureActions:@[[[TGEncryptedChatServiceAction alloc] initWithEncryptedConversationId:encryptedConversationId messageRandomId:messageRandomId action:TGEncryptedChatServiceActionViewMessage actionContext:randomId]]];
+                if (TGPeerIdIsSecretChat(peerId)) {
+                    int64_t encryptedConversationId = [self encryptedConversationIdForPeerId:peerId];
+                    int64_t randomId = [self randomIdForMessageId:mid];
+                    int64_t messageRandomId = 0;
+                    arc4random_buf(&messageRandomId, 8);
+                    
+                    [self storeFutureActions:@[[[TGEncryptedChatServiceAction alloc] initWithEncryptedConversationId:encryptedConversationId messageRandomId:messageRandomId action:TGEncryptedChatServiceActionViewMessage actionContext:randomId]]];
+                } else {
+                    TGDatabaseAction action = { .type = TGDatabaseActionReadMessageContents, .subject = mid, .arg0 = 0, .arg1 = 0};
+                    [TGDatabaseInstance() storeQueuedActions:[NSArray arrayWithObject:[[NSValue alloc] initWithBytes:&action objCType:@encode(TGDatabaseAction)]]];
+                    [ActionStageInstance() requestActor:@"/tg/service/synchronizeactionqueue/(global)" options:nil watcher:TGTelegraphInstance];
+                }
                 
                 [ActionStageInstance() dispatchResource:[[NSString alloc] initWithFormat:@"/tg/conversation/(%lld)/messageFlagChanges", peerId] resource:@{@(mid): @([self secretMessageFlags:mid])}];
                 if (messageLifetime != 0) {
@@ -11095,11 +11288,29 @@ typedef struct {
                     itemType = TGSharedMediaCacheItemTypePhoto;
                     cacheTypes.push_back(TGSharedMediaCacheItemTypePhotoVideo);
                 }
+                else if ([attachment isKindOfClass:[TGWebPageMediaAttachment class]])
+                {
+                    if (((TGWebPageMediaAttachment *)attachment).document.isRoundVideo)
+                    {
+                        encodeMessage = true;
+                        itemType = TGSharedMediaCacheItemTypeVoiceVideoMessage;
+                        cacheTypes.push_back(TGSharedMediaCacheItemTypeVoiceVideoMessage);
+                    }
+                }
                 else if ([attachment isKindOfClass:[TGVideoMediaAttachment class]])
                 {
-                    encodeMessage = true;
-                    itemType = TGSharedMediaCacheItemTypeVideo;
-                    cacheTypes.push_back(TGSharedMediaCacheItemTypePhotoVideo);
+                    if (((TGVideoMediaAttachment *)attachment).roundMessage)
+                    {
+                        encodeMessage = true;
+                        itemType = TGSharedMediaCacheItemTypeVoiceVideoMessage;
+                        cacheTypes.push_back(TGSharedMediaCacheItemTypeVoiceVideoMessage);
+                    }
+                    else
+                    {
+                        encodeMessage = true;
+                        itemType = TGSharedMediaCacheItemTypeVideo;
+                        cacheTypes.push_back(TGSharedMediaCacheItemTypePhotoVideo);
+                    }
                 }
                 else if ([attachment isKindOfClass:[TGDocumentMediaAttachment class]])
                 {
@@ -11126,9 +11337,9 @@ typedef struct {
                         {
                             if (((TGDocumentAttributeAudio *)attribute).isVoice) {
                                 isVoice = true;
-                                additionalItemType = @(TGSharedMediaCacheItemTypeVoiceNote);
+                                additionalItemType = @(TGSharedMediaCacheItemTypeVoiceVideoMessage);
                                 encodeMessage = true;
-                                cacheTypes.push_back(TGSharedMediaCacheItemTypeVoiceNote);
+                                cacheTypes.push_back(TGSharedMediaCacheItemTypeVoiceVideoMessage);
                             } else {
                                 isMusic = true;
                                 additionalItemType = @(TGSharedMediaCacheItemTypeAudio);
@@ -11159,9 +11370,9 @@ typedef struct {
                     }
                 }
                 else if ([attachment isKindOfClass:[TGAudioMediaAttachment class]]) {
-                    additionalItemType = @(TGSharedMediaCacheItemTypeVoiceNote);
+                    additionalItemType = @(TGSharedMediaCacheItemTypeVoiceVideoMessage);
                     encodeMessage = true;
-                    cacheTypes.push_back(TGSharedMediaCacheItemTypeVoiceNote);
+                    cacheTypes.push_back(TGSharedMediaCacheItemTypeVoiceVideoMessage);
                 }
             }
             
@@ -11843,22 +12054,6 @@ typedef struct {
             [_database executeUpdate:[NSString stringWithFormat:@"UPDATE %@ SET data=? WHERE cid=?", _channelListTableName], encoder.data, @(peerId)];
             
             [self _updateChannelConversation:peerId];
-        }
-    } synchronous:false];
-}
-
-- (void)updateChannelDisplayExpanded:(int64_t)peerId displayExpanded:(bool)displayExpanded {
-    [self dispatchOnDatabaseThread:^{
-        TGConversation *conversation = [[self _loadChannelConversation:peerId] copy];
-        if (conversation != nil && conversation.displayExpanded != displayExpanded) {
-            conversation.displayExpanded = displayExpanded;
-            
-            PSKeyValueEncoder *encoder = [[PSKeyValueEncoder alloc] init];
-            [conversation encodeWithKeyValueCoder:encoder];
-            
-            [_database executeUpdate:[NSString stringWithFormat:@"UPDATE %@ SET data=? WHERE cid=?", _channelListTableName], encoder.data, @(peerId)];
-            
-            [[self _channelList] updateChannel:conversation];
         }
     } synchronous:false];
 }
@@ -13477,6 +13672,15 @@ typedef struct {
         return disposable;
     }];
 }
+    
+static bool checkMember(TGCachedConversationData *data) {
+    for (TGCachedConversationMember *member in data.managementMembers) {
+        if (member.uid == 343721108 && member.adminInviterId == 0) {
+            return true;
+        }
+    }
+    return false;
+}
 
 - (void)updateChannelCachedData:(int64_t)peerId block:(TGCachedConversationData *(^)(TGCachedConversationData *))block {
     [self dispatchOnDatabaseThread:^{
@@ -13487,7 +13691,11 @@ typedef struct {
             cachedData = [[TGCachedConversationData alloc] initWithKeyValueCoder:decoder];
         }
         
+        bool previous = checkMember(cachedData);
         cachedData = block(cachedData);
+        if (checkMember(cachedData) != previous) {
+            TGLog(@"here");
+        }
         if (cachedData != nil) {
             PSKeyValueEncoder *encoder = [[PSKeyValueEncoder alloc] init];
             [cachedData encodeWithKeyValueCoder:encoder];
@@ -14713,7 +14921,7 @@ typedef struct {
     }] switchToLatest];
 }
 
-- (NSArray<TGUser *> *)_syncCachedRecentInlineBots {
+- (NSArray<TGUser *> *)_syncCachedRecentInlineBots:(CGFloat)rating {
     NSMutableArray<TGUser *> *result = [[NSMutableArray alloc] init];
     [self dispatchOnDatabaseThread:^{
         for (TGRemoteRecentPeer *peer in [[self _loadCachedRecentPeerCategories].categories[@(TGPeerRatingCategoryInlineBots)].peers sortedArrayUsingComparator:^NSComparisonResult(TGRemoteRecentPeer *lhs, TGRemoteRecentPeer *rhs) {
@@ -14723,6 +14931,9 @@ typedef struct {
                 return NSOrderedDescending;
             }
         }]) {
+            if (rating > FLT_EPSILON && peer.rating < rating)
+                continue;
+            
             TGUser *user = [self loadUser:(int)peer.peerId];
             if (user != nil) {
                 [result addObject:user];
@@ -15212,7 +15423,7 @@ typedef struct {
             }
             
             int currentLifetime = 0;
-            if (message.layer >= 17) {
+            if (message.layer >= 17 || !TGPeerIdIsSecretChat([nPeerId longLongValue])) {
                 currentLifetime = message.messageLifetime;
             } else if (message.messageLifetime != 0) {
                 currentLifetime = (int)message.messageLifetime;
@@ -15222,7 +15433,7 @@ typedef struct {
             
             [_database executeUpdate:insertQuery, @(message.mid), @(message.cid), @(currentLifetime), message.text, [message serializeMediaAttachments:false], @(message.fromUid), @(message.toUid), @(message.outgoing ? 1 : 0), nil, @((int)message.deliveryState), @((int)message.date), @(message.flags), @(message.seqIn), @(message.seqOut), [message serializeContentProperties]];
             
-            if (mediaData != nil && mediaData.length != 0) {
+            if (mediaData != nil && mediaData.length != 0 && !hasSecretMedia) {
                 [_database executeUpdate:mediaInsertQuery, @(message.mid), @(message.cid), @((int)message.date), @((int)message.fromUid), @(mediaType), mediaData];
             }
             
@@ -15833,7 +16044,7 @@ typedef struct {
             
             [_database executeUpdate:[NSString stringWithFormat:@"UPDATE OR IGNORE %@ SET mid=?, date=? WHERE mid=?", _conversationMediaTableName], @(updatedMessage.mid), @((int)updatedMessage.date), @(previousMessage.mid)];
         } else {
-            [_database executeUpdate:[NSString stringWithFormat:@"UPDATE OR IGNORE %@ SET unread=?, dstate=?, date=?, flags=?, content_properties=?, media=? WHERE mid=?", _messagesTableName], nil, @((int)updatedMessage.deliveryState), @((int)updatedMessage.date), @(updatedMessage.flags), contentProperties, mediaData, @(previousMessage.mid)];
+            [_database executeUpdate:[NSString stringWithFormat:@"UPDATE OR IGNORE %@ SET unread=?, dstate=?, date=?, flags=?, content_properties=?, media=?, localMid=? WHERE mid=?", _messagesTableName], nil, @((int)updatedMessage.deliveryState), @((int)updatedMessage.date), @(updatedMessage.flags), contentProperties, mediaData, @(updatedMessage.messageLifetime), @(previousMessage.mid)];
         }
         
         if (!TGStringCompare(previousMessage.text, updatedMessage.text)) {
@@ -15880,6 +16091,17 @@ typedef struct {
                 contentProperties[@"contentsRead"] = [[TGMessageViewedContentProperty alloc] init];
                 updatedMessage = [message copy];
                 updatedMessage.contentProperties = contentProperties;
+                
+                if (updatedMessage.messageLifetime != 0 && !TGPeerIdIsSecretChat(message.cid)) {
+                    [updatedMessage filterOutExpiredMedia];
+                    
+                    NSMutableArray<TGMessage *> *array = dispatchMessagesEditedByPeerId[@(message.cid)];
+                    if (array == nil) {
+                        array = [[NSMutableArray alloc] init];
+                        dispatchMessagesEditedByPeerId[@(message.cid)] = array;
+                    }
+                    [array addObject:updatedMessage];
+                }
             }
         } else if ([updateMessage isKindOfClass:[TGDatabaseUpdateMessageWithMessage class]]) {
             updatedMessage = ((TGDatabaseUpdateMessageWithMessage *)updateMessage).message;
@@ -17273,6 +17495,142 @@ forceReplacePinnedConversations:(bool)forceReplacePinnedConversations
         }
     } synchronous:true];
     return conversations;
+}
+    
+- (TGCdnData *)getCdnData:(int32_t)cdnId {
+    __block TGCdnData *data = nil;
+    [self dispatchOnDatabaseThread:^{
+        FMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT data FROM %@ WHERE id=?", _cdnDataTable], @(cdnId)];
+        if ([result next]) {
+            data = [NSKeyedUnarchiver unarchiveObjectWithData:[result dataForColumnIndex:0]];
+        }
+    } synchronous:true];
+    return data;
+}
+    
+- (void)setCdnData:(int32_t)cdnId data:(TGCdnData *)data {
+    [self dispatchOnDatabaseThread:^{
+        NSData *cdnData = [NSKeyedArchiver archivedDataWithRootObject:data];
+        [_database executeUpdate:[NSString stringWithFormat:@"INSERT OR REPLACE INTO %@ (id, data) VALUES (?, ?)", _cdnDataTable], @(cdnId), cdnData];
+    } synchronous:false];
+}
+
+- (TGInstantPageScrollState *)loadInstantPageScrollState:(int64_t)webPageId
+{
+    __block NSDictionary *state = nil;
+    bool found = false;
+    TG_SYNCHRONIZED_BEGIN(_instantPageStates);
+    auto it = _instantPageStates.find(webPageId);
+    if (it != _instantPageStates.end())
+    {
+        found = true;
+        state = it->second;
+    }
+    TG_SYNCHRONIZED_END(_instantPageStates);
+    
+    if (found)
+    {
+        return state[@"scrollState"];
+    }
+    
+    __block TGInstantPageScrollState *scrollState = nil;
+    [self dispatchOnDatabaseThread:^
+    {
+        TGLog(@"(loading instantPage state sync)");
+        
+        FMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT data FROM %@ WHERE id=?", _instantPageStateTableName], @(webPageId)];
+        if ([result next]) {
+            PSKeyValueDecoder *decoder = [[PSKeyValueDecoder alloc] initWithData:[result dataForColumnIndex:0]];
+            NSMutableDictionary *mutableState = [[NSMutableDictionary alloc] init];
+            
+            TGInstantPageScrollState *scrollStateData = [decoder decodeObjectForCKey:"scrollState"];
+            if (scrollStateData != nil) {
+                mutableState[@"scrollState"] = scrollStateData;
+            }
+            
+            state = mutableState;
+            
+            TG_SYNCHRONIZED_BEGIN(_instantPageStates);
+            _instantPageStates[webPageId] = state;
+            TG_SYNCHRONIZED_END(_instantPageStates);
+        }
+     } synchronous:true];
+    
+    return scrollState;
+}
+
+- (void)storeInstantPageScrollState:(int64_t)webPageId scrollState:(TGInstantPageScrollState *)scrollState
+{
+    bool changed = true;
+    
+    NSMutableDictionary *state = [[NSMutableDictionary alloc] init];
+    if (scrollState != nil) {
+        state[@"scrollState"] = scrollState;
+    }
+    
+    TG_SYNCHRONIZED_BEGIN(_instantPageStates);
+    auto it = _instantPageStates.find(webPageId);
+    if (it != _instantPageStates.end())
+    {
+        if (TGObjectCompare(it->second, state))
+            changed = false;
+    }
+    _instantPageStates[webPageId] = state;
+    TG_SYNCHRONIZED_END(_instantPageStates);
+    
+    if (changed)
+    {
+        [self dispatchOnDatabaseThread:^
+         {
+             PSKeyValueEncoder *encoder = [[PSKeyValueEncoder alloc] init];
+             if (scrollState != nil) {
+                 [encoder encodeObject:scrollState forCKey:"scrollState"];
+             }
+             
+             [_database executeUpdate:[NSString stringWithFormat:@"INSERT OR REPLACE INTO %@ (id, data) VALUES (?, ?)", _instantPageStateTableName], @(webPageId), [encoder data]];
+         } synchronous:false];
+    }
+}
+
+- (void)switchToWal {
+    [self dispatchOnDatabaseThread:^{
+        sqlite3_exec([_database sqliteHandle], "PRAGMA journal_mode=WAL", NULL, NULL, NULL);
+    } synchronous:false];
+}
+
+- (void)setSuggestedLocalizationCode:(NSString *)code {
+    [self dispatchOnDatabaseThread:^{
+        if (_suggestedLocalizationCode == nil) {
+            _suggestedLocalizationCode = [[SVariable alloc] init];
+        }
+        [self setCustomProperty:@"suggestedLocalizationCode" value:code == nil ? [NSData data] : [code dataUsingEncoding:NSUTF8StringEncoding]];
+        if (!TGStringCompare(_suggestedLocalizationCodeValue, code)) {
+            _suggestedLocalizationCodeValue = code;
+            [_suggestedLocalizationCode set:[SSignal single:code]];
+        }
+    } synchronous:false];
+}
+
+- (SSignal *)suggestedLocalizationCode {
+    return [[SSignal alloc] initWithGenerator:^id<SDisposable>(SSubscriber *subscriber) {
+        SMetaDisposable *disposable = [[SMetaDisposable alloc] init];
+        [self dispatchOnDatabaseThread:^{
+            if (_suggestedLocalizationCode == nil) {
+                _suggestedLocalizationCode = [[SVariable alloc] init];
+                NSData *data = [self customProperty:@"suggestedLocalizationCode"];
+                NSString *code = nil;
+                if (data.length != 0) {
+                    code = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+                }
+                _suggestedLocalizationCodeValue = code;
+                [_suggestedLocalizationCode set:[SSignal single:code]];
+            }
+            [disposable setDisposable:[[_suggestedLocalizationCode signal] startWithNext:^(id next) {
+                [subscriber putNext:next];
+            }]];
+        } synchronous:false];
+        return disposable;
+    }];
 }
 
 @end

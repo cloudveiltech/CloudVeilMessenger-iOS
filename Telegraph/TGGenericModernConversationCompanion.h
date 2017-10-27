@@ -56,6 +56,11 @@
 - (NSDictionary *)_optionsForMessageActions;
 - (void)_setupOutgoingMessage:(TGMessage *)message;
 - (bool)_messagesNeedRandomId;
+- (bool)canSendStickers;
+- (bool)canSendMedia;
+- (bool)canSendGifs;
+- (bool)canSendGames;
+- (bool)canSendInline;
 
 - (void)standaloneForwardMessages:(NSArray *)messages;
 - (void)standaloneSendMessages:(NSArray *)messages;
@@ -66,7 +71,7 @@
 
 - (bool)shouldFastScrollDown;
 
-- (void)updateMessagesLive:(NSDictionary *)messageIdToMessage;
+- (void)updateMessagesLive:(NSDictionary *)messageIdToMessage animated:(bool)animated;
 
 - (SSignal *)primaryTitlePanel;
 

@@ -24,7 +24,6 @@ NSString *TGMentionBoldAttributeName = @"TGMentionBoldAttributeName";
 
 @interface HPGrowingTextView ()
 {
-    bool _ignoreChangeNotification;
     UIColor *_intrinsicTextColor;
     UIFont *_intrinsicTextFont;
 }
@@ -83,6 +82,13 @@ NSString *TGMentionBoldAttributeName = @"TGMentionBoldAttributeName";
     _animationDuration = 0.1f;
     
     _internalTextView.attributedText = [[NSAttributedString alloc] initWithString:@"" attributes:[self defaultAttributes]];
+}
+
+- (void)setDisableFormatting:(bool)disableFormatting
+{
+    _disableFormatting = disableFormatting;
+    if (iosMajorVersion() >= 7)
+        _internalTextView.allowsEditingTextAttributes = !disableFormatting;
 }
 
 - (void)setFrame:(CGRect)frame
@@ -435,6 +441,16 @@ NSString *TGMentionBoldAttributeName = @"TGMentionBoldAttributeName";
 }
 
 #pragma mark -
+
+- (BOOL)textViewShouldBeginEditing:(UITextView *)__unused textView
+{
+    id<HPGrowingTextViewDelegate> delegate = _delegate;
+    
+    if ([delegate respondsToSelector:@selector(growingTextViewShouldBeginEditing:)])
+        return [delegate growingTextViewShouldBeginEditing:self];
+    
+    return true;
+}
 
 - (void)textViewDidBeginEditing:(UITextView *)__unused textView
 {

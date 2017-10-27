@@ -101,53 +101,6 @@
 
 @end
 
-@implementation TLDocumentAttribute$documentAttributeVideo : TLDocumentAttribute
-
-
-- (int32_t)TLconstructorSignature
-{
-    return (int32_t)0x5910cccb;
-}
-
-- (int32_t)TLconstructorName
-{
-    return (int32_t)0xbd5974ef;
-}
-
-- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)metaObject
-{
-    TLDocumentAttribute$documentAttributeVideo *object = [[TLDocumentAttribute$documentAttributeVideo alloc] init];
-    object.duration = metaObject->getInt32((int32_t)0xac00f752);
-    object.w = metaObject->getInt32((int32_t)0x98407fc3);
-    object.h = metaObject->getInt32((int32_t)0x27243f49);
-    return object;
-}
-
-- (void)TLfillFieldsWithValues:(std::map<int32_t, TLConstructedValue> *)values
-{
-    {
-        TLConstructedValue value;
-        value.type = TLConstructedValueTypePrimitiveInt32;
-        value.primitive.int32Value = self.duration;
-        values->insert(std::pair<int32_t, TLConstructedValue>((int32_t)0xac00f752, value));
-    }
-    {
-        TLConstructedValue value;
-        value.type = TLConstructedValueTypePrimitiveInt32;
-        value.primitive.int32Value = self.w;
-        values->insert(std::pair<int32_t, TLConstructedValue>((int32_t)0x98407fc3, value));
-    }
-    {
-        TLConstructedValue value;
-        value.type = TLConstructedValueTypePrimitiveInt32;
-        value.primitive.int32Value = self.h;
-        values->insert(std::pair<int32_t, TLConstructedValue>((int32_t)0x27243f49, value));
-    }
-}
-
-
-@end
-
 @implementation TLDocumentAttribute$documentAttributeFilename : TLDocumentAttribute
 
 
@@ -256,6 +209,60 @@
 
 - (void)TLfillFieldsWithValues:(std::map<int32_t, TLConstructedValue> *)__unused values
 {
+}
+
+
+@end
+
+@implementation TLDocumentAttribute$documentAttributeVideo : TLDocumentAttribute
+
+
+- (int32_t)TLconstructorSignature
+{
+    return (int32_t)0xef02ce6;
+}
+
+- (int32_t)TLconstructorName
+{
+    return (int32_t)0xbd5974ef;
+}
+
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)metaObject
+{
+    TLDocumentAttribute$documentAttributeVideo *object = [[TLDocumentAttribute$documentAttributeVideo alloc] init];
+    object.flags = metaObject->getInt32((int32_t)0x81915c23);
+    object.duration = metaObject->getInt32((int32_t)0xac00f752);
+    object.w = metaObject->getInt32((int32_t)0x98407fc3);
+    object.h = metaObject->getInt32((int32_t)0x27243f49);
+    return object;
+}
+
+- (void)TLfillFieldsWithValues:(std::map<int32_t, TLConstructedValue> *)values
+{
+    {
+        TLConstructedValue value;
+        value.type = TLConstructedValueTypePrimitiveInt32;
+        value.primitive.int32Value = self.flags;
+        values->insert(std::pair<int32_t, TLConstructedValue>((int32_t)0x81915c23, value));
+    }
+    {
+        TLConstructedValue value;
+        value.type = TLConstructedValueTypePrimitiveInt32;
+        value.primitive.int32Value = self.duration;
+        values->insert(std::pair<int32_t, TLConstructedValue>((int32_t)0xac00f752, value));
+    }
+    {
+        TLConstructedValue value;
+        value.type = TLConstructedValueTypePrimitiveInt32;
+        value.primitive.int32Value = self.w;
+        values->insert(std::pair<int32_t, TLConstructedValue>((int32_t)0x98407fc3, value));
+    }
+    {
+        TLConstructedValue value;
+        value.type = TLConstructedValueTypePrimitiveInt32;
+        value.primitive.int32Value = self.h;
+        values->insert(std::pair<int32_t, TLConstructedValue>((int32_t)0x27243f49, value));
+    }
 }
 
 

@@ -198,7 +198,7 @@
 
 - (void)_displayCameraWithView:(TGAttachmentCameraView *)cameraView menuController:(TGMenuSheetController *)menuController
 {
-    if (![TGAccessChecker checkCameraAuthorizationStatusWithAlertDismissComlpetion:nil])
+    if (![TGAccessChecker checkCameraAuthorizationStatusForIntent:TGCameraAccessIntentDefault alertDismissCompletion:nil])
         return;
     
     if (TGAppDelegateInstance.rootController.isSplitView)
@@ -276,7 +276,7 @@
         [strongCameraView attachPreviewViewAnimated:true];
     };
     
-    controller.finishedWithPhoto = ^(UIImage *resultImage, __unused NSString *caption, __unused NSArray *stickers)
+    controller.finishedWithPhoto = ^(__unused TGOverlayController *controller, UIImage *resultImage, __unused NSString *caption, __unused NSArray *stickers, __unused NSNumber *timer)
     {
         __strong TGMediaAvatarMenuMixin *strongSelf = weakSelf;
         if (strongSelf == nil)
@@ -377,7 +377,7 @@
         if (strongSelf == nil)
             return;
         
-        TGMediaAssetsController *controller = [TGMediaAssetsController controllerWithAssetGroup:group intent:TGMediaAssetsControllerSetProfilePhotoIntent];
+        TGMediaAssetsController *controller = [TGMediaAssetsController controllerWithAssetGroup:group intent:TGMediaAssetsControllerSetProfilePhotoIntent recipientName:nil];
         __weak TGMediaAssetsController *weakController = controller;
         controller.avatarCompletionBlock = ^(UIImage *resultImage)
         {

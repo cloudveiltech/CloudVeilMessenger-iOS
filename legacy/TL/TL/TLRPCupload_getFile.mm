@@ -16,7 +16,7 @@
 
 - (int)impliedResponseSignature
 {
-    return (int)0x96a18d5;
+    return 0;
 }
 
 - (int)layerVersion

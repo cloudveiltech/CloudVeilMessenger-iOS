@@ -940,7 +940,7 @@ static int64_t extractMessageConversationId(T concreteMessage, int &outFromUid)
             {
                 if ([message isKindOfClass:[TLMessage$modernMessage class]])
                 {
-                    TLMessageFwdHeader$messageFwdHeader *fwd_header = (TLMessageFwdHeader$messageFwdHeader *)((TLMessage$modernMessage *)message).fwd_header;
+                    TLMessageFwdHeader$messageFwdHeader *fwd_header = (TLMessageFwdHeader$messageFwdHeader *)((TLMessage$modernMessage *)message).fwd_from;
                     if (fwd_header != nil) {
                         if (fwd_header.from_id != 0) {
                             if (knownUsers.find(fwd_header.from_id) == knownUsers.end() && processedUsers.find(fwd_header.from_id) == processedUsers.end())
@@ -1578,7 +1578,10 @@ static int64_t extractMessageConversationId(T concreteMessage, int &outFromUid)
                                             }
                                         }
                                         
-                                        NSMutableString *formatString = [[NSMutableString alloc] initWithString:TGLocalized(formatStringBase)];
+                                        NSString *baseString = TGLocalized(formatStringBase);
+                                        baseString = [baseString stringByReplacingOccurrencesOfString:@"%@" withString:@"{game}"];
+                                        
+                                        NSMutableString *formatString = [[NSMutableString alloc] initWithString:baseString];
                                         
                                         NSString *authorName = user.displayFirstName;
                                         
@@ -1646,6 +1649,13 @@ static int64_t extractMessageConversationId(T concreteMessage, int &outFromUid)
                                         attachmentFound = true;
                                         break;
                                     }
+                                    case TGMessageActionEncryptedChatMessageScreenshot:
+                                    {
+                                        text = [NSString stringWithFormat:TGLocalized(@"MESSAGE_SCREENSHOT"), user.displayName];
+                                        attachmentFound = true;
+                                        
+                                        break;
+                                    }
                                     default:
                                         break;
                                 }
@@ -1659,8 +1669,13 @@ static int64_t extractMessageConversationId(T concreteMessage, int &outFromUid)
                                         text = [[NSString alloc] initWithFormat:@"%@@%@: 🖼 %@", user.displayName, chatName, ((TGImageMediaAttachment *)attachment).caption];
                                     }
                                 } else {
-                                    if (message.cid > 0)
-                                        text = [[NSString alloc] initWithFormat:TGLocalized(@"MESSAGE_PHOTO"), user.displayName];
+                                    if (message.cid > 0) {
+                                        if (message.messageLifetime > 0 && message.messageLifetime <= 60) {
+                                            text = [[NSString alloc] initWithFormat:TGLocalized(@"MESSAGE_PHOTO_SECRET"), user.displayName];
+                                        } else {
+                                            text = [[NSString alloc] initWithFormat:TGLocalized(@"MESSAGE_PHOTO"), user.displayName];
+                                        }
+                                    }
                                     else
                                         text = [[NSString alloc] initWithFormat:TGLocalized(@"CHAT_MESSAGE_PHOTO"), user.displayName, chatName];
                                 }
@@ -1671,6 +1686,8 @@ static int64_t extractMessageConversationId(T concreteMessage, int &outFromUid)
                             }
                             else if (attachment.type == TGVideoMediaAttachmentType)
                             {
+                                bool isRoundMessage = ((TGVideoMediaAttachment *)attachment).roundMessage;
+                                
                                 if (((TGVideoMediaAttachment *)attachment).caption.length != 0) {
                                     if (message.cid > 0) {
                                         text = [[NSString alloc] initWithFormat:@"%@: 📹 %@", user.displayName, ((TGVideoMediaAttachment *)attachment).caption];
@@ -1678,10 +1695,22 @@ static int64_t extractMessageConversationId(T concreteMessage, int &outFromUid)
                                         text = [[NSString alloc] initWithFormat:@"%@@%@: 📹 %@", user.displayName, chatName, ((TGVideoMediaAttachment *)attachment).caption];
                                     }
                                 } else {
-                                    if (message.cid > 0)
-                                        text = [[NSString alloc] initWithFormat:TGLocalized(@"MESSAGE_VIDEO"), user.displayName];
-                                    else
-                                        text = [[NSString alloc] initWithFormat:TGLocalized(@"CHAT_MESSAGE_VIDEO"), user.displayName, chatName];
+                                    if (isRoundMessage) {
+                                        if (message.cid > 0)
+                                            text = [[NSString alloc] initWithFormat:TGLocalized(@"MESSAGE_ROUND"), user.displayName];
+                                        else
+                                            text = [[NSString alloc] initWithFormat:TGLocalized(@"CHAT_MESSAGE_ROUND"), user.displayName, chatName];
+                                    }
+                                    else {
+                                        if (message.cid > 0)
+                                            if (message.messageLifetime > 0 && message.messageLifetime <= 60) {
+                                                text = [[NSString alloc] initWithFormat:TGLocalized(@"MESSAGE_VIDEO_SECRET"), user.displayName];
+                                            } else {
+                                                text = [[NSString alloc] initWithFormat:TGLocalized(@"MESSAGE_VIDEO"), user.displayName];
+                                            }
+                                        else
+                                            text = [[NSString alloc] initWithFormat:TGLocalized(@"CHAT_MESSAGE_VIDEO"), user.displayName, chatName];
+                                    }
                                 }
                                 
                                 attachmentFound = true;
@@ -1899,7 +1928,11 @@ static int64_t extractMessageConversationId(T concreteMessage, int &outFromUid)
                         }
                         
                         if (text != nil)
-                            [[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
+                            
+                            dispatch_async(dispatch_get_main_queue(), ^(void){
+                                
+                                [[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
+                            });
                     }
                 }
                 @catch (NSException *e)

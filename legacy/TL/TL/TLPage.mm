@@ -38,7 +38,7 @@
 
 - (int32_t)TLconstructorSignature
 {
-    return (int32_t)0x8dee6c44;
+    return (int32_t)0x8e3f9ebe;
 }
 
 - (int32_t)TLconstructorName
@@ -51,7 +51,7 @@
     TLPage$pagePart *object = [[TLPage$pagePart alloc] init];
     object.blocks = metaObject->getArray((int32_t)0x277ee766);
     object.photos = metaObject->getArray((int32_t)0x26b9c95f);
-    object.videos = metaObject->getArray((int32_t)0xff960b08);
+    object.documents = metaObject->getArray((int32_t)0xbf7d927d);
     return object;
 }
 
@@ -72,8 +72,8 @@
     {
         TLConstructedValue value;
         value.type = TLConstructedValueTypeVector;
-        value.nativeObject = self.videos;
-        values->insert(std::pair<int32_t, TLConstructedValue>((int32_t)0xff960b08, value));
+        value.nativeObject = self.documents;
+        values->insert(std::pair<int32_t, TLConstructedValue>((int32_t)0xbf7d927d, value));
     }
 }
 
@@ -85,7 +85,7 @@
 
 - (int32_t)TLconstructorSignature
 {
-    return (int32_t)0xd7a19d69;
+    return (int32_t)0x556ec7aa;
 }
 
 - (int32_t)TLconstructorName
@@ -98,7 +98,7 @@
     TLPage$pageFull *object = [[TLPage$pageFull alloc] init];
     object.blocks = metaObject->getArray((int32_t)0x277ee766);
     object.photos = metaObject->getArray((int32_t)0x26b9c95f);
-    object.videos = metaObject->getArray((int32_t)0xff960b08);
+    object.documents = metaObject->getArray((int32_t)0xbf7d927d);
     return object;
 }
 
@@ -119,8 +119,8 @@
     {
         TLConstructedValue value;
         value.type = TLConstructedValueTypeVector;
-        value.nativeObject = self.videos;
-        values->insert(std::pair<int32_t, TLConstructedValue>((int32_t)0xff960b08, value));
+        value.nativeObject = self.documents;
+        values->insert(std::pair<int32_t, TLConstructedValue>((int32_t)0xbf7d927d, value));
     }
 }
 

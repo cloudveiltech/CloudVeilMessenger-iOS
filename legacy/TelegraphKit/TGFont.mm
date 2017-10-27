@@ -35,6 +35,22 @@ UIFont *TGMediumSystemFontOfSize(CGFloat size)
     }
 }
 
+UIFont *TGSemiboldSystemFontOfSize(CGFloat size)
+{
+    static bool useSystem = false;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^
+    {
+        useSystem = iosMajorVersion() >= 9;
+    });
+    
+    if (useSystem) {
+        return [UIFont systemFontOfSize:size weight:UIFontWeightSemibold];
+    } else {
+        return [UIFont fontWithName:@"HelveticaNeue-Medium" size:size];
+    }
+}
+
 UIFont *TGBoldSystemFontOfSize(CGFloat size)
 {
     static bool useSystem = false;
@@ -89,6 +105,11 @@ UIFont *TGItalicSystemFontOfSize(CGFloat size)
 + (UIFont *)boldSystemFontOfSize:(CGFloat)size
 {
     return TGBoldSystemFontOfSize(size);
+}
+
++ (UIFont *)roundedFontOfSize:(CGFloat)size
+{
+    return [UIFont fontWithName:@".SFCompactRounded-Semibold" size:size];
 }
 
 @end

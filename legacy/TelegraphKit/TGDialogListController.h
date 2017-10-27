@@ -30,6 +30,7 @@ extern NSString *authorNameYou;
 
 @property (nonatomic) bool ignoreBots;
 
+
 + (void)setLastAppearedConversationId:(int64_t)conversationId;
 
 + (void)setDebugDoNotJump:(bool)debugDoNotJump;
@@ -48,7 +49,7 @@ extern NSString *authorNameYou;
 
 - (void)searchResultsReloaded:(NSDictionary *)items searchString:(NSString *)searchString;
 
-- (void)titleStateUpdated:(NSString *)text isLoading:(bool)isLoading;
+- (void)titleStateUpdated:(NSString *)text isLoading:(bool)isLoading isProxy:(bool)isProxy;
 
 - (void)userTypingInConversationUpdated:(int64_t)conversationId typingString:(NSString *)typingString;
 

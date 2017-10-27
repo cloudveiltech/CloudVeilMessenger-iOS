@@ -11,19 +11,9 @@
 
 #import <Foundation/Foundation.h>
 
-//#include <tr1/memory>
-#ifdef __MAC_10_9
 #include <memory>
-#else
-#include <tr1/memory>
-#endif
 #include <vector>
-
-#ifdef __MAC_10_9
 #include <unordered_map>
-#else
-#include <tr1/unordered_map>
-#endif
 
 #include "TLMetaType.h"
 #include "TLMetaField.h"

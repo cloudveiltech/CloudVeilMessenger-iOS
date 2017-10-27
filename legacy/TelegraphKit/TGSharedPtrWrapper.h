@@ -8,12 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-//#include <tr1/memory>
-#ifdef __MAC_10_9
 #include <memory>
-#else
-#include <tr1/memory>
-#endif
 
 @interface TGSharedPtrWrapper : NSObject
 

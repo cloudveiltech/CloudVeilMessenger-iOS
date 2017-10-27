@@ -19,11 +19,7 @@
 
 #import "TL/TLMetaScheme.h"
 
-#ifdef __MAC_10_9
 #include <unordered_map>
-#else
-#include <tr1/unordered_map>
-#endif
 
 #define TL_INT32_CONSTRUCTOR ((int32_t)0xA8509BDA)
 #define TL_INT64_CONSTRUCTOR ((int32_t)0x22076CBA)

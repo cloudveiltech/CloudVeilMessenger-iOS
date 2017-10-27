@@ -5,12 +5,7 @@
 #import <libkern/OSAtomic.h>
 
 #include <vector>
-
-#ifdef __MAC_10_9
 #include <unordered_map>
-#else
-#include <tr1/unordered_map>
-#endif
 
 static const char *graphQueueSpecific = "com.telegraph.graphdispatchqueue";
 

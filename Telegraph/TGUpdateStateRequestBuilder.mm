@@ -93,6 +93,12 @@
 
 #import "TGCallSignals.h"
 
+#import "TGLocalizationSignals.h"
+#import "TGLocalization.h"
+
+#import "TGSuggestedLocalizationController.h"
+#import "TGLocalizationSelectionController.h"
+
 static int stateVersion = 0;
 static bool didRequestUpdates = false;
 
@@ -311,7 +317,7 @@ static bool _initialUpdatesScheduled = false;
     return [[[TGTelegramNetworking instance] requestSignal:getWebPagePreview] mapToSignal:^SSignal *(TLMessageMedia *media)
     {
         TGWebPageMediaAttachment *webPage = nil;
-        for (id attachment in [TGMessage parseTelegraphMedia:media])
+        for (id attachment in [TGMessage parseTelegraphMedia:media mediaLifetime:nil])
         {
             if ([attachment isKindOfClass:[TGWebPageMediaAttachment class]])
             {
@@ -521,7 +527,7 @@ static bool _initialUpdatesScheduled = false;
         NSString *currentVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
         NSString *versionKey = [[NSString alloc] initWithFormat:@"NotifiedVersionUpdate_%@", currentVersion];
 #ifdef DEBUG
-        //[[NSUserDefaults standardUserDefaults] removeObjectForKey:versionKey];
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:versionKey];
 #endif
         if (![[[NSUserDefaults standardUserDefaults] objectForKey:versionKey] boolValue]) {
             NSString *previousVersion = [[NSUserDefaults standardUserDefaults] objectForKey:@"UpdateChangelog_PreviousVersion"];
@@ -529,14 +535,10 @@ static bool _initialUpdatesScheduled = false;
                 previousVersion = @"3.16";
             }
             
-#ifdef DEBUG
-            //previousVersion = @"3.15";
-            //currentVersion = @"4.444";
-#endif
-            
             bool skipUpdate = initial;
-#ifdef INTERNAL_RELEASE
-            //skipUpdate = true;
+#ifdef DEBUG
+#elif defined(INTERNAL_RELEASE)
+            skipUpdate = true;
 #endif
             if (skipUpdate) {
                 [[NSUserDefaults standardUserDefaults] setObject:@true forKey:versionKey];
@@ -588,7 +590,7 @@ static bool _initialUpdatesScheduled = false;
                                     }
                                     
                                     if (updateServiceNotification.media != nil) {
-                                        NSArray *medias = [TGMessage parseTelegraphMedia:updateServiceNotification.media];
+                                        NSArray *medias = [TGMessage parseTelegraphMedia:updateServiceNotification.media mediaLifetime:nil];
                                         if (medias.count != 0) {
                                             [mediaAttachments addObjectsFromArray:medias];
                                         }
@@ -1234,7 +1236,7 @@ static bool _initialUpdatesScheduled = false;
                 if (datacenterOption.ip_address.length == 0)
                     continue;
                 
-                [[TGTelegramNetworking instance] mergeDatacenterAddress:datacenterOption.n_id address:[[MTDatacenterAddress alloc] initWithIp:datacenterOption.ip_address port:(uint16_t)(datacenterOption.port == 0 ? 443 : datacenterOption.port) preferForMedia:false restrictToTcp:datacenterOption.flags & (1 << 2)]];
+                [[TGTelegramNetworking instance] mergeDatacenterAddress:datacenterOption.n_id address:[[MTDatacenterAddress alloc] initWithIp:datacenterOption.ip_address port:(uint16_t)(datacenterOption.port == 0 ? 443 : datacenterOption.port) preferForMedia:false restrictToTcp:datacenterOption.flags & (1 << 2) cdn:datacenterOption.flags & (1 << 3) preferForProxy:datacenterOption.flags & (1 << 4)]];
             }
         }
         else if ([update isKindOfClass:[TLUpdate$updateUserBlocked class]])
@@ -1516,6 +1518,15 @@ static bool _initialUpdatesScheduled = false;
             [updatedPinnedDialogsKeyOrder addObject:@(peerId)];
         } else if ([update isKindOfClass:[TLUpdate$updateConfig class]]) {
             [ActionStageInstance() requestActor:@"/tg/service/updateConfig/(task)" options:nil flags:0 watcher:TGTelegraphInstance];
+        } else if ([update isKindOfClass:[TLUpdate$updateLangPack class]]) {
+            TLUpdate$updateLangPack *updateLangPack = (TLUpdate$updateLangPack *)update;
+            if (updateLangPack.difference.from_version == currentNativeLocalization().version) {
+                [TGLocalizationSignals mergeLocalization:updateLangPack.difference replace:false];
+            } else {
+                [TGTelegraphInstance.disposeOnLogout add:[[TGLocalizationSignals pollLocalization] startWithNext:nil]];
+            }
+        } else if ([update isKindOfClass:[TLUpdate$updateLangPackTooLong class]]) {
+            [TGTelegraphInstance.disposeOnLogout add:[[TGLocalizationSignals pollLocalization] startWithNext:nil]];
         }
     }
     
@@ -1560,6 +1571,9 @@ static bool _initialUpdatesScheduled = false;
                     NSMutableDictionary *contentProperties = [[NSMutableDictionary alloc] initWithDictionary:message.contentProperties];
                     contentProperties[@"contentsRead"] = [[TGMessageViewedContentProperty alloc] init];
                     message.contentProperties = contentProperties;
+                }
+                if (message.messageLifetime != 0) {
+                    [message filterOutExpiredMedia];
                 }
             }
             
@@ -1934,6 +1948,10 @@ static bool _initialUpdatesScheduled = false;
                         activity = @"recordingAudio";
                     else if ([userTyping.action isKindOfClass:[TLSendMessageAction$sendMessageUploadAudioAction class]])
                         activity = @"uploadingAudio";
+                    else if ([userTyping.action isKindOfClass:[TLSendMessageAction$sendMessageRecordRoundAction class]])
+                        activity = @"recordingVideoMessage";
+                    else if ([userTyping.action isKindOfClass:[TLSendMessageAction$sendMessageUploadRoundAction class]])
+                        activity = @"uploadingVideoMessage";
                     else if ([userTyping.action isKindOfClass:[TLSendMessageAction$sendMessageUploadPhotoAction class]])
                         activity = @"uploadingPhoto";
                     else if ([userTyping.action isKindOfClass:[TLSendMessageAction$sendMessageUploadDocumentAction class]])
@@ -1963,6 +1981,10 @@ static bool _initialUpdatesScheduled = false;
                     activity = @"recordingAudio";
                 else if ([userTyping.action isKindOfClass:[TLSendMessageAction$sendMessageUploadAudioAction class]])
                     activity = @"uploadingAudio";
+                else if ([userTyping.action isKindOfClass:[TLSendMessageAction$sendMessageRecordRoundAction class]])
+                    activity = @"recordingVideoMessage";
+                else if ([userTyping.action isKindOfClass:[TLSendMessageAction$sendMessageUploadRoundAction class]])
+                    activity = @"uploadingVideoMessage";
                 else if ([userTyping.action isKindOfClass:[TLSendMessageAction$sendMessageUploadPhotoAction class]])
                     activity = @"uploadingPhoto";
                 else if ([userTyping.action isKindOfClass:[TLSendMessageAction$sendMessageUploadDocumentAction class]])

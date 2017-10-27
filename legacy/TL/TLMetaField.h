@@ -11,12 +11,7 @@
 
 #include "TLMetaType.h"
 
-#ifdef __MAC_10_9
 #include <memory>
-#else
-#include <tr1/memory>
-#endif
-
 
 struct TLMetaField
 {

@@ -187,7 +187,7 @@ static NSMutableDictionary *dismissedContactLinkPanelsByUserId()
 
 - (bool)shouldDisplayContactLinkPanel
 {
-    if (_conversationId == [TGTelegraphInstance serviceUserUid] || _conversationId == TGTelegraphInstance.clientUserId)
+    if (_conversationId == [TGTelegraphInstance serviceUserUid] || _conversationId == [TGTelegraphInstance voipSupportUserUid] || _conversationId == TGTelegraphInstance.clientUserId)
         return false;
     return true;
 }
@@ -500,6 +500,9 @@ static NSMutableDictionary *dismissedContactLinkPanelsByUserId()
     if (user.uid == [TGTelegraphInstance serviceUserUid])
         return @"Telegram";
     
+    if (user.uid == [TGTelegraphInstance voipSupportUserUid])
+        return @"VoIP Support";
+    
     if (isContact || user.phoneNumber.length == 0)
         return user.displayName;
     
@@ -524,7 +527,7 @@ static NSMutableDictionary *dismissedContactLinkPanelsByUserId()
         {
             if (accentColored != NULL)
                 *accentColored = true;
-            return TGLocalizedStatic(@"Presence.online");
+            return TGLocalized(@"Presence.online");
         }
         else if (user.presence.lastSeen != 0)
             return [TGDateUtils stringForRelativeLastSeen:user.presence.lastSeen];
@@ -539,6 +542,10 @@ static NSMutableDictionary *dismissedContactLinkPanelsByUserId()
         return TGLocalized(@"Activity.RecordingAudio");
     else if ([activity isEqualToString:@"uploadingAudio"])
         return TGLocalized(@"Activity.UploadingAudio");
+    else if ([activity isEqualToString:@"recordingVideoMessage"])
+        return TGLocalized(@"Activity.RecordingVideoMessage");
+    else if ([activity isEqualToString:@"uploadingVideoMessage"])
+        return TGLocalized(@"Activity.UploadingVideoMessage");
     else if ([activity isEqualToString:@"uploadingPhoto"])
         return TGLocalized(@"Activity.UploadingPhoto");
     else if ([activity isEqualToString:@"uploadingVideo"])
@@ -557,6 +564,8 @@ static NSMutableDictionary *dismissedContactLinkPanelsByUserId()
 {
     if ([activity isEqualToString:@"recordingAudio"])
         return TGModernConversationTitleViewActivityAudioRecording;
+    else if ([activity isEqualToString:@"recordingVideoMessage"])
+        return TGModernConversationTitleViewActivityVideoMessageRecording;
     else if ([activity isEqualToString:@"uploadingPhoto"])
         return TGModernConversationTitleViewActivityUploading;
     else if ([activity isEqualToString:@"uploadingVideo"])
@@ -569,6 +578,12 @@ static NSMutableDictionary *dismissedContactLinkPanelsByUserId()
         return TGModernConversationTitleViewActivityPlaying;
     
     return TGModernConversationTitleViewActivityTyping;
+}
+
+- (NSString *)title
+{
+    TGUser *user = [TGDatabaseInstance() loadUser:_uid];
+    return [self stringForTitle:user isContact:_isContact];
 }
 
 - (void)loadInitialState
@@ -686,7 +701,7 @@ static NSMutableDictionary *dismissedContactLinkPanelsByUserId()
         }
         return _botStartPanel;
     }
-    return _unblockPanel;
+    return nil;
 }
 
 - (UIView *)_conversationHeader
@@ -723,6 +738,11 @@ static NSMutableDictionary *dismissedContactLinkPanelsByUserId()
     return TGAppDelegateInstance.autoDownloadAudioInPrivateChats;
 }
 
+- (bool)shouldAutomaticallyDownloadVideoMessages
+{
+    return TGAppDelegateInstance.autoDownloadVideoMessageInPrivateChats;
+}
+
 - (NSString *)_sendMessagePathForMessageId:(int32_t)mid
 {
     return [[NSString alloc] initWithFormat:@"/tg/sendCommonMessage/(%@)/(%d)", [self _conversationIdPathComponent], mid];
@@ -743,6 +763,8 @@ static NSMutableDictionary *dismissedContactLinkPanelsByUserId()
     [ActionStageInstance() watchForPaths:@[
         [[NSString alloc] initWithFormat:@"/tg/conversation/(%" PRId64 ")/typing", _conversationId],
         [[NSString alloc] initWithFormat:@"/tg/userLink/(%" PRId32 ")", _uid],
+        [[NSString alloc] initWithFormat:@"/tg/conversation/(%lld)/messageFlagChanges", _conversationId],
+        [[NSString alloc] initWithFormat:@"/tg/conversation/messageViewDateChanges"],
         @"/tg/blockedUsers"
     ] watcher:self];
 
@@ -756,40 +778,37 @@ static NSMutableDictionary *dismissedContactLinkPanelsByUserId()
 
 - (void)_createOrUpdatePrimaryTitlePanel:(bool)createIfNeeded
 {
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone)
+    TGModernConversationController *controller = self.controller;
+    
+    TGModernConversationPrivateTitlePanel *privateTitlePanel = nil;
+    if ([[controller primaryTitlePanel] isKindOfClass:[TGModernConversationPrivateTitlePanel class]])
+        privateTitlePanel = (TGModernConversationPrivateTitlePanel *)[controller primaryTitlePanel];
+    else
     {
-        TGModernConversationController *controller = self.controller;
-        
-        TGModernConversationPrivateTitlePanel *privateTitlePanel = nil;
-        if ([[controller primaryTitlePanel] isKindOfClass:[TGModernConversationPrivateTitlePanel class]])
-            privateTitlePanel = (TGModernConversationPrivateTitlePanel *)[controller primaryTitlePanel];
-        else
+        if (createIfNeeded)
         {
-            if (createIfNeeded)
-            {
-                privateTitlePanel = [[TGModernConversationPrivateTitlePanel alloc] init];
-                privateTitlePanel.companionHandle = self.actionHandle;
-            }
-            else
-                return;
+            privateTitlePanel = [[TGModernConversationPrivateTitlePanel alloc] init];
+            privateTitlePanel.companionHandle = self.actionHandle;
         }
-        
-        NSMutableArray *actions = [[NSMutableArray alloc] init];
-        [actions addObject:@{@"title": TGLocalized(@"Conversation.Search"), @"icon": [UIImage imageNamed:@"PanelSearchIcon"], @"action": @"search"}];
-        if (_isMuted)
-            [actions addObject:@{@"title": TGLocalized(@"Conversation.Unmute"), @"icon": TGTintedImage([UIImage imageNamed:@"DialogListActionUnmute"], TGAccentColor()), @"action": @"unmute"}];
         else
-            [actions addObject:@{@"title": TGLocalized(@"Conversation.Mute"), @"icon": TGTintedImage([UIImage imageNamed:@"DialogListActionMute"], TGAccentColor()), @"action": @"mute"}];
-        
-        if (_supportsCalls) {
-            [actions addObject:@{@"title": TGLocalized(@"Conversation.Call"), @"icon": TGTintedImage([UIImage imageNamed:@"TabIconCalls"], TGAccentColor()), @"action": @"call"}];
-        }
-        
-        [actions addObject:@{@"title": TGLocalized(@"Conversation.Info"), @"icon": [UIImage imageNamed:@"PanelInfoIcon"], @"action": @"info"}];
-        [privateTitlePanel setButtonsWithTitlesAndActions:actions];
-
-        [controller setPrimaryTitlePanel:privateTitlePanel];
+            return;
     }
+    
+    NSMutableArray *actions = [[NSMutableArray alloc] init];
+    [actions addObject:@{@"title": TGLocalized(@"Conversation.Search"), @"icon": [UIImage imageNamed:@"PanelSearchIcon"], @"action": @"search"}];
+    if (_isMuted)
+        [actions addObject:@{@"title": TGLocalized(@"Conversation.Unmute"), @"icon": TGTintedImage([UIImage imageNamed:@"DialogListActionUnmute"], TGAccentColor()), @"action": @"unmute"}];
+    else
+        [actions addObject:@{@"title": TGLocalized(@"Conversation.Mute"), @"icon": TGTintedImage([UIImage imageNamed:@"DialogListActionMute"], TGAccentColor()), @"action": @"mute"}];
+    
+    if (_supportsCalls) {
+        [actions addObject:@{@"title": TGLocalized(@"Conversation.Call"), @"icon": TGTintedImage([UIImage imageNamed:@"TabIconCalls"], TGAccentColor()), @"action": @"call"}];
+    }
+    
+    [actions addObject:@{@"title": TGLocalized(@"Conversation.Info"), @"icon": [UIImage imageNamed:@"PanelInfoIcon"], @"action": @"info"}];
+    [privateTitlePanel setButtonsWithTitlesAndActions:actions];
+
+    [controller setPrimaryTitlePanel:privateTitlePanel];
 }
 
 - (void)_loadControllerPrimaryTitlePanel
@@ -1063,6 +1082,26 @@ static NSMutableDictionary *dismissedContactLinkPanelsByUserId()
             [self _updatePhoneSharingStatusFromUserLink:userLink];
         });
     }
+    else if ([path isEqualToString:[[NSString alloc] initWithFormat:@"/tg/conversation/(%lld)/messageFlagChanges", _conversationId]])
+    {
+        TGDispatchOnMainThread(^
+        {
+            [(NSMutableDictionary *)resource enumerateKeysAndObjectsUsingBlock:^(NSNumber *nMessageId, NSNumber *nFlags, __unused BOOL *stop)
+            {
+                [self _setMessageFlags:(int32_t)[nMessageId intValue] flags:[nFlags intValue]];
+            }];
+        });
+    }
+    else if ([path isEqualToString:[[NSString alloc] initWithFormat:@"/tg/conversation/messageViewDateChanges"]])
+    {
+        TGDispatchOnMainThread(^
+        {
+            [(NSMutableDictionary *)resource enumerateKeysAndObjectsUsingBlock:^(NSNumber *nMessageId, NSNumber *nViewDate, __unused BOOL *stop)
+            {
+                [self _setMessageViewDate:(int32_t)[nMessageId intValue] viewDate:[nViewDate doubleValue]];
+            }];
+        });
+    }
     else if ([path isEqualToString:@"/tg/calls/enabled"])
     {
         bool enabled = [((SGraphObjectNode *)resource).object boolValue];
@@ -1114,6 +1153,11 @@ static NSMutableDictionary *dismissedContactLinkPanelsByUserId()
 }
 
 - (bool)allowReplies
+{
+    return true;
+}
+
+- (bool)allowSelfDescructingMedia
 {
     return true;
 }
@@ -1258,15 +1302,95 @@ static NSMutableDictionary *dismissedContactLinkPanelsByUserId()
 }
 
 - (void)startVoiceCall {
-    if (_callsPrivate)
-    {
+    if (_callsPrivate) {
         TGUser *user = [TGDatabaseInstance() loadUser:_uid];
         [[[TGAlertView alloc] initWithTitle:TGLocalized(@"Call.ConnectionErrorTitle") message:[NSString stringWithFormat:TGLocalized(@"Call.PrivacyErrorMessage"), user.displayFirstName] cancelButtonTitle:TGLocalized(@"OK") okButtonTitle:nil completionBlock:nil] show];
     }
-    else
-    {
+    else {
         [[TGInterfaceManager instance] callPeerWithId:_uid];
     }
+}
+
+- (bool)supportsCalls {
+    return _supportsCalls;
+}
+
+- (int)messageLifetime
+{
+    return 0;
+}
+
+- (TGMessageModernConversationItem *)_updateMediaStatusData:(TGMessageModernConversationItem *)item
+{
+    if (item->_message.mediaAttachments.count != 0)
+    {
+        bool canBeRead = false;
+        for (TGMediaAttachment *attachment in item->_message.mediaAttachments)
+        {
+            switch (attachment.type)
+            {
+                case TGImageMediaAttachmentType:
+                case TGVideoMediaAttachmentType:
+                    if (attachment.type == TGVideoMediaAttachmentType && ((TGVideoMediaAttachment *)attachment).roundMessage)
+                        canBeRead = true;
+                    else
+                        canBeRead = item->_message.messageLifetime > 0 && item->_message.messageLifetime <= 60;
+                    break;
+                case TGAudioMediaAttachmentType:
+                    canBeRead = true;
+                    break;
+                case TGDocumentMediaAttachmentType:
+                    for (id attribute in ((TGDocumentMediaAttachment *)attachment).attributes) {
+                        if ([attribute isKindOfClass:[TGDocumentAttributeAudio class]]) {
+                            canBeRead = ((TGDocumentAttributeAudio *)attribute).isVoice;
+                            break;
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+        if (canBeRead) {
+            int flags = [TGDatabaseInstance() secretMessageFlags:item->_message.mid];
+            NSTimeInterval viewDate = [TGDatabaseInstance() messageCountdownLocalTime:item->_message.mid enqueueIfNotQueued:false initiatedCountdown:NULL];
+            
+            if (flags != 0 || ABS(viewDate - DBL_EPSILON) > 0.0)
+                [self _setMessageFlagsAndViewDate:item->_message.mid flags:flags viewDate:viewDate];
+        }
+    }
+    
+    return [super _updateMediaStatusData:item];
+}
+
+- (void)markMessagesAsViewed:(NSArray *)messageIds
+{
+    [TGDatabaseInstance() dispatchOnDatabaseThread:^
+     {
+         NSMutableArray *readMessageIds = [[NSMutableArray alloc] init];
+         
+         for (NSNumber *nMessageId in messageIds)
+         {
+             TGMessage *message = [TGDatabaseInstance() loadMessageWithMid:[nMessageId intValue] peerId:_conversationId];
+             if (!message.outgoing && message.messageLifetime > 0 && message.messageLifetime <= 60 && message.layer >= 17)
+             {
+                 bool initiatedCountdown = false;
+                 [TGDatabaseInstance() messageCountdownLocalTime:[nMessageId intValue] enqueueIfNotQueued:true initiatedCountdown:&initiatedCountdown];
+                 if (initiatedCountdown)
+                     [readMessageIds addObject:nMessageId];
+             }
+         }
+         
+         if (readMessageIds.count != 0)
+         {
+             [ActionStageInstance() requestActor:@"/tg/service/synchronizeserviceactions/(settings)" options:nil watcher:TGTelegraphInstance];
+         }
+     } synchronous:false];
+}
+
+- (NSUInteger)layer
+{
+    return 70;
 }
 
 @end

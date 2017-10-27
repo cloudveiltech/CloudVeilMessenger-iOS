@@ -373,3 +373,62 @@
 
 @end
 
+@implementation TLSendMessageAction$sendMessageRecordRoundAction : TLSendMessageAction
+
+
+- (int32_t)TLconstructorSignature
+{
+    return (int32_t)0x88f27fbc;
+}
+
+- (int32_t)TLconstructorName
+{
+    return (int32_t)0x6308487a;
+}
+
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)__unused metaObject
+{
+    TLSendMessageAction$sendMessageRecordRoundAction *object = [[TLSendMessageAction$sendMessageRecordRoundAction alloc] init];
+    return object;
+}
+
+- (void)TLfillFieldsWithValues:(std::map<int32_t, TLConstructedValue> *)__unused values
+{
+}
+
+
+@end
+
+@implementation TLSendMessageAction$sendMessageUploadRoundAction : TLSendMessageAction
+
+
+- (int32_t)TLconstructorSignature
+{
+    return (int32_t)0x243e1c66;
+}
+
+- (int32_t)TLconstructorName
+{
+    return (int32_t)0xca170402;
+}
+
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)metaObject
+{
+    TLSendMessageAction$sendMessageUploadRoundAction *object = [[TLSendMessageAction$sendMessageUploadRoundAction alloc] init];
+    object.progress = metaObject->getInt32((int32_t)0x9c5261bd);
+    return object;
+}
+
+- (void)TLfillFieldsWithValues:(std::map<int32_t, TLConstructedValue> *)values
+{
+    {
+        TLConstructedValue value;
+        value.type = TLConstructedValueTypePrimitiveInt32;
+        value.primitive.int32Value = self.progress;
+        values->insert(std::pair<int32_t, TLConstructedValue>((int32_t)0x9c5261bd, value));
+    }
+}
+
+
+@end
+

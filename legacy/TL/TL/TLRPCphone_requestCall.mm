@@ -22,7 +22,7 @@
 
 - (int)layerVersion
 {
-    return 60;
+    return 64;
 }
 
 - (int32_t)TLconstructorSignature

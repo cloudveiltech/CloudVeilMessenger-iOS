@@ -447,6 +447,11 @@
     
     if (![self _updateControllerInset:false])
         [self controllerInsetUpdated:UIEdgeInsetsZero];
+    
+    if (@available(iOS 11.0, *))
+    {
+        _collectionView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    }
 }
 
 - (void)_updateExplicitTableInset
@@ -1043,7 +1048,7 @@
             focusItem = galleryItem;
     }];
 
-    TGMediaPickerGalleryModel *model = [[TGMediaPickerGalleryModel alloc] initWithItems:galleryItems focusItem:focusItem selectionContext:item.selectionContext editingContext:_editingContext hasCaptions:self.captionsEnabled inhibitDocumentCaptions:false hasSelectionPanel:false];
+    TGMediaPickerGalleryModel *model = [[TGMediaPickerGalleryModel alloc] initWithItems:galleryItems focusItem:focusItem selectionContext:item.selectionContext editingContext:_editingContext hasCaptions:self.captionsEnabled hasTimer:false inhibitDocumentCaptions:false hasSelectionPanel:false recipientName:self.recipientName];
     model.suggestionContext = self.suggestionContext;
     model.controller = modernGallery;
     model.externalSelectionCount = ^NSInteger
@@ -1502,7 +1507,7 @@
         
         SSignal *signal = [SSignal single:item];
         
-        if ([item conformsToProtocol:@protocol(TGMediaEditableItem)] && [item respondsToSelector:@selector(screenImageSignal)])
+        if ([item conformsToProtocol:@protocol(TGMediaEditableItem)] && [item respondsToSelector:@selector(screenImageSignal:)])
         {
             signal = [[[[_editingContext imageSignalForItem:(id<TGMediaEditableItem>)item] filter:^bool(id result)
             {

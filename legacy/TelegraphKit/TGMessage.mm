@@ -8,13 +8,9 @@
 #import <objc/runtime.h>
 
 #import "TGTextCheckingResult.h"
+#import "TGPeerIdAdapter.h"
 
-#ifdef __MAC_10_9
 #include <unordered_map>
-#else
-#include <tr1/unordered_map>
-#endif
-
 
 static void *NSTextCheckingResultTelegramHiddenLinkKey = &NSTextCheckingResultTelegramHiddenLinkKey;
 
@@ -226,6 +222,9 @@ typedef enum {
 
 - (NSUInteger)layer
 {
+    if (!TGPeerIdIsSecretChat(self.cid)) {
+        return 70;
+    }
     NSUInteger value = [TGMessage layerFromFlags:_flags];
     if (value < 1)
         value = 1;
@@ -289,6 +288,22 @@ typedef enum {
     
     _textCheckingResults = nil;
     _hasNoCheckingResults = false;
+}
+
+- (NSArray *)effectiveTextAndEntities {
+    NSArray *entities = nil;
+    for (id media in self.mediaAttachments) {
+        if ([media isKindOfClass:[TGImageMediaAttachment class]]) {
+            return @[((TGImageMediaAttachment *)media).caption ?: @"", @[]];
+        } else if ([media isKindOfClass:[TGVideoMediaAttachment class]]) {
+            return @[((TGImageMediaAttachment *)media).caption ?: @"", @[]];
+        } else if ([media isKindOfClass:[TGDocumentMediaAttachment class]]) {
+            return @[((TGImageMediaAttachment *)media).caption ?: @"", @[]];
+        } else if ([media isKindOfClass:[TGMessageEntitiesAttachment class]]) {
+            entities = ((TGMessageEntitiesAttachment *)media).entities;
+        }
+    }
+    return @[_text ?: @"", entities ?: @[]];
 }
 
 - (bool)local
@@ -367,7 +382,7 @@ typedef enum {
             NSError *error = nil;
             static NSDataDetector *dataDetector = nil;
             if (dataDetector == nil)
-                dataDetector = [NSDataDetector dataDetectorWithTypes:(int)(NSTextCheckingTypeLink | NSTextCheckingTypePhoneNumber) error:&error];
+                dataDetector = [NSDataDetector dataDetectorWithTypes:(int)(NSTextCheckingTypePhoneNumber) error:&error];
             [dataDetector enumerateMatchesInString:text options:0 range:NSMakeRange(0, text.length) usingBlock:^(NSTextCheckingResult *match, __unused NSMatchingFlags flags, __unused BOOL *stop)
              {
                  NSTextCheckingType type = [match resultType];
@@ -407,7 +422,7 @@ typedef enum {
         if (c >= '0' && c <= '9')
         {
             digitsInRow++;
-            if (digitsInRow >= 6)
+            if (digitsInRow >= 3)
             {
                 containsSomething = true;
                 break;
@@ -483,10 +498,12 @@ typedef enum {
         }];
         
         static NSCharacterSet *characterSet = nil;
+        static NSCharacterSet *punctuationSet = nil;
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^
         {
             characterSet = [NSCharacterSet alphanumericCharacterSet];
+            punctuationSet = [NSCharacterSet punctuationCharacterSet];
         });
         
         if (containsSomething && (highlightMentionsAndTags || highlightCommands))
@@ -536,7 +553,7 @@ typedef enum {
                     
                     if (c == '@')
                     {
-                        if (previous == 0 || previous == ' ' || previous == '\n') {
+                        if (previous == 0 || previous == ' ' || previous == '\n' || previous == '[' || previous == ']' || previous == '(' || previous == ')' || previous == ':') {
                             mentionStart = i;
                         }
                     }
@@ -857,6 +874,29 @@ typedef enum {
     return nil;
 }
 
+- (NSString *)authorSignature {
+    for (TGMediaAttachment *attachment in _mediaAttachments)
+    {
+        if (attachment.type == TGAuthorSignatureMediaAttachmentType)
+        {
+            return ((TGAuthorSignatureMediaAttachment *)attachment).signature;
+        }
+    }
+    
+    return nil;
+}
+
+- (NSString *)forwardAuthorSignature {
+    for (TGMediaAttachment *attachment in _mediaAttachments)
+    {
+        if (attachment.type == TGForwardedMessageMediaAttachmentType) {
+            return ((TGForwardedMessageMediaAttachment *)attachment).forwardAuthorSignature;
+        }
+    }
+    
+    return nil;
+}
+
 + (void)registerMediaAttachmentParser:(int)type parser:(id<TGMediaAttachmentParser>)parser
 {
     mediaAttachmentParsers.insert(std::pair<int, id<TGMediaAttachmentParser> >(type, parser));
@@ -1020,6 +1060,75 @@ typedef enum {
     
     PSKeyValueDecoder *decoder = [[PSKeyValueDecoder alloc] initWithData:data];
     return [decoder decodeObjectsByKeys];
+}
+
+- (void)removeReplyAndMarkup {
+    if (_mediaAttachments.count != 0) {
+        for (NSUInteger i = 0; i < _mediaAttachments.count; i++) {
+            if ([_mediaAttachments[i] isKindOfClass:[TGReplyMessageMediaAttachment class]]) {
+                NSMutableArray *result = [[NSMutableArray alloc] initWithArray:_mediaAttachments];
+                [result removeObjectAtIndex:i];
+                _mediaAttachments = result;
+                break;
+            }
+        }
+        
+        for (NSUInteger i = 0; i < _mediaAttachments.count; i++) {
+            if ([_mediaAttachments[i] isKindOfClass:[TGReplyMarkupAttachment class]]) {
+                NSMutableArray *result = [[NSMutableArray alloc] initWithArray:_mediaAttachments];
+                [result removeObjectAtIndex:i];
+                _mediaAttachments = result;
+                break;
+            }
+        }
+    }
+}
+
+- (void)filterOutExpiredMedia {
+    if (self.mediaAttachments.count != 0) {
+        NSMutableArray *updatedMedia = [[NSMutableArray alloc] initWithArray:self.mediaAttachments];
+        for (NSUInteger index = 0; index < updatedMedia.count; index++) {
+            if ([updatedMedia[index] isKindOfClass:[TGImageMediaAttachment class]]) {
+                TGImageMediaAttachment *imageMedia = updatedMedia[index];
+                TGImageMediaAttachment *updatedImageMedia = [[TGImageMediaAttachment alloc] init];
+                updatedImageMedia.caption = imageMedia.caption;
+                updatedMedia[index] = updatedImageMedia;
+            } else if ([updatedMedia[index] isKindOfClass:[TGVideoMediaAttachment class]]) {
+                TGVideoMediaAttachment *videoMedia = updatedMedia[index];
+                TGVideoMediaAttachment *updatedVideoMedia = [[TGVideoMediaAttachment alloc] init];
+                updatedVideoMedia.caption = videoMedia.caption;
+                updatedMedia[index] = updatedVideoMedia;
+            } else if ([updatedMedia[index] isKindOfClass:[TGDocumentMediaAttachment class]]) {
+                TGDocumentMediaAttachment *documentMedia = updatedMedia[index];
+                TGDocumentMediaAttachment *updatedDocumentMedia = [[TGDocumentMediaAttachment alloc] init];
+                updatedDocumentMedia.caption = documentMedia.caption;
+                updatedMedia[index] = updatedDocumentMedia;
+            }
+        }
+        self.mediaAttachments = updatedMedia;
+    }
+}
+
+- (bool)hasExpiredMedia {
+    for (id media in self.mediaAttachments) {
+        if ([media isKindOfClass:[TGImageMediaAttachment class]]) {
+            TGImageMediaAttachment *imageMedia = media;
+            if (imageMedia.imageId == 0 && imageMedia.localImageId == 0) {
+                return true;
+            }
+        } else if ([media isKindOfClass:[TGVideoMediaAttachment class]]) {
+            TGVideoMediaAttachment *videoMedia = media;
+            if (videoMedia.videoId == 0 && videoMedia.localVideoId == 0) {
+                return true;
+            }
+        } if ([media isKindOfClass:[TGDocumentMediaAttachment class]]) {
+            TGDocumentMediaAttachment *documentMedia = media;
+            if (documentMedia.documentId == 0 && documentMedia.localDocumentId == 0) {
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 @end

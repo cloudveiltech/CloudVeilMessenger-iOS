@@ -326,3 +326,55 @@
 
 @end
 
+@implementation TLMessagesFilter$inputMessagesFilterRoundVideo : TLMessagesFilter
+
+
+- (int32_t)TLconstructorSignature
+{
+    return (int32_t)0xb549da53;
+}
+
+- (int32_t)TLconstructorName
+{
+    return (int32_t)0x58fc0a00;
+}
+
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)__unused metaObject
+{
+    TLMessagesFilter$inputMessagesFilterRoundVideo *object = [[TLMessagesFilter$inputMessagesFilterRoundVideo alloc] init];
+    return object;
+}
+
+- (void)TLfillFieldsWithValues:(std::map<int32_t, TLConstructedValue> *)__unused values
+{
+}
+
+
+@end
+
+@implementation TLMessagesFilter$inputMessagesFilterRoundVoice : TLMessagesFilter
+
+
+- (int32_t)TLconstructorSignature
+{
+    return (int32_t)0x7a7c17a4;
+}
+
+- (int32_t)TLconstructorName
+{
+    return (int32_t)0x37e60c8b;
+}
+
+- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)__unused metaObject
+{
+    TLMessagesFilter$inputMessagesFilterRoundVoice *object = [[TLMessagesFilter$inputMessagesFilterRoundVoice alloc] init];
+    return object;
+}
+
+- (void)TLfillFieldsWithValues:(std::map<int32_t, TLConstructedValue> *)__unused values
+{
+}
+
+
+@end
+

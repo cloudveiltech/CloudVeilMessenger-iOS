@@ -200,6 +200,11 @@
     [_currentAudioSession dispose];
     
     [TGEmbedPIPController resumePictureInPicturePlayback];
+    
+    TGDispatchAfter(0.1, dispatch_get_main_queue(), ^
+    {
+        [TGEmbedPIPController maybeReleaseVolumeOverlay];
+    });
 }
 
 - (void)setDisallowPIP:(bool)disallowPIP
@@ -222,7 +227,7 @@
     if (_currentAudioSession != nil)
         return;
     
-    _currentAudioSession = [[TGAudioSessionManager instance] requestSessionWithType:TGAudioSessionTypePlayVideo interrupted:^{}];
+    _currentAudioSession = [[TGAudioSessionManager instance] requestSessionWithType:TGAudioSessionTypePlayEmbedVideo interrupted:^{}];
 }
 
 - (void)setupWithEmbedSize:(CGSize)embedSize
@@ -712,15 +717,23 @@
     {
         [_jsQueue dispatch:^
         {
-            [_wkWebView evaluateJavaScript:jsString completionHandler:^(id result, __unused NSError *error)
+            void (^block)(void) = ^
             {
-                dispatch_semaphore_signal(_sema);
-                TGDispatchOnMainThread(^
+                [_wkWebView evaluateJavaScript:jsString completionHandler:^(id result, __unused NSError *error)
                 {
-                    if (completion != nil)
-                        completion(result);
-                });
-            }];
+                    dispatch_semaphore_signal(_sema);
+                    TGDispatchOnMainThread(^
+                    {
+                        if (completion != nil)
+                            completion(result);
+                    });
+                 }];
+            };
+            
+            if (iosMajorVersion() >= 11)
+                TGDispatchOnMainThread(block);
+            else
+                block();
             
             dispatch_semaphore_wait(_sema, DISPATCH_TIME_FOREVER);
         }];

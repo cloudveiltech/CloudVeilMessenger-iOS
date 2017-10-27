@@ -47,6 +47,7 @@
 #import "TGCachedPeerSettings.h"
 
 #import "TGConversationScrollState.h"
+#import "TGInstantPageScrollState.h"
 
 #import "TGPeerRatingUpdates.h"
 
@@ -55,6 +56,8 @@
 #import "TGDatabaseReadMessagesByDate.h"
 
 #import "TGDatabaseMessageDraft.h"
+
+@class TGCdnData;
 
 @class TGMessageEditingContext;
 @class TGRemoteRecentPeerCategories;
@@ -73,12 +76,9 @@ typedef struct {
 #ifdef __cplusplus
 #include <map>
 #include <vector>
+#include <memory>
 #include <set>
 #endif
-
-//#include <tr1/memory>
-
-
 
 typedef enum {
     TGDatabaseMessageFlagDeliveryState = 2,
@@ -101,7 +101,8 @@ typedef enum {
     TGDatabaseActionClearConversation = 4,
     TGDatabaseActionDeleteSecretMessage = 5,
     TGDatabaseActionClearSecretConversation = 6,
-    TGDatabaseActionReadMessageContents = 7
+    TGDatabaseActionReadMessageContents = 7,
+    TGDatabaseActionScreenshotMessage = 8
 } TGDatabaseActionType;
 
 typedef struct
@@ -465,7 +466,6 @@ typedef void (^TGDatabaseCleanupEverythingBlock)();
 
 - (void)updateChannelDisplayVariant:(int64_t)peerId displayVariant:(int32_t)displayVariant;
 
-- (void)updateChannelDisplayExpanded:(int64_t)peerId displayExpanded:(bool)displayExpanded;
 - (void)updateChannelPostAsChannel:(int64_t)peerId postAsChannel:(bool)postAsChannel;
 
 - (void)updateChannelPinnedMessageId:(int64_t)peerId pinnedMessageId:(int32_t)pinnedMessageId hidden:(NSNumber *)hidden;
@@ -536,7 +536,7 @@ typedef void (^TGDatabaseCleanupEverythingBlock)();
 - (void)commitDismissReportPeerSpam:(int64_t)peerId;
 
 - (SSignal *)cachedRecentPeers;
-- (NSArray<TGUser *> *)_syncCachedRecentInlineBots;
+- (NSArray<TGUser *> *)_syncCachedRecentInlineBots:(CGFloat)rating;
 - (void)replaceCachedRecentPeers:(TGRemoteRecentPeerCategories *)categories;
 - (void)updatePeerRatings:(NSArray<TGPeerRatingUpdates *> *)updates;
 - (NSArray<TGPeerRatingUpdates *> *)peerRatingUpdatesFromOutgoingMessageEvents:(NSDictionary<NSNumber *, NSArray<NSNumber *> *> *)outgoingMessageEvents;
@@ -600,6 +600,19 @@ forceReplacePinnedConversations:(bool)forceReplacePinnedConversations;
 - (NSArray<TGUser *> *)contactUsersMatchingPhone:(NSString *)phoneNumber;
 
 - (NSArray<TGConversation *> *)_getPinnedConversations;
+
+- (TGInstantPageScrollState *)loadInstantPageScrollState:(int64_t)webPageId;
+- (void)storeInstantPageScrollState:(int64_t)webPageId scrollState:(TGInstantPageScrollState *)scrollState;
+
+- (void)switchToWal;
+
+- (void)setSuggestedLocalizationCode:(NSString *)code;
+- (SSignal *)suggestedLocalizationCode;
+
++ (NSArray *)searchUsersInArray:(NSArray *)users query:(NSString *)query;
+
+- (NSDictionary *)loadPopularInvitees;
+- (void)replacePopularInvitees:(NSArray *)invitees;
 
 @end
 

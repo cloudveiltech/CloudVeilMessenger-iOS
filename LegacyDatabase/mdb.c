@@ -2030,7 +2030,7 @@ mdb_page_alloc(MDB_cursor *mc, int num, MDB_page **mp)
 			if (Paranoid && mc->mc_dbi == FREE_DBI)
 				retry = -1;
 		}
-		if (Paranoid && retry < /* DISABLES CODE */ (0) && mop_len)
+		if (Paranoid && retry < 0 && mop_len)
 			break;
 
 		last++;

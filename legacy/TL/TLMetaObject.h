@@ -14,29 +14,13 @@
 #include "TLMetaField.h"
 #include "TLConstructedValue.h"
 
-#ifdef __MAC_10_9
 #include <memory>
-#else
-#include <tr1/memory>
-#endif
-
 #include <vector>
-
-#ifdef __MAC_10_9
 #include <unordered_map>
-#else
-#include <tr1/unordered_map>
-#endif
-
 
 class TLMetaObject
 {
 public:
-    /*
-    std::shared_ptr<std::vector<TLMetaField> > fields;
-    std::shared_ptr<std::unordered_map<int32_t, int> > fieldNameToIndex;
-    std::shared_ptr<std::vector<TLConstructedValue> > values;
-     */
     std::shared_ptr<std::vector<TLMetaField> > fields;
     std::shared_ptr<std::unordered_map<int32_t, int> > fieldNameToIndex;
     std::shared_ptr<std::vector<TLConstructedValue> > values;
