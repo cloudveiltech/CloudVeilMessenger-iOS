@@ -1,0 +1,249 @@
+### Swift dependencies file v0 ###
+provides-top-level:
+- "TGUserModel"
+provides-nominal:
+- "15SecurityManager11TGUserModelC"
+provides-member:
+- ["15SecurityManager11TGUserModelC", ""]
+provides-dynamic-lookup:
+depends-top-level:
+- !private "??"
+- "AssignmentPrecedence"
+- "CastingPrecedence"
+- "NSInteger"
+- "NSObject"
+- "NSString"
+- "StringLiteralType"
+- "TGUserModel"
+- !private "UserDefaults"
+depends-member:
+- ["s23BidirectionalCollectionP", "init"]
+- !private ["s7CVarArgP", "UserDefaults"]
+- ["s7CVarArgP", ""]
+- !private ["s7CVarArgP", "id"]
+- ["s7CVarArgP", "init"]
+- !private ["s7CVarArgP", "kTGUserModelId"]
+- !private ["s7CVarArgP", "kTGUserModelPhoneNumber"]
+- !private ["s7CVarArgP", "kTGUserModelUserName"]
+- !private ["s7CVarArgP", "object"]
+- !private ["s7CVarArgP", "phoneNumber"]
+- !private ["s7CVarArgP", "set"]
+- !private ["s7CVarArgP", "standard"]
+- !private ["s7CVarArgP", "userName"]
+- ["s10CollectionP", "init"]
+- ["s10ComparableP", "init"]
+- !private ["s28CustomDebugStringConvertibleP", "UserDefaults"]
+- ["s28CustomDebugStringConvertibleP", ""]
+- !private ["s28CustomDebugStringConvertibleP", "id"]
+- ["s28CustomDebugStringConvertibleP", "init"]
+- !private ["s28CustomDebugStringConvertibleP", "kTGUserModelId"]
+- !private ["s28CustomDebugStringConvertibleP", "kTGUserModelPhoneNumber"]
+- !private ["s28CustomDebugStringConvertibleP", "kTGUserModelUserName"]
+- !private ["s28CustomDebugStringConvertibleP", "object"]
+- !private ["s28CustomDebugStringConvertibleP", "phoneNumber"]
+- !private ["s28CustomDebugStringConvertibleP", "set"]
+- !private ["s28CustomDebugStringConvertibleP", "standard"]
+- !private ["s28CustomDebugStringConvertibleP", "userName"]
+- ["s29CustomPlaygroundQuickLookableP", "init"]
+- ["s17CustomReflectableP", "init"]
+- !private ["s23CustomStringConvertibleP", "UserDefaults"]
+- ["s23CustomStringConvertibleP", ""]
+- !private ["s23CustomStringConvertibleP", "id"]
+- ["s23CustomStringConvertibleP", "init"]
+- !private ["s23CustomStringConvertibleP", "kTGUserModelId"]
+- !private ["s23CustomStringConvertibleP", "kTGUserModelPhoneNumber"]
+- !private ["s23CustomStringConvertibleP", "kTGUserModelUserName"]
+- !private ["s23CustomStringConvertibleP", "object"]
+- !private ["s23CustomStringConvertibleP", "phoneNumber"]
+- !private ["s23CustomStringConvertibleP", "set"]
+- !private ["s23CustomStringConvertibleP", "standard"]
+- !private ["s23CustomStringConvertibleP", "userName"]
+- ["s9DecodableP", "init"]
+- ["s9EncodableP", "init"]
+- !private ["s9EquatableP", "UserDefaults"]
+- ["s9EquatableP", ""]
+- !private ["s9EquatableP", "id"]
+- ["s9EquatableP", "init"]
+- !private ["s9EquatableP", "kTGUserModelId"]
+- !private ["s9EquatableP", "kTGUserModelPhoneNumber"]
+- !private ["s9EquatableP", "kTGUserModelUserName"]
+- !private ["s9EquatableP", "object"]
+- !private ["s9EquatableP", "phoneNumber"]
+- !private ["s9EquatableP", "set"]
+- !private ["s9EquatableP", "standard"]
+- !private ["s9EquatableP", "userName"]
+- ["s43ExpressibleByExtendedGraphemeClusterLiteralP", "init"]
+- ["s26ExpressibleByStringLiteralP", "init"]
+- ["s33ExpressibleByUnicodeScalarLiteralP", "init"]
+- !private ["s8HashableP", "UserDefaults"]
+- ["s8HashableP", ""]
+- !private ["s8HashableP", "id"]
+- ["s8HashableP", "init"]
+- !private ["s8HashableP", "kTGUserModelId"]
+- !private ["s8HashableP", "kTGUserModelPhoneNumber"]
+- !private ["s8HashableP", "kTGUserModelUserName"]
+- !private ["s8HashableP", "object"]
+- !private ["s8HashableP", "phoneNumber"]
+- !private ["s8HashableP", "set"]
+- !private ["s8HashableP", "standard"]
+- !private ["s8HashableP", "userName"]
+- ["s25LosslessStringConvertibleP", "init"]
+- ["s10MirrorPathP", "init"]
+- !private ["So8NSCodingP", "init"]
+- !private ["So9NSCopyingP", "init"]
+- !private ["So21NSItemProviderReadingP", "init"]
+- !private ["So21NSItemProviderWritingP", "init"]
+- !private ["So16NSMutableCopyingP", "init"]
+- ["So8NSObjectC", "NSInteger"]
+- ["So8NSObjectC", "NSString"]
+- !private ["So8NSObjectC", "UserDefaults"]
+- ["So8NSObjectC", ""]
+- ["So8NSObjectC", "id"]
+- ["So8NSObjectC", "init"]
+- ["So8NSObjectC", "kTGUserModelId"]
+- ["So8NSObjectC", "kTGUserModelPhoneNumber"]
+- ["So8NSObjectC", "kTGUserModelUserName"]
+- !private ["So8NSObjectC", "object"]
+- ["So8NSObjectC", "phoneNumber"]
+- ["So8NSObjectC", "set"]
+- !private ["So8NSObjectC", "standard"]
+- ["So8NSObjectC", "userName"]
+- !private ["So16NSObjectProtocolP", "UserDefaults"]
+- ["So16NSObjectProtocolP", ""]
+- !private ["So16NSObjectProtocolP", "id"]
+- !private ["So16NSObjectProtocolP", "init"]
+- !private ["So16NSObjectProtocolP", "kTGUserModelId"]
+- !private ["So16NSObjectProtocolP", "kTGUserModelPhoneNumber"]
+- !private ["So16NSObjectProtocolP", "kTGUserModelUserName"]
+- !private ["So16NSObjectProtocolP", "object"]
+- !private ["So16NSObjectProtocolP", "phoneNumber"]
+- !private ["So16NSObjectProtocolP", "set"]
+- !private ["So16NSObjectProtocolP", "standard"]
+- !private ["So16NSObjectProtocolP", "userName"]
+- !private ["So14NSSecureCodingP", "init"]
+- !private ["So8NSStringC", "init"]
+- ["s26RangeReplaceableCollectionP", "init"]
+- ["s8SequenceP", "init"]
+- !private ["s12StaticStringV", "init"]
+- ["SS", "init"]
+- ["s14StringProtocolP", "init"]
+- ["15SecurityManager11TGUserModelC", "NSInteger"]
+- ["15SecurityManager11TGUserModelC", "NSString"]
+- !private ["15SecurityManager11TGUserModelC", "UserDefaults"]
+- ["15SecurityManager11TGUserModelC", "deinit"]
+- ["15SecurityManager11TGUserModelC", "id"]
+- ["15SecurityManager11TGUserModelC", "init"]
+- ["15SecurityManager11TGUserModelC", "kTGUserModelId"]
+- ["15SecurityManager11TGUserModelC", "kTGUserModelPhoneNumber"]
+- ["15SecurityManager11TGUserModelC", "kTGUserModelUserName"]
+- ["15SecurityManager11TGUserModelC", "phoneNumber"]
+- ["15SecurityManager11TGUserModelC", "set"]
+- ["15SecurityManager11TGUserModelC", "userName"]
+- ["s16TextOutputStreamP", "init"]
+- ["s20TextOutputStreamableP", "init"]
+- ["9Alamofire14URLConvertibleP", "init"]
+- !private ["So12UserDefaultsC", "object"]
+- !private ["So12UserDefaultsC", "set"]
+- !private ["So12UserDefaultsC", "standard"]
+- ["s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP", "init"]
+- ["s34_ExpressibleByBuiltinStringLiteralP", "init"]
+- ["s39_ExpressibleByBuiltinUTF16StringLiteralP", "init"]
+- ["s41_ExpressibleByBuiltinUnicodeScalarLiteralP", "init"]
+- ["s33_ExpressibleByStringInterpolationP", "init"]
+- !private ["s35_HasCustomAnyHashableRepresentationP", "init"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "UserDefaults"]
+- ["10Foundation27_KeyValueCodingAndObservingP", ""]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "id"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "init"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "kTGUserModelId"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "kTGUserModelPhoneNumber"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "kTGUserModelUserName"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "object"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "phoneNumber"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "set"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "standard"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "userName"]
+- ["s21_ObjectiveCBridgeableP", "init"]
+- ["s16_SwiftStringViewP", "init"]
+depends-nominal:
+- "s23BidirectionalCollectionP"
+- "s7CVarArgP"
+- "s10CollectionP"
+- "s10ComparableP"
+- "s28CustomDebugStringConvertibleP"
+- "s29CustomPlaygroundQuickLookableP"
+- "s17CustomReflectableP"
+- "s23CustomStringConvertibleP"
+- "s9DecodableP"
+- "s9EncodableP"
+- "s9EquatableP"
+- "s43ExpressibleByExtendedGraphemeClusterLiteralP"
+- "s26ExpressibleByStringLiteralP"
+- "s33ExpressibleByUnicodeScalarLiteralP"
+- "s8HashableP"
+- "s25LosslessStringConvertibleP"
+- "s10MirrorPathP"
+- !private "So8NSCodingP"
+- !private "So9NSCopyingP"
+- !private "So21NSItemProviderReadingP"
+- !private "So21NSItemProviderWritingP"
+- !private "So16NSMutableCopyingP"
+- "So8NSObjectC"
+- "So16NSObjectProtocolP"
+- !private "So14NSSecureCodingP"
+- !private "So8NSStringC"
+- "s26RangeReplaceableCollectionP"
+- "s8SequenceP"
+- !private "s12StaticStringV"
+- "SS"
+- "s14StringProtocolP"
+- "15SecurityManager11TGUserModelC"
+- "s16TextOutputStreamP"
+- "s20TextOutputStreamableP"
+- "9Alamofire14URLConvertibleP"
+- !private "So12UserDefaultsC"
+- "s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP"
+- "s34_ExpressibleByBuiltinStringLiteralP"
+- "s39_ExpressibleByBuiltinUTF16StringLiteralP"
+- "s41_ExpressibleByBuiltinUnicodeScalarLiteralP"
+- "s33_ExpressibleByStringInterpolationP"
+- !private "s35_HasCustomAnyHashableRepresentationP"
+- "10Foundation27_KeyValueCodingAndObservingP"
+- "s21_ObjectiveCBridgeableP"
+- "s16_SwiftStringViewP"
+depends-dynamic-lookup:
+depends-external:
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/x86_64/Dispatch.apinotesc"
+- "/Users/dimavirych/Documents/Projects/CloudVeil-securityManager-ios/SecurityManager/Frameworks/Alamofire.framework/Modules/Alamofire.swiftmodule/x86_64.swiftmodule"
+- "/Users/dimavirych/Documents/Projects/CloudVeil-securityManager-ios/SecurityManager/Frameworks/ObjectMapper.framework/Modules/ObjectMapper.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/x86_64/ObjectiveC.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/x86_64/CoreImage.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/x86_64/QuartzCore.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/x86_64/Dispatch.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/x86_64/Metal.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/x86_64/Darwin.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/x86_64/Foundation.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/x86_64/CoreFoundation.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/x86_64/CoreGraphics.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/x86_64/Swift.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/x86_64/UIKit.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/x86_64/SwiftOnoneSupport.swiftmodule"
+- "/Users/dimavirych/Documents/Projects/CloudVeil-securityManager-ios/SecurityManager/Frameworks/Alamofire.framework/Headers/Alamofire.h"
+- "/Users/dimavirych/Documents/Projects/CloudVeil-securityManager-ios/SecurityManager/SecurityManager.h"
+- "/Users/dimavirych/Documents/Projects/CloudVeil-securityManager-ios/SecurityManager/Frameworks/ObjectMapper.framework/Headers/ObjectMapper.h"
+- "/Users/dimavirych/Documents/Projects/CloudVeil-securityManager-ios/SecurityManager/Frameworks/Alamofire.framework/Headers/Alamofire-Swift.h"
+- "/Users/dimavirych/Documents/Projects/CloudVeil-securityManager-ios/SecurityManager/Frameworks/ObjectMapper.framework/Headers/ObjectMapper-Swift.h"
+- "/Users/dimavirych/Library/Developer/Xcode/DerivedData/SecurityManager-fxqfczmjtsnrcpbuhqgdcfaedmfn/Build/Intermediates.noindex/SecurityManager.build/Debug Hockeyapp-iphonesimulator/SecurityManager.build/unextended-module.modulemap"
+- "/Users/dimavirych/Documents/Projects/CloudVeil-securityManager-ios/SecurityManager/Frameworks/Alamofire.framework/Modules/module.modulemap"
+- "/Users/dimavirych/Documents/Projects/CloudVeil-securityManager-ios/SecurityManager/Frameworks/ObjectMapper.framework/Modules/module.modulemap"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator11.3.sdk/usr/include/objc/ObjectiveC.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator11.3.sdk/System/Library/Frameworks/OpenGLES.framework/Headers/OpenGLES.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator11.3.sdk/System/Library/Frameworks/CoreImage.framework/Headers/CoreImage.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator11.3.sdk/System/Library/Frameworks/QuartzCore.framework/Headers/QuartzCore.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator11.3.sdk/System/Library/Frameworks/Metal.framework/Headers/Metal.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator11.3.sdk/usr/include/Darwin.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator11.3.sdk/System/Library/Frameworks/Foundation.framework/Headers/Foundation.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator11.3.sdk/System/Library/Frameworks/CoreGraphics.framework/Headers/CoreGraphics.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator11.3.sdk/System/Library/Frameworks/UIKit.framework/Headers/UIKit.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator11.3.sdk/System/Library/Frameworks/CoreText.framework/Headers/CoreText.apinotes"
+interface-hash: "b846ce8244e972d0119bfb3861241272"

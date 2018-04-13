@@ -391,6 +391,7 @@
 		09FCB6921FB2E98C0007D2CA /* PasswordPlaceholderIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 09FCB6901FB2E98B0007D2CA /* PasswordPlaceholderIcon@2x.png */; };
 		09FCB6951FB2FAE80007D2CA /* PasscodePlaceholderIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 09FCB6931FB2FAE60007D2CA /* PasscodePlaceholderIcon@2x.png */; };
 		09FCB6961FB2FAE80007D2CA /* PasscodePlaceholderIcon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 09FCB6941FB2FAE70007D2CA /* PasscodePlaceholderIcon@3x.png */; };
+		1565DBAD2080FCF400B5C4A3 /* SecurityManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1565DBAC2080FCF300B5C4A3 /* SecurityManager.framework */; };
 		6801D6681BEF6CC600533783 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D08805C9156E8F5100311537 /* AddressBook.framework */; };
 		6804D8AE1D1D624E0082E71F /* TGGifGalleryAddAccessoryView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6804D8AC1D1D624E0082E71F /* TGGifGalleryAddAccessoryView.h */; };
 		6804D8AF1D1D624E0082E71F /* TGGifGalleryAddAccessoryView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6804D8AD1D1D624E0082E71F /* TGGifGalleryAddAccessoryView.m */; };
@@ -4995,7 +4996,7 @@
 		};
 		D020FB161D99637200F279AA /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 12;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
@@ -5458,6 +5459,7 @@
 		09FCB6901FB2E98B0007D2CA /* PasswordPlaceholderIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "PasswordPlaceholderIcon@2x.png"; path = "Resources/PasswordPlaceholderIcon@2x.png"; sourceTree = "<group>"; };
 		09FCB6931FB2FAE60007D2CA /* PasscodePlaceholderIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "PasscodePlaceholderIcon@2x.png"; path = "Resources/PasscodePlaceholderIcon@2x.png"; sourceTree = "<group>"; };
 		09FCB6941FB2FAE70007D2CA /* PasscodePlaceholderIcon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "PasscodePlaceholderIcon@3x.png"; path = "Resources/PasscodePlaceholderIcon@3x.png"; sourceTree = "<group>"; };
+		1565DBAC2080FCF300B5C4A3 /* SecurityManager.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SecurityManager.framework; sourceTree = "<group>"; };
 		6803268D1D5D74FF0062725B /* TGPhotoPaintSettingsWrapperView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPhotoPaintSettingsWrapperView.h; sourceTree = "<group>"; };
 		6803268E1D5D74FF0062725B /* TGPhotoPaintSettingsWrapperView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPhotoPaintSettingsWrapperView.m; sourceTree = "<group>"; };
 		680326911D5DFC640062725B /* TGPaintingData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPaintingData.h; sourceTree = "<group>"; };
@@ -11594,6 +11596,7 @@
 				685A691A1DDB227F006BC208 /* CallKit.framework in Frameworks */,
 				D020FBE81D999B3200F279AA /* Intents.framework in Frameworks */,
 				685FDB4F1D9997730045EC75 /* NotificationCenter.framework in Frameworks */,
+				1565DBAD2080FCF400B5C4A3 /* SecurityManager.framework in Frameworks */,
 				687D86911D01CCE100820510 /* AVKit.framework in Frameworks */,
 				D0EE3B361C7C87C400DD5E83 /* MtProtoKit.framework in Frameworks */,
 				68CAE0641C6CEF1700151753 /* WebKit.framework in Frameworks */,
@@ -11951,6 +11954,14 @@
 				0991B9C61FCB7445005EDFF2 /* TGDefaultPresentationPallete.m */,
 			);
 			name = Presentation;
+			sourceTree = "<group>";
+		};
+		150B682D2080D683003F92F4 /* Vendor */ = {
+			isa = PBXGroup;
+			children = (
+				1565DBAC2080FCF300B5C4A3 /* SecurityManager.framework */,
+			);
+			path = Vendor;
 			sourceTree = "<group>";
 		};
 		6811AE231A35E2E3009309A3 /* Crop */ = {
@@ -19515,6 +19526,7 @@
 		D08805A1156E8F3600311537 = {
 			isa = PBXGroup;
 			children = (
+				150B682D2080D683003F92F4 /* Vendor */,
 				D0B9B19419CA324D0020C9CF /* LaunchScreen.xib */,
 				D0DAA484197496240036E709 /* Icon-76.png */,
 				D0C6748E1CB8640400183765 /* Icon-167.png */,
@@ -28720,6 +28732,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D064421C1E4E2A3600394D5F /* AppStore.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
@@ -28747,6 +28760,7 @@
 					"$(PROJECT_DIR)/Telegraph/thirdparty",
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/submodules/libtgvoip/build/Debug-iphoneos",
+					"$(PROJECT_DIR)/Vendor",
 				);
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -28770,9 +28784,10 @@
 					/Users/peter/Dropbox/workspace/ModernTelegram/MtProtoKit/openssl,
 					thirdparty/SSignalKit,
 					submodules/libtgvoip,
+					Vendor/SecurityManager,
 				);
 				INFOPLIST_FILE = "Telegraph/Telegraph-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -28782,6 +28797,7 @@
 					"$(SRCROOT)/submodules/MtProtoKit/openssl/iOS",
 					"$(SRCROOT)/submodules/MtProtoKit/openssl/OSX",
 					"$(PROJECT_DIR)/submodules/libtgvoip/external",
+					"$(SRCROOT)/Vendor",
 				);
 				OTHER_CFLAGS = "";
 				"OTHER_CFLAGS[arch=*]" = (
@@ -28804,7 +28820,7 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				USER_HEADER_SEARCH_PATHS = "../TelegraphKit/TelegraphKit/** ../ActionStage/ActionStage ../MtProtoKit_Legacy/MtProtoKit/** Telegraph/thirdparty/opus/include/** thirdparty/Stripe";
+				USER_HEADER_SEARCH_PATHS = "../TelegraphKit/TelegraphKit/** ../ActionStage/ActionStage ../MtProtoKit_Legacy/MtProtoKit/** Telegraph/thirdparty/opus/include/** thirdparty/Stripe Vendor/SecurityManager";
 				WARNING_CFLAGS = "-Wall";
 				WRAPPER_EXTENSION = app;
 			};
@@ -29356,6 +29372,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 93EFBF0E173DC6DA00F7B89E /* Config.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
@@ -29383,6 +29400,7 @@
 					"$(PROJECT_DIR)/Telegraph/thirdparty",
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/submodules/libtgvoip/build/Debug-iphoneos",
+					"$(PROJECT_DIR)/Vendor",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Telegraph/Telegraph-Prefix.pch";
@@ -29405,9 +29423,10 @@
 					"$(SRCROOT)/../MtProtoKit/thirdparty/openssl",
 					thirdparty/SSignalKit,
 					submodules/libtgvoip,
+					Vendor/SecurityManager,
 				);
 				INFOPLIST_FILE = "Telegraph/Telegraph-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -29417,6 +29436,7 @@
 					"$(SRCROOT)/submodules/MtProtoKit/openssl/iOS",
 					"$(SRCROOT)/submodules/MtProtoKit/openssl/OSX",
 					"$(PROJECT_DIR)/submodules/libtgvoip/external",
+					"$(SRCROOT)/Vendor",
 				);
 				OTHER_CFLAGS = "";
 				"OTHER_CFLAGS[arch=*]" = (
@@ -29439,7 +29459,7 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				USER_HEADER_SEARCH_PATHS = "../TelegraphKit/TelegraphKit/** ../ActionStage/ActionStage ../MtProtoKit_Legacy/MtProtoKit/** Telegraph/thirdparty/opus/include/** thirdparty/Stripe";
+				USER_HEADER_SEARCH_PATHS = "../TelegraphKit/TelegraphKit/** ../ActionStage/ActionStage ../MtProtoKit_Legacy/MtProtoKit/** Telegraph/thirdparty/opus/include/** thirdparty/Stripe Vendor/SecurityManager";
 				WARNING_CFLAGS = "-Wall";
 				WRAPPER_EXTENSION = app;
 			};
@@ -29758,6 +29778,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 93EFBF0E173DC6DA00F7B89E /* Config.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
@@ -29785,6 +29806,7 @@
 					"$(PROJECT_DIR)/Telegraph/thirdparty",
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/submodules/libtgvoip/build/Debug-iphoneos",
+					"$(PROJECT_DIR)/Vendor",
 				);
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -29808,9 +29830,10 @@
 					/Users/peter/Dropbox/workspace/ModernTelegram/MtProtoKit/openssl,
 					thirdparty/SSignalKit,
 					submodules/libtgvoip,
+					Vendor/SecurityManager,
 				);
 				INFOPLIST_FILE = "Telegraph/Telegraph-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -29820,6 +29843,7 @@
 					"$(SRCROOT)/submodules/MtProtoKit/openssl/iOS",
 					"$(SRCROOT)/submodules/MtProtoKit/openssl/OSX",
 					"$(PROJECT_DIR)/submodules/libtgvoip/external",
+					"$(SRCROOT)/Vendor",
 				);
 				OTHER_CFLAGS = "";
 				"OTHER_CFLAGS[arch=*]" = (
@@ -29842,7 +29866,7 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				USER_HEADER_SEARCH_PATHS = "../TelegraphKit/TelegraphKit/** ../ActionStage/ActionStage ../MtProtoKit_Legacy/MtProtoKit/** Telegraph/thirdparty/opus/include/** thirdparty/Stripe";
+				USER_HEADER_SEARCH_PATHS = "../TelegraphKit/TelegraphKit/** ../ActionStage/ActionStage ../MtProtoKit_Legacy/MtProtoKit/** Telegraph/thirdparty/opus/include/** thirdparty/Stripe Vendor/SecurityManager";
 				WARNING_CFLAGS = "-Wall";
 				WRAPPER_EXTENSION = app;
 			};
@@ -29852,6 +29876,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D064421C1E4E2A3600394D5F /* AppStore.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
@@ -29879,6 +29904,7 @@
 					"$(PROJECT_DIR)/Telegraph/thirdparty",
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/submodules/libtgvoip/build/Debug-iphoneos",
+					"$(PROJECT_DIR)/Vendor",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Telegraph/Telegraph-Prefix.pch";
@@ -29901,9 +29927,10 @@
 					"$(SRCROOT)/../MtProtoKit/thirdparty/openssl",
 					thirdparty/SSignalKit,
 					submodules/libtgvoip,
+					Vendor/SecurityManager,
 				);
 				INFOPLIST_FILE = "Telegraph/Telegraph-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -29913,6 +29940,7 @@
 					"$(SRCROOT)/submodules/MtProtoKit/openssl/iOS",
 					"$(SRCROOT)/submodules/MtProtoKit/openssl/OSX",
 					"$(PROJECT_DIR)/submodules/libtgvoip/external",
+					"$(SRCROOT)/Vendor",
 				);
 				OTHER_CFLAGS = "";
 				"OTHER_CFLAGS[arch=*]" = (
@@ -29934,7 +29962,7 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				USER_HEADER_SEARCH_PATHS = "../TelegraphKit/TelegraphKit/** ../ActionStage/ActionStage ../MtProtoKit_Legacy/MtProtoKit/** Telegraph/thirdparty/opus/include/** thirdparty/Stripe";
+				USER_HEADER_SEARCH_PATHS = "../TelegraphKit/TelegraphKit/** ../ActionStage/ActionStage ../MtProtoKit_Legacy/MtProtoKit/** Telegraph/thirdparty/opus/include/** thirdparty/Stripe Vendor/SecurityManager";
 				WARNING_CFLAGS = "-Wall";
 				WRAPPER_EXTENSION = app;
 			};

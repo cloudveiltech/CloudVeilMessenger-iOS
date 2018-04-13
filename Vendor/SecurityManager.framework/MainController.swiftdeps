@@ -1,0 +1,310 @@
+### Swift dependencies file v0 ###
+provides-top-level:
+- "MainController"
+provides-nominal:
+- "15SecurityManager14MainControllerC"
+provides-member:
+- ["15SecurityManager14MainControllerC", ""]
+provides-dynamic-lookup:
+- "disableBio"
+- "disableBioChange"
+- "disableProfilePhoto"
+- "disableProfilePhotoChange"
+- "getSettings"
+- "shared"
+depends-top-level:
+- !private "??"
+- "AssignmentPrecedence"
+- "Bool"
+- !private "BooleanLiteralType"
+- "CastingPrecedence"
+- !private "DataSource"
+- !private "Dictionary"
+- "MainController"
+- "NSObject"
+- !private "SecurityManager"
+- !private "String"
+- "TGRow"
+- !private "TGSettingsRequest"
+- "TGSettingsResponse"
+- !private "TGUserController"
+depends-member:
+- !private ["12ObjectMapper12BaseMappableP", "bots"]
+- !private ["12ObjectMapper12BaseMappableP", "channels"]
+- !private ["12ObjectMapper12BaseMappableP", "disableBio"]
+- !private ["12ObjectMapper12BaseMappableP", "disableBioChange"]
+- !private ["12ObjectMapper12BaseMappableP", "disableProfilePhoto"]
+- !private ["12ObjectMapper12BaseMappableP", "disableProfilePhotoChange"]
+- !private ["12ObjectMapper12BaseMappableP", "groups"]
+- !private ["12ObjectMapper12BaseMappableP", "id"]
+- !private ["12ObjectMapper12BaseMappableP", "init"]
+- !private ["12ObjectMapper12BaseMappableP", "phoneNumber"]
+- !private ["12ObjectMapper12BaseMappableP", "userName"]
+- !private ["s7CVarArgP", "DataSource"]
+- ["s7CVarArgP", "MainController"]
+- !private ["s7CVarArgP", "SecurityManager"]
+- !private ["s7CVarArgP", "TGSettingsRequest"]
+- !private ["s7CVarArgP", "TGUserController"]
+- ["s7CVarArgP", ""]
+- !private ["s7CVarArgP", "bots"]
+- !private ["s7CVarArgP", "channels"]
+- !private ["s7CVarArgP", "getUserID"]
+- !private ["s7CVarArgP", "getUserName"]
+- !private ["s7CVarArgP", "getUserPhoneNumber"]
+- !private ["s7CVarArgP", "groups"]
+- !private ["s7CVarArgP", "id"]
+- ["s7CVarArgP", "init"]
+- !private ["s7CVarArgP", "phoneNumber"]
+- !private ["s7CVarArgP", "saveSettings"]
+- !private ["s7CVarArgP", "settings"]
+- !private ["s7CVarArgP", "shared"]
+- !private ["s7CVarArgP", "userName"]
+- !private ["s28CustomDebugStringConvertibleP", "DataSource"]
+- ["s28CustomDebugStringConvertibleP", "MainController"]
+- !private ["s28CustomDebugStringConvertibleP", "SecurityManager"]
+- !private ["s28CustomDebugStringConvertibleP", "TGSettingsRequest"]
+- !private ["s28CustomDebugStringConvertibleP", "TGUserController"]
+- ["s28CustomDebugStringConvertibleP", ""]
+- !private ["s28CustomDebugStringConvertibleP", "bots"]
+- !private ["s28CustomDebugStringConvertibleP", "channels"]
+- !private ["s28CustomDebugStringConvertibleP", "getUserID"]
+- !private ["s28CustomDebugStringConvertibleP", "getUserName"]
+- !private ["s28CustomDebugStringConvertibleP", "getUserPhoneNumber"]
+- !private ["s28CustomDebugStringConvertibleP", "groups"]
+- !private ["s28CustomDebugStringConvertibleP", "id"]
+- ["s28CustomDebugStringConvertibleP", "init"]
+- !private ["s28CustomDebugStringConvertibleP", "phoneNumber"]
+- !private ["s28CustomDebugStringConvertibleP", "saveSettings"]
+- !private ["s28CustomDebugStringConvertibleP", "settings"]
+- !private ["s28CustomDebugStringConvertibleP", "shared"]
+- !private ["s28CustomDebugStringConvertibleP", "userName"]
+- !private ["s23CustomStringConvertibleP", "DataSource"]
+- ["s23CustomStringConvertibleP", "MainController"]
+- !private ["s23CustomStringConvertibleP", "SecurityManager"]
+- !private ["s23CustomStringConvertibleP", "TGSettingsRequest"]
+- !private ["s23CustomStringConvertibleP", "TGUserController"]
+- ["s23CustomStringConvertibleP", ""]
+- !private ["s23CustomStringConvertibleP", "bots"]
+- !private ["s23CustomStringConvertibleP", "channels"]
+- !private ["s23CustomStringConvertibleP", "getUserID"]
+- !private ["s23CustomStringConvertibleP", "getUserName"]
+- !private ["s23CustomStringConvertibleP", "getUserPhoneNumber"]
+- !private ["s23CustomStringConvertibleP", "groups"]
+- !private ["s23CustomStringConvertibleP", "id"]
+- ["s23CustomStringConvertibleP", "init"]
+- !private ["s23CustomStringConvertibleP", "phoneNumber"]
+- !private ["s23CustomStringConvertibleP", "saveSettings"]
+- !private ["s23CustomStringConvertibleP", "settings"]
+- !private ["s23CustomStringConvertibleP", "shared"]
+- !private ["s23CustomStringConvertibleP", "userName"]
+- !private ["15SecurityManager10DataSourceC", "set"]
+- !private ["15SecurityManager10DataSourceC", "value"]
+- !private ["s9EquatableP", "DataSource"]
+- ["s9EquatableP", "MainController"]
+- !private ["s9EquatableP", "SecurityManager"]
+- !private ["s9EquatableP", "TGSettingsRequest"]
+- !private ["s9EquatableP", "TGUserController"]
+- ["s9EquatableP", ""]
+- !private ["s9EquatableP", "bots"]
+- !private ["s9EquatableP", "channels"]
+- !private ["s9EquatableP", "getUserID"]
+- !private ["s9EquatableP", "getUserName"]
+- !private ["s9EquatableP", "getUserPhoneNumber"]
+- !private ["s9EquatableP", "groups"]
+- !private ["s9EquatableP", "id"]
+- ["s9EquatableP", "init"]
+- !private ["s9EquatableP", "phoneNumber"]
+- !private ["s9EquatableP", "saveSettings"]
+- !private ["s9EquatableP", "settings"]
+- !private ["s9EquatableP", "shared"]
+- !private ["s9EquatableP", "userName"]
+- !private ["s8HashableP", "DataSource"]
+- ["s8HashableP", "MainController"]
+- !private ["s8HashableP", "SecurityManager"]
+- !private ["s8HashableP", "TGSettingsRequest"]
+- !private ["s8HashableP", "TGUserController"]
+- ["s8HashableP", ""]
+- !private ["s8HashableP", "bots"]
+- !private ["s8HashableP", "channels"]
+- !private ["s8HashableP", "getUserID"]
+- !private ["s8HashableP", "getUserName"]
+- !private ["s8HashableP", "getUserPhoneNumber"]
+- !private ["s8HashableP", "groups"]
+- !private ["s8HashableP", "id"]
+- ["s8HashableP", "init"]
+- !private ["s8HashableP", "phoneNumber"]
+- !private ["s8HashableP", "saveSettings"]
+- !private ["s8HashableP", "settings"]
+- !private ["s8HashableP", "shared"]
+- !private ["s8HashableP", "userName"]
+- ["15SecurityManager14MainControllerC", "Bool"]
+- !private ["15SecurityManager14MainControllerC", "DataSource"]
+- ["15SecurityManager14MainControllerC", "MainController"]
+- !private ["15SecurityManager14MainControllerC", "SecurityManager"]
+- !private ["15SecurityManager14MainControllerC", "String"]
+- ["15SecurityManager14MainControllerC", "TGRow"]
+- !private ["15SecurityManager14MainControllerC", "TGSettingsRequest"]
+- ["15SecurityManager14MainControllerC", "TGSettingsResponse"]
+- !private ["15SecurityManager14MainControllerC", "TGUserController"]
+- ["15SecurityManager14MainControllerC", "deinit"]
+- ["15SecurityManager14MainControllerC", "disableBio"]
+- ["15SecurityManager14MainControllerC", "disableBioChange"]
+- ["15SecurityManager14MainControllerC", "disableProfilePhoto"]
+- ["15SecurityManager14MainControllerC", "disableProfilePhotoChange"]
+- ["15SecurityManager14MainControllerC", "getSettings"]
+- ["15SecurityManager14MainControllerC", "init"]
+- !private ["15SecurityManager14MainControllerC", "saveSettings"]
+- !private ["15SecurityManager14MainControllerC", "settings"]
+- ["15SecurityManager14MainControllerC", "shared"]
+- !private ["12ObjectMapper8MappableP", "bots"]
+- !private ["12ObjectMapper8MappableP", "channels"]
+- !private ["12ObjectMapper8MappableP", "disableBio"]
+- !private ["12ObjectMapper8MappableP", "disableBioChange"]
+- !private ["12ObjectMapper8MappableP", "disableProfilePhoto"]
+- !private ["12ObjectMapper8MappableP", "disableProfilePhotoChange"]
+- !private ["12ObjectMapper8MappableP", "groups"]
+- !private ["12ObjectMapper8MappableP", "id"]
+- !private ["12ObjectMapper8MappableP", "init"]
+- !private ["12ObjectMapper8MappableP", "phoneNumber"]
+- !private ["12ObjectMapper8MappableP", "userName"]
+- ["So8NSObjectC", "Bool"]
+- !private ["So8NSObjectC", "DataSource"]
+- ["So8NSObjectC", "MainController"]
+- !private ["So8NSObjectC", "SecurityManager"]
+- !private ["So8NSObjectC", "String"]
+- ["So8NSObjectC", "TGRow"]
+- !private ["So8NSObjectC", "TGSettingsRequest"]
+- ["So8NSObjectC", "TGSettingsResponse"]
+- !private ["So8NSObjectC", "TGUserController"]
+- ["So8NSObjectC", ""]
+- !private ["So8NSObjectC", "bots"]
+- !private ["So8NSObjectC", "channels"]
+- ["So8NSObjectC", "disableBio"]
+- ["So8NSObjectC", "disableBioChange"]
+- ["So8NSObjectC", "disableProfilePhoto"]
+- ["So8NSObjectC", "disableProfilePhotoChange"]
+- ["So8NSObjectC", "getSettings"]
+- !private ["So8NSObjectC", "getUserID"]
+- !private ["So8NSObjectC", "getUserName"]
+- !private ["So8NSObjectC", "getUserPhoneNumber"]
+- !private ["So8NSObjectC", "groups"]
+- !private ["So8NSObjectC", "id"]
+- ["So8NSObjectC", "init"]
+- !private ["So8NSObjectC", "phoneNumber"]
+- ["So8NSObjectC", "saveSettings"]
+- ["So8NSObjectC", "settings"]
+- ["So8NSObjectC", "shared"]
+- !private ["So8NSObjectC", "userName"]
+- !private ["So16NSObjectProtocolP", "DataSource"]
+- ["So16NSObjectProtocolP", "MainController"]
+- !private ["So16NSObjectProtocolP", "SecurityManager"]
+- !private ["So16NSObjectProtocolP", "TGSettingsRequest"]
+- !private ["So16NSObjectProtocolP", "TGUserController"]
+- ["So16NSObjectProtocolP", ""]
+- !private ["So16NSObjectProtocolP", "bots"]
+- !private ["So16NSObjectProtocolP", "channels"]
+- !private ["So16NSObjectProtocolP", "getUserID"]
+- !private ["So16NSObjectProtocolP", "getUserName"]
+- !private ["So16NSObjectProtocolP", "getUserPhoneNumber"]
+- !private ["So16NSObjectProtocolP", "groups"]
+- !private ["So16NSObjectProtocolP", "id"]
+- ["So16NSObjectProtocolP", "init"]
+- !private ["So16NSObjectProtocolP", "phoneNumber"]
+- !private ["So16NSObjectProtocolP", "saveSettings"]
+- !private ["So16NSObjectProtocolP", "settings"]
+- !private ["So16NSObjectProtocolP", "shared"]
+- !private ["So16NSObjectProtocolP", "userName"]
+- !private ["15SecurityManager06ObjectB0C", "getSettings"]
+- !private ["15SecurityManager06ObjectB0C", "shared"]
+- !private ["15SecurityManagerAAC", "getSettings"]
+- !private ["15SecurityManagerAAC", "shared"]
+- !private ["15SecurityManager17TGSettingsRequestC", "bots"]
+- !private ["15SecurityManager17TGSettingsRequestC", "channels"]
+- !private ["15SecurityManager17TGSettingsRequestC", "deinit"]
+- !private ["15SecurityManager17TGSettingsRequestC", "groups"]
+- !private ["15SecurityManager17TGSettingsRequestC", "id"]
+- !private ["15SecurityManager17TGSettingsRequestC", "init"]
+- !private ["15SecurityManager17TGSettingsRequestC", "phoneNumber"]
+- !private ["15SecurityManager17TGSettingsRequestC", "userName"]
+- ["15SecurityManager18TGSettingsResponseC", "deinit"]
+- !private ["15SecurityManager18TGSettingsResponseC", "disableBio"]
+- !private ["15SecurityManager18TGSettingsResponseC", "disableBioChange"]
+- !private ["15SecurityManager18TGSettingsResponseC", "disableProfilePhoto"]
+- !private ["15SecurityManager18TGSettingsResponseC", "disableProfilePhotoChange"]
+- !private ["15SecurityManager16TGUserControllerC", "getUserID"]
+- !private ["15SecurityManager16TGUserControllerC", "getUserName"]
+- !private ["15SecurityManager16TGUserControllerC", "getUserPhoneNumber"]
+- !private ["15SecurityManager16TGUserControllerC", "shared"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "DataSource"]
+- ["10Foundation27_KeyValueCodingAndObservingP", "MainController"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "SecurityManager"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "TGSettingsRequest"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "TGUserController"]
+- ["10Foundation27_KeyValueCodingAndObservingP", ""]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "bots"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "channels"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "getUserID"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "getUserName"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "getUserPhoneNumber"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "groups"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "id"]
+- ["10Foundation27_KeyValueCodingAndObservingP", "init"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "phoneNumber"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "saveSettings"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "settings"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "shared"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "userName"]
+depends-nominal:
+- !private "12ObjectMapper12BaseMappableP"
+- "s7CVarArgP"
+- "s28CustomDebugStringConvertibleP"
+- "s23CustomStringConvertibleP"
+- !private "15SecurityManager10DataSourceC"
+- "s9EquatableP"
+- "s8HashableP"
+- "15SecurityManager14MainControllerC"
+- !private "12ObjectMapper8MappableP"
+- "So8NSObjectC"
+- "So16NSObjectProtocolP"
+- !private "15SecurityManager06ObjectB0C"
+- !private "15SecurityManagerAAC"
+- !private "15SecurityManager17TGSettingsRequestC"
+- "15SecurityManager18TGSettingsResponseC"
+- !private "15SecurityManager16TGUserControllerC"
+- "10Foundation27_KeyValueCodingAndObservingP"
+depends-dynamic-lookup:
+depends-external:
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/x86_64/Dispatch.apinotesc"
+- "/Users/dimavirych/Documents/Projects/CloudVeil-securityManager-ios/SecurityManager/Frameworks/Alamofire.framework/Modules/Alamofire.swiftmodule/x86_64.swiftmodule"
+- "/Users/dimavirych/Documents/Projects/CloudVeil-securityManager-ios/SecurityManager/Frameworks/ObjectMapper.framework/Modules/ObjectMapper.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/x86_64/ObjectiveC.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/x86_64/CoreImage.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/x86_64/QuartzCore.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/x86_64/Dispatch.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/x86_64/Metal.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/x86_64/Darwin.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/x86_64/Foundation.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/x86_64/CoreFoundation.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/x86_64/CoreGraphics.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/x86_64/Swift.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/x86_64/UIKit.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/x86_64/SwiftOnoneSupport.swiftmodule"
+- "/Users/dimavirych/Documents/Projects/CloudVeil-securityManager-ios/SecurityManager/Frameworks/Alamofire.framework/Headers/Alamofire.h"
+- "/Users/dimavirych/Documents/Projects/CloudVeil-securityManager-ios/SecurityManager/SecurityManager.h"
+- "/Users/dimavirych/Documents/Projects/CloudVeil-securityManager-ios/SecurityManager/Frameworks/ObjectMapper.framework/Headers/ObjectMapper.h"
+- "/Users/dimavirych/Documents/Projects/CloudVeil-securityManager-ios/SecurityManager/Frameworks/Alamofire.framework/Headers/Alamofire-Swift.h"
+- "/Users/dimavirych/Documents/Projects/CloudVeil-securityManager-ios/SecurityManager/Frameworks/ObjectMapper.framework/Headers/ObjectMapper-Swift.h"
+- "/Users/dimavirych/Library/Developer/Xcode/DerivedData/SecurityManager-fxqfczmjtsnrcpbuhqgdcfaedmfn/Build/Intermediates.noindex/SecurityManager.build/Debug Hockeyapp-iphonesimulator/SecurityManager.build/unextended-module.modulemap"
+- "/Users/dimavirych/Documents/Projects/CloudVeil-securityManager-ios/SecurityManager/Frameworks/Alamofire.framework/Modules/module.modulemap"
+- "/Users/dimavirych/Documents/Projects/CloudVeil-securityManager-ios/SecurityManager/Frameworks/ObjectMapper.framework/Modules/module.modulemap"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator11.3.sdk/usr/include/objc/ObjectiveC.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator11.3.sdk/System/Library/Frameworks/OpenGLES.framework/Headers/OpenGLES.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator11.3.sdk/System/Library/Frameworks/CoreImage.framework/Headers/CoreImage.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator11.3.sdk/System/Library/Frameworks/QuartzCore.framework/Headers/QuartzCore.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator11.3.sdk/System/Library/Frameworks/Metal.framework/Headers/Metal.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator11.3.sdk/usr/include/Darwin.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator11.3.sdk/System/Library/Frameworks/Foundation.framework/Headers/Foundation.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator11.3.sdk/System/Library/Frameworks/CoreGraphics.framework/Headers/CoreGraphics.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator11.3.sdk/System/Library/Frameworks/UIKit.framework/Headers/UIKit.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator11.3.sdk/System/Library/Frameworks/CoreText.framework/Headers/CoreText.apinotes"
+interface-hash: "5c8a6fd0b74bf2ab9ac24cd3bb447bbd"
