@@ -391,7 +391,15 @@
 		09FCB6921FB2E98C0007D2CA /* PasswordPlaceholderIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 09FCB6901FB2E98B0007D2CA /* PasswordPlaceholderIcon@2x.png */; };
 		09FCB6951FB2FAE80007D2CA /* PasscodePlaceholderIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 09FCB6931FB2FAE60007D2CA /* PasscodePlaceholderIcon@2x.png */; };
 		09FCB6961FB2FAE80007D2CA /* PasscodePlaceholderIcon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 09FCB6941FB2FAE70007D2CA /* PasscodePlaceholderIcon@3x.png */; };
-		1565DBAD2080FCF400B5C4A3 /* SecurityManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1565DBAC2080FCF300B5C4A3 /* SecurityManager.framework */; };
+		15F7194E208664110031ABD8 /* SecurityManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 15F7194D208664110031ABD8 /* SecurityManager.framework */; };
+		15F7194F20866B470031ABD8 /* SecurityManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 15F7194D208664110031ABD8 /* SecurityManager.framework */; };
+		15F7195020866B470031ABD8 /* SecurityManager.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 15F7194D208664110031ABD8 /* SecurityManager.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		15F7195320866FE80031ABD8 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 15F7195220866FE80031ABD8 /* Alamofire.framework */; };
+		15F7195420866FFB0031ABD8 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 15F7195220866FE80031ABD8 /* Alamofire.framework */; };
+		15F7195520866FFB0031ABD8 /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 15F7195220866FE80031ABD8 /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		15F71957208670920031ABD8 /* ObjectMapper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 15F71956208670910031ABD8 /* ObjectMapper.framework */; };
+		15F71958208670970031ABD8 /* ObjectMapper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 15F71956208670910031ABD8 /* ObjectMapper.framework */; };
+		15F71959208670970031ABD8 /* ObjectMapper.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 15F71956208670910031ABD8 /* ObjectMapper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6801D6681BEF6CC600533783 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D08805C9156E8F5100311537 /* AddressBook.framework */; };
 		6804D8AE1D1D624E0082E71F /* TGGifGalleryAddAccessoryView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6804D8AC1D1D624E0082E71F /* TGGifGalleryAddAccessoryView.h */; };
 		6804D8AF1D1D624E0082E71F /* TGGifGalleryAddAccessoryView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6804D8AD1D1D624E0082E71F /* TGGifGalleryAddAccessoryView.m */; };
@@ -5000,8 +5008,11 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				15F7195020866B470031ABD8 /* SecurityManager.framework in Embed Frameworks */,
 				D020FBEA1D99A83C00F279AA /* MtProtoKitDynamic.framework in Embed Frameworks */,
+				15F71959208670970031ABD8 /* ObjectMapper.framework in Embed Frameworks */,
 				D020FB121D99637200F279AA /* LegacyDatabase.framework in Embed Frameworks */,
+				15F7195520866FFB0031ABD8 /* Alamofire.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5459,7 +5470,9 @@
 		09FCB6901FB2E98B0007D2CA /* PasswordPlaceholderIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "PasswordPlaceholderIcon@2x.png"; path = "Resources/PasswordPlaceholderIcon@2x.png"; sourceTree = "<group>"; };
 		09FCB6931FB2FAE60007D2CA /* PasscodePlaceholderIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "PasscodePlaceholderIcon@2x.png"; path = "Resources/PasscodePlaceholderIcon@2x.png"; sourceTree = "<group>"; };
 		09FCB6941FB2FAE70007D2CA /* PasscodePlaceholderIcon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "PasscodePlaceholderIcon@3x.png"; path = "Resources/PasscodePlaceholderIcon@3x.png"; sourceTree = "<group>"; };
-		1565DBAC2080FCF300B5C4A3 /* SecurityManager.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SecurityManager.framework; sourceTree = "<group>"; };
+		15F7194D208664110031ABD8 /* SecurityManager.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SecurityManager.framework; sourceTree = "<group>"; };
+		15F7195220866FE80031ABD8 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Alamofire.framework; sourceTree = "<group>"; };
+		15F71956208670910031ABD8 /* ObjectMapper.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ObjectMapper.framework; sourceTree = "<group>"; };
 		6803268D1D5D74FF0062725B /* TGPhotoPaintSettingsWrapperView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPhotoPaintSettingsWrapperView.h; sourceTree = "<group>"; };
 		6803268E1D5D74FF0062725B /* TGPhotoPaintSettingsWrapperView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPhotoPaintSettingsWrapperView.m; sourceTree = "<group>"; };
 		680326911D5DFC640062725B /* TGPaintingData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPaintingData.h; sourceTree = "<group>"; };
@@ -11596,15 +11609,17 @@
 				685A691A1DDB227F006BC208 /* CallKit.framework in Frameworks */,
 				D020FBE81D999B3200F279AA /* Intents.framework in Frameworks */,
 				685FDB4F1D9997730045EC75 /* NotificationCenter.framework in Frameworks */,
-				1565DBAD2080FCF400B5C4A3 /* SecurityManager.framework in Frameworks */,
+				15F7194E208664110031ABD8 /* SecurityManager.framework in Frameworks */,
 				687D86911D01CCE100820510 /* AVKit.framework in Frameworks */,
 				D0EE3B361C7C87C400DD5E83 /* MtProtoKit.framework in Frameworks */,
 				68CAE0641C6CEF1700151753 /* WebKit.framework in Frameworks */,
 				93A5407F185F2D4D00B4F135 /* CoreMotion.framework in Frameworks */,
 				D0A4D7A11C0F961B00537E74 /* VideoToolbox.framework in Frameworks */,
+				15F7194F20866B470031ABD8 /* SecurityManager.framework in Frameworks */,
 				68521C751BCD833800B8A6FA /* Contacts.framework in Frameworks */,
 				68521C661BCD831A00B8A6FA /* ContactsUI.framework in Frameworks */,
 				D0821A301BBEA38200CE53BA /* CoreSpotlight.framework in Frameworks */,
+				15F71957208670920031ABD8 /* ObjectMapper.framework in Frameworks */,
 				D00C79211BBCA4CA00F979C8 /* HockeySDK.framework in Frameworks */,
 				D0CD8FF71BB33B9900E05F40 /* SafariServices.framework in Frameworks */,
 				6836F8F51BB262CC00D3A77B /* WatchConnectivity.framework in Frameworks */,
@@ -11614,6 +11629,7 @@
 				D0B3942F1A57055D00D9AB97 /* LocalAuthentication.framework in Frameworks */,
 				D0BE9B6C1A38D9ED0001972E /* Photos.framework in Frameworks */,
 				D07147811A14C37200D7896A /* WebP.framework in Frameworks */,
+				15F7195420866FFB0031ABD8 /* Alamofire.framework in Frameworks */,
 				D054F616192801EE002952ED /* libicucore.dylib in Frameworks */,
 				D054F6121927FCEF002952ED /* libc++.dylib in Frameworks */,
 				D0AC709918BE214000CDFFA8 /* libopus.a in Frameworks */,
@@ -11625,6 +11641,7 @@
 				93985171162F8A5A009DBCA5 /* MapKit.framework in Frameworks */,
 				935B6E301628850B00A2E265 /* MessageUI.framework in Frameworks */,
 				93362AFB1624797400007FB8 /* CoreTelephony.framework in Frameworks */,
+				15F71958208670970031ABD8 /* ObjectMapper.framework in Frameworks */,
 				937F0378161DF8E600AA32DC /* CoreLocation.framework in Frameworks */,
 				93B532A6160BEA3000A16903 /* CFNetwork.framework in Frameworks */,
 				D00733D515B1B96C0091EBEE /* AVFoundation.framework in Frameworks */,
@@ -11634,6 +11651,7 @@
 				D0B33C67159CAC3400451700 /* ImageIO.framework in Frameworks */,
 				D0880626156EA74000311537 /* SystemConfiguration.framework in Frameworks */,
 				D0D03650158F7F5B00E39802 /* libstdc++.dylib in Frameworks */,
+				15F7195320866FE80031ABD8 /* Alamofire.framework in Frameworks */,
 				D0FD89A3156FD4FC00CC3714 /* Security.framework in Frameworks */,
 				D08805D0156E8F6700311537 /* QuartzCore.framework in Frameworks */,
 				D08805CE156E8F5C00311537 /* libz.dylib in Frameworks */,
@@ -11959,7 +11977,9 @@
 		150B682D2080D683003F92F4 /* Vendor */ = {
 			isa = PBXGroup;
 			children = (
-				1565DBAC2080FCF300B5C4A3 /* SecurityManager.framework */,
+				15F71956208670910031ABD8 /* ObjectMapper.framework */,
+				15F7195220866FE80031ABD8 /* Alamofire.framework */,
+				15F7194D208664110031ABD8 /* SecurityManager.framework */,
 			);
 			path = Vendor;
 			sourceTree = "<group>";
@@ -28810,7 +28830,10 @@
 					"-DTGVOIP_USE_AUDIO_SESSION",
 					"-DINTERNAL_RELEASE",
 				);
-				OTHER_LDFLAGS = "-ObjC";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"$(inherited)",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.cloudveil.CloudVeilMessenger;
 				PRODUCT_MODULE_NAME = "CloudVeil Messenger";
 				PRODUCT_NAME = "CloudVeil Messenger";
@@ -29449,7 +29472,10 @@
 					"-DTGVOIP_USE_AUDIO_SESSION",
 					"-DINTERNAL_RELEASE",
 				);
-				OTHER_LDFLAGS = "-ObjC";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"$(inherited)",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.cloudveil.CloudVeilMessenger;
 				PRODUCT_MODULE_NAME = "CloudVeil Messenger";
 				PRODUCT_NAME = "CloudVeil Messenger";
@@ -29856,7 +29882,10 @@
 					"-DTGVOIP_USE_AUDIO_SESSION",
 					"-DINTERNAL_RELEASE",
 				);
-				OTHER_LDFLAGS = "-ObjC";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"$(inherited)",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.cloudveil.CloudVeilMessenger;
 				PRODUCT_MODULE_NAME = "CloudVeil Messenger";
 				PRODUCT_NAME = "CloudVeil Messenger";
@@ -29952,7 +29981,10 @@
 					"-DTGVOIP_USE_CUSTOM_CRYPTO",
 					"-DTGVOIP_USE_AUDIO_SESSION",
 				);
-				OTHER_LDFLAGS = "-ObjC";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"$(inherited)",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.cloudveil.CloudVeilMessenger;
 				PRODUCT_MODULE_NAME = "CloudVeil Messenger";
 				PRODUCT_NAME = "CloudVeil Messenger";
