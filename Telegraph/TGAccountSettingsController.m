@@ -74,6 +74,9 @@
 
 #import "TGLegacyComponentsContext.h"
 
+// MARK: - CloudVeil
+#import <SecurityManager/SecurityManager-Swift.h>
+
 @interface TGAccountSettingsController () <TGWallpaperControllerDelegate>
 {
     int32_t _uid;
@@ -324,6 +327,10 @@
 
 - (void)editButtonPressed
 {
+    // MARK: - CloudVeil
+    if ([[MainController shared] disableBioChange] == true)
+        return;
+    
     TGEditProfileController *controller = [[TGEditProfileController alloc] init];
     [self.navigationController pushViewController:controller animated:true];
 }

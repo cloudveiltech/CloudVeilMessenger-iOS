@@ -278,6 +278,9 @@
 #import "TGLiveLocationSignals.h"
 #import "TGScreenCaptureSignals.h"
 
+// MARK: - CloudVeil
+#import <SecurityManager/SecurityManager-Swift.h>
+
 #if TARGET_IPHONE_SIMULATOR
 NSInteger TGModernConversationControllerUnloadHistoryLimit = 500;
 NSInteger TGModernConversationControllerUnloadHistoryThreshold = 200;
@@ -1813,7 +1816,10 @@ typedef enum {
 
 - (void)avatarPressed
 {
-    [_companion _controllerAvatarPressed];
+    
+    // MARK: - CloudVeil
+    if ([[MainController shared] disableBio] == false)
+        [_companion _controllerAvatarPressed];
 }
 
 - (void)closeButtonPressed
@@ -6467,7 +6473,9 @@ typedef enum {
 
 - (void)setAvatarUrl:(NSString *)avatarUrl
 {
-    [_avatarButton setAvatarUrl:avatarUrl];
+    // MARK: - CloudVeil
+    if ([[MainController shared] disableProfilePhoto] == false)
+        [_avatarButton setAvatarUrl:avatarUrl];
 }
 
 - (void)setStatus:(NSString *)status accentColored:(bool)accentColored allowAnimation:(bool)allowAnimation toggleMode:(TGModernConversationControllerTitleToggle)toggleMode

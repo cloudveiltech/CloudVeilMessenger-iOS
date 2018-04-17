@@ -12,6 +12,9 @@
 
 #import <LegacyComponents/TGModernGalleryTransitionView.h>
 
+// MARK: - CloudVeil
+#import <SecurityManager/SecurityManager-Swift.h>
+
 @interface TGLetteredAvatarView (TGModernGalleryTransition) <TGModernGalleryTransitionView>
 
 @end
@@ -68,7 +71,7 @@
 {
     self = [super initWithFrame:frame];
     if (self)
-    {   
+    {
         _avatarView = [[TGLetteredAvatarView alloc] initWithFrame:CGRectMake(15, 15 + TGScreenPixel, 66, 66)];
         [_avatarView setSingleFontSize:28.0f doubleFontSize:28.0f useBoldFont:false];
         _avatarView.fadeTransition = true;
@@ -182,10 +185,10 @@
     {
         _avatarView.alpha = hidden ? 0.0f : 1.0f;
         [UIView animateWithDuration:0.2 animations:^
-        {
-            _avatarOverlay.alpha = hidden ? 0.0f : 1.0f;;
-            _avatarIconView.alpha = hidden ? 0.0f : 1.0f;;
-        }];
+         {
+             _avatarOverlay.alpha = hidden ? 0.0f : 1.0f;;
+             _avatarIconView.alpha = hidden ? 0.0f : 1.0f;;
+         }];
     }
     else
     {
@@ -310,16 +313,16 @@
             if (animated)
             {
                 [UIView animateWithDuration:0.3 animations:^
-                {
-                    _nameLabel.alpha = 0.0f;
-                    _statusLabel.alpha = 0.0f;
-                    _callButton.alpha = 0.0f;
-                    
-                    _firstNameField.alpha = 1.0f;
-                    _lastNameField.alpha = 1.0f;
-                    _editingFirstNameSeparator.alpha = 1.0f;
-                    _editingLastNameSeparator.alpha = 1.0f;
-                }];
+                 {
+                     _nameLabel.alpha = 0.0f;
+                     _statusLabel.alpha = 0.0f;
+                     _callButton.alpha = 0.0f;
+                     
+                     _firstNameField.alpha = 1.0f;
+                     _lastNameField.alpha = 1.0f;
+                     _editingFirstNameSeparator.alpha = 1.0f;
+                     _editingLastNameSeparator.alpha = 1.0f;
+                 }];
             }
             else
             {
@@ -342,25 +345,25 @@
             if (animated)
             {
                 [UIView animateWithDuration:0.3 animations:^
-                {
-                    _nameLabel.alpha = 1.0f;
-                    _statusLabel.alpha = 1.0f;
-                    _callButton.alpha = 1.0f;
-                    
-                    _firstNameField.alpha = 0.0f;
-                    _lastNameField.alpha = 0.0f;
-                    _editingFirstNameSeparator.alpha = 0.0f;
-                    _editingLastNameSeparator.alpha = 0.0f;
-                } completion:^(BOOL finished)
-                {
-                    if (finished)
-                    {
-                        _firstNameField.hidden = true;
-                        _lastNameField.hidden = true;
-                        _editingFirstNameSeparator.hidden = true;
-                        _editingLastNameSeparator.hidden = true;
-                    }
-                }];
+                 {
+                     _nameLabel.alpha = 1.0f;
+                     _statusLabel.alpha = 1.0f;
+                     _callButton.alpha = 1.0f;
+                     
+                     _firstNameField.alpha = 0.0f;
+                     _lastNameField.alpha = 0.0f;
+                     _editingFirstNameSeparator.alpha = 0.0f;
+                     _editingLastNameSeparator.alpha = 0.0f;
+                 } completion:^(BOOL finished)
+                 {
+                     if (finished)
+                     {
+                         _firstNameField.hidden = true;
+                         _lastNameField.hidden = true;
+                         _editingFirstNameSeparator.hidden = true;
+                         _editingLastNameSeparator.hidden = true;
+                     }
+                 }];
             }
             else
             {
@@ -399,46 +402,51 @@
 
 - (void)setAvatarUri:(NSString *)avatarUri animated:(bool)animated synchronous:(bool)synchronous
 {
-    static UIImage *placeholder = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^
-    {
-        //!placeholder
-        UIGraphicsBeginImageContextWithOptions(CGSizeMake(64.0f, 64.0f), false, 0.0f);
-        CGContextRef context = UIGraphicsGetCurrentContext();
+    // MARK: - CloudVeil
+    if ([[MainController shared] disableProfilePhoto] == false) {
+        static UIImage *placeholder = nil;
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^
+                      {
+                          //!placeholder
+                          UIGraphicsBeginImageContextWithOptions(CGSizeMake(64.0f, 64.0f), false, 0.0f);
+                          CGContextRef context = UIGraphicsGetCurrentContext();
+                          
+                          CGContextSetFillColorWithColor(context, [UIColor whiteColor].CGColor);
+                          CGContextFillEllipseInRect(context, CGRectMake(0.0f, 0.0f, 64.0f, 64.0f));
+                          CGContextSetStrokeColorWithColor(context, UIColorRGB(0xd9d9d9).CGColor);
+                          CGContextSetLineWidth(context, 1.0f);
+                          CGContextStrokeEllipseInRect(context, CGRectMake(0.5f, 0.5f, 63.0f, 63.0f));
+                          
+                          placeholder = UIGraphicsGetImageFromCurrentImageContext();
+                          UIGraphicsEndImageContext();
+                      });
         
-        CGContextSetFillColorWithColor(context, [UIColor whiteColor].CGColor);
-        CGContextFillEllipseInRect(context, CGRectMake(0.0f, 0.0f, 64.0f, 64.0f));
-        CGContextSetStrokeColorWithColor(context, UIColorRGB(0xd9d9d9).CGColor);
-        CGContextSetLineWidth(context, 1.0f);
-        CGContextStrokeEllipseInRect(context, CGRectMake(0.5f, 0.5f, 63.0f, 63.0f));
+        UIImage *currentPlaceholder = [_avatarView currentImage];
+        if (currentPlaceholder == nil)
+            currentPlaceholder = placeholder;
         
-        placeholder = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
-    });
-    
-    UIImage *currentPlaceholder = [_avatarView currentImage];
-    if (currentPlaceholder == nil)
-        currentPlaceholder = placeholder;
-    
-    if (avatarUri.length == 0)
-    {
-        int uid = _avatarPlaceholderDisabled ? 0 : _uidForPlaceholderCalculation;
-        NSString *firstName = _avatarPlaceholderDisabled ? nil : _firstName;
-        NSString *lastName = _avatarPlaceholderDisabled ? nil : _lastName;
-        [_avatarView loadUserPlaceholderWithSize:CGSizeMake(64.0f, 64.0f) uid:uid firstName:firstName lastName:lastName placeholder:placeholder];
-    }
-    else if (!TGStringCompare([_avatarView currentUrl], avatarUri))
-    {
-        _avatarView.fadeTransitionDuration = animated ? 0.3 : 0.1;
-        _avatarView.contentHints = synchronous ? TGRemoteImageContentHintLoadFromDiskSynchronously : 0;
-        [_avatarView loadImage:avatarUri filter:@"circle:64x64" placeholder:currentPlaceholder forceFade:animated];
+        if (avatarUri.length == 0)
+        {
+            int uid = _avatarPlaceholderDisabled ? 0 : _uidForPlaceholderCalculation;
+            NSString *firstName = _avatarPlaceholderDisabled ? nil : _firstName;
+            NSString *lastName = _avatarPlaceholderDisabled ? nil : _lastName;
+            [_avatarView loadUserPlaceholderWithSize:CGSizeMake(64.0f, 64.0f) uid:uid firstName:firstName lastName:lastName placeholder:placeholder];
+        }
+        else if (!TGStringCompare([_avatarView currentUrl], avatarUri))
+        {
+            _avatarView.fadeTransitionDuration = animated ? 0.3 : 0.1;
+            _avatarView.contentHints = synchronous ? TGRemoteImageContentHintLoadFromDiskSynchronously : 0;
+            [_avatarView loadImage:avatarUri filter:@"circle:64x64" placeholder:currentPlaceholder forceFade:animated];
+        }
     }
 }
 
 - (void)setAvatarImage:(UIImage *)avatarImage animated:(bool)__unused animated
 {
-    [_avatarView loadImage:avatarImage];
+    // MARK: - CloudVeil
+    if ([[MainController shared] disableProfilePhoto] == false)
+        [_avatarView loadImage:avatarImage];
 }
 
 - (UIView *)avatarOverlay
@@ -448,16 +456,16 @@
         static UIImage *overlayImage = nil;
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^
-        {
-            UIGraphicsBeginImageContextWithOptions(CGSizeMake(64.0f, 64.0f), false, 0.0f);
-            CGContextRef context = UIGraphicsGetCurrentContext();
-            
-            CGContextSetFillColorWithColor(context, UIColorRGBA(0x000000, 0.5f).CGColor);
-            CGContextFillEllipseInRect(context, CGRectMake(0.0f, 0.0f, 64.0f, 64.0f));
-            
-            overlayImage = UIGraphicsGetImageFromCurrentImageContext();
-            UIGraphicsEndImageContext();
-        });
+                      {
+                          UIGraphicsBeginImageContextWithOptions(CGSizeMake(64.0f, 64.0f), false, 0.0f);
+                          CGContextRef context = UIGraphicsGetCurrentContext();
+                          
+                          CGContextSetFillColorWithColor(context, UIColorRGBA(0x000000, 0.5f).CGColor);
+                          CGContextFillEllipseInRect(context, CGRectMake(0.0f, 0.0f, 64.0f, 64.0f));
+                          
+                          overlayImage = UIGraphicsGetImageFromCurrentImageContext();
+                          UIGraphicsEndImageContext();
+                      });
         
         _avatarOverlay = [[UIImageView alloc] initWithImage:overlayImage];
         _avatarOverlay.frame = _avatarView.frame;
@@ -503,11 +511,11 @@
             avatarOverlay.alpha = 0.0f;
             _activityIndicator.alpha = 0.0f;
             [UIView animateWithDuration:0.3 animations:^
-            {
-                _avatarIconView.alpha = 0.0f;
-                avatarOverlay.alpha = 1.0f;
-                _activityIndicator.alpha = 1.0f;
-            }];
+             {
+                 _avatarIconView.alpha = 0.0f;
+                 avatarOverlay.alpha = 1.0f;
+                 _activityIndicator.alpha = 1.0f;
+             }];
         }
         else
         {
@@ -521,16 +529,16 @@
         if (animated)
         {
             [UIView animateWithDuration:0.3 animations:^
-            {
-                if (!_showCameraIcon)
-                    _avatarOverlay.alpha = 0.0f;
-                else
-                    [self avatarIconView].alpha = 1.0f;
-                _activityIndicator.alpha = 0.0f;
-            } completion:^(BOOL finished) {
-                if (finished)
-                    [_activityIndicator stopAnimating];
-            }];
+             {
+                 if (!_showCameraIcon)
+                     _avatarOverlay.alpha = 0.0f;
+                 else
+                     [self avatarIconView].alpha = 1.0f;
+                 _activityIndicator.alpha = 0.0f;
+             } completion:^(BOOL finished) {
+                 if (finished)
+                     [_activityIndicator stopAnimating];
+             }];
         }
         else
         {
@@ -658,7 +666,7 @@
     {
         if (textField.text.length > 64)
             textField.text = [textField.text substringToIndex:64];
-     
+        
         if (_editing)
         {
             NSString *nameText = nil;

@@ -15,6 +15,9 @@
 
 #import <QuartzCore/QuartzCore.h>
 
+// MARK: - CloudVeil
+#import <SecurityManager/SecurityManager-Swift.h>
+
 static UIImage *contactCellCheckImage()
 {
     return TGImageNamed(@"ModernContactSelectionEmpty.png");
@@ -102,25 +105,25 @@ static UIImage *contactCellCheckedImage()
         if (checked)
         {
             [UIView animateWithDuration:0.12 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^
-            {
-                _checkView.transform = CGAffineTransformMakeScale(1.16f, 1.16f);
-            } completion:^(BOOL finished)
-            {
-                if (finished)
-                {
-                    [UIView animateWithDuration:0.08 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^
-                    {
-                        _checkView.transform = CGAffineTransformIdentity;
-                    } completion:nil];
-                }
-            }];
+             {
+                 _checkView.transform = CGAffineTransformMakeScale(1.16f, 1.16f);
+             } completion:^(BOOL finished)
+             {
+                 if (finished)
+                 {
+                     [UIView animateWithDuration:0.08 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^
+                      {
+                          _checkView.transform = CGAffineTransformIdentity;
+                      } completion:nil];
+                 }
+             }];
         }
         else
         {
             [UIView animateWithDuration:0.16 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^
-            {
-                _checkView.transform = CGAffineTransformIdentity;
-            } completion:nil];
+             {
+                 _checkView.transform = CGAffineTransformIdentity;
+             } completion:nil];
         }
     }
     else
@@ -304,51 +307,54 @@ static UIImage *contactCellCheckedImage()
         _subtitleLabel.hidden = _subtitleText == nil || _subtitleText.length == 0;
     }
     
-    if (false && _hideAvatar)
-    {
-        _avatarView.hidden = true;
-    }
-    else
-    {
-        _avatarView.hidden = false;
-        
-        CGFloat diameter = TGIsPad() ? 45.0f : 40.0f;
-        
-        static UIImage *placeholder = nil;
-        static dispatch_once_t onceToken;
-        dispatch_once(&onceToken, ^
+    // MARK: - CloudVeil
+    if ([[MainController shared] disableProfilePhoto] == false) {
+        if (false && _hideAvatar)
         {
-            UIGraphicsBeginImageContextWithOptions(CGSizeMake(diameter, diameter), false, 0.0f);
-            CGContextRef context = UIGraphicsGetCurrentContext();
-            
-            //!placeholder
-            CGContextSetFillColorWithColor(context, [UIColor whiteColor].CGColor);
-            CGContextFillEllipseInRect(context, CGRectMake(0.0f, 0.0f, diameter, diameter));
-            CGContextSetStrokeColorWithColor(context, UIColorRGB(0xd9d9d9).CGColor);
-            CGContextSetLineWidth(context, 1.0f);
-            CGContextStrokeEllipseInRect(context, CGRectMake(0.5f, 0.5f, diameter - 1.0f, diameter - 1.0f));
-            
-            placeholder = UIGraphicsGetImageFromCurrentImageContext();
-            UIGraphicsEndImageContext();
-        });
-        
-        if (_avatarUrl.length != 0)
-        {
-            _avatarView.fadeTransitionDuration = animateState ? 0.14 : 0.3;
-            if (![_avatarUrl isEqualToString:_avatarView.currentUrl])
-            {
-                if (animateState)
-                {
-                    UIImage *currentImage = [_avatarView currentImage];
-                    [_avatarView loadImage:_avatarUrl filter:TGIsPad() ? @"circle:45x45" : @"circle:40x40" placeholder:(currentImage != nil ? currentImage : placeholder) forceFade:true];
-                }
-                else
-                    [_avatarView loadImage:_avatarUrl filter:TGIsPad() ? @"circle:45x45" : @"circle:40x40" placeholder:placeholder];
-            }
+            _avatarView.hidden = true;
         }
         else
         {
-            [_avatarView loadUserPlaceholderWithSize:CGSizeMake(diameter, diameter) uid:_hideAvatar ? 0 : (int32_t)_itemId firstName:_user.firstName lastName:_user.lastName placeholder:placeholder];
+            _avatarView.hidden = false;
+            
+            CGFloat diameter = TGIsPad() ? 45.0f : 40.0f;
+            
+            static UIImage *placeholder = nil;
+            static dispatch_once_t onceToken;
+            dispatch_once(&onceToken, ^
+                          {
+                              UIGraphicsBeginImageContextWithOptions(CGSizeMake(diameter, diameter), false, 0.0f);
+                              CGContextRef context = UIGraphicsGetCurrentContext();
+                              
+                              //!placeholder
+                              CGContextSetFillColorWithColor(context, [UIColor whiteColor].CGColor);
+                              CGContextFillEllipseInRect(context, CGRectMake(0.0f, 0.0f, diameter, diameter));
+                              CGContextSetStrokeColorWithColor(context, UIColorRGB(0xd9d9d9).CGColor);
+                              CGContextSetLineWidth(context, 1.0f);
+                              CGContextStrokeEllipseInRect(context, CGRectMake(0.5f, 0.5f, diameter - 1.0f, diameter - 1.0f));
+                              
+                              placeholder = UIGraphicsGetImageFromCurrentImageContext();
+                              UIGraphicsEndImageContext();
+                          });
+            
+            if (_avatarUrl.length != 0)
+            {
+                _avatarView.fadeTransitionDuration = animateState ? 0.14 : 0.3;
+                if (![_avatarUrl isEqualToString:_avatarView.currentUrl])
+                {
+                    if (animateState)
+                    {
+                        UIImage *currentImage = [_avatarView currentImage];
+                        [_avatarView loadImage:_avatarUrl filter:TGIsPad() ? @"circle:45x45" : @"circle:40x40" placeholder:(currentImage != nil ? currentImage : placeholder) forceFade:true];
+                    }
+                    else
+                        [_avatarView loadImage:_avatarUrl filter:TGIsPad() ? @"circle:45x45" : @"circle:40x40" placeholder:placeholder];
+                }
+            }
+            else
+            {
+                [_avatarView loadUserPlaceholderWithSize:CGSizeMake(diameter, diameter) uid:_hideAvatar ? 0 : (int32_t)_itemId firstName:_user.firstName lastName:_user.lastName placeholder:placeholder];
+            }
         }
     }
     
@@ -406,10 +412,10 @@ static UIImage *contactCellCheckedImage()
             if (animated)
             {
                 [UIView animateWithDuration:0.3 animations:^
-                {
-                    _checkButton.alpha = 1.0f;
-                    [self layoutSubviews];
-                }];
+                 {
+                     _checkButton.alpha = 1.0f;
+                     [self layoutSubviews];
+                 }];
             }
             else
             {
@@ -422,16 +428,16 @@ static UIImage *contactCellCheckedImage()
             if (animated)
             {
                 [UIView animateWithDuration:0.3 animations:^
-                {
-                    _checkButton.alpha = 0.0f;
-                    [self layoutSubviews];
-                } completion:^(BOOL finished)
-                {
-                    if (finished)
-                    {
-                        _checkButton.hidden = true;
-                    }
-                }];
+                 {
+                     _checkButton.alpha = 0.0f;
+                     [self layoutSubviews];
+                 } completion:^(BOOL finished)
+                 {
+                     if (finished)
+                     {
+                         _checkButton.hidden = true;
+                     }
+                 }];
             }
             else
             {

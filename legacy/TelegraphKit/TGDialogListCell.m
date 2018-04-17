@@ -19,6 +19,9 @@
 
 #import "TGSimpleImageView.h"
 
+// MARK: - CloudVeil
+#import <SecurityManager/SecurityManager-Swift.h>
+
 static UIColor *normalTextColor = nil;
 static UIColor *actionTextColor = nil;
 static UIColor *mediaTextColor = nil;
@@ -78,10 +81,10 @@ static UIColor *mediaTextColor = nil;
             style.alignment = NSTextAlignmentLeft;
             
             NSDictionary *attributes = @{
-                NSParagraphStyleAttributeName: style,
-                NSFontAttributeName: _titleFont,
-                NSForegroundColorAttributeName:_isEncrypted ? _presentation.pallete.dialogEncryptedColor : _presentation.pallete.dialogTitleColor
-            };
+                                         NSParagraphStyleAttributeName: style,
+                                         NSFontAttributeName: _titleFont,
+                                         NSForegroundColorAttributeName:_isEncrypted ? _presentation.pallete.dialogEncryptedColor : _presentation.pallete.dialogTitleColor
+                                         };
             
             [_title drawWithRect:titleFrame options:NSStringDrawingUsesLineFragmentOrigin attributes:attributes context:nil];
         }
@@ -101,18 +104,18 @@ static UIColor *mediaTextColor = nil;
             static NSDictionary *attributes = nil;
             static dispatch_once_t onceToken;
             dispatch_once(&onceToken, ^
-            {
-                NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
-                style.lineBreakMode = NSLineBreakByClipping;
-                style.alignment = NSTextAlignmentLeft;
-
-                attributes = @{
-                    NSParagraphStyleAttributeName: style,
-                    NSFontAttributeName: _textFont,
-                    NSForegroundColorAttributeName: _textColor
-                };
-            });
-
+                          {
+                              NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+                              style.lineBreakMode = NSLineBreakByClipping;
+                              style.alignment = NSTextAlignmentLeft;
+                              
+                              attributes = @{
+                                             NSParagraphStyleAttributeName: style,
+                                             NSFontAttributeName: _textFont,
+                                             NSForegroundColorAttributeName: _textColor
+                                             };
+                          });
+            
             [_typingText drawWithRect:typingFrame options:NSStringDrawingUsesLineFragmentOrigin attributes:attributes context:nil];
         }
         else
@@ -138,18 +141,18 @@ static UIColor *mediaTextColor = nil;
                 static NSDictionary *attributes = nil;
                 static dispatch_once_t onceToken;
                 dispatch_once(&onceToken, ^
-                {
-                    NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
-                    style.lineSpacing = 1 + TGScreenPixel;
-                    style.lineBreakMode = NSLineBreakByWordWrapping;
-                    style.alignment = NSTextAlignmentLeft;
-                    
-                    attributes = @{
-                        NSParagraphStyleAttributeName: style,
-                        NSFontAttributeName: _textFont,
-                        NSForegroundColorAttributeName: _textColor
-                    };
-                });
+                              {
+                                  NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+                                  style.lineSpacing = 1 + TGScreenPixel;
+                                  style.lineBreakMode = NSLineBreakByWordWrapping;
+                                  style.alignment = NSTextAlignmentLeft;
+                                  
+                                  attributes = @{
+                                                 NSParagraphStyleAttributeName: style,
+                                                 NSFontAttributeName: _textFont,
+                                                 NSForegroundColorAttributeName: _textColor
+                                                 };
+                              });
                 
                 [_text drawWithRect:textFrame options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingTruncatesLastVisibleLine attributes:attributes context:nil];
             }
@@ -160,7 +163,7 @@ static UIColor *mediaTextColor = nil;
             
             //CGContextFillRect(context, textFrame);
         }
-    
+        
         if (_authorName != nil && _authorName.length != 0)
         {
             CGContextSetFillColorWithColor(context, _authorNameColor == nil ? [UIColor blackColor].CGColor : [_authorNameColor CGColor]);
@@ -174,10 +177,10 @@ static UIColor *mediaTextColor = nil;
                     style.alignment = NSTextAlignmentLeft;
                     
                     attributes = @{
-                        NSParagraphStyleAttributeName: style,
-                        NSFontAttributeName: _authorNameFont,
-                        NSForegroundColorAttributeName: _authorNameColor == nil ? [UIColor blackColor] : _authorNameColor
-                    };
+                                   NSParagraphStyleAttributeName: style,
+                                   NSFontAttributeName: _authorNameFont,
+                                   NSForegroundColorAttributeName: _authorNameColor == nil ? [UIColor blackColor] : _authorNameColor
+                                   };
                     
                     [_authorName drawWithRect:authorNameFrame options:NSStringDrawingUsesLineFragmentOrigin attributes:attributes context:nil];
                 }
@@ -303,7 +306,7 @@ static UIColor *mediaTextColor = nil;
         self.selectedBackgroundView = selectedView;
         
         _assetsSource = assetsSource;
-
+        
         _textView = [[TGDialogListTextView alloc] initWithFrame:CGRectMake(73, 2, self.frame.size.width - 73, 46)];
         _textView.contentMode = UIViewContentModeLeft;
         _textView.titleFont = TGMediumSystemFontOfSize(16);
@@ -575,7 +578,12 @@ static UIColor *mediaTextColor = nil;
 
 - (void)collectCachedPhotos:(NSMutableDictionary *)dict
 {
-    [_avatarView tryFillCache:dict];
+    // MARK: - CloudVeil
+    if ([[MainController shared] disableProfilePhoto] == false) {
+        [_avatarView tryFillCache:dict];
+    } else {
+        _avatarView.image = nil;
+    }
 }
 
 - (UIView *)typingDotsContainer
@@ -1460,7 +1468,7 @@ static NSArray *editingButtonTypes(bool muted, bool pinned, bool mutable) {
     } else {
         totalUnreadCount = _unreadCount + _serviceUnreadCount;
     }
-
+    
     if (totalUnreadCount) {
         _unreadCountBackgrond.hidden = false;
         _unreadCountLabel.hidden = false;
@@ -1523,68 +1531,69 @@ static NSArray *editingButtonTypes(bool muted, bool pinned, bool mutable) {
         _authorName = _textView.authorName;
         _textView.authorNameColor = self.presentation.pallete.dialogDraftColor;
     }
-        
+    
     _avatarView.hidden = false;
     
     static UIImage *placeholder = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^
-    {
-        //!placeholder
-        UIGraphicsBeginImageContextWithOptions(CGSizeMake(62.0f, 62.0f), false, 0.0f);
-        CGContextRef context = UIGraphicsGetCurrentContext();
-        
-        CGContextSetFillColorWithColor(context, [UIColor whiteColor].CGColor);
-        CGContextFillEllipseInRect(context, CGRectMake(0.0f, 0.0f, 62.0f, 62.0f));
-        CGContextSetStrokeColorWithColor(context, UIColorRGB(0xd9d9d9).CGColor);
-        CGContextSetLineWidth(context, 1.0f);
-        CGContextStrokeEllipseInRect(context, CGRectMake(0.5f, 0.5f, 61.0f, 61.0f));
-        
-        placeholder = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
-    });
-    
-    if (_isSavedMessages)
-    {
-        [_avatarView loadSavedMessagesWithSize:CGSizeMake(62.0f, 62.0f) placeholder:placeholder];
-    }
-    else if (_avatarUrl.length != 0)
-    {
-        _avatarView.fadeTransitionDuration = keepState ? 0.3 : 0.14;
-        
-        if (![_avatarView.currentUrl isEqualToString:_avatarUrl])
+                  {
+                      //!placeholder
+                      UIGraphicsBeginImageContextWithOptions(CGSizeMake(62.0f, 62.0f), false, 0.0f);
+                      CGContextRef context = UIGraphicsGetCurrentContext();
+                      
+                      CGContextSetFillColorWithColor(context, [UIColor whiteColor].CGColor);
+                      CGContextFillEllipseInRect(context, CGRectMake(0.0f, 0.0f, 62.0f, 62.0f));
+                      CGContextSetStrokeColorWithColor(context, UIColorRGB(0xd9d9d9).CGColor);
+                      CGContextSetLineWidth(context, 1.0f);
+                      CGContextStrokeEllipseInRect(context, CGRectMake(0.5f, 0.5f, 61.0f, 61.0f));
+                      
+                      placeholder = UIGraphicsGetImageFromCurrentImageContext();
+                      UIGraphicsEndImageContext();
+                  });
+    if ([[MainController shared] disableProfilePhoto] == false) {
+        if (_isSavedMessages)
         {
-            if (keepState)
-            {
-                [_avatarView loadImage:_avatarUrl filter:@"circle:62x62" placeholder:(_avatarView.currentImage != nil ? _avatarView.currentImage : placeholder) forceFade:true];
-            }
-            else
-            {
-                [_avatarView loadImage:_avatarUrl filter:@"circle:62x62" placeholder:placeholder forceFade:false];
-            }
+            [_avatarView loadSavedMessagesWithSize:CGSizeMake(62.0f, 62.0f) placeholder:placeholder];
         }
-    }
-    else
-    {
-        _avatarView.fadeTransitionDuration = 0.14;
-        
-        if (_isEncrypted || _conversationId > 0)
+        else if (_avatarUrl.length != 0)
         {
-            NSString *firstName = nil;
-            NSString *lastName = nil;
-            if (_titleLetters.count >= 2)
-            {
-                firstName = _titleLetters[0];
-                lastName = _titleLetters[1];
-            }
-            else if (_titleLetters.count == 1)
-                firstName = _titleLetters[0];
+            _avatarView.fadeTransitionDuration = keepState ? 0.3 : 0.14;
             
-            [_avatarView loadUserPlaceholderWithSize:CGSizeMake(62.0f, 62.0f) uid:_isEncrypted ? _encryptedUserId : (int32_t)_conversationId firstName:firstName lastName:lastName placeholder:placeholder];
+            if (![_avatarView.currentUrl isEqualToString:_avatarUrl])
+            {
+                if (keepState)
+                {
+                    [_avatarView loadImage:_avatarUrl filter:@"circle:62x62" placeholder:(_avatarView.currentImage != nil ? _avatarView.currentImage : placeholder) forceFade:true];
+                }
+                else
+                {
+                    [_avatarView loadImage:_avatarUrl filter:@"circle:62x62" placeholder:placeholder forceFade:false];
+                }
+            }
         }
         else
         {
-            [_avatarView loadGroupPlaceholderWithSize:CGSizeMake(62.0f, 62.0f) conversationId:_conversationId title:_isBroadcast ? @"" : _titleText placeholder:placeholder];
+            _avatarView.fadeTransitionDuration = 0.14;
+            
+            if (_isEncrypted || _conversationId > 0)
+            {
+                NSString *firstName = nil;
+                NSString *lastName = nil;
+                if (_titleLetters.count >= 2)
+                {
+                    firstName = _titleLetters[0];
+                    lastName = _titleLetters[1];
+                }
+                else if (_titleLetters.count == 1)
+                    firstName = _titleLetters[0];
+                
+                [_avatarView loadUserPlaceholderWithSize:CGSizeMake(62.0f, 62.0f) uid:_isEncrypted ? _encryptedUserId : (int32_t)_conversationId firstName:firstName lastName:lastName placeholder:placeholder];
+            }
+            else
+            {
+                [_avatarView loadGroupPlaceholderWithSize:CGSizeMake(62.0f, 62.0f) conversationId:_conversationId title:_isBroadcast ? @"" : _titleText placeholder:placeholder];
+            }
         }
     }
     
@@ -1758,10 +1767,10 @@ static NSArray *editingButtonTypes(bool muted, bool pinned, bool mutable) {
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^
-    {
-        screenSize = TGScreenSize();
-        widescreenWidth = MAX(screenSize.width, screenSize.height);
-    });
+                  {
+                      screenSize = TGScreenSize();
+                      widescreenWidth = MAX(screenSize.width, screenSize.height);
+                  });
     
     CGFloat safeInset = 0.0f;
     if ([self respondsToSelector:@selector(safeAreaInsets)])
@@ -1957,7 +1966,7 @@ static NSArray *editingButtonTypes(bool muted, bool pinned, bool mutable) {
         
         _textView.titleFrame = titleRect;
         _textView.textFrame = messageRect;
-    
+        
         _validSize = size;
         
         TG_TIMESTAMP_MEASURE(cellLayout);

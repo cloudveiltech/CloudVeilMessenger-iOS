@@ -18,6 +18,9 @@
 
 #import "TGTelegraphConversationMessageAssetsSource.h"
 
+// MARK: - CloudVeil
+#import <SecurityManager/SecurityManager-Swift.h>
+
 static CGFloat preferredTextFontSize;
 
 void TGMessageViewModelLayoutSetPreferredTextFontSize(CGFloat fontSize)
@@ -198,7 +201,10 @@ void TGUpdateMessageViewModelLayoutConstants(CGFloat baseFontPointSize)
             
             _avatarModel = [[TGModernLetteredAvatarViewModel alloc] initWithSize:CGSizeMake(38.0f, 38.0f) placeholder:placeholder];
             _avatarModel.skipDrawInContext = true;
-            [self addSubmodel:_avatarModel];
+            
+            // MARK: - CloudVeil
+            if ([[MainController shared] disableProfilePhoto] == false)
+                [self addSubmodel:_avatarModel];
         } else if ([authorPeer isKindOfClass:[TGConversation class]] && context != nil && (context.isAdminLog || context.isSavedMessages)) {
             TGConversation *author = authorPeer;
             _firstName = author.chatTitle;
@@ -223,7 +229,10 @@ void TGUpdateMessageViewModelLayoutConstants(CGFloat baseFontPointSize)
             
             _avatarModel = [[TGModernLetteredAvatarViewModel alloc] initWithSize:CGSizeMake(38.0f, 38.0f) placeholder:placeholder];
             _avatarModel.skipDrawInContext = true;
-            [self addSubmodel:_avatarModel];
+            
+            // MARK: - CloudVeil
+            if ([[MainController shared] disableProfilePhoto] == false)
+                [self addSubmodel:_avatarModel];
         }
         
         if (iosMajorVersion() >= 10)

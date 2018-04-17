@@ -7,6 +7,9 @@
 #import "TGCollectionMenuView.h"
 #import "TGCollectionMenuLayout.h"
 
+// MARK: - CloudVeil
+#import <SecurityManager/SecurityManager-Swift.h>
+
 @interface TGCollectionMenuSection ()
 
 - (void)insertItem:(TGCollectionItem *)item atIndex:(NSUInteger)index;
@@ -442,7 +445,9 @@
         TGCollectionItem *item = indexPath.section < (NSInteger)_menuSections.sections.count && indexPath.row < (NSInteger)((TGCollectionMenuSection *)_menuSections.sections[indexPath.section]).items.count ? ((TGCollectionMenuSection *)_menuSections.sections[indexPath.section]).items[indexPath.item] : nil;
         if (item != nil)
         {
-            [item itemSelected:self];
+            // MARK: - CloudVeil
+            if ([[MainController shared] disableBioChange] == false)
+                [item itemSelected:self];
             
             if (item.deselectAutomatically)
                 [collectionView deselectItemAtIndexPath:indexPath animated:true];

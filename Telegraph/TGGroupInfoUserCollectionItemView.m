@@ -10,6 +10,9 @@
 
 #import "TGPresentation.h"
 
+// MARK: - CloudVeil
+#import <SecurityManager/SecurityManager-Swift.h>
+
 @interface TGGroupInfoUserCollectionItemViewContent : UIView
 
 @property (nonatomic, strong) NSString *firstName;
@@ -47,16 +50,16 @@
     static CGColorRef activeStatusColor = NULL;
     static CGColorRef regularStatusColor = NULL;
     dispatch_once(&onceToken, ^
-    {
-        regularNameFont = TGSystemFontOfSize(17.0f);
-        boldNameFont = TGMediumSystemFontOfSize(17.0f);
-        statusFont = TGSystemFontOfSize(13.0f);
-        
-        nameColor = CGColorRetain([UIColor blackColor].CGColor);
-        secretNameColor = CGColorRetain(UIColorRGB(0x00a629).CGColor);
-        activeStatusColor = CGColorRetain(TGAccentColor().CGColor);
-        regularStatusColor = CGColorRetain(UIColorRGB(0xb3b3b3).CGColor);
-    });
+                  {
+                      regularNameFont = TGSystemFontOfSize(17.0f);
+                      boldNameFont = TGMediumSystemFontOfSize(17.0f);
+                      statusFont = TGSystemFontOfSize(13.0f);
+                      
+                      nameColor = CGColorRetain([UIColor blackColor].CGColor);
+                      secretNameColor = CGColorRetain(UIColorRGB(0x00a629).CGColor);
+                      activeStatusColor = CGColorRetain(TGAccentColor().CGColor);
+                      regularStatusColor = CGColorRetain(UIColorRGB(0xb3b3b3).CGColor);
+                  });
     
     CGRect bounds = self.bounds;
     CGFloat availableWidth = bounds.size.width - 20.0f - 1.0f;
@@ -236,28 +239,32 @@
 
 - (void)setAvatarUri:(NSString *)avatarUri
 {
-    static UIImage *placeholder = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^
-    {
-        UIGraphicsBeginImageContextWithOptions(CGSizeMake(40.0f, 40.0f), false, 0.0f);
-        CGContextRef context = UIGraphicsGetCurrentContext();
-        
-        //!placeholder
-        CGContextSetFillColorWithColor(context, [UIColor whiteColor].CGColor);
-        CGContextFillEllipseInRect(context, CGRectMake(0.0f, 0.0f, 40.0f, 40.0f));
-        CGContextSetStrokeColorWithColor(context, UIColorRGB(0xd9d9d9).CGColor);
-        CGContextSetLineWidth(context, 1.0f);
-        CGContextStrokeEllipseInRect(context, CGRectMake(0.5f, 0.5f, 39.0f, 39.0f));
-        
-        placeholder = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
-    });
+    // MARK: - CloudVeil
     
-    if (avatarUri.length == 0)
-        [_avatarView loadUserPlaceholderWithSize:CGSizeMake(40.0f, 40.0f) uid:_uidForPlaceholderCalculation firstName:_content.firstName lastName:_content.lastName placeholder:placeholder];
-    else if (!TGStringCompare([_avatarView currentUrl], avatarUri))
-        [_avatarView loadImage:avatarUri filter:@"circle:40x40" placeholder:placeholder];
+    if ([[MainController shared] disableProfilePhoto] == false) {
+        static UIImage *placeholder = nil;
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^
+                      {
+                          UIGraphicsBeginImageContextWithOptions(CGSizeMake(40.0f, 40.0f), false, 0.0f);
+                          CGContextRef context = UIGraphicsGetCurrentContext();
+                          
+                          //!placeholder
+                          CGContextSetFillColorWithColor(context, [UIColor whiteColor].CGColor);
+                          CGContextFillEllipseInRect(context, CGRectMake(0.0f, 0.0f, 40.0f, 40.0f));
+                          CGContextSetStrokeColorWithColor(context, UIColorRGB(0xd9d9d9).CGColor);
+                          CGContextSetLineWidth(context, 1.0f);
+                          CGContextStrokeEllipseInRect(context, CGRectMake(0.5f, 0.5f, 39.0f, 39.0f));
+                          
+                          placeholder = UIGraphicsGetImageFromCurrentImageContext();
+                          UIGraphicsEndImageContext();
+                      });
+        
+        if (avatarUri.length == 0)
+            [_avatarView loadUserPlaceholderWithSize:CGSizeMake(40.0f, 40.0f) uid:_uidForPlaceholderCalculation firstName:_content.firstName lastName:_content.lastName placeholder:placeholder];
+        else if (!TGStringCompare([_avatarView currentUrl], avatarUri))
+            [_avatarView loadImage:avatarUri filter:@"circle:40x40" placeholder:placeholder];
+    }
 }
 
 - (void)setIsSecretChat:(bool)isSecretChat
@@ -305,9 +312,9 @@
 - (void)setEnableSwitch:(bool)enableSwitch animated:(bool)animated {
     _switchView.userInteractionEnabled = enableSwitch;
     if (animated) {
-         [UIView animateWithDuration:0.3 animations:^{
+        [UIView animateWithDuration:0.3 animations:^{
             _switchView.alpha = enableSwitch ? 1.0f : 0.4f;
-         }];
+        }];
     } else {
         _switchView.alpha = enableSwitch ? 1.0f : 0.4f;
     }
@@ -362,9 +369,9 @@
         if (animated)
         {
             [UIView animateWithDuration:0.3 animations:^
-            {
-                _disabledOverlayView.alpha = 1.0f;
-            }];
+             {
+                 _disabledOverlayView.alpha = 1.0f;
+             }];
         }
         else
             _disabledOverlayView.alpha = 1.0f;
@@ -377,12 +384,12 @@
             _disabledOverlayView = nil;
             
             [UIView animateWithDuration:0.3 animations:^
-            {
-                view.alpha = 0.0f;
-            } completion:^(__unused BOOL finished)
-            {
-                [view removeFromSuperview];
-            }];
+             {
+                 view.alpha = 0.0f;
+             } completion:^(__unused BOOL finished)
+             {
+                 [view removeFromSuperview];
+             }];
         }
         else
         {
