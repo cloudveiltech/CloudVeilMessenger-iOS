@@ -11,8 +11,12 @@ provides-dynamic-lookup:
 - "disableProfilePhoto"
 - "disableProfilePhotoChange"
 - "getSettings"
+- "isBotAvailable"
+- "isChannelAvailable"
+- "isGroupAvailable"
 - "shared"
 depends-top-level:
+- !private "=="
 - !private "??"
 - "AssignmentPrecedence"
 - "Bool"
@@ -21,14 +25,24 @@ depends-top-level:
 - !private "DataSource"
 - !private "Dictionary"
 - "MainController"
+- "NSInteger"
 - "NSObject"
 - !private "SecurityManager"
 - !private "String"
+- !private "StringLiteralType"
 - "TGRow"
 - !private "TGSettingsRequest"
 - "TGSettingsResponse"
 - !private "TGUserController"
 depends-member:
+- !private ["15SecurityManager12AccessObjectC", "bots"]
+- !private ["15SecurityManager12AccessObjectC", "channels"]
+- !private ["15SecurityManager12AccessObjectC", "groups"]
+- !private ["Sa", "flatMap"]
+- !private ["Sa", "index"]
+- !private ["Sa", "subscript"]
+- !private ["s10ArraySliceV", "subscript"]
+- !private ["12ObjectMapper12BaseMappableP", "access"]
 - !private ["12ObjectMapper12BaseMappableP", "bots"]
 - !private ["12ObjectMapper12BaseMappableP", "channels"]
 - !private ["12ObjectMapper12BaseMappableP", "disableBio"]
@@ -40,6 +54,10 @@ depends-member:
 - !private ["12ObjectMapper12BaseMappableP", "init"]
 - !private ["12ObjectMapper12BaseMappableP", "phoneNumber"]
 - !private ["12ObjectMapper12BaseMappableP", "userName"]
+- !private ["s23BidirectionalCollectionP", "flatMap"]
+- !private ["s23BidirectionalCollectionP", "index"]
+- !private ["s23BidirectionalCollectionP", "init"]
+- !private ["s23BidirectionalCollectionP", "subscript"]
 - !private ["s7CVarArgP", "DataSource"]
 - ["s7CVarArgP", "MainController"]
 - !private ["s7CVarArgP", "SecurityManager"]
@@ -48,17 +66,27 @@ depends-member:
 - ["s7CVarArgP", ""]
 - !private ["s7CVarArgP", "bots"]
 - !private ["s7CVarArgP", "channels"]
+- !private ["s7CVarArgP", "flatMap"]
 - !private ["s7CVarArgP", "getUserID"]
 - !private ["s7CVarArgP", "getUserName"]
 - !private ["s7CVarArgP", "getUserPhoneNumber"]
 - !private ["s7CVarArgP", "groups"]
 - !private ["s7CVarArgP", "id"]
+- !private ["s7CVarArgP", "index"]
 - ["s7CVarArgP", "init"]
+- !private ["s7CVarArgP", "keys"]
 - !private ["s7CVarArgP", "phoneNumber"]
 - !private ["s7CVarArgP", "saveSettings"]
 - !private ["s7CVarArgP", "settings"]
 - !private ["s7CVarArgP", "shared"]
+- !private ["s7CVarArgP", "subscript"]
 - !private ["s7CVarArgP", "userName"]
+- !private ["s10CollectionP", "flatMap"]
+- !private ["s10CollectionP", "index"]
+- !private ["s10CollectionP", "init"]
+- !private ["s10CollectionP", "keys"]
+- !private ["s10CollectionP", "subscript"]
+- !private ["s10ComparableP", "init"]
 - !private ["s28CustomDebugStringConvertibleP", "DataSource"]
 - ["s28CustomDebugStringConvertibleP", "MainController"]
 - !private ["s28CustomDebugStringConvertibleP", "SecurityManager"]
@@ -67,17 +95,27 @@ depends-member:
 - ["s28CustomDebugStringConvertibleP", ""]
 - !private ["s28CustomDebugStringConvertibleP", "bots"]
 - !private ["s28CustomDebugStringConvertibleP", "channels"]
+- !private ["s28CustomDebugStringConvertibleP", "flatMap"]
 - !private ["s28CustomDebugStringConvertibleP", "getUserID"]
 - !private ["s28CustomDebugStringConvertibleP", "getUserName"]
 - !private ["s28CustomDebugStringConvertibleP", "getUserPhoneNumber"]
 - !private ["s28CustomDebugStringConvertibleP", "groups"]
 - !private ["s28CustomDebugStringConvertibleP", "id"]
+- !private ["s28CustomDebugStringConvertibleP", "index"]
 - ["s28CustomDebugStringConvertibleP", "init"]
+- !private ["s28CustomDebugStringConvertibleP", "keys"]
 - !private ["s28CustomDebugStringConvertibleP", "phoneNumber"]
 - !private ["s28CustomDebugStringConvertibleP", "saveSettings"]
 - !private ["s28CustomDebugStringConvertibleP", "settings"]
 - !private ["s28CustomDebugStringConvertibleP", "shared"]
+- !private ["s28CustomDebugStringConvertibleP", "subscript"]
 - !private ["s28CustomDebugStringConvertibleP", "userName"]
+- !private ["s29CustomPlaygroundQuickLookableP", "init"]
+- !private ["s17CustomReflectableP", "flatMap"]
+- !private ["s17CustomReflectableP", "index"]
+- !private ["s17CustomReflectableP", "init"]
+- !private ["s17CustomReflectableP", "keys"]
+- !private ["s17CustomReflectableP", "subscript"]
 - !private ["s23CustomStringConvertibleP", "DataSource"]
 - ["s23CustomStringConvertibleP", "MainController"]
 - !private ["s23CustomStringConvertibleP", "SecurityManager"]
@@ -86,19 +124,35 @@ depends-member:
 - ["s23CustomStringConvertibleP", ""]
 - !private ["s23CustomStringConvertibleP", "bots"]
 - !private ["s23CustomStringConvertibleP", "channels"]
+- !private ["s23CustomStringConvertibleP", "flatMap"]
 - !private ["s23CustomStringConvertibleP", "getUserID"]
 - !private ["s23CustomStringConvertibleP", "getUserName"]
 - !private ["s23CustomStringConvertibleP", "getUserPhoneNumber"]
 - !private ["s23CustomStringConvertibleP", "groups"]
 - !private ["s23CustomStringConvertibleP", "id"]
+- !private ["s23CustomStringConvertibleP", "index"]
 - ["s23CustomStringConvertibleP", "init"]
+- !private ["s23CustomStringConvertibleP", "keys"]
 - !private ["s23CustomStringConvertibleP", "phoneNumber"]
 - !private ["s23CustomStringConvertibleP", "saveSettings"]
 - !private ["s23CustomStringConvertibleP", "settings"]
 - !private ["s23CustomStringConvertibleP", "shared"]
+- !private ["s23CustomStringConvertibleP", "subscript"]
 - !private ["s23CustomStringConvertibleP", "userName"]
 - !private ["15SecurityManager10DataSourceC", "set"]
 - !private ["15SecurityManager10DataSourceC", "value"]
+- !private ["s9DecodableP", "flatMap"]
+- !private ["s9DecodableP", "index"]
+- !private ["s9DecodableP", "init"]
+- !private ["s9DecodableP", "keys"]
+- !private ["s9DecodableP", "subscript"]
+- !private ["s10DictionaryV", "keys"]
+- !private ["s10DictionaryV", "subscript"]
+- !private ["s9EncodableP", "flatMap"]
+- !private ["s9EncodableP", "index"]
+- !private ["s9EncodableP", "init"]
+- !private ["s9EncodableP", "keys"]
+- !private ["s9EncodableP", "subscript"]
 - !private ["s9EquatableP", "DataSource"]
 - ["s9EquatableP", "MainController"]
 - !private ["s9EquatableP", "SecurityManager"]
@@ -107,17 +161,29 @@ depends-member:
 - ["s9EquatableP", ""]
 - !private ["s9EquatableP", "bots"]
 - !private ["s9EquatableP", "channels"]
+- !private ["s9EquatableP", "flatMap"]
 - !private ["s9EquatableP", "getUserID"]
 - !private ["s9EquatableP", "getUserName"]
 - !private ["s9EquatableP", "getUserPhoneNumber"]
 - !private ["s9EquatableP", "groups"]
 - !private ["s9EquatableP", "id"]
+- !private ["s9EquatableP", "index"]
 - ["s9EquatableP", "init"]
+- !private ["s9EquatableP", "keys"]
 - !private ["s9EquatableP", "phoneNumber"]
 - !private ["s9EquatableP", "saveSettings"]
 - !private ["s9EquatableP", "settings"]
 - !private ["s9EquatableP", "shared"]
+- !private ["s9EquatableP", "subscript"]
 - !private ["s9EquatableP", "userName"]
+- !private ["s25ExpressibleByArrayLiteralP", "flatMap"]
+- !private ["s25ExpressibleByArrayLiteralP", "index"]
+- !private ["s25ExpressibleByArrayLiteralP", "subscript"]
+- !private ["s30ExpressibleByDictionaryLiteralP", "keys"]
+- !private ["s30ExpressibleByDictionaryLiteralP", "subscript"]
+- !private ["s43ExpressibleByExtendedGraphemeClusterLiteralP", "init"]
+- !private ["s26ExpressibleByStringLiteralP", "init"]
+- !private ["s33ExpressibleByUnicodeScalarLiteralP", "init"]
 - !private ["s8HashableP", "DataSource"]
 - ["s8HashableP", "MainController"]
 - !private ["s8HashableP", "SecurityManager"]
@@ -137,9 +203,11 @@ depends-member:
 - !private ["s8HashableP", "settings"]
 - !private ["s8HashableP", "shared"]
 - !private ["s8HashableP", "userName"]
+- !private ["s25LosslessStringConvertibleP", "init"]
 - ["15SecurityManager14MainControllerC", "Bool"]
 - !private ["15SecurityManager14MainControllerC", "DataSource"]
 - ["15SecurityManager14MainControllerC", "MainController"]
+- ["15SecurityManager14MainControllerC", "NSInteger"]
 - !private ["15SecurityManager14MainControllerC", "SecurityManager"]
 - !private ["15SecurityManager14MainControllerC", "String"]
 - ["15SecurityManager14MainControllerC", "TGRow"]
@@ -153,9 +221,13 @@ depends-member:
 - ["15SecurityManager14MainControllerC", "disableProfilePhotoChange"]
 - ["15SecurityManager14MainControllerC", "getSettings"]
 - ["15SecurityManager14MainControllerC", "init"]
+- ["15SecurityManager14MainControllerC", "isBotAvailable"]
+- ["15SecurityManager14MainControllerC", "isChannelAvailable"]
+- ["15SecurityManager14MainControllerC", "isGroupAvailable"]
 - !private ["15SecurityManager14MainControllerC", "saveSettings"]
 - !private ["15SecurityManager14MainControllerC", "settings"]
 - ["15SecurityManager14MainControllerC", "shared"]
+- !private ["12ObjectMapper8MappableP", "access"]
 - !private ["12ObjectMapper8MappableP", "bots"]
 - !private ["12ObjectMapper8MappableP", "channels"]
 - !private ["12ObjectMapper8MappableP", "disableBio"]
@@ -167,9 +239,14 @@ depends-member:
 - !private ["12ObjectMapper8MappableP", "init"]
 - !private ["12ObjectMapper8MappableP", "phoneNumber"]
 - !private ["12ObjectMapper8MappableP", "userName"]
+- !private ["s10MirrorPathP", "init"]
+- !private ["s17MutableCollectionP", "flatMap"]
+- !private ["s17MutableCollectionP", "index"]
+- !private ["s17MutableCollectionP", "subscript"]
 - ["So8NSObjectC", "Bool"]
 - !private ["So8NSObjectC", "DataSource"]
 - ["So8NSObjectC", "MainController"]
+- ["So8NSObjectC", "NSInteger"]
 - !private ["So8NSObjectC", "SecurityManager"]
 - !private ["So8NSObjectC", "String"]
 - ["So8NSObjectC", "TGRow"]
@@ -190,6 +267,9 @@ depends-member:
 - !private ["So8NSObjectC", "groups"]
 - !private ["So8NSObjectC", "id"]
 - ["So8NSObjectC", "init"]
+- ["So8NSObjectC", "isBotAvailable"]
+- ["So8NSObjectC", "isChannelAvailable"]
+- ["So8NSObjectC", "isGroupAvailable"]
 - !private ["So8NSObjectC", "phoneNumber"]
 - ["So8NSObjectC", "saveSettings"]
 - ["So8NSObjectC", "settings"]
@@ -216,8 +296,22 @@ depends-member:
 - !private ["So16NSObjectProtocolP", "userName"]
 - !private ["15SecurityManager06ObjectB0C", "getSettings"]
 - !private ["15SecurityManager06ObjectB0C", "shared"]
+- !private ["s22RandomAccessCollectionP", "flatMap"]
+- !private ["s22RandomAccessCollectionP", "index"]
+- !private ["s22RandomAccessCollectionP", "subscript"]
+- !private ["s26RangeReplaceableCollectionP", "flatMap"]
+- !private ["s26RangeReplaceableCollectionP", "index"]
+- !private ["s26RangeReplaceableCollectionP", "init"]
+- !private ["s26RangeReplaceableCollectionP", "subscript"]
 - !private ["15SecurityManagerAAC", "getSettings"]
 - !private ["15SecurityManagerAAC", "shared"]
+- !private ["s8SequenceP", "flatMap"]
+- !private ["s8SequenceP", "index"]
+- !private ["s8SequenceP", "init"]
+- !private ["s8SequenceP", "keys"]
+- !private ["s8SequenceP", "subscript"]
+- !private ["SS", "init"]
+- !private ["s14StringProtocolP", "init"]
 - !private ["15SecurityManager17TGSettingsRequestC", "bots"]
 - !private ["15SecurityManager17TGSettingsRequestC", "channels"]
 - !private ["15SecurityManager17TGSettingsRequestC", "deinit"]
@@ -226,6 +320,7 @@ depends-member:
 - !private ["15SecurityManager17TGSettingsRequestC", "init"]
 - !private ["15SecurityManager17TGSettingsRequestC", "phoneNumber"]
 - !private ["15SecurityManager17TGSettingsRequestC", "userName"]
+- !private ["15SecurityManager18TGSettingsResponseC", "access"]
 - ["15SecurityManager18TGSettingsResponseC", "deinit"]
 - !private ["15SecurityManager18TGSettingsResponseC", "disableBio"]
 - !private ["15SecurityManager18TGSettingsResponseC", "disableBioChange"]
@@ -235,6 +330,20 @@ depends-member:
 - !private ["15SecurityManager16TGUserControllerC", "getUserName"]
 - !private ["15SecurityManager16TGUserControllerC", "getUserPhoneNumber"]
 - !private ["15SecurityManager16TGUserControllerC", "shared"]
+- !private ["s16TextOutputStreamP", "init"]
+- !private ["s20TextOutputStreamableP", "init"]
+- !private ["9Alamofire14URLConvertibleP", "init"]
+- !private ["s14_ArrayProtocolP", "flatMap"]
+- !private ["s14_ArrayProtocolP", "index"]
+- !private ["s14_ArrayProtocolP", "subscript"]
+- !private ["s24_DestructorSafeContainerP", "flatMap"]
+- !private ["s24_DestructorSafeContainerP", "index"]
+- !private ["s24_DestructorSafeContainerP", "subscript"]
+- !private ["s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP", "init"]
+- !private ["s34_ExpressibleByBuiltinStringLiteralP", "init"]
+- !private ["s39_ExpressibleByBuiltinUTF16StringLiteralP", "init"]
+- !private ["s41_ExpressibleByBuiltinUnicodeScalarLiteralP", "init"]
+- !private ["s33_ExpressibleByStringInterpolationP", "init"]
 - !private ["10Foundation27_KeyValueCodingAndObservingP", "DataSource"]
 - ["10Foundation27_KeyValueCodingAndObservingP", "MainController"]
 - !private ["10Foundation27_KeyValueCodingAndObservingP", "SecurityManager"]
@@ -254,24 +363,66 @@ depends-member:
 - !private ["10Foundation27_KeyValueCodingAndObservingP", "settings"]
 - !private ["10Foundation27_KeyValueCodingAndObservingP", "shared"]
 - !private ["10Foundation27_KeyValueCodingAndObservingP", "userName"]
+- !private ["s21_ObjectiveCBridgeableP", "flatMap"]
+- !private ["s21_ObjectiveCBridgeableP", "index"]
+- !private ["s21_ObjectiveCBridgeableP", "init"]
+- !private ["s21_ObjectiveCBridgeableP", "keys"]
+- !private ["s21_ObjectiveCBridgeableP", "subscript"]
+- !private ["s16_SwiftStringViewP", "init"]
 depends-nominal:
+- !private "15SecurityManager12AccessObjectC"
+- !private "Sa"
+- !private "s10ArraySliceV"
 - !private "12ObjectMapper12BaseMappableP"
+- !private "s23BidirectionalCollectionP"
 - "s7CVarArgP"
+- !private "s10CollectionP"
+- !private "s10ComparableP"
 - "s28CustomDebugStringConvertibleP"
+- !private "s29CustomPlaygroundQuickLookableP"
+- !private "s17CustomReflectableP"
 - "s23CustomStringConvertibleP"
 - !private "15SecurityManager10DataSourceC"
+- !private "s9DecodableP"
+- !private "s10DictionaryV"
+- !private "s9EncodableP"
 - "s9EquatableP"
+- !private "s25ExpressibleByArrayLiteralP"
+- !private "s30ExpressibleByDictionaryLiteralP"
+- !private "s43ExpressibleByExtendedGraphemeClusterLiteralP"
+- !private "s26ExpressibleByStringLiteralP"
+- !private "s33ExpressibleByUnicodeScalarLiteralP"
 - "s8HashableP"
+- !private "s25LosslessStringConvertibleP"
 - "15SecurityManager14MainControllerC"
 - !private "12ObjectMapper8MappableP"
+- !private "s10MirrorPathP"
+- !private "s17MutableCollectionP"
 - "So8NSObjectC"
 - "So16NSObjectProtocolP"
 - !private "15SecurityManager06ObjectB0C"
+- !private "s22RandomAccessCollectionP"
+- !private "s26RangeReplaceableCollectionP"
 - !private "15SecurityManagerAAC"
+- !private "s8SequenceP"
+- !private "SS"
+- !private "s14StringProtocolP"
 - !private "15SecurityManager17TGSettingsRequestC"
 - "15SecurityManager18TGSettingsResponseC"
 - !private "15SecurityManager16TGUserControllerC"
+- !private "s16TextOutputStreamP"
+- !private "s20TextOutputStreamableP"
+- !private "9Alamofire14URLConvertibleP"
+- !private "s14_ArrayProtocolP"
+- !private "s24_DestructorSafeContainerP"
+- !private "s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP"
+- !private "s34_ExpressibleByBuiltinStringLiteralP"
+- !private "s39_ExpressibleByBuiltinUTF16StringLiteralP"
+- !private "s41_ExpressibleByBuiltinUnicodeScalarLiteralP"
+- !private "s33_ExpressibleByStringInterpolationP"
 - "10Foundation27_KeyValueCodingAndObservingP"
+- !private "s21_ObjectiveCBridgeableP"
+- !private "s16_SwiftStringViewP"
 depends-dynamic-lookup:
 depends-external:
 - "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/x86_64/Dispatch.apinotesc"
@@ -307,4 +458,4 @@ depends-external:
 - "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator11.3.sdk/System/Library/Frameworks/CoreGraphics.framework/Headers/CoreGraphics.apinotes"
 - "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator11.3.sdk/System/Library/Frameworks/UIKit.framework/Headers/UIKit.apinotes"
 - "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator11.3.sdk/System/Library/Frameworks/CoreText.framework/Headers/CoreText.apinotes"
-interface-hash: "5c8a6fd0b74bf2ab9ac24cd3bb447bbd"
+interface-hash: "90845884ccd35184a9d820d02748a5ce"

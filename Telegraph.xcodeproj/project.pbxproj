@@ -4802,7 +4802,7 @@
 		D0FC353C1B3D52560041A938 /* MusicPlayerAlbumArtPlaceholder@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D0FC353A1B3D52560041A938 /* MusicPlayerAlbumArtPlaceholder@2x.png */; };
 		D0FC353D1B3D52560041A938 /* MusicPlayerAlbumArtPlaceholder@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = D0FC353B1B3D52560041A938 /* MusicPlayerAlbumArtPlaceholder@3x.png */; };
 		D0FD8995156FCA3D00CC3714 /* TGMainTabsController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0FD8994156FCA3D00CC3714 /* TGMainTabsController.m */; };
-		D0FD89A3156FD4FC00CC3714 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0FD89A2156FD4FB00CC3714 /* Security.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		D0FD89A3156FD4FC00CC3714 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0FD89A2156FD4FB00CC3714 /* Security.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		D0FFBDDF1BAB0E7300F532C9 /* TGChannelMembersController.h in Headers */ = {isa = PBXBuildFile; fileRef = D0FFBDDD1BAB0E7300F532C9 /* TGChannelMembersController.h */; };
 		D0FFBDE01BAB0E7300F532C9 /* TGChannelMembersController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0FFBDDE1BAB0E7300F532C9 /* TGChannelMembersController.m */; };
 /* End PBXBuildFile section */
@@ -28788,7 +28788,7 @@
 				);
 				INFOPLIST_FILE = "Telegraph/Telegraph-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks $(PROJECT_DIR)/Vendor";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Telegraph/thirdparty/opus/lib",
@@ -29427,7 +29427,7 @@
 				);
 				INFOPLIST_FILE = "Telegraph/Telegraph-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks $(PROJECT_DIR)/Vendor";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Telegraph/thirdparty/opus/lib",
@@ -29834,7 +29834,7 @@
 				);
 				INFOPLIST_FILE = "Telegraph/Telegraph-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks $(PROJECT_DIR)/Vendor";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Telegraph/thirdparty/opus/lib",
@@ -29931,7 +29931,7 @@
 				);
 				INFOPLIST_FILE = "Telegraph/Telegraph-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks $(PROJECT_DIR)/Vendor";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Telegraph/thirdparty/opus/lib",

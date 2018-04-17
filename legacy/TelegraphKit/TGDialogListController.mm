@@ -90,6 +90,10 @@
 
 #import "TGPresentation.h"
 
+// MARK: - CloudVeil
+#import <SecurityManager/SecurityManager-Swift.h>
+// MARK: ----------------
+
 static bool _debugDoNotJump = false;
 
 static int64_t lastAppearedConversationId = 0;
@@ -778,6 +782,9 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
     }
     
     [self _performSizeChangesWithDuration:0.0f size:_tableView.frame.size];
+    
+    
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -1081,9 +1088,45 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
             selectedConversation = conversation.conversationId;
         }
     }
+    // MARK: - CloudVeil Security
+    NSMutableArray *securityGroups = [NSMutableArray new];
+    NSMutableArray *securityChannels = [NSMutableArray new];
+    for (TGConversation *conversation in items) {
+        
+        TGRow *row = [TGRow alloc];
+        row.objectID = conversation.conversationId;
+        row.title = conversation.chatTitle;
+        row.userName = conversation.username;
+        
+        if (conversation.isChannelGroup)
+            [securityGroups addObject:row];
+        
+        if (conversation.isChannel)
+            [securityChannels addObject:row];
+    }
+    
+    [[MainController shared] getSettingsWithGroups:securityGroups bots:[NSMutableArray new] channels:securityChannels];
+    // MARK: --------------------
     
     [_listModel removeAllObjects];
     [_listModel addObjectsFromArray:items];
+    
+    // MARK: - CloudVeil Security
+    for (TGConversation *conversation in items) {
+        if (conversation.isChannelGroup) {
+            
+            if ([[MainController shared] isGroupAvailableWithGroupID:conversation.conversationId] == false) {
+                [_listModel removeObject:conversation];
+            }
+        }
+        
+        if (conversation.isChannel) {
+            if ([[MainController shared] isChannelAvailableWithChannelID:conversation.conversationId] == false) {
+                [_listModel removeObject:conversation];
+            }
+        }
+    }
+    // MARK: --------------------
     
     [self reloadData:_reloadWithAnimations];
     _reloadWithAnimations = false;

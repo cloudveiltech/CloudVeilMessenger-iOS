@@ -163,7 +163,6 @@ typedef unsigned int swift_uint4  __attribute__((__ext_vector_type__(4)));
 # define SWIFT_DEPRECATED_OBJC(Msg) SWIFT_DEPRECATED_MSG(Msg)
 #endif
 #if __has_feature(modules)
-@import ObjectiveC;
 @import Foundation;
 #endif
 
@@ -178,64 +177,11 @@ typedef unsigned int swift_uint4  __attribute__((__ext_vector_type__(4)));
 #if __has_attribute(external_source_symbol)
 # pragma push_macro("any")
 # undef any
-# pragma clang attribute push(__attribute__((external_source_symbol(language="Swift", defined_in="SecurityManager",generated_declaration))), apply_to=any(function,enum,objc_interface,objc_category,objc_protocol))
+# pragma clang attribute push(__attribute__((external_source_symbol(language="Swift", defined_in="ObjectMapper",generated_declaration))), apply_to=any(function,enum,objc_interface,objc_category,objc_protocol))
 # pragma pop_macro("any")
 #endif
 
-@class TGRow;
 
-SWIFT_CLASS("_TtC15SecurityManager14MainController")
-@interface MainController : NSObject
-SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, strong) MainController * _Nonnull shared;)
-+ (MainController * _Nonnull)shared SWIFT_WARN_UNUSED_RESULT;
-@property (nonatomic, readonly) BOOL disableBio;
-@property (nonatomic, readonly) BOOL disableBioChange;
-@property (nonatomic, readonly) BOOL disableProfilePhoto;
-@property (nonatomic, readonly) BOOL disableProfilePhotoChange;
-- (void)getSettingsWithGroups:(NSArray<TGRow *> * _Nonnull)groups bots:(NSArray<TGRow *> * _Nonnull)bots channels:(NSArray<TGRow *> * _Nonnull)channels;
-- (BOOL)isGroupAvailableWithGroupID:(NSInteger)groupID SWIFT_WARN_UNUSED_RESULT;
-- (BOOL)isChannelAvailableWithChannelID:(NSInteger)channelID SWIFT_WARN_UNUSED_RESULT;
-- (BOOL)isBotAvailableWithBotID:(NSInteger)botID SWIFT_WARN_UNUSED_RESULT;
-- (nonnull instancetype)init OBJC_DESIGNATED_INITIALIZER;
-@end
-
-
-
-
-
-
-
-@class NSString;
-
-SWIFT_CLASS("_TtC15SecurityManager5TGRow")
-@interface TGRow : NSObject
-@property (nonatomic) NSInteger objectID;
-@property (nonatomic, strong) NSString * _Nonnull title;
-@property (nonatomic, strong) NSString * _Nonnull userName;
-- (nonnull instancetype)init SWIFT_UNAVAILABLE;
-+ (nonnull instancetype)new SWIFT_DEPRECATED_MSG("-init is unavailable");
-@end
-
-
-SWIFT_CLASS("_TtC15SecurityManager17TGSettingsRequest")
-@interface TGSettingsRequest : NSObject
-- (nonnull instancetype)init SWIFT_UNAVAILABLE;
-+ (nonnull instancetype)new SWIFT_DEPRECATED_MSG("-init is unavailable");
-@end
-
-
-SWIFT_CLASS("_TtC15SecurityManager16TGUserController")
-@interface TGUserController : NSObject
-SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, strong) TGUserController * _Nonnull shared;)
-+ (TGUserController * _Nonnull)shared SWIFT_WARN_UNUSED_RESULT;
-- (void)setWithUserID:(NSInteger)id;
-- (void)setWithUserPhoneNumber:(NSString * _Nonnull)phone;
-- (void)setWithUserName:(NSString * _Nonnull)name;
-- (NSInteger)getUserID SWIFT_WARN_UNUSED_RESULT;
-- (NSString * _Nonnull)getUserPhoneNumber SWIFT_WARN_UNUSED_RESULT;
-- (NSString * _Nonnull)getUserName SWIFT_WARN_UNUSED_RESULT;
-- (nonnull instancetype)init OBJC_DESIGNATED_INITIALIZER;
-@end
 
 #if __has_attribute(external_source_symbol)
 # pragma clang attribute pop

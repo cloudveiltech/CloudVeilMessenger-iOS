@@ -151,6 +151,10 @@
 
 #import "TGLegacyComponentsContext.h"
 
+// MARK: - CloudVeil Security
+#import <SecurityManager/SecurityManager-Swift.h>
+// --------------------------
+
 NSString *TGDeviceProximityStateChangedNotification = @"TGDeviceProximityStateChangedNotification";
 
 CFAbsoluteTime applicationStartupTimestamp = 0;
@@ -2790,6 +2794,15 @@ static unsigned int overrideIndexAbove(__unused id self, __unused SEL _cmd)
 - (void)reloadSettingsController:(int)uid
 {
     TGAccountSettingsController *accountSettingsController = [[TGAccountSettingsController alloc] initWithUid:uid];
+    
+    
+    // MARK: - CloudVeil Security
+    TGUser *securityUser = [TGDatabaseInstance() loadUser:uid];
+    
+    [[TGUserController shared] setWithUserID: uid];
+    [[TGUserController shared] setWithUserName: securityUser.userName];
+    [[TGUserController shared] setWithUserPhoneNumber: securityUser.phoneNumber];
+    // MARK: ---------------------
     
     int index = -1;
     for (id controller in _rootController.mainTabsController.viewControllers)

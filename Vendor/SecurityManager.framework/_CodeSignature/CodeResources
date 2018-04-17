@@ -78,7 +78,7 @@
 		</data>
 		<key>Headers/SecurityManager-Swift.h</key>
 		<data>
-		MuPf+CL4XSAJm69Z0749KQzGDik=
+		Octc7KL+CCCjYXO60xeJMeowaAc=
 		</data>
 		<key>Headers/SecurityManager.h</key>
 		<data>
@@ -98,11 +98,11 @@
 		</data>
 		<key>MainController.o</key>
 		<data>
-		fsyfUAnTTHWOMJiG1EAjLoDBmQo=
+		dpBIo44RtpWJxRwfsLMFYtCTXjU=
 		</data>
 		<key>MainController.swiftdeps</key>
 		<data>
-		A5i21JhLiEO4UF95AWFS+uHJXlY=
+		s5HI+T61hqkFKTO22Fg3v7IGsyI=
 		</data>
 		<key>MainController~partial.swiftdoc</key>
 		<data>
@@ -110,7 +110,7 @@
 		</data>
 		<key>MainController~partial.swiftmodule</key>
 		<data>
-		zeP90ZsBXdFforS23nns0uqRdHM=
+		N6mLNyshGPBM9hfaPQgVf3By9dc=
 		</data>
 		<key>Modules/SecurityManager.swiftmodule/x86_64.swiftdoc</key>
 		<data>
@@ -118,7 +118,7 @@
 		</data>
 		<key>Modules/SecurityManager.swiftmodule/x86_64.swiftmodule</key>
 		<data>
-		mUDnRT/SW7XDTIWvdEAA+pNO5lo=
+		AglpEw3I8bD8Qk/Nlav4JMGYcdM=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -202,11 +202,11 @@
 		</data>
 		<key>SecurityManager-Swift.h</key>
 		<data>
-		MuPf+CL4XSAJm69Z0749KQzGDik=
+		Octc7KL+CCCjYXO60xeJMeowaAc=
 		</data>
 		<key>SecurityManager-master.swiftdeps</key>
 		<data>
-		yXU2UhZ8Vf6f9Eb4BzdXoqi29HU=
+		Aij38KtSCs5xjt297QGlpwOMMXg=
 		</data>
 		<key>SecurityManager.d</key>
 		<data>
@@ -230,7 +230,7 @@
 		</data>
 		<key>SecurityManager.swiftmodule</key>
 		<data>
-		mUDnRT/SW7XDTIWvdEAA+pNO5lo=
+		AglpEw3I8bD8Qk/Nlav4JMGYcdM=
 		</data>
 		<key>SecurityManager~partial.swiftdoc</key>
 		<data>
@@ -613,11 +613,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			MuPf+CL4XSAJm69Z0749KQzGDik=
+			Octc7KL+CCCjYXO60xeJMeowaAc=
 			</data>
 			<key>hash2</key>
 			<data>
-			kfq6fOZptY5r2uT1hy0JW0WSK1r3SAUf0ivobzfTBwc=
+			oytBX6ebTs5uluU8mkzWGd3OFjxi9XfSnWAcisC696o=
 			</data>
 		</dict>
 		<key>Headers/SecurityManager.h</key>
@@ -657,22 +657,22 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			fsyfUAnTTHWOMJiG1EAjLoDBmQo=
+			dpBIo44RtpWJxRwfsLMFYtCTXjU=
 			</data>
 			<key>hash2</key>
 			<data>
-			CFeJcJdaoap1f2phg0WPSntp+aTSzr1Fila2WsNm314=
+			40AS2xH8oldFUuj3dFbURssqYSK+BZYgbvst3ZCvSXQ=
 			</data>
 		</dict>
 		<key>MainController.swiftdeps</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			A5i21JhLiEO4UF95AWFS+uHJXlY=
+			s5HI+T61hqkFKTO22Fg3v7IGsyI=
 			</data>
 			<key>hash2</key>
 			<data>
-			ybeqagbvU+IRWMtYjEGKIg5/nLFGMir+zYN3UKBUbN4=
+			3QwcDDll1ewpDr5whV3btlQ4QYYvnQf687O9bh5dpYg=
 			</data>
 		</dict>
 		<key>MainController~partial.swiftdoc</key>
@@ -690,11 +690,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			zeP90ZsBXdFforS23nns0uqRdHM=
+			N6mLNyshGPBM9hfaPQgVf3By9dc=
 			</data>
 			<key>hash2</key>
 			<data>
-			DQHlhbFXSzIm4zuQFaKxFWro09v1Ph2APY+DiH4PjBo=
+			BFAQQu1SIql5iIf0eCRZy5KH8qLs/pR+fgF2aZ7ASoA=
 			</data>
 		</dict>
 		<key>Modules/SecurityManager.swiftmodule/x86_64.swiftdoc</key>
@@ -712,11 +712,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			mUDnRT/SW7XDTIWvdEAA+pNO5lo=
+			AglpEw3I8bD8Qk/Nlav4JMGYcdM=
 			</data>
 			<key>hash2</key>
 			<data>
-			XI+anWL95TVEbqoChINY2OOxQRZgCYcycVo1JB3i2aM=
+			4AqO/A+pgkgdqKbMGgyZklbsmX03JqNO1o7vref9jok=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>
@@ -943,22 +943,22 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			MuPf+CL4XSAJm69Z0749KQzGDik=
+			Octc7KL+CCCjYXO60xeJMeowaAc=
 			</data>
 			<key>hash2</key>
 			<data>
-			kfq6fOZptY5r2uT1hy0JW0WSK1r3SAUf0ivobzfTBwc=
+			oytBX6ebTs5uluU8mkzWGd3OFjxi9XfSnWAcisC696o=
 			</data>
 		</dict>
 		<key>SecurityManager-master.swiftdeps</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			yXU2UhZ8Vf6f9Eb4BzdXoqi29HU=
+			Aij38KtSCs5xjt297QGlpwOMMXg=
 			</data>
 			<key>hash2</key>
 			<data>
-			YrgMZlLJWhJH0qDDwIfTGil3a9X+1s9E9wQGjFn7j7o=
+			jzTgFz0nvX8MGAWDTfGoWCMK3lF8fRkD3xGenbhmmxc=
 			</data>
 		</dict>
 		<key>SecurityManager.d</key>
@@ -1020,11 +1020,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			mUDnRT/SW7XDTIWvdEAA+pNO5lo=
+			AglpEw3I8bD8Qk/Nlav4JMGYcdM=
 			</data>
 			<key>hash2</key>
 			<data>
-			XI+anWL95TVEbqoChINY2OOxQRZgCYcycVo1JB3i2aM=
+			4AqO/A+pgkgdqKbMGgyZklbsmX03JqNO1o7vref9jok=
 			</data>
 		</dict>
 		<key>SecurityManager~partial.swiftdoc</key>
