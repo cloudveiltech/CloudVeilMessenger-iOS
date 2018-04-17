@@ -1216,7 +1216,7 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
 - (void)updateConversations:(NSDictionary *)dict {
     for (NSUInteger i = 0; i < _listModel.count; i++) {
         TGConversation *conversation = dict[@(((TGConversation *)_listModel[i]).conversationId)];
-        if (conversation != nil) {
+        if (conversation != nil && i < _listModel.count) {
             [_listModel replaceObjectAtIndex:i withObject:conversation];
         }
     }
@@ -1253,7 +1253,8 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
     for (NSNumber *nUpdatedIndex in updatedIndices)
     {
         index++;
-        [_listModel replaceObjectAtIndex:[nUpdatedIndex intValue] withObject:[updatedItems objectAtIndex:index]];
+        if ([nUpdatedIndex intValue] < _listModel.count)
+            [_listModel replaceObjectAtIndex:[nUpdatedIndex intValue] withObject:[updatedItems objectAtIndex:index]];
     }
     
     for (NSNumber *nUpdatedIndex in updatedIndices)
@@ -2964,7 +2965,8 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
                             if (updatedItems == nil)
                                 updatedItems = [[NSMutableArray alloc] initWithArray:section[@"items"]];
                             
-                            [updatedItems replaceObjectAtIndex:itemIndex withObject:updatedConversation];
+                            if (itemIndex < _listModel.count)
+                                [updatedItems replaceObjectAtIndex:itemIndex withObject:updatedConversation];
                         }
                     }
                 }
