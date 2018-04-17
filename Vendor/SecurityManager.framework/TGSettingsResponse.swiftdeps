@@ -39,8 +39,12 @@ depends-member:
 - !private ["12ObjectMapper12BaseMappableP", "disableBioChange"]
 - !private ["12ObjectMapper12BaseMappableP", "disableProfilePhoto"]
 - !private ["12ObjectMapper12BaseMappableP", "disableProfilePhotoChange"]
+- !private ["12ObjectMapper12BaseMappableP", "disableSticker"]
+- !private ["12ObjectMapper12BaseMappableP", "disableStickers"]
+- !private ["12ObjectMapper12BaseMappableP", "disableStickersImage"]
 - !private ["12ObjectMapper12BaseMappableP", "groups"]
 - ["12ObjectMapper12BaseMappableP", "init"]
+- !private ["12ObjectMapper12BaseMappableP", "manageUsers"]
 - ["12ObjectMapper12BaseMappableP", "mapping"]
 - !private ["12ObjectMapper12BaseMappableP", "secretChat"]
 - !private ["12ObjectMapper12BaseMappableP", "secretChatMinimumLength"]
@@ -71,8 +75,12 @@ depends-member:
 - !private ["12ObjectMapper8MappableP", "disableBioChange"]
 - !private ["12ObjectMapper8MappableP", "disableProfilePhoto"]
 - !private ["12ObjectMapper8MappableP", "disableProfilePhotoChange"]
+- !private ["12ObjectMapper8MappableP", "disableSticker"]
+- !private ["12ObjectMapper8MappableP", "disableStickers"]
+- !private ["12ObjectMapper8MappableP", "disableStickersImage"]
 - !private ["12ObjectMapper8MappableP", "groups"]
 - ["12ObjectMapper8MappableP", "init"]
+- !private ["12ObjectMapper8MappableP", "manageUsers"]
 - ["12ObjectMapper8MappableP", "mapping"]
 - !private ["12ObjectMapper8MappableP", "secretChat"]
 - !private ["12ObjectMapper8MappableP", "secretChatMinimumLength"]
@@ -96,8 +104,12 @@ depends-member:
 - ["15SecurityManager18TGSettingsResponseC", "disableBioChange"]
 - ["15SecurityManager18TGSettingsResponseC", "disableProfilePhoto"]
 - ["15SecurityManager18TGSettingsResponseC", "disableProfilePhotoChange"]
+- ["15SecurityManager18TGSettingsResponseC", "disableSticker"]
+- ["15SecurityManager18TGSettingsResponseC", "disableStickers"]
+- ["15SecurityManager18TGSettingsResponseC", "disableStickersImage"]
 - ["15SecurityManager18TGSettingsResponseC", "groups"]
 - ["15SecurityManager18TGSettingsResponseC", "init"]
+- ["15SecurityManager18TGSettingsResponseC", "manageUsers"]
 - ["15SecurityManager18TGSettingsResponseC", "mapping"]
 - ["15SecurityManager18TGSettingsResponseC", "secretChat"]
 - ["15SecurityManager18TGSettingsResponseC", "secretChatMinimumLength"]
@@ -183,4 +195,4 @@ depends-external:
 - "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator11.3.sdk/System/Library/Frameworks/CoreGraphics.framework/Headers/CoreGraphics.apinotes"
 - "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator11.3.sdk/System/Library/Frameworks/UIKit.framework/Headers/UIKit.apinotes"
 - "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator11.3.sdk/System/Library/Frameworks/CoreText.framework/Headers/CoreText.apinotes"
-interface-hash: "29542588d46830609423268ab6620401"
+interface-hash: "061aff40fc311152811c6eef36ef829d"

@@ -192,6 +192,8 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, strong) MainControll
 @property (nonatomic, readonly) BOOL disableBioChange;
 @property (nonatomic, readonly) BOOL disableProfilePhoto;
 @property (nonatomic, readonly) BOOL disableProfilePhotoChange;
+@property (nonatomic, readonly) BOOL isSecretChatAvailable;
+@property (nonatomic, readonly) NSInteger minimumSecretLenght;
 - (void)getSettingsWithGroups:(NSArray<TGRow *> * _Nonnull)groups bots:(NSArray<TGRow *> * _Nonnull)bots channels:(NSArray<TGRow *> * _Nonnull)channels;
 - (BOOL)isGroupAvailableWithGroupID:(NSInteger)groupID SWIFT_WARN_UNUSED_RESULT;
 - (BOOL)isChannelAvailableWithChannelID:(NSInteger)channelID SWIFT_WARN_UNUSED_RESULT;

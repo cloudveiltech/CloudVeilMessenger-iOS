@@ -14,6 +14,8 @@ provides-dynamic-lookup:
 - "isBotAvailable"
 - "isChannelAvailable"
 - "isGroupAvailable"
+- "isSecretChatAvailable"
+- "minimumSecretLenght"
 - "shared"
 depends-top-level:
 - !private "=="
@@ -24,6 +26,7 @@ depends-top-level:
 - "CastingPrecedence"
 - !private "DataSource"
 - !private "Dictionary"
+- !private "Int"
 - "MainController"
 - "NSInteger"
 - "NSObject"
@@ -53,12 +56,16 @@ depends-member:
 - !private ["12ObjectMapper12BaseMappableP", "id"]
 - !private ["12ObjectMapper12BaseMappableP", "init"]
 - !private ["12ObjectMapper12BaseMappableP", "phoneNumber"]
+- !private ["12ObjectMapper12BaseMappableP", "secretChat"]
+- !private ["12ObjectMapper12BaseMappableP", "secretChatMinimumLength"]
 - !private ["12ObjectMapper12BaseMappableP", "userName"]
 - !private ["s23BidirectionalCollectionP", "flatMap"]
 - !private ["s23BidirectionalCollectionP", "index"]
 - !private ["s23BidirectionalCollectionP", "init"]
 - !private ["s23BidirectionalCollectionP", "subscript"]
+- !private ["s13BinaryIntegerP", "init"]
 - !private ["s7CVarArgP", "DataSource"]
+- !private ["s7CVarArgP", "Int"]
 - ["s7CVarArgP", "MainController"]
 - !private ["s7CVarArgP", "SecurityManager"]
 - !private ["s7CVarArgP", "TGSettingsRequest"]
@@ -88,6 +95,7 @@ depends-member:
 - !private ["s10CollectionP", "subscript"]
 - !private ["s10ComparableP", "init"]
 - !private ["s28CustomDebugStringConvertibleP", "DataSource"]
+- !private ["s28CustomDebugStringConvertibleP", "Int"]
 - ["s28CustomDebugStringConvertibleP", "MainController"]
 - !private ["s28CustomDebugStringConvertibleP", "SecurityManager"]
 - !private ["s28CustomDebugStringConvertibleP", "TGSettingsRequest"]
@@ -117,6 +125,7 @@ depends-member:
 - !private ["s17CustomReflectableP", "keys"]
 - !private ["s17CustomReflectableP", "subscript"]
 - !private ["s23CustomStringConvertibleP", "DataSource"]
+- !private ["s23CustomStringConvertibleP", "Int"]
 - ["s23CustomStringConvertibleP", "MainController"]
 - !private ["s23CustomStringConvertibleP", "SecurityManager"]
 - !private ["s23CustomStringConvertibleP", "TGSettingsRequest"]
@@ -154,6 +163,7 @@ depends-member:
 - !private ["s9EncodableP", "keys"]
 - !private ["s9EncodableP", "subscript"]
 - !private ["s9EquatableP", "DataSource"]
+- !private ["s9EquatableP", "Int"]
 - ["s9EquatableP", "MainController"]
 - !private ["s9EquatableP", "SecurityManager"]
 - !private ["s9EquatableP", "TGSettingsRequest"]
@@ -182,9 +192,12 @@ depends-member:
 - !private ["s30ExpressibleByDictionaryLiteralP", "keys"]
 - !private ["s30ExpressibleByDictionaryLiteralP", "subscript"]
 - !private ["s43ExpressibleByExtendedGraphemeClusterLiteralP", "init"]
+- !private ["s27ExpressibleByIntegerLiteralP", "init"]
 - !private ["s26ExpressibleByStringLiteralP", "init"]
 - !private ["s33ExpressibleByUnicodeScalarLiteralP", "init"]
+- !private ["s17FixedWidthIntegerP", "init"]
 - !private ["s8HashableP", "DataSource"]
+- !private ["s8HashableP", "Int"]
 - ["s8HashableP", "MainController"]
 - !private ["s8HashableP", "SecurityManager"]
 - !private ["s8HashableP", "TGSettingsRequest"]
@@ -203,9 +216,11 @@ depends-member:
 - !private ["s8HashableP", "settings"]
 - !private ["s8HashableP", "shared"]
 - !private ["s8HashableP", "userName"]
+- !private ["Si", "init"]
 - !private ["s25LosslessStringConvertibleP", "init"]
 - ["15SecurityManager14MainControllerC", "Bool"]
 - !private ["15SecurityManager14MainControllerC", "DataSource"]
+- !private ["15SecurityManager14MainControllerC", "Int"]
 - ["15SecurityManager14MainControllerC", "MainController"]
 - ["15SecurityManager14MainControllerC", "NSInteger"]
 - !private ["15SecurityManager14MainControllerC", "SecurityManager"]
@@ -224,6 +239,8 @@ depends-member:
 - ["15SecurityManager14MainControllerC", "isBotAvailable"]
 - ["15SecurityManager14MainControllerC", "isChannelAvailable"]
 - ["15SecurityManager14MainControllerC", "isGroupAvailable"]
+- ["15SecurityManager14MainControllerC", "isSecretChatAvailable"]
+- ["15SecurityManager14MainControllerC", "minimumSecretLenght"]
 - !private ["15SecurityManager14MainControllerC", "saveSettings"]
 - !private ["15SecurityManager14MainControllerC", "settings"]
 - ["15SecurityManager14MainControllerC", "shared"]
@@ -238,6 +255,8 @@ depends-member:
 - !private ["12ObjectMapper8MappableP", "id"]
 - !private ["12ObjectMapper8MappableP", "init"]
 - !private ["12ObjectMapper8MappableP", "phoneNumber"]
+- !private ["12ObjectMapper8MappableP", "secretChat"]
+- !private ["12ObjectMapper8MappableP", "secretChatMinimumLength"]
 - !private ["12ObjectMapper8MappableP", "userName"]
 - !private ["s10MirrorPathP", "init"]
 - !private ["s17MutableCollectionP", "flatMap"]
@@ -245,6 +264,7 @@ depends-member:
 - !private ["s17MutableCollectionP", "subscript"]
 - ["So8NSObjectC", "Bool"]
 - !private ["So8NSObjectC", "DataSource"]
+- !private ["So8NSObjectC", "Int"]
 - ["So8NSObjectC", "MainController"]
 - ["So8NSObjectC", "NSInteger"]
 - !private ["So8NSObjectC", "SecurityManager"]
@@ -270,12 +290,15 @@ depends-member:
 - ["So8NSObjectC", "isBotAvailable"]
 - ["So8NSObjectC", "isChannelAvailable"]
 - ["So8NSObjectC", "isGroupAvailable"]
+- ["So8NSObjectC", "isSecretChatAvailable"]
+- ["So8NSObjectC", "minimumSecretLenght"]
 - !private ["So8NSObjectC", "phoneNumber"]
 - ["So8NSObjectC", "saveSettings"]
 - ["So8NSObjectC", "settings"]
 - ["So8NSObjectC", "shared"]
 - !private ["So8NSObjectC", "userName"]
 - !private ["So16NSObjectProtocolP", "DataSource"]
+- !private ["So16NSObjectProtocolP", "Int"]
 - ["So16NSObjectProtocolP", "MainController"]
 - !private ["So16NSObjectProtocolP", "SecurityManager"]
 - !private ["So16NSObjectProtocolP", "TGSettingsRequest"]
@@ -294,6 +317,7 @@ depends-member:
 - !private ["So16NSObjectProtocolP", "settings"]
 - !private ["So16NSObjectProtocolP", "shared"]
 - !private ["So16NSObjectProtocolP", "userName"]
+- !private ["s7NumericP", "init"]
 - !private ["15SecurityManager06ObjectB0C", "getSettings"]
 - !private ["15SecurityManager06ObjectB0C", "shared"]
 - !private ["s22RandomAccessCollectionP", "flatMap"]
@@ -310,6 +334,9 @@ depends-member:
 - !private ["s8SequenceP", "init"]
 - !private ["s8SequenceP", "keys"]
 - !private ["s8SequenceP", "subscript"]
+- !private ["s13SignedIntegerP", "init"]
+- !private ["s13SignedNumericP", "init"]
+- !private ["s10StrideableP", "init"]
 - !private ["SS", "init"]
 - !private ["s14StringProtocolP", "init"]
 - !private ["15SecurityManager17TGSettingsRequestC", "bots"]
@@ -326,6 +353,8 @@ depends-member:
 - !private ["15SecurityManager18TGSettingsResponseC", "disableBioChange"]
 - !private ["15SecurityManager18TGSettingsResponseC", "disableProfilePhoto"]
 - !private ["15SecurityManager18TGSettingsResponseC", "disableProfilePhotoChange"]
+- !private ["15SecurityManager18TGSettingsResponseC", "secretChat"]
+- !private ["15SecurityManager18TGSettingsResponseC", "secretChatMinimumLength"]
 - !private ["15SecurityManager16TGUserControllerC", "getUserID"]
 - !private ["15SecurityManager16TGUserControllerC", "getUserName"]
 - !private ["15SecurityManager16TGUserControllerC", "getUserPhoneNumber"]
@@ -336,15 +365,18 @@ depends-member:
 - !private ["s14_ArrayProtocolP", "flatMap"]
 - !private ["s14_ArrayProtocolP", "index"]
 - !private ["s14_ArrayProtocolP", "subscript"]
+- !private ["s18_BitwiseOperationsP", "init"]
 - !private ["s24_DestructorSafeContainerP", "flatMap"]
 - !private ["s24_DestructorSafeContainerP", "index"]
 - !private ["s24_DestructorSafeContainerP", "subscript"]
 - !private ["s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP", "init"]
+- !private ["s35_ExpressibleByBuiltinIntegerLiteralP", "init"]
 - !private ["s34_ExpressibleByBuiltinStringLiteralP", "init"]
 - !private ["s39_ExpressibleByBuiltinUTF16StringLiteralP", "init"]
 - !private ["s41_ExpressibleByBuiltinUnicodeScalarLiteralP", "init"]
 - !private ["s33_ExpressibleByStringInterpolationP", "init"]
 - !private ["10Foundation27_KeyValueCodingAndObservingP", "DataSource"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "Int"]
 - ["10Foundation27_KeyValueCodingAndObservingP", "MainController"]
 - !private ["10Foundation27_KeyValueCodingAndObservingP", "SecurityManager"]
 - !private ["10Foundation27_KeyValueCodingAndObservingP", "TGSettingsRequest"]
@@ -375,6 +407,7 @@ depends-nominal:
 - !private "s10ArraySliceV"
 - !private "12ObjectMapper12BaseMappableP"
 - !private "s23BidirectionalCollectionP"
+- !private "s13BinaryIntegerP"
 - "s7CVarArgP"
 - !private "s10CollectionP"
 - !private "s10ComparableP"
@@ -390,9 +423,12 @@ depends-nominal:
 - !private "s25ExpressibleByArrayLiteralP"
 - !private "s30ExpressibleByDictionaryLiteralP"
 - !private "s43ExpressibleByExtendedGraphemeClusterLiteralP"
+- !private "s27ExpressibleByIntegerLiteralP"
 - !private "s26ExpressibleByStringLiteralP"
 - !private "s33ExpressibleByUnicodeScalarLiteralP"
+- !private "s17FixedWidthIntegerP"
 - "s8HashableP"
+- !private "Si"
 - !private "s25LosslessStringConvertibleP"
 - "15SecurityManager14MainControllerC"
 - !private "12ObjectMapper8MappableP"
@@ -400,11 +436,15 @@ depends-nominal:
 - !private "s17MutableCollectionP"
 - "So8NSObjectC"
 - "So16NSObjectProtocolP"
+- !private "s7NumericP"
 - !private "15SecurityManager06ObjectB0C"
 - !private "s22RandomAccessCollectionP"
 - !private "s26RangeReplaceableCollectionP"
 - !private "15SecurityManagerAAC"
 - !private "s8SequenceP"
+- !private "s13SignedIntegerP"
+- !private "s13SignedNumericP"
+- !private "s10StrideableP"
 - !private "SS"
 - !private "s14StringProtocolP"
 - !private "15SecurityManager17TGSettingsRequestC"
@@ -414,8 +454,10 @@ depends-nominal:
 - !private "s20TextOutputStreamableP"
 - !private "9Alamofire14URLConvertibleP"
 - !private "s14_ArrayProtocolP"
+- !private "s18_BitwiseOperationsP"
 - !private "s24_DestructorSafeContainerP"
 - !private "s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP"
+- !private "s35_ExpressibleByBuiltinIntegerLiteralP"
 - !private "s34_ExpressibleByBuiltinStringLiteralP"
 - !private "s39_ExpressibleByBuiltinUTF16StringLiteralP"
 - !private "s41_ExpressibleByBuiltinUnicodeScalarLiteralP"
@@ -458,4 +500,4 @@ depends-external:
 - "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator11.3.sdk/System/Library/Frameworks/CoreGraphics.framework/Headers/CoreGraphics.apinotes"
 - "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator11.3.sdk/System/Library/Frameworks/UIKit.framework/Headers/UIKit.apinotes"
 - "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator11.3.sdk/System/Library/Frameworks/CoreText.framework/Headers/CoreText.apinotes"
-interface-hash: "90845884ccd35184a9d820d02748a5ce"
+interface-hash: "21dd6a394cfb883016fa4e1332a5c4e0"

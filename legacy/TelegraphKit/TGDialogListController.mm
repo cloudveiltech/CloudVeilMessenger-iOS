@@ -1125,6 +1125,11 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
                 [_listModel removeObject:conversation];
             }
         }
+        
+        if (conversation.isEncrypted) {
+            if ([[MainController shared] isSecretChatAvailable] == false)
+                [_listModel removeObject:conversation];
+        }
     }
     // MARK: --------------------
     
