@@ -35,6 +35,9 @@
 
 #import "TGPresentation.h"
 
+// MARK: - CloudVeil
+#import <SecurityManager/SecurityManager-Swift.h>
+
 @interface TGEditProfileController () <ASWatcher>
 {
     int32_t _uid;
@@ -412,7 +415,10 @@
         
         return searchController;
     };
-    [_avatarMixin present];
+    
+    // MARK: - CloudVeil
+    if ([[MainController shared] disableProfilePhotoChange] == false)
+        [_avatarMixin present];
 }
 
 - (void)phoneNumberPressed
