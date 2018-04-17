@@ -10,6 +10,7 @@ provides-dynamic-lookup:
 - "disableBioChange"
 - "disableProfilePhoto"
 - "disableProfilePhotoChange"
+- "firstRunPopup"
 - "getSettings"
 - "isBotAvailable"
 - "isChannelAvailable"
@@ -18,6 +19,7 @@ provides-dynamic-lookup:
 - "minimumSecretLenght"
 - "shared"
 depends-top-level:
+- !private "!"
 - !private "=="
 - !private "??"
 - "AssignmentPrecedence"
@@ -32,11 +34,14 @@ depends-top-level:
 - "NSObject"
 - !private "SecurityManager"
 - !private "String"
-- !private "StringLiteralType"
+- "StringLiteralType"
 - "TGRow"
 - !private "TGSettingsRequest"
 - "TGSettingsResponse"
 - !private "TGUserController"
+- !private "UIAlertController"
+- "UIViewController"
+- !private "UserDefaults"
 depends-member:
 - !private ["15SecurityManager12AccessObjectC", "bots"]
 - !private ["15SecurityManager12AccessObjectC", "channels"]
@@ -61,16 +66,22 @@ depends-member:
 - !private ["12ObjectMapper12BaseMappableP", "userName"]
 - !private ["s23BidirectionalCollectionP", "flatMap"]
 - !private ["s23BidirectionalCollectionP", "index"]
-- !private ["s23BidirectionalCollectionP", "init"]
+- ["s23BidirectionalCollectionP", "init"]
 - !private ["s23BidirectionalCollectionP", "subscript"]
 - !private ["s13BinaryIntegerP", "init"]
+- !private ["Sb", "_getBuiltinLogicValue"]
 - !private ["s7CVarArgP", "DataSource"]
 - !private ["s7CVarArgP", "Int"]
 - ["s7CVarArgP", "MainController"]
 - !private ["s7CVarArgP", "SecurityManager"]
 - !private ["s7CVarArgP", "TGSettingsRequest"]
 - !private ["s7CVarArgP", "TGUserController"]
+- !private ["s7CVarArgP", "UIAlertController"]
+- !private ["s7CVarArgP", "UserDefaults"]
 - ["s7CVarArgP", ""]
+- !private ["s7CVarArgP", "_getBuiltinLogicValue"]
+- !private ["s7CVarArgP", "addAction"]
+- !private ["s7CVarArgP", "bool"]
 - !private ["s7CVarArgP", "bots"]
 - !private ["s7CVarArgP", "channels"]
 - !private ["s7CVarArgP", "flatMap"]
@@ -81,26 +92,35 @@ depends-member:
 - !private ["s7CVarArgP", "id"]
 - !private ["s7CVarArgP", "index"]
 - ["s7CVarArgP", "init"]
+- !private ["s7CVarArgP", "kWasFirstLoaded"]
 - !private ["s7CVarArgP", "keys"]
 - !private ["s7CVarArgP", "phoneNumber"]
+- !private ["s7CVarArgP", "present"]
 - !private ["s7CVarArgP", "saveSettings"]
+- !private ["s7CVarArgP", "set"]
 - !private ["s7CVarArgP", "settings"]
 - !private ["s7CVarArgP", "shared"]
+- !private ["s7CVarArgP", "standard"]
 - !private ["s7CVarArgP", "subscript"]
 - !private ["s7CVarArgP", "userName"]
+- !private ["s7CVarArgP", "wasFirstLoaded"]
 - !private ["s10CollectionP", "flatMap"]
 - !private ["s10CollectionP", "index"]
-- !private ["s10CollectionP", "init"]
+- ["s10CollectionP", "init"]
 - !private ["s10CollectionP", "keys"]
 - !private ["s10CollectionP", "subscript"]
-- !private ["s10ComparableP", "init"]
+- ["s10ComparableP", "init"]
 - !private ["s28CustomDebugStringConvertibleP", "DataSource"]
 - !private ["s28CustomDebugStringConvertibleP", "Int"]
 - ["s28CustomDebugStringConvertibleP", "MainController"]
 - !private ["s28CustomDebugStringConvertibleP", "SecurityManager"]
 - !private ["s28CustomDebugStringConvertibleP", "TGSettingsRequest"]
 - !private ["s28CustomDebugStringConvertibleP", "TGUserController"]
+- !private ["s28CustomDebugStringConvertibleP", "UIAlertController"]
+- !private ["s28CustomDebugStringConvertibleP", "UserDefaults"]
 - ["s28CustomDebugStringConvertibleP", ""]
+- !private ["s28CustomDebugStringConvertibleP", "addAction"]
+- !private ["s28CustomDebugStringConvertibleP", "bool"]
 - !private ["s28CustomDebugStringConvertibleP", "bots"]
 - !private ["s28CustomDebugStringConvertibleP", "channels"]
 - !private ["s28CustomDebugStringConvertibleP", "flatMap"]
@@ -111,17 +131,24 @@ depends-member:
 - !private ["s28CustomDebugStringConvertibleP", "id"]
 - !private ["s28CustomDebugStringConvertibleP", "index"]
 - ["s28CustomDebugStringConvertibleP", "init"]
+- !private ["s28CustomDebugStringConvertibleP", "kWasFirstLoaded"]
 - !private ["s28CustomDebugStringConvertibleP", "keys"]
 - !private ["s28CustomDebugStringConvertibleP", "phoneNumber"]
+- !private ["s28CustomDebugStringConvertibleP", "present"]
 - !private ["s28CustomDebugStringConvertibleP", "saveSettings"]
+- !private ["s28CustomDebugStringConvertibleP", "set"]
 - !private ["s28CustomDebugStringConvertibleP", "settings"]
 - !private ["s28CustomDebugStringConvertibleP", "shared"]
+- !private ["s28CustomDebugStringConvertibleP", "standard"]
 - !private ["s28CustomDebugStringConvertibleP", "subscript"]
 - !private ["s28CustomDebugStringConvertibleP", "userName"]
-- !private ["s29CustomPlaygroundQuickLookableP", "init"]
+- !private ["s28CustomDebugStringConvertibleP", "wasFirstLoaded"]
+- !private ["s29CustomPlaygroundQuickLookableP", "_getBuiltinLogicValue"]
+- ["s29CustomPlaygroundQuickLookableP", "init"]
+- !private ["s17CustomReflectableP", "_getBuiltinLogicValue"]
 - !private ["s17CustomReflectableP", "flatMap"]
 - !private ["s17CustomReflectableP", "index"]
-- !private ["s17CustomReflectableP", "init"]
+- ["s17CustomReflectableP", "init"]
 - !private ["s17CustomReflectableP", "keys"]
 - !private ["s17CustomReflectableP", "subscript"]
 - !private ["s23CustomStringConvertibleP", "DataSource"]
@@ -130,7 +157,12 @@ depends-member:
 - !private ["s23CustomStringConvertibleP", "SecurityManager"]
 - !private ["s23CustomStringConvertibleP", "TGSettingsRequest"]
 - !private ["s23CustomStringConvertibleP", "TGUserController"]
+- !private ["s23CustomStringConvertibleP", "UIAlertController"]
+- !private ["s23CustomStringConvertibleP", "UserDefaults"]
 - ["s23CustomStringConvertibleP", ""]
+- !private ["s23CustomStringConvertibleP", "_getBuiltinLogicValue"]
+- !private ["s23CustomStringConvertibleP", "addAction"]
+- !private ["s23CustomStringConvertibleP", "bool"]
 - !private ["s23CustomStringConvertibleP", "bots"]
 - !private ["s23CustomStringConvertibleP", "channels"]
 - !private ["s23CustomStringConvertibleP", "flatMap"]
@@ -141,25 +173,32 @@ depends-member:
 - !private ["s23CustomStringConvertibleP", "id"]
 - !private ["s23CustomStringConvertibleP", "index"]
 - ["s23CustomStringConvertibleP", "init"]
+- !private ["s23CustomStringConvertibleP", "kWasFirstLoaded"]
 - !private ["s23CustomStringConvertibleP", "keys"]
 - !private ["s23CustomStringConvertibleP", "phoneNumber"]
+- !private ["s23CustomStringConvertibleP", "present"]
 - !private ["s23CustomStringConvertibleP", "saveSettings"]
+- !private ["s23CustomStringConvertibleP", "set"]
 - !private ["s23CustomStringConvertibleP", "settings"]
 - !private ["s23CustomStringConvertibleP", "shared"]
+- !private ["s23CustomStringConvertibleP", "standard"]
 - !private ["s23CustomStringConvertibleP", "subscript"]
 - !private ["s23CustomStringConvertibleP", "userName"]
+- !private ["s23CustomStringConvertibleP", "wasFirstLoaded"]
 - !private ["15SecurityManager10DataSourceC", "set"]
 - !private ["15SecurityManager10DataSourceC", "value"]
+- !private ["s9DecodableP", "_getBuiltinLogicValue"]
 - !private ["s9DecodableP", "flatMap"]
 - !private ["s9DecodableP", "index"]
-- !private ["s9DecodableP", "init"]
+- ["s9DecodableP", "init"]
 - !private ["s9DecodableP", "keys"]
 - !private ["s9DecodableP", "subscript"]
 - !private ["s10DictionaryV", "keys"]
 - !private ["s10DictionaryV", "subscript"]
+- !private ["s9EncodableP", "_getBuiltinLogicValue"]
 - !private ["s9EncodableP", "flatMap"]
 - !private ["s9EncodableP", "index"]
-- !private ["s9EncodableP", "init"]
+- ["s9EncodableP", "init"]
 - !private ["s9EncodableP", "keys"]
 - !private ["s9EncodableP", "subscript"]
 - !private ["s9EquatableP", "DataSource"]
@@ -168,9 +207,16 @@ depends-member:
 - !private ["s9EquatableP", "SecurityManager"]
 - !private ["s9EquatableP", "TGSettingsRequest"]
 - !private ["s9EquatableP", "TGUserController"]
+- !private ["s9EquatableP", "UIAlertController"]
+- !private ["s9EquatableP", "UserDefaults"]
 - ["s9EquatableP", ""]
+- !private ["s9EquatableP", "_getBuiltinLogicValue"]
+- !private ["s9EquatableP", "addAction"]
+- !private ["s9EquatableP", "alert"]
+- !private ["s9EquatableP", "bool"]
 - !private ["s9EquatableP", "bots"]
 - !private ["s9EquatableP", "channels"]
+- !private ["s9EquatableP", "default"]
 - !private ["s9EquatableP", "flatMap"]
 - !private ["s9EquatableP", "getUserID"]
 - !private ["s9EquatableP", "getUserName"]
@@ -179,22 +225,28 @@ depends-member:
 - !private ["s9EquatableP", "id"]
 - !private ["s9EquatableP", "index"]
 - ["s9EquatableP", "init"]
+- !private ["s9EquatableP", "kWasFirstLoaded"]
 - !private ["s9EquatableP", "keys"]
 - !private ["s9EquatableP", "phoneNumber"]
+- !private ["s9EquatableP", "present"]
 - !private ["s9EquatableP", "saveSettings"]
+- !private ["s9EquatableP", "set"]
 - !private ["s9EquatableP", "settings"]
 - !private ["s9EquatableP", "shared"]
+- !private ["s9EquatableP", "standard"]
 - !private ["s9EquatableP", "subscript"]
 - !private ["s9EquatableP", "userName"]
+- !private ["s9EquatableP", "wasFirstLoaded"]
 - !private ["s25ExpressibleByArrayLiteralP", "flatMap"]
 - !private ["s25ExpressibleByArrayLiteralP", "index"]
 - !private ["s25ExpressibleByArrayLiteralP", "subscript"]
+- !private ["s27ExpressibleByBooleanLiteralP", "_getBuiltinLogicValue"]
 - !private ["s30ExpressibleByDictionaryLiteralP", "keys"]
 - !private ["s30ExpressibleByDictionaryLiteralP", "subscript"]
-- !private ["s43ExpressibleByExtendedGraphemeClusterLiteralP", "init"]
+- ["s43ExpressibleByExtendedGraphemeClusterLiteralP", "init"]
 - !private ["s27ExpressibleByIntegerLiteralP", "init"]
-- !private ["s26ExpressibleByStringLiteralP", "init"]
-- !private ["s33ExpressibleByUnicodeScalarLiteralP", "init"]
+- ["s26ExpressibleByStringLiteralP", "init"]
+- ["s33ExpressibleByUnicodeScalarLiteralP", "init"]
 - !private ["s17FixedWidthIntegerP", "init"]
 - !private ["s8HashableP", "DataSource"]
 - !private ["s8HashableP", "Int"]
@@ -202,22 +254,35 @@ depends-member:
 - !private ["s8HashableP", "SecurityManager"]
 - !private ["s8HashableP", "TGSettingsRequest"]
 - !private ["s8HashableP", "TGUserController"]
+- !private ["s8HashableP", "UIAlertController"]
+- !private ["s8HashableP", "UserDefaults"]
 - ["s8HashableP", ""]
+- !private ["s8HashableP", "_getBuiltinLogicValue"]
+- !private ["s8HashableP", "addAction"]
+- !private ["s8HashableP", "alert"]
+- !private ["s8HashableP", "bool"]
 - !private ["s8HashableP", "bots"]
 - !private ["s8HashableP", "channels"]
+- !private ["s8HashableP", "default"]
 - !private ["s8HashableP", "getUserID"]
 - !private ["s8HashableP", "getUserName"]
 - !private ["s8HashableP", "getUserPhoneNumber"]
 - !private ["s8HashableP", "groups"]
 - !private ["s8HashableP", "id"]
 - ["s8HashableP", "init"]
+- !private ["s8HashableP", "kWasFirstLoaded"]
 - !private ["s8HashableP", "phoneNumber"]
+- !private ["s8HashableP", "present"]
 - !private ["s8HashableP", "saveSettings"]
+- !private ["s8HashableP", "set"]
 - !private ["s8HashableP", "settings"]
 - !private ["s8HashableP", "shared"]
+- !private ["s8HashableP", "standard"]
 - !private ["s8HashableP", "userName"]
+- !private ["s8HashableP", "wasFirstLoaded"]
 - !private ["Si", "init"]
-- !private ["s25LosslessStringConvertibleP", "init"]
+- !private ["s25LosslessStringConvertibleP", "_getBuiltinLogicValue"]
+- ["s25LosslessStringConvertibleP", "init"]
 - ["15SecurityManager14MainControllerC", "Bool"]
 - !private ["15SecurityManager14MainControllerC", "DataSource"]
 - !private ["15SecurityManager14MainControllerC", "Int"]
@@ -229,21 +294,27 @@ depends-member:
 - !private ["15SecurityManager14MainControllerC", "TGSettingsRequest"]
 - ["15SecurityManager14MainControllerC", "TGSettingsResponse"]
 - !private ["15SecurityManager14MainControllerC", "TGUserController"]
+- !private ["15SecurityManager14MainControllerC", "UIAlertController"]
+- ["15SecurityManager14MainControllerC", "UIViewController"]
+- !private ["15SecurityManager14MainControllerC", "UserDefaults"]
 - ["15SecurityManager14MainControllerC", "deinit"]
 - ["15SecurityManager14MainControllerC", "disableBio"]
 - ["15SecurityManager14MainControllerC", "disableBioChange"]
 - ["15SecurityManager14MainControllerC", "disableProfilePhoto"]
 - ["15SecurityManager14MainControllerC", "disableProfilePhotoChange"]
+- ["15SecurityManager14MainControllerC", "firstRunPopup"]
 - ["15SecurityManager14MainControllerC", "getSettings"]
 - ["15SecurityManager14MainControllerC", "init"]
 - ["15SecurityManager14MainControllerC", "isBotAvailable"]
 - ["15SecurityManager14MainControllerC", "isChannelAvailable"]
 - ["15SecurityManager14MainControllerC", "isGroupAvailable"]
 - ["15SecurityManager14MainControllerC", "isSecretChatAvailable"]
+- !private ["15SecurityManager14MainControllerC", "kWasFirstLoaded"]
 - ["15SecurityManager14MainControllerC", "minimumSecretLenght"]
 - !private ["15SecurityManager14MainControllerC", "saveSettings"]
 - !private ["15SecurityManager14MainControllerC", "settings"]
 - ["15SecurityManager14MainControllerC", "shared"]
+- !private ["15SecurityManager14MainControllerC", "wasFirstLoaded"]
 - !private ["12ObjectMapper8MappableP", "access"]
 - !private ["12ObjectMapper8MappableP", "bots"]
 - !private ["12ObjectMapper8MappableP", "channels"]
@@ -258,10 +329,17 @@ depends-member:
 - !private ["12ObjectMapper8MappableP", "secretChat"]
 - !private ["12ObjectMapper8MappableP", "secretChatMinimumLength"]
 - !private ["12ObjectMapper8MappableP", "userName"]
-- !private ["s10MirrorPathP", "init"]
+- ["s10MirrorPathP", "init"]
 - !private ["s17MutableCollectionP", "flatMap"]
 - !private ["s17MutableCollectionP", "index"]
 - !private ["s17MutableCollectionP", "subscript"]
+- !private ["So8NSCodingP", "addAction"]
+- !private ["So8NSCodingP", "init"]
+- !private ["So8NSCodingP", "present"]
+- !private ["So9NSCopyingP", "init"]
+- !private ["So26NSExtensionRequestHandlingP", "addAction"]
+- !private ["So26NSExtensionRequestHandlingP", "init"]
+- !private ["So26NSExtensionRequestHandlingP", "present"]
 - ["So8NSObjectC", "Bool"]
 - !private ["So8NSObjectC", "DataSource"]
 - !private ["So8NSObjectC", "Int"]
@@ -273,13 +351,19 @@ depends-member:
 - !private ["So8NSObjectC", "TGSettingsRequest"]
 - ["So8NSObjectC", "TGSettingsResponse"]
 - !private ["So8NSObjectC", "TGUserController"]
+- !private ["So8NSObjectC", "UIAlertController"]
+- ["So8NSObjectC", "UIViewController"]
+- !private ["So8NSObjectC", "UserDefaults"]
 - ["So8NSObjectC", ""]
+- !private ["So8NSObjectC", "addAction"]
+- !private ["So8NSObjectC", "bool"]
 - !private ["So8NSObjectC", "bots"]
 - !private ["So8NSObjectC", "channels"]
 - ["So8NSObjectC", "disableBio"]
 - ["So8NSObjectC", "disableBioChange"]
 - ["So8NSObjectC", "disableProfilePhoto"]
 - ["So8NSObjectC", "disableProfilePhotoChange"]
+- ["So8NSObjectC", "firstRunPopup"]
 - ["So8NSObjectC", "getSettings"]
 - !private ["So8NSObjectC", "getUserID"]
 - !private ["So8NSObjectC", "getUserName"]
@@ -291,19 +375,28 @@ depends-member:
 - ["So8NSObjectC", "isChannelAvailable"]
 - ["So8NSObjectC", "isGroupAvailable"]
 - ["So8NSObjectC", "isSecretChatAvailable"]
+- ["So8NSObjectC", "kWasFirstLoaded"]
 - ["So8NSObjectC", "minimumSecretLenght"]
 - !private ["So8NSObjectC", "phoneNumber"]
+- !private ["So8NSObjectC", "present"]
 - ["So8NSObjectC", "saveSettings"]
+- !private ["So8NSObjectC", "set"]
 - ["So8NSObjectC", "settings"]
 - ["So8NSObjectC", "shared"]
+- !private ["So8NSObjectC", "standard"]
 - !private ["So8NSObjectC", "userName"]
+- ["So8NSObjectC", "wasFirstLoaded"]
 - !private ["So16NSObjectProtocolP", "DataSource"]
 - !private ["So16NSObjectProtocolP", "Int"]
 - ["So16NSObjectProtocolP", "MainController"]
 - !private ["So16NSObjectProtocolP", "SecurityManager"]
 - !private ["So16NSObjectProtocolP", "TGSettingsRequest"]
 - !private ["So16NSObjectProtocolP", "TGUserController"]
+- !private ["So16NSObjectProtocolP", "UIAlertController"]
+- !private ["So16NSObjectProtocolP", "UserDefaults"]
 - ["So16NSObjectProtocolP", ""]
+- !private ["So16NSObjectProtocolP", "addAction"]
+- !private ["So16NSObjectProtocolP", "bool"]
 - !private ["So16NSObjectProtocolP", "bots"]
 - !private ["So16NSObjectProtocolP", "channels"]
 - !private ["So16NSObjectProtocolP", "getUserID"]
@@ -312,11 +405,16 @@ depends-member:
 - !private ["So16NSObjectProtocolP", "groups"]
 - !private ["So16NSObjectProtocolP", "id"]
 - ["So16NSObjectProtocolP", "init"]
+- !private ["So16NSObjectProtocolP", "kWasFirstLoaded"]
 - !private ["So16NSObjectProtocolP", "phoneNumber"]
+- !private ["So16NSObjectProtocolP", "present"]
 - !private ["So16NSObjectProtocolP", "saveSettings"]
+- !private ["So16NSObjectProtocolP", "set"]
 - !private ["So16NSObjectProtocolP", "settings"]
 - !private ["So16NSObjectProtocolP", "shared"]
+- !private ["So16NSObjectProtocolP", "standard"]
 - !private ["So16NSObjectProtocolP", "userName"]
+- !private ["So16NSObjectProtocolP", "wasFirstLoaded"]
 - !private ["s7NumericP", "init"]
 - !private ["15SecurityManager06ObjectB0C", "getSettings"]
 - !private ["15SecurityManager06ObjectB0C", "shared"]
@@ -325,20 +423,22 @@ depends-member:
 - !private ["s22RandomAccessCollectionP", "subscript"]
 - !private ["s26RangeReplaceableCollectionP", "flatMap"]
 - !private ["s26RangeReplaceableCollectionP", "index"]
-- !private ["s26RangeReplaceableCollectionP", "init"]
+- ["s26RangeReplaceableCollectionP", "init"]
 - !private ["s26RangeReplaceableCollectionP", "subscript"]
+- !private ["s16RawRepresentableP", "alert"]
+- !private ["s16RawRepresentableP", "default"]
 - !private ["15SecurityManagerAAC", "getSettings"]
 - !private ["15SecurityManagerAAC", "shared"]
 - !private ["s8SequenceP", "flatMap"]
 - !private ["s8SequenceP", "index"]
-- !private ["s8SequenceP", "init"]
+- ["s8SequenceP", "init"]
 - !private ["s8SequenceP", "keys"]
 - !private ["s8SequenceP", "subscript"]
 - !private ["s13SignedIntegerP", "init"]
 - !private ["s13SignedNumericP", "init"]
 - !private ["s10StrideableP", "init"]
-- !private ["SS", "init"]
-- !private ["s14StringProtocolP", "init"]
+- ["SS", "init"]
+- ["s14StringProtocolP", "init"]
 - !private ["15SecurityManager17TGSettingsRequestC", "bots"]
 - !private ["15SecurityManager17TGSettingsRequestC", "channels"]
 - !private ["15SecurityManager17TGSettingsRequestC", "deinit"]
@@ -359,9 +459,46 @@ depends-member:
 - !private ["15SecurityManager16TGUserControllerC", "getUserName"]
 - !private ["15SecurityManager16TGUserControllerC", "getUserPhoneNumber"]
 - !private ["15SecurityManager16TGUserControllerC", "shared"]
-- !private ["s16TextOutputStreamP", "init"]
-- !private ["s20TextOutputStreamableP", "init"]
-- !private ["9Alamofire14URLConvertibleP", "init"]
+- ["s16TextOutputStreamP", "init"]
+- ["s20TextOutputStreamableP", "init"]
+- !private ["So13UIAlertActionC", "init"]
+- !private ["SC18UIAlertActionStyleO", "default"]
+- !private ["So17UIAlertControllerC", "addAction"]
+- !private ["So17UIAlertControllerC", "init"]
+- !private ["SC22UIAlertControllerStyleO", "alert"]
+- !private ["So21UIAppearanceContainerP", "addAction"]
+- !private ["So21UIAppearanceContainerP", "init"]
+- !private ["So21UIAppearanceContainerP", "present"]
+- !private ["So18UIContentContainerP", "addAction"]
+- !private ["So18UIContentContainerP", "init"]
+- !private ["So18UIContentContainerP", "present"]
+- !private ["So18UIFocusEnvironmentP", "addAction"]
+- !private ["So18UIFocusEnvironmentP", "init"]
+- !private ["So18UIFocusEnvironmentP", "present"]
+- !private ["So30UIPasteConfigurationSupportingP", "addAction"]
+- !private ["So30UIPasteConfigurationSupportingP", "init"]
+- !private ["So30UIPasteConfigurationSupportingP", "present"]
+- !private ["So11UIResponderC", "addAction"]
+- !private ["So11UIResponderC", "init"]
+- !private ["So11UIResponderC", "present"]
+- !private ["So30UIResponderStandardEditActionsP", "addAction"]
+- !private ["So30UIResponderStandardEditActionsP", "init"]
+- !private ["So30UIResponderStandardEditActionsP", "present"]
+- !private ["So35UISpringLoadedInteractionSupportingP", "addAction"]
+- !private ["So35UISpringLoadedInteractionSupportingP", "init"]
+- !private ["So16UIStateRestoringP", "addAction"]
+- !private ["So16UIStateRestoringP", "init"]
+- !private ["So16UIStateRestoringP", "present"]
+- !private ["So18UITraitEnvironmentP", "addAction"]
+- !private ["So18UITraitEnvironmentP", "init"]
+- !private ["So18UITraitEnvironmentP", "present"]
+- !private ["So16UIViewControllerC", "addAction"]
+- !private ["So16UIViewControllerC", "init"]
+- !private ["So16UIViewControllerC", "present"]
+- ["9Alamofire14URLConvertibleP", "init"]
+- !private ["So12UserDefaultsC", "bool"]
+- !private ["So12UserDefaultsC", "set"]
+- !private ["So12UserDefaultsC", "standard"]
 - !private ["s14_ArrayProtocolP", "flatMap"]
 - !private ["s14_ArrayProtocolP", "index"]
 - !private ["s14_ArrayProtocolP", "subscript"]
@@ -369,19 +506,24 @@ depends-member:
 - !private ["s24_DestructorSafeContainerP", "flatMap"]
 - !private ["s24_DestructorSafeContainerP", "index"]
 - !private ["s24_DestructorSafeContainerP", "subscript"]
-- !private ["s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP", "init"]
+- !private ["s35_ExpressibleByBuiltinBooleanLiteralP", "_getBuiltinLogicValue"]
+- ["s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP", "init"]
 - !private ["s35_ExpressibleByBuiltinIntegerLiteralP", "init"]
-- !private ["s34_ExpressibleByBuiltinStringLiteralP", "init"]
-- !private ["s39_ExpressibleByBuiltinUTF16StringLiteralP", "init"]
-- !private ["s41_ExpressibleByBuiltinUnicodeScalarLiteralP", "init"]
-- !private ["s33_ExpressibleByStringInterpolationP", "init"]
+- ["s34_ExpressibleByBuiltinStringLiteralP", "init"]
+- ["s39_ExpressibleByBuiltinUTF16StringLiteralP", "init"]
+- ["s41_ExpressibleByBuiltinUnicodeScalarLiteralP", "init"]
+- ["s33_ExpressibleByStringInterpolationP", "init"]
 - !private ["10Foundation27_KeyValueCodingAndObservingP", "DataSource"]
 - !private ["10Foundation27_KeyValueCodingAndObservingP", "Int"]
 - ["10Foundation27_KeyValueCodingAndObservingP", "MainController"]
 - !private ["10Foundation27_KeyValueCodingAndObservingP", "SecurityManager"]
 - !private ["10Foundation27_KeyValueCodingAndObservingP", "TGSettingsRequest"]
 - !private ["10Foundation27_KeyValueCodingAndObservingP", "TGUserController"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "UIAlertController"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "UserDefaults"]
 - ["10Foundation27_KeyValueCodingAndObservingP", ""]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "addAction"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "bool"]
 - !private ["10Foundation27_KeyValueCodingAndObservingP", "bots"]
 - !private ["10Foundation27_KeyValueCodingAndObservingP", "channels"]
 - !private ["10Foundation27_KeyValueCodingAndObservingP", "getUserID"]
@@ -390,81 +532,109 @@ depends-member:
 - !private ["10Foundation27_KeyValueCodingAndObservingP", "groups"]
 - !private ["10Foundation27_KeyValueCodingAndObservingP", "id"]
 - ["10Foundation27_KeyValueCodingAndObservingP", "init"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "kWasFirstLoaded"]
 - !private ["10Foundation27_KeyValueCodingAndObservingP", "phoneNumber"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "present"]
 - !private ["10Foundation27_KeyValueCodingAndObservingP", "saveSettings"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "set"]
 - !private ["10Foundation27_KeyValueCodingAndObservingP", "settings"]
 - !private ["10Foundation27_KeyValueCodingAndObservingP", "shared"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "standard"]
 - !private ["10Foundation27_KeyValueCodingAndObservingP", "userName"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "wasFirstLoaded"]
+- !private ["s21_ObjectiveCBridgeableP", "_getBuiltinLogicValue"]
 - !private ["s21_ObjectiveCBridgeableP", "flatMap"]
 - !private ["s21_ObjectiveCBridgeableP", "index"]
-- !private ["s21_ObjectiveCBridgeableP", "init"]
+- ["s21_ObjectiveCBridgeableP", "init"]
 - !private ["s21_ObjectiveCBridgeableP", "keys"]
 - !private ["s21_ObjectiveCBridgeableP", "subscript"]
-- !private ["s16_SwiftStringViewP", "init"]
+- ["s16_SwiftStringViewP", "init"]
 depends-nominal:
 - !private "15SecurityManager12AccessObjectC"
 - !private "Sa"
 - !private "s10ArraySliceV"
 - !private "12ObjectMapper12BaseMappableP"
-- !private "s23BidirectionalCollectionP"
+- "s23BidirectionalCollectionP"
 - !private "s13BinaryIntegerP"
+- !private "Sb"
 - "s7CVarArgP"
-- !private "s10CollectionP"
-- !private "s10ComparableP"
+- "s10CollectionP"
+- "s10ComparableP"
 - "s28CustomDebugStringConvertibleP"
-- !private "s29CustomPlaygroundQuickLookableP"
-- !private "s17CustomReflectableP"
+- "s29CustomPlaygroundQuickLookableP"
+- "s17CustomReflectableP"
 - "s23CustomStringConvertibleP"
 - !private "15SecurityManager10DataSourceC"
-- !private "s9DecodableP"
+- "s9DecodableP"
 - !private "s10DictionaryV"
-- !private "s9EncodableP"
+- "s9EncodableP"
 - "s9EquatableP"
 - !private "s25ExpressibleByArrayLiteralP"
+- !private "s27ExpressibleByBooleanLiteralP"
 - !private "s30ExpressibleByDictionaryLiteralP"
-- !private "s43ExpressibleByExtendedGraphemeClusterLiteralP"
+- "s43ExpressibleByExtendedGraphemeClusterLiteralP"
 - !private "s27ExpressibleByIntegerLiteralP"
-- !private "s26ExpressibleByStringLiteralP"
-- !private "s33ExpressibleByUnicodeScalarLiteralP"
+- "s26ExpressibleByStringLiteralP"
+- "s33ExpressibleByUnicodeScalarLiteralP"
 - !private "s17FixedWidthIntegerP"
 - "s8HashableP"
 - !private "Si"
-- !private "s25LosslessStringConvertibleP"
+- "s25LosslessStringConvertibleP"
 - "15SecurityManager14MainControllerC"
 - !private "12ObjectMapper8MappableP"
-- !private "s10MirrorPathP"
+- "s10MirrorPathP"
 - !private "s17MutableCollectionP"
+- !private "So8NSCodingP"
+- !private "So9NSCopyingP"
+- !private "So26NSExtensionRequestHandlingP"
 - "So8NSObjectC"
 - "So16NSObjectProtocolP"
 - !private "s7NumericP"
 - !private "15SecurityManager06ObjectB0C"
 - !private "s22RandomAccessCollectionP"
-- !private "s26RangeReplaceableCollectionP"
+- "s26RangeReplaceableCollectionP"
+- !private "s16RawRepresentableP"
 - !private "15SecurityManagerAAC"
-- !private "s8SequenceP"
+- "s8SequenceP"
 - !private "s13SignedIntegerP"
 - !private "s13SignedNumericP"
 - !private "s10StrideableP"
-- !private "SS"
-- !private "s14StringProtocolP"
+- "SS"
+- "s14StringProtocolP"
 - !private "15SecurityManager17TGSettingsRequestC"
 - "15SecurityManager18TGSettingsResponseC"
 - !private "15SecurityManager16TGUserControllerC"
-- !private "s16TextOutputStreamP"
-- !private "s20TextOutputStreamableP"
-- !private "9Alamofire14URLConvertibleP"
+- "s16TextOutputStreamP"
+- "s20TextOutputStreamableP"
+- !private "So13UIAlertActionC"
+- !private "SC18UIAlertActionStyleO"
+- !private "So17UIAlertControllerC"
+- !private "SC22UIAlertControllerStyleO"
+- !private "So21UIAppearanceContainerP"
+- !private "So18UIContentContainerP"
+- !private "So18UIFocusEnvironmentP"
+- !private "So30UIPasteConfigurationSupportingP"
+- !private "So11UIResponderC"
+- !private "So30UIResponderStandardEditActionsP"
+- !private "So35UISpringLoadedInteractionSupportingP"
+- !private "So16UIStateRestoringP"
+- !private "So18UITraitEnvironmentP"
+- !private "So16UIViewControllerC"
+- "9Alamofire14URLConvertibleP"
+- !private "So12UserDefaultsC"
 - !private "s14_ArrayProtocolP"
 - !private "s18_BitwiseOperationsP"
 - !private "s24_DestructorSafeContainerP"
-- !private "s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP"
+- !private "s35_ExpressibleByBuiltinBooleanLiteralP"
+- "s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP"
 - !private "s35_ExpressibleByBuiltinIntegerLiteralP"
-- !private "s34_ExpressibleByBuiltinStringLiteralP"
-- !private "s39_ExpressibleByBuiltinUTF16StringLiteralP"
-- !private "s41_ExpressibleByBuiltinUnicodeScalarLiteralP"
-- !private "s33_ExpressibleByStringInterpolationP"
+- "s34_ExpressibleByBuiltinStringLiteralP"
+- "s39_ExpressibleByBuiltinUTF16StringLiteralP"
+- "s41_ExpressibleByBuiltinUnicodeScalarLiteralP"
+- "s33_ExpressibleByStringInterpolationP"
 - "10Foundation27_KeyValueCodingAndObservingP"
-- !private "s21_ObjectiveCBridgeableP"
-- !private "s16_SwiftStringViewP"
+- "s21_ObjectiveCBridgeableP"
+- "s16_SwiftStringViewP"
 depends-dynamic-lookup:
 depends-external:
 - "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/x86_64/Dispatch.apinotesc"
@@ -500,4 +670,4 @@ depends-external:
 - "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator11.3.sdk/System/Library/Frameworks/CoreGraphics.framework/Headers/CoreGraphics.apinotes"
 - "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator11.3.sdk/System/Library/Frameworks/UIKit.framework/Headers/UIKit.apinotes"
 - "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator11.3.sdk/System/Library/Frameworks/CoreText.framework/Headers/CoreText.apinotes"
-interface-hash: "21dd6a394cfb883016fa4e1332a5c4e0"
+interface-hash: "4fcf237ea0cee1a7a132849211d2abbe"

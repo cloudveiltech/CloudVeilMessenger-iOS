@@ -183,6 +183,7 @@ typedef unsigned int swift_uint4  __attribute__((__ext_vector_type__(4)));
 #endif
 
 @class TGRow;
+@class UIViewController;
 
 SWIFT_CLASS("_TtC15SecurityManager14MainController")
 @interface MainController : NSObject
@@ -198,6 +199,7 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, strong) MainControll
 - (BOOL)isGroupAvailableWithGroupID:(NSInteger)groupID SWIFT_WARN_UNUSED_RESULT;
 - (BOOL)isChannelAvailableWithChannelID:(NSInteger)channelID SWIFT_WARN_UNUSED_RESULT;
 - (BOOL)isBotAvailableWithBotID:(NSInteger)botID SWIFT_WARN_UNUSED_RESULT;
+- (void)firstRunPopupAt:(UIViewController * _Nonnull)viewController;
 - (nonnull instancetype)init OBJC_DESIGNATED_INITIALIZER;
 @end
 

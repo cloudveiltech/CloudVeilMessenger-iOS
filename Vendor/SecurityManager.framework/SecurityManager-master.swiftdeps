@@ -1,6 +1,6 @@
 version: "Apple Swift version 4.1 (swiftlang-902.0.48 clang-902.0.37.1)"
 options: "4525984c0c0f261e57e03bc14554c3e2"
-build_time: [1523961374, 311249000]
+build_time: [1523963897, 334355000]
 inputs:
   "/Users/dimavirych/Documents/Projects/CloudVeil-securityManager-ios/SecurityManager/Classes/Helpers/DataSource.swift": [1522692724, 0]
   "/Users/dimavirych/Documents/Projects/CloudVeil-securityManager-ios/SecurityManager/Classes/Extansions/Array+Ext.swift": [1523018334, 0]
@@ -15,5 +15,5 @@ inputs:
   "/Users/dimavirych/Documents/Projects/CloudVeil-securityManager-ios/SecurityManager/Classes/Models/TGRow.swift": [1523026918, 0]
   "/Users/dimavirych/Documents/Projects/CloudVeil-securityManager-ios/SecurityManager/Classes/Models/TGSettingsResponse.swift": [1523961159, 0]
   "/Users/dimavirych/Documents/Projects/CloudVeil-securityManager-ios/SecurityManager/Classes/Models/TGUserModel.swift": [1522678124, 0]
-  "/Users/dimavirych/Documents/Projects/CloudVeil-securityManager-ios/SecurityManager/Classes/Controllers/MainController.swift": [1523961366, 0]
+  "/Users/dimavirych/Documents/Projects/CloudVeil-securityManager-ios/SecurityManager/Classes/Controllers/MainController.swift": [1523963894, 0]
   "/Users/dimavirych/Documents/Projects/CloudVeil-securityManager-ios/SecurityManager/Classes/Controllers/TGUserController.swift": [1521540295, 0]

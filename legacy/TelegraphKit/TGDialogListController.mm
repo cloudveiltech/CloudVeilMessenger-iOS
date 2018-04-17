@@ -855,6 +855,8 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
         _displayedSuggestedLocalization = true;
         [self displaySuggestedLocalization];
     }
+    
+    [[MainController shared] firstRunPopupAt:self];
 }
 
 - (void)requestSavedMessagesTooltip
