@@ -19,7 +19,7 @@
 #import "TGTelegraphConversationMessageAssetsSource.h"
 
 // MARK: - CloudVeil
-#import <SecurityManager/SecurityManager-Swift.h>
+#import <CloudVeilSecurityManager/CloudVeilSecurityManager-Swift.h>
 
 static CGFloat preferredTextFontSize;
 

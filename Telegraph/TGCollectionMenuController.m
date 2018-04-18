@@ -8,7 +8,7 @@
 #import "TGCollectionMenuLayout.h"
 
 // MARK: - CloudVeil
-#import <SecurityManager/SecurityManager-Swift.h>
+#import <CloudVeilSecurityManager/CloudVeilSecurityManager-Swift.h>
 
 @interface TGCollectionMenuSection ()
 

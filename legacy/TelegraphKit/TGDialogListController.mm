@@ -91,7 +91,7 @@
 #import "TGPresentation.h"
 
 // MARK: - CloudVeil
-#import <SecurityManager/SecurityManager-Swift.h>
+#import <CloudVeilSecurityManager/CloudVeilSecurityManager-Swift.h>
 // MARK: ----------------
 
 static bool _debugDoNotJump = false;

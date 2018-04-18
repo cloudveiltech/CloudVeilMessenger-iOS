@@ -152,7 +152,9 @@
 #import "TGLegacyComponentsContext.h"
 
 // MARK: - CloudVeil Security
-#import <SecurityManager/SecurityManager-Swift.h>
+#import <CloudVeilSecurityManager/CloudVeilSecurityManager-Swift.h>
+
+
 // --------------------------
 
 NSString *TGDeviceProximityStateChangedNotification = @"TGDeviceProximityStateChangedNotification";

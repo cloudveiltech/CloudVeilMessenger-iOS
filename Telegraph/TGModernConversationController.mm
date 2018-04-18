@@ -279,7 +279,7 @@
 #import "TGScreenCaptureSignals.h"
 
 // MARK: - CloudVeil
-#import <SecurityManager/SecurityManager-Swift.h>
+#import <CloudVeilSecurityManager/CloudVeilSecurityManager-Swift.h>
 
 #if TARGET_IPHONE_SIMULATOR
 NSInteger TGModernConversationControllerUnloadHistoryLimit = 500;

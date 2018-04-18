@@ -75,7 +75,7 @@
 #import "TGLegacyComponentsContext.h"
 
 // MARK: - CloudVeil
-#import <SecurityManager/SecurityManager-Swift.h>
+#import <CloudVeilSecurityManager/CloudVeilSecurityManager-Swift.h>
 
 @interface TGAccountSettingsController () <TGWallpaperControllerDelegate>
 {

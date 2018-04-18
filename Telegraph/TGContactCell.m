@@ -16,7 +16,7 @@
 #import <QuartzCore/QuartzCore.h>
 
 // MARK: - CloudVeil
-#import <SecurityManager/SecurityManager-Swift.h>
+#import <CloudVeilSecurityManager/CloudVeilSecurityManager-Swift.h>
 
 static UIImage *contactCellCheckImage()
 {

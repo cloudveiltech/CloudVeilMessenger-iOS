@@ -391,15 +391,7 @@
 		09FCB6921FB2E98C0007D2CA /* PasswordPlaceholderIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 09FCB6901FB2E98B0007D2CA /* PasswordPlaceholderIcon@2x.png */; };
 		09FCB6951FB2FAE80007D2CA /* PasscodePlaceholderIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 09FCB6931FB2FAE60007D2CA /* PasscodePlaceholderIcon@2x.png */; };
 		09FCB6961FB2FAE80007D2CA /* PasscodePlaceholderIcon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 09FCB6941FB2FAE70007D2CA /* PasscodePlaceholderIcon@3x.png */; };
-		15F7194E208664110031ABD8 /* SecurityManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 15F7194D208664110031ABD8 /* SecurityManager.framework */; };
-		15F7194F20866B470031ABD8 /* SecurityManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 15F7194D208664110031ABD8 /* SecurityManager.framework */; };
-		15F7195020866B470031ABD8 /* SecurityManager.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 15F7194D208664110031ABD8 /* SecurityManager.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		15F7195320866FE80031ABD8 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 15F7195220866FE80031ABD8 /* Alamofire.framework */; };
-		15F7195420866FFB0031ABD8 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 15F7195220866FE80031ABD8 /* Alamofire.framework */; };
-		15F7195520866FFB0031ABD8 /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 15F7195220866FE80031ABD8 /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		15F71957208670920031ABD8 /* ObjectMapper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 15F71956208670910031ABD8 /* ObjectMapper.framework */; };
-		15F71958208670970031ABD8 /* ObjectMapper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 15F71956208670910031ABD8 /* ObjectMapper.framework */; };
-		15F71959208670970031ABD8 /* ObjectMapper.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 15F71956208670910031ABD8 /* ObjectMapper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		5781279A3E981BACB2A862B6 /* Pods_Telegraph.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34639DB4BD9C4D4AE6A9E41 /* Pods_Telegraph.framework */; };
 		6801D6681BEF6CC600533783 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D08805C9156E8F5100311537 /* AddressBook.framework */; };
 		6804D8AE1D1D624E0082E71F /* TGGifGalleryAddAccessoryView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6804D8AC1D1D624E0082E71F /* TGGifGalleryAddAccessoryView.h */; };
 		6804D8AF1D1D624E0082E71F /* TGGifGalleryAddAccessoryView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6804D8AD1D1D624E0082E71F /* TGGifGalleryAddAccessoryView.m */; };
@@ -5008,11 +5000,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				15F7195020866B470031ABD8 /* SecurityManager.framework in Embed Frameworks */,
 				D020FBEA1D99A83C00F279AA /* MtProtoKitDynamic.framework in Embed Frameworks */,
-				15F71959208670970031ABD8 /* ObjectMapper.framework in Embed Frameworks */,
 				D020FB121D99637200F279AA /* LegacyDatabase.framework in Embed Frameworks */,
-				15F7195520866FFB0031ABD8 /* Alamofire.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5470,9 +5459,6 @@
 		09FCB6901FB2E98B0007D2CA /* PasswordPlaceholderIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "PasswordPlaceholderIcon@2x.png"; path = "Resources/PasswordPlaceholderIcon@2x.png"; sourceTree = "<group>"; };
 		09FCB6931FB2FAE60007D2CA /* PasscodePlaceholderIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "PasscodePlaceholderIcon@2x.png"; path = "Resources/PasscodePlaceholderIcon@2x.png"; sourceTree = "<group>"; };
 		09FCB6941FB2FAE70007D2CA /* PasscodePlaceholderIcon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "PasscodePlaceholderIcon@3x.png"; path = "Resources/PasscodePlaceholderIcon@3x.png"; sourceTree = "<group>"; };
-		15F7194D208664110031ABD8 /* SecurityManager.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SecurityManager.framework; sourceTree = "<group>"; };
-		15F7195220866FE80031ABD8 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Alamofire.framework; sourceTree = "<group>"; };
-		15F71956208670910031ABD8 /* ObjectMapper.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ObjectMapper.framework; sourceTree = "<group>"; };
 		6803268D1D5D74FF0062725B /* TGPhotoPaintSettingsWrapperView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPhotoPaintSettingsWrapperView.h; sourceTree = "<group>"; };
 		6803268E1D5D74FF0062725B /* TGPhotoPaintSettingsWrapperView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPhotoPaintSettingsWrapperView.m; sourceTree = "<group>"; };
 		680326911D5DFC640062725B /* TGPaintingData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPaintingData.h; sourceTree = "<group>"; };
@@ -7573,6 +7559,7 @@
 		93F5D95F162A36CC00E38E48 /* TGSendInvitesActor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGSendInvitesActor.m; sourceTree = "<group>"; };
 		93F6940416932F8700691086 /* TGBlockListRequestActor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGBlockListRequestActor.h; sourceTree = "<group>"; };
 		93F6940516932F8700691086 /* TGBlockListRequestActor.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TGBlockListRequestActor.mm; sourceTree = "<group>"; };
+		9C6C7E49F94BB376923B6948 /* Pods-Telegraph.debug hockeyapp.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Telegraph.debug hockeyapp.xcconfig"; path = "Pods/Target Support Files/Pods-Telegraph/Pods-Telegraph.debug hockeyapp.xcconfig"; sourceTree = "<group>"; };
 		D00040A315BCD2EA00AF9EBF /* TGMessage+Telegraph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TGMessage+Telegraph.h"; sourceTree = "<group>"; };
 		D00040A415BCD2EA00AF9EBF /* TGMessage+Telegraph.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TGMessage+Telegraph.m"; sourceTree = "<group>"; };
 		D00040AA15BCD53900AF9EBF /* TGImageInfo+Telegraph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TGImageInfo+Telegraph.h"; sourceTree = "<group>"; };
@@ -11556,6 +11543,7 @@
 		D0FD89A2156FD4FB00CC3714 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		D0FFBDDD1BAB0E7300F532C9 /* TGChannelMembersController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGChannelMembersController.h; sourceTree = "<group>"; };
 		D0FFBDDE1BAB0E7300F532C9 /* TGChannelMembersController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGChannelMembersController.m; sourceTree = "<group>"; };
+		D34639DB4BD9C4D4AE6A9E41 /* Pods_Telegraph.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Telegraph.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -11565,6 +11553,13 @@
 			files = (
 				0956E00C1EEAB11B008982F3 /* LegacyDatabase.framework in Frameworks */,
 				099120C11EEAA63400F1366E /* NotificationCenter.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4DC2B8F610632909F5CFDCA0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -11609,17 +11604,14 @@
 				685A691A1DDB227F006BC208 /* CallKit.framework in Frameworks */,
 				D020FBE81D999B3200F279AA /* Intents.framework in Frameworks */,
 				685FDB4F1D9997730045EC75 /* NotificationCenter.framework in Frameworks */,
-				15F7194E208664110031ABD8 /* SecurityManager.framework in Frameworks */,
 				687D86911D01CCE100820510 /* AVKit.framework in Frameworks */,
 				D0EE3B361C7C87C400DD5E83 /* MtProtoKit.framework in Frameworks */,
 				68CAE0641C6CEF1700151753 /* WebKit.framework in Frameworks */,
 				93A5407F185F2D4D00B4F135 /* CoreMotion.framework in Frameworks */,
 				D0A4D7A11C0F961B00537E74 /* VideoToolbox.framework in Frameworks */,
-				15F7194F20866B470031ABD8 /* SecurityManager.framework in Frameworks */,
 				68521C751BCD833800B8A6FA /* Contacts.framework in Frameworks */,
 				68521C661BCD831A00B8A6FA /* ContactsUI.framework in Frameworks */,
 				D0821A301BBEA38200CE53BA /* CoreSpotlight.framework in Frameworks */,
-				15F71957208670920031ABD8 /* ObjectMapper.framework in Frameworks */,
 				D00C79211BBCA4CA00F979C8 /* HockeySDK.framework in Frameworks */,
 				D0CD8FF71BB33B9900E05F40 /* SafariServices.framework in Frameworks */,
 				6836F8F51BB262CC00D3A77B /* WatchConnectivity.framework in Frameworks */,
@@ -11629,7 +11621,6 @@
 				D0B3942F1A57055D00D9AB97 /* LocalAuthentication.framework in Frameworks */,
 				D0BE9B6C1A38D9ED0001972E /* Photos.framework in Frameworks */,
 				D07147811A14C37200D7896A /* WebP.framework in Frameworks */,
-				15F7195420866FFB0031ABD8 /* Alamofire.framework in Frameworks */,
 				D054F616192801EE002952ED /* libicucore.dylib in Frameworks */,
 				D054F6121927FCEF002952ED /* libc++.dylib in Frameworks */,
 				D0AC709918BE214000CDFFA8 /* libopus.a in Frameworks */,
@@ -11641,7 +11632,6 @@
 				93985171162F8A5A009DBCA5 /* MapKit.framework in Frameworks */,
 				935B6E301628850B00A2E265 /* MessageUI.framework in Frameworks */,
 				93362AFB1624797400007FB8 /* CoreTelephony.framework in Frameworks */,
-				15F71958208670970031ABD8 /* ObjectMapper.framework in Frameworks */,
 				937F0378161DF8E600AA32DC /* CoreLocation.framework in Frameworks */,
 				93B532A6160BEA3000A16903 /* CFNetwork.framework in Frameworks */,
 				D00733D515B1B96C0091EBEE /* AVFoundation.framework in Frameworks */,
@@ -11651,7 +11641,6 @@
 				D0B33C67159CAC3400451700 /* ImageIO.framework in Frameworks */,
 				D0880626156EA74000311537 /* SystemConfiguration.framework in Frameworks */,
 				D0D03650158F7F5B00E39802 /* libstdc++.dylib in Frameworks */,
-				15F7195320866FE80031ABD8 /* Alamofire.framework in Frameworks */,
 				D0FD89A3156FD4FC00CC3714 /* Security.framework in Frameworks */,
 				D08805D0156E8F6700311537 /* QuartzCore.framework in Frameworks */,
 				D08805CE156E8F5C00311537 /* libz.dylib in Frameworks */,
@@ -11659,6 +11648,7 @@
 				D08805CA156E8F5100311537 /* AddressBook.framework in Frameworks */,
 				D08805C8156E8F4D00311537 /* CoreText.framework in Frameworks */,
 				D08805B5156E8F3600311537 /* CoreGraphics.framework in Frameworks */,
+				5781279A3E981BACB2A862B6 /* Pods_Telegraph.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -11972,16 +11962,6 @@
 				0991B9C61FCB7445005EDFF2 /* TGDefaultPresentationPallete.m */,
 			);
 			name = Presentation;
-			sourceTree = "<group>";
-		};
-		150B682D2080D683003F92F4 /* Vendor */ = {
-			isa = PBXGroup;
-			children = (
-				15F71956208670910031ABD8 /* ObjectMapper.framework */,
-				15F7195220866FE80031ABD8 /* Alamofire.framework */,
-				15F7194D208664110031ABD8 /* SecurityManager.framework */,
-			);
-			path = Vendor;
 			sourceTree = "<group>";
 		};
 		6811AE231A35E2E3009309A3 /* Crop */ = {
@@ -15579,6 +15559,14 @@
 				93F3A0F418212E2B0005EB98 /* TGModernDateViewModel.m */,
 			);
 			name = Date;
+			sourceTree = "<group>";
+		};
+		CA374ABCB5A1A91D77D2A462 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				9C6C7E49F94BB376923B6948 /* Pods-Telegraph.debug hockeyapp.xcconfig */,
+			);
+			name = Pods;
 			sourceTree = "<group>";
 		};
 		D00542F41BC74F9000456715 /* Share */ = {
@@ -19546,7 +19534,6 @@
 		D08805A1156E8F3600311537 = {
 			isa = PBXGroup;
 			children = (
-				150B682D2080D683003F92F4 /* Vendor */,
 				D0B9B19419CA324D0020C9CF /* LaunchScreen.xib */,
 				D0DAA484197496240036E709 /* Icon-76.png */,
 				D0C6748E1CB8640400183765 /* Icon-167.png */,
@@ -19587,6 +19574,7 @@
 				099120C21EEAA63400F1366E /* Widget */,
 				D08805AF156E8F3600311537 /* Frameworks */,
 				D08805AD156E8F3600311537 /* Products */,
+				CA374ABCB5A1A91D77D2A462 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -19663,6 +19651,7 @@
 				D08805B2156E8F3600311537 /* Foundation.framework */,
 				D08805B4156E8F3600311537 /* CoreGraphics.framework */,
 				6869F8C81D96D33C00D5AA92 /* NotificationCenter.framework */,
+				D34639DB4BD9C4D4AE6A9E41 /* Pods_Telegraph.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -24351,6 +24340,7 @@
 			buildPhases = (
 				68744C0B1BB1A9F700FE6542 /* Resources */,
 				68744C321BB1A9F800FE6542 /* Embed App Extensions */,
+				4DC2B8F610632909F5CFDCA0 /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -24439,6 +24429,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = D08805C4156E8F3600311537 /* Build configuration list for PBXNativeTarget "Telegraph" */;
 			buildPhases = (
+				0D13B93950117EDE577792EC /* [CP] Check Pods Manifest.lock */,
 				D08805A8156E8F3600311537 /* Sources */,
 				D08805A9156E8F3600311537 /* Frameworks */,
 				D08805AA156E8F3600311537 /* Resources */,
@@ -24447,6 +24438,7 @@
 				D061F3021A9290F80031BCBE /* Embed App Extensions */,
 				6879BEE41B43683E007C9800 /* Embed Watch Content */,
 				D020FB161D99637200F279AA /* Embed Frameworks */,
+				05F075DDAEDD12CF79B2BE60 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -25584,6 +25576,46 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		05F075DDAEDD12CF79B2BE60 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-Telegraph/Pods-Telegraph-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/CloudVeilSecurityManager/CloudVeilSecurityManager.framework",
+				"${BUILT_PRODUCTS_DIR}/ObjectMapper/ObjectMapper.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CloudVeilSecurityManager.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ObjectMapper.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Telegraph/Pods-Telegraph-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		0D13B93950117EDE577792EC /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Telegraph-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 		932E96A716946F6A00D6EC55 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 8;
@@ -28412,7 +28444,6 @@
 /* Begin XCBuildConfiguration section */
 		099120CE1EEAA63400F1366E /* Debug Hockeyapp */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 93EFBF0E173DC6DA00F7B89E /* Config.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -28553,7 +28584,6 @@
 		};
 		68744C301BB1A9F800FE6542 /* Debug Hockeyapp */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 93EFBF0E173DC6DA00F7B89E /* Config.xcconfig */;
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -28630,7 +28660,6 @@
 		};
 		68744C341BB1A9F800FE6542 /* Debug Hockeyapp */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 93EFBF0E173DC6DA00F7B89E /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = WatchAppIcon;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -28734,7 +28763,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				ONLY_ACTIVE_ARCH = YES;
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
@@ -28752,7 +28781,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D064421C1E4E2A3600394D5F /* AppStore.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
@@ -29066,7 +29095,6 @@
 		};
 		D020FAE61D99466A00F279AA /* Debug Hockeyapp */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 93EFBF0E173DC6DA00F7B89E /* Config.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -29136,7 +29164,6 @@
 		};
 		D020FB141D99637200F279AA /* Debug Hockeyapp */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 93EFBF0E173DC6DA00F7B89E /* Config.xcconfig */;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -29247,7 +29274,6 @@
 		};
 		D02601E41A55CA2400716290 /* Debug Hockeyapp */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 93EFBF0E173DC6DA00F7B89E /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -29376,7 +29402,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				PROVISIONING_PROFILE = "3d288e61-4eb7-41c0-87cc-4cb24f2b7517";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "3d288e61-4eb7-41c0-87cc-4cb24f2b7517";
@@ -29395,7 +29421,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 93EFBF0E173DC6DA00F7B89E /* Config.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
@@ -29710,7 +29736,6 @@
 		};
 		D08805C2156E8F3600311537 /* Debug Hockeyapp */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 93EFBF0E173DC6DA00F7B89E /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -29743,7 +29768,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				ONLY_ACTIVE_ARCH = YES;
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
@@ -29785,7 +29810,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				PROVISIONING_PROFILE = "3d288e61-4eb7-41c0-87cc-4cb24f2b7517";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "3d288e61-4eb7-41c0-87cc-4cb24f2b7517";
@@ -29802,9 +29827,9 @@
 		};
 		D08805C5156E8F3600311537 /* Debug Hockeyapp */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 93EFBF0E173DC6DA00F7B89E /* Config.xcconfig */;
+			baseConfigurationReference = 9C6C7E49F94BB376923B6948 /* Pods-Telegraph.debug hockeyapp.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
@@ -29905,7 +29930,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D064421C1E4E2A3600394D5F /* AppStore.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
