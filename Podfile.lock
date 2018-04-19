@@ -1,6 +1,6 @@
 PODS:
   - Alamofire (4.7.2)
-  - CloudVeilSecurityManager (1.0.1):
+  - CloudVeilSecurityManager (1.0.2):
     - Alamofire
     - ObjectMapper
   - ObjectMapper (3.1.0)
@@ -16,7 +16,7 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   Alamofire: e4fa87002c137ba2d8d634d2c51fabcda0d5c223
-  CloudVeilSecurityManager: 8fa26a8d08a81e9c183adb57871e0526a1e2ddee
+  CloudVeilSecurityManager: c0c292ee8fc67e25bc451dc01b71449f0ae1696d
   ObjectMapper: 20505058f54e5c3ca69e1d6de9897d152a5369a6
 
 PODFILE CHECKSUM: 135cd30dd70e4f53e5eff8e2f8d2c1c8a874225a
