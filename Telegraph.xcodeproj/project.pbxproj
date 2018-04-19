@@ -391,6 +391,7 @@
 		09FCB6921FB2E98C0007D2CA /* PasswordPlaceholderIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 09FCB6901FB2E98B0007D2CA /* PasswordPlaceholderIcon@2x.png */; };
 		09FCB6951FB2FAE80007D2CA /* PasscodePlaceholderIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 09FCB6931FB2FAE60007D2CA /* PasscodePlaceholderIcon@2x.png */; };
 		09FCB6961FB2FAE80007D2CA /* PasscodePlaceholderIcon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 09FCB6941FB2FAE70007D2CA /* PasscodePlaceholderIcon@3x.png */; };
+		158AB4FD20877B9F000606F6 /* Launch.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 158AB4FC20877B9F000606F6 /* Launch.storyboard */; };
 		5781279A3E981BACB2A862B6 /* Pods_Telegraph.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34639DB4BD9C4D4AE6A9E41 /* Pods_Telegraph.framework */; };
 		6801D6681BEF6CC600533783 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D08805C9156E8F5100311537 /* AddressBook.framework */; };
 		6804D8AE1D1D624E0082E71F /* TGGifGalleryAddAccessoryView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6804D8AC1D1D624E0082E71F /* TGGifGalleryAddAccessoryView.h */; };
@@ -4136,7 +4137,6 @@
 		D0B7ED1B1B94C5EB0006408E /* TGQueuedDeleteChannelMessages.m in Sources */ = {isa = PBXBuildFile; fileRef = D0B7ED191B94C5EB0006408E /* TGQueuedDeleteChannelMessages.m */; };
 		D0B7F1DA1B94D5DA0006408E /* TGChannelStateSignals.h in Headers */ = {isa = PBXBuildFile; fileRef = D0B7F1D81B94D5DA0006408E /* TGChannelStateSignals.h */; };
 		D0B7F1DB1B94D5DA0006408E /* TGChannelStateSignals.m in Sources */ = {isa = PBXBuildFile; fileRef = D0B7F1D91B94D5DA0006408E /* TGChannelStateSignals.m */; };
-		D0B9B19519CA324D0020C9CF /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = D0B9B19419CA324D0020C9CF /* LaunchScreen.xib */; };
 		D0B9F57419FE642400C2EDE2 /* TGWebSearchController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0B9F57319FE642400C2EDE2 /* TGWebSearchController.m */; };
 		D0BAF3E1193E8AC400A0093F /* ModernConversationInput.png in Resources */ = {isa = PBXBuildFile; fileRef = D0BAF3C4193E8AC400A0093F /* ModernConversationInput.png */; };
 		D0BAF3E2193E8AC400A0093F /* ModernConversationMicButton_Highlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = D0BAF3C5193E8AC400A0093F /* ModernConversationMicButton_Highlighted.png */; };
@@ -5459,6 +5459,7 @@
 		09FCB6901FB2E98B0007D2CA /* PasswordPlaceholderIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "PasswordPlaceholderIcon@2x.png"; path = "Resources/PasswordPlaceholderIcon@2x.png"; sourceTree = "<group>"; };
 		09FCB6931FB2FAE60007D2CA /* PasscodePlaceholderIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "PasscodePlaceholderIcon@2x.png"; path = "Resources/PasscodePlaceholderIcon@2x.png"; sourceTree = "<group>"; };
 		09FCB6941FB2FAE70007D2CA /* PasscodePlaceholderIcon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "PasscodePlaceholderIcon@3x.png"; path = "Resources/PasscodePlaceholderIcon@3x.png"; sourceTree = "<group>"; };
+		158AB4FC20877B9F000606F6 /* Launch.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Launch.storyboard; sourceTree = "<group>"; };
 		6803268D1D5D74FF0062725B /* TGPhotoPaintSettingsWrapperView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPhotoPaintSettingsWrapperView.h; sourceTree = "<group>"; };
 		6803268E1D5D74FF0062725B /* TGPhotoPaintSettingsWrapperView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPhotoPaintSettingsWrapperView.m; sourceTree = "<group>"; };
 		680326911D5DFC640062725B /* TGPaintingData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPaintingData.h; sourceTree = "<group>"; };
@@ -10692,7 +10693,6 @@
 		D0B7ED191B94C5EB0006408E /* TGQueuedDeleteChannelMessages.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGQueuedDeleteChannelMessages.m; sourceTree = "<group>"; };
 		D0B7F1D81B94D5DA0006408E /* TGChannelStateSignals.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGChannelStateSignals.h; sourceTree = "<group>"; };
 		D0B7F1D91B94D5DA0006408E /* TGChannelStateSignals.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGChannelStateSignals.m; sourceTree = "<group>"; };
-		D0B9B19419CA324D0020C9CF /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LaunchScreen.xib; sourceTree = "<group>"; };
 		D0B9F57219FE642400C2EDE2 /* TGWebSearchController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGWebSearchController.h; sourceTree = "<group>"; };
 		D0B9F57319FE642400C2EDE2 /* TGWebSearchController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGWebSearchController.m; sourceTree = "<group>"; };
 		D0BAF3C4193E8AC400A0093F /* ModernConversationInput.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ModernConversationInput.png; path = Resources/ModernConversationInput.png; sourceTree = "<group>"; };
@@ -19534,7 +19534,7 @@
 		D08805A1156E8F3600311537 = {
 			isa = PBXGroup;
 			children = (
-				D0B9B19419CA324D0020C9CF /* LaunchScreen.xib */,
+				158AB4FC20877B9F000606F6 /* Launch.storyboard */,
 				D0DAA484197496240036E709 /* Icon-76.png */,
 				D0C6748E1CB8640400183765 /* Icon-167.png */,
 				D0DAA482197495EA0036E709 /* Icon-72@2x.png */,
@@ -24439,6 +24439,7 @@
 				6879BEE41B43683E007C9800 /* Embed Watch Content */,
 				D020FB161D99637200F279AA /* Embed Frameworks */,
 				05F075DDAEDD12CF79B2BE60 /* [CP] Embed Pods Frameworks */,
+				158AB500208783E5000606F6 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -24939,7 +24940,6 @@
 				681653B91CC24F9E006D88C2 /* OpenInUberIcon@2x.png in Resources */,
 				9386E8AB185DE9CC00930205 /* ModernAuthCountryButtonHighlighted@2x.png in Resources */,
 				93992D8F182A706C00F29746 /* ModernBubbleIncomingPartial@2x.png in Resources */,
-				D0B9B19519CA324D0020C9CF /* LaunchScreen.xib in Resources */,
 				D055A7E31A6882C000A1D48C /* SharedMediaNavigationBarArrow.png in Resources */,
 				091D23771E609CC400A6A322 /* voip_fail.caf in Resources */,
 				0918B6DA1FA109D700EC302B /* SettingsCameraIcon@3x.png in Resources */,
@@ -25156,6 +25156,7 @@
 				D0DAA481197495A80036E709 /* Icon-72.png in Resources */,
 				D07B66F51DD0FC450090A31F /* ConversationInstantPageButtonIconMedia@2x.png in Resources */,
 				D0C7B9BF1D9D822600EC75FA /* AppIntentVocabulary.plist in Resources */,
+				158AB4FD20877B9F000606F6 /* Launch.storyboard in Resources */,
 				0937A5A41E9678F00093D4DA /* TempAudioPreviewPlay@2x.png in Resources */,
 				68D704A71C5BDF6100F25436 /* MusicPlayerControlRepeat@2x.png in Resources */,
 				09498C321F7186E100EB9E4D /* MusicPlayerArrow@3x.png in Resources */,
@@ -25615,6 +25616,19 @@
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
+		};
+		158AB500208783E5000606F6 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "EMBEDDED_EXTENSION_PLUGIN_PATH=\"$TARGET_BUILD_DIR/$PLUGINS_FOLDER_PATH/Widget.appex/Frameworks\"\nif [[ -d \"$EMBEDDED_EXTENSION_PLUGIN_PATH\" ]]; then\nrm -fr \"$EMBEDDED_EXTENSION_PLUGIN_PATH\"\nfi\n\nEMBEDDED_EXTENSION_PLUGIN_PATH=\"$TARGET_BUILD_DIR/$PLUGINS_FOLDER_PATH/SiriIntents.appex/Frameworks\"\nif [[ -d \"$EMBEDDED_EXTENSION_PLUGIN_PATH\" ]]; then\nrm -fr \"$EMBEDDED_EXTENSION_PLUGIN_PATH\"\nfi";
 		};
 		932E96A716946F6A00D6EC55 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -28548,7 +28562,7 @@
 		};
 		099120D11EEAA63400F1366E /* Release Hockeyapp */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 93EFBF0E173DC6DA00F7B89E /* Config.xcconfig */;
+			baseConfigurationReference = 9C6C7E49F94BB376923B6948 /* Pods-Telegraph.debug hockeyapp.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -28781,7 +28795,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D064421C1E4E2A3600394D5F /* AppStore.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
@@ -29008,6 +29022,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D064421C1E4E2A3600394D5F /* AppStore.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -29096,6 +29111,7 @@
 		D020FAE61D99466A00F279AA /* Debug Hockeyapp */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -29130,6 +29146,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D064421C1E4E2A3600394D5F /* AppStore.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -29376,7 +29393,7 @@
 		};
 		D064420C1E4E299800394D5F /* Release Hockeyapp */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 93EFBF0E173DC6DA00F7B89E /* Config.xcconfig */;
+			baseConfigurationReference = 9C6C7E49F94BB376923B6948 /* Pods-Telegraph.debug hockeyapp.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -29419,9 +29436,9 @@
 		};
 		D064420D1E4E299800394D5F /* Release Hockeyapp */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 93EFBF0E173DC6DA00F7B89E /* Config.xcconfig */;
+			baseConfigurationReference = 9C6C7E49F94BB376923B6948 /* Pods-Telegraph.debug hockeyapp.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
@@ -29519,7 +29536,7 @@
 		};
 		D064420E1E4E299800394D5F /* Release Hockeyapp */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 93EFBF0E173DC6DA00F7B89E /* Config.xcconfig */;
+			baseConfigurationReference = 9C6C7E49F94BB376923B6948 /* Pods-Telegraph.debug hockeyapp.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -29569,7 +29586,7 @@
 		};
 		D064420F1E4E299800394D5F /* Release Hockeyapp */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 93EFBF0E173DC6DA00F7B89E /* Config.xcconfig */;
+			baseConfigurationReference = 9C6C7E49F94BB376923B6948 /* Pods-Telegraph.debug hockeyapp.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = WatchAppIcon;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -29605,7 +29622,7 @@
 		};
 		D06442101E4E299800394D5F /* Release Hockeyapp */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 93EFBF0E173DC6DA00F7B89E /* Config.xcconfig */;
+			baseConfigurationReference = 9C6C7E49F94BB376923B6948 /* Pods-Telegraph.debug hockeyapp.xcconfig */;
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -29644,8 +29661,9 @@
 		};
 		D06442111E4E299800394D5F /* Release Hockeyapp */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 93EFBF0E173DC6DA00F7B89E /* Config.xcconfig */;
+			baseConfigurationReference = 9C6C7E49F94BB376923B6948 /* Pods-Telegraph.debug hockeyapp.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -29679,7 +29697,7 @@
 		};
 		D06442121E4E299800394D5F /* Release Hockeyapp */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 93EFBF0E173DC6DA00F7B89E /* Config.xcconfig */;
+			baseConfigurationReference = 9C6C7E49F94BB376923B6948 /* Pods-Telegraph.debug hockeyapp.xcconfig */;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -29829,7 +29847,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9C6C7E49F94BB376923B6948 /* Pods-Telegraph.debug hockeyapp.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
@@ -29930,7 +29948,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D064421C1E4E2A3600394D5F /* AppStore.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
