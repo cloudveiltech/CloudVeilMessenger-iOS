@@ -202,9 +202,8 @@ void TGUpdateMessageViewModelLayoutConstants(CGFloat baseFontPointSize)
             _avatarModel = [[TGModernLetteredAvatarViewModel alloc] initWithSize:CGSizeMake(38.0f, 38.0f) placeholder:placeholder];
             _avatarModel.skipDrawInContext = true;
             
-            // MARK: - CloudVeil
-            if ([[MainController shared] disableProfilePhoto] == false)
-                [self addSubmodel:_avatarModel];
+            [self addSubmodel:_avatarModel];
+            
         } else if ([authorPeer isKindOfClass:[TGConversation class]] && context != nil && (context.isAdminLog || context.isSavedMessages)) {
             TGConversation *author = authorPeer;
             _firstName = author.chatTitle;
@@ -230,9 +229,7 @@ void TGUpdateMessageViewModelLayoutConstants(CGFloat baseFontPointSize)
             _avatarModel = [[TGModernLetteredAvatarViewModel alloc] initWithSize:CGSizeMake(38.0f, 38.0f) placeholder:placeholder];
             _avatarModel.skipDrawInContext = true;
             
-            // MARK: - CloudVeil
-            if ([[MainController shared] disableProfilePhoto] == false)
-                [self addSubmodel:_avatarModel];
+            [self addSubmodel:_avatarModel];
         }
         
         if (iosMajorVersion() >= 10)
@@ -243,6 +240,10 @@ void TGUpdateMessageViewModelLayoutConstants(CGFloat baseFontPointSize)
 
 - (void)setAuthorAvatarUrl:(NSString *)authorAvatarUrl groupId:(int64_t)groupId
 {
+    // MARK: - CloudVeil
+    if ([[MainController shared] disableProfilePhoto])
+        return [_avatarModel setAvatarTitle:_firstName groupId:groupId];
+    
     if (authorAvatarUrl.length == 0)
         [_avatarModel setAvatarTitle:_firstName groupId:groupId];
     else
@@ -251,6 +252,10 @@ void TGUpdateMessageViewModelLayoutConstants(CGFloat baseFontPointSize)
 
 - (void)setAuthorAvatarUrl:(NSString *)authorAvatarUrl
 {
+    // MARK: - CloudVeil
+    if ([[MainController shared] disableProfilePhoto])
+        return [_avatarModel setAvatarFirstName:_firstName lastName:_lastName uid:_uid];
+    
     if (authorAvatarUrl.length == 0)
         [_avatarModel setAvatarFirstName:_firstName lastName:_lastName uid:_uid];
     else

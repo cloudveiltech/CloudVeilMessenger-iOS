@@ -264,6 +264,8 @@
             [_avatarView loadUserPlaceholderWithSize:CGSizeMake(40.0f, 40.0f) uid:_uidForPlaceholderCalculation firstName:_content.firstName lastName:_content.lastName placeholder:placeholder];
         else if (!TGStringCompare([_avatarView currentUrl], avatarUri))
             [_avatarView loadImage:avatarUri filter:@"circle:40x40" placeholder:placeholder];
+    } else {
+        [_avatarView loadUserPlaceholderWithSize:CGSizeMake(40.0f, 40.0f) uid:_uidForPlaceholderCalculation firstName:_content.firstName lastName:_content.lastName placeholder:nil];
     }
 }
 

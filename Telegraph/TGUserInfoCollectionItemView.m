@@ -439,6 +439,8 @@
             _avatarView.contentHints = synchronous ? TGRemoteImageContentHintLoadFromDiskSynchronously : 0;
             [_avatarView loadImage:avatarUri filter:@"circle:64x64" placeholder:currentPlaceholder forceFade:animated];
         }
+    } else {
+        [_avatarView loadUserPlaceholderWithSize:CGSizeMake(64.0f, 64.0f) uid:_uidForPlaceholderCalculation firstName:_firstName lastName:_lastName placeholder:nil];
     }
 }
 

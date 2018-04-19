@@ -6474,7 +6474,9 @@ typedef enum {
 - (void)setAvatarUrl:(NSString *)avatarUrl
 {
     // MARK: - CloudVeil
-    if ([[MainController shared] disableProfilePhoto] == false)
+    if ([[MainController shared] disableProfilePhoto])
+        _avatarButton.avatarUrl = nil;
+    else
         [_avatarButton setAvatarUrl:avatarUrl];
 }
 

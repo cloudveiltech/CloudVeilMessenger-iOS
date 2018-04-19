@@ -356,6 +356,10 @@ static UIImage *contactCellCheckedImage()
                 [_avatarView loadUserPlaceholderWithSize:CGSizeMake(diameter, diameter) uid:_hideAvatar ? 0 : (int32_t)_itemId firstName:_user.firstName lastName:_user.lastName placeholder:placeholder];
             }
         }
+    } else {
+        
+        CGFloat diameter = TGIsPad() ? 45.0f : 40.0f;
+        [_avatarView loadUserPlaceholderWithSize:CGSizeMake(diameter, diameter) uid:_hideAvatar ? 0 : (int32_t)_itemId firstName:_user.firstName lastName:_user.lastName placeholder:nil];
     }
     
     if (_checkButton != nil)
