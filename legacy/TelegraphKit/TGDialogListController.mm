@@ -1090,9 +1090,13 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
             selectedConversation = conversation.conversationId;
         }
     }
+    
+    
     // MARK: - CloudVeil Security
+    TGUser *user = nil;
     NSMutableArray *securityGroups = [NSMutableArray new];
     NSMutableArray *securityChannels = [NSMutableArray new];
+    NSMutableArray *securityBots = [NSMutableArray new];
     for (TGConversation *conversation in items) {
         
         TGRow *row = [TGRow alloc];
@@ -1105,13 +1109,23 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
         
         if (conversation.isChannel)
             [securityChannels addObject:row];
+        
+        user = [TGDatabaseInstance() loadUser:(int)conversation.conversationId];
+        if (user.isBot) {
+        
+            row.title = user.firstName;
+            row.userName = user.userName;
+            [securityBots addObject:row];
+        }
     }
     
-    [[MainController shared] getSettingsWithGroups:securityGroups bots:[NSMutableArray new] channels:securityChannels];
+    [[MainController shared] getSettingsWithGroups:securityGroups bots:securityBots channels:securityChannels];
     // MARK: --------------------
     
     [_listModel removeAllObjects];
     [_listModel addObjectsFromArray:items];
+    
+    
     
     // MARK: - CloudVeil Security
     for (TGConversation *conversation in items) {
@@ -1130,6 +1144,12 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
         
         if (conversation.isEncrypted) {
             if ([[MainController shared] isSecretChatAvailable] == false)
+                [_listModel removeObject:conversation];
+        }
+        
+        user = [TGDatabaseInstance() loadUser:(int)conversation.conversationId];
+        if (user.isBot) {
+            if ([[MainController shared] isBotAvailableWithBotID:conversation.conversationId] == false)
                 [_listModel removeObject:conversation];
         }
     }
