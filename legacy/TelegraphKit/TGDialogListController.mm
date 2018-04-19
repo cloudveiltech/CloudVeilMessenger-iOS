@@ -690,6 +690,10 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
     
     if (![self _updateControllerInset:false])
         [self controllerInsetUpdated:UIEdgeInsetsZero];
+    
+    [[MainController shared] appendObserverWithObs:^{
+        [weakSelf.tableView reloadData];
+    }];
 }
 
 - (void)doUnloadView

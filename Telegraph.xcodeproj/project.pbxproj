@@ -228,7 +228,7 @@
 		0991B9C71FCB7445005EDFF2 /* TGDefaultPresentationPallete.h in Headers */ = {isa = PBXBuildFile; fileRef = 0991B9C51FCB7445005EDFF2 /* TGDefaultPresentationPallete.h */; };
 		0991B9C81FCB7445005EDFF2 /* TGDefaultPresentationPallete.m in Sources */ = {isa = PBXBuildFile; fileRef = 0991B9C61FCB7445005EDFF2 /* TGDefaultPresentationPallete.m */; };
 		09965F831F93FD0F0057956E /* MusicPlayerControlRepeatOne@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 09965F791F93FD0E0057956E /* MusicPlayerControlRepeatOne@3x.png */; };
-		09A982591F28B6A8007FF90D /* (null) in Sources */ = {isa = PBXBuildFile; };
+		09A982591F28B6A8007FF90D /* BuildFile in Sources */ = {isa = PBXBuildFile; };
 		09A9825D1F28B8A5007FF90D /* SecretTimerFlame@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 09A9825B1F28B8A5007FF90D /* SecretTimerFlame@2x.png */; };
 		09A9825E1F28B8A5007FF90D /* SecretTimerFlame@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 09A9825C1F28B8A5007FF90D /* SecretTimerFlame@3x.png */; };
 		09AB58181F6C4B290087449F /* TGLocationPulseViewModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 09AB58161F6C4B290087449F /* TGLocationPulseViewModel.h */; };
@@ -2763,17 +2763,17 @@
 		D01659AB1DEDA799006DCE14 /* TLPhoneCall$phoneCallDiscarded.mm in Sources */ = {isa = PBXBuildFile; fileRef = D01659A91DEDA799006DCE14 /* TLPhoneCall$phoneCallDiscarded.mm */; };
 		D01659CB1DEDD8D0006DCE14 /* TLUpdate$updatePinnedDialogs.h in Headers */ = {isa = PBXBuildFile; fileRef = D01659C91DEDD8D0006DCE14 /* TLUpdate$updatePinnedDialogs.h */; };
 		D01659CC1DEDD8D0006DCE14 /* TLUpdate$updatePinnedDialogs.mm in Sources */ = {isa = PBXBuildFile; fileRef = D01659CA1DEDD8D0006DCE14 /* TLUpdate$updatePinnedDialogs.mm */; };
-		D0177B7E1F2683BF0044446D /* (null) in Headers */ = {isa = PBXBuildFile; };
-		D0177B7F1F2683BF0044446D /* (null) in Sources */ = {isa = PBXBuildFile; };
-		D0177B961F26869C0044446D /* (null) in Resources */ = {isa = PBXBuildFile; };
-		D0177B971F26869C0044446D /* (null) in Resources */ = {isa = PBXBuildFile; };
-		D0177BA91F2773E40044446D /* (null) in Headers */ = {isa = PBXBuildFile; };
-		D0177BAA1F2773E40044446D /* (null) in Sources */ = {isa = PBXBuildFile; };
-		D0177BAD1F2773F90044446D /* (null) in Headers */ = {isa = PBXBuildFile; };
-		D0177BAE1F2773F90044446D /* (null) in Sources */ = {isa = PBXBuildFile; };
-		D0177BB11F27769B0044446D /* (null) in Headers */ = {isa = PBXBuildFile; };
-		D0177BB21F27769B0044446D /* (null) in Sources */ = {isa = PBXBuildFile; };
-		D0177BB71F2780DB0044446D /* (null) in Sources */ = {isa = PBXBuildFile; };
+		D0177B7E1F2683BF0044446D /* BuildFile in Headers */ = {isa = PBXBuildFile; };
+		D0177B7F1F2683BF0044446D /* BuildFile in Sources */ = {isa = PBXBuildFile; };
+		D0177B961F26869C0044446D /* BuildFile in Resources */ = {isa = PBXBuildFile; };
+		D0177B971F26869C0044446D /* BuildFile in Resources */ = {isa = PBXBuildFile; };
+		D0177BA91F2773E40044446D /* BuildFile in Headers */ = {isa = PBXBuildFile; };
+		D0177BAA1F2773E40044446D /* BuildFile in Sources */ = {isa = PBXBuildFile; };
+		D0177BAD1F2773F90044446D /* BuildFile in Headers */ = {isa = PBXBuildFile; };
+		D0177BAE1F2773F90044446D /* BuildFile in Sources */ = {isa = PBXBuildFile; };
+		D0177BB11F27769B0044446D /* BuildFile in Headers */ = {isa = PBXBuildFile; };
+		D0177BB21F27769B0044446D /* BuildFile in Sources */ = {isa = PBXBuildFile; };
+		D0177BB71F2780DB0044446D /* BuildFile in Sources */ = {isa = PBXBuildFile; };
 		D019453F1A9F81E200FDA2C4 /* TGUpdatesWithPts.h in Headers */ = {isa = PBXBuildFile; fileRef = D019453D1A9F81E200FDA2C4 /* TGUpdatesWithPts.h */; };
 		D01945401A9F81E300FDA2C4 /* TGUpdatesWithPts.m in Sources */ = {isa = PBXBuildFile; fileRef = D019453E1A9F81E200FDA2C4 /* TGUpdatesWithPts.m */; };
 		D01945431A9FA5D600FDA2C4 /* TGUpdatesWithSeq.h in Headers */ = {isa = PBXBuildFile; fileRef = D01945411A9FA5D600FDA2C4 /* TGUpdatesWithSeq.h */; };
@@ -5022,6 +5022,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0428CF207FCFF52BAD52D2CD /* Pods-Telegraph.debug hockeyapp.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Telegraph.debug hockeyapp.xcconfig"; path = "Pods/Target Support Files/Pods-Telegraph/Pods-Telegraph.debug hockeyapp.xcconfig"; sourceTree = "<group>"; };
 		09034EB41EE08B5E006997DB /* ModernContactListBroadcastIcon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ModernContactListBroadcastIcon@3x.png"; path = "Resources/ModernContactListBroadcastIcon@3x.png"; sourceTree = "<group>"; };
 		09034EB51EE08B5F006997DB /* ModernContactListCreateGroupIcon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ModernContactListCreateGroupIcon@3x.png"; path = "Resources/ModernContactListCreateGroupIcon@3x.png"; sourceTree = "<group>"; };
 		09034EB61EE08B5F006997DB /* ModernContactListCreateSecretChatIcon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ModernContactListCreateSecretChatIcon@3x.png"; path = "Resources/ModernContactListCreateSecretChatIcon@3x.png"; sourceTree = "<group>"; };
@@ -7560,7 +7561,6 @@
 		93F5D95F162A36CC00E38E48 /* TGSendInvitesActor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGSendInvitesActor.m; sourceTree = "<group>"; };
 		93F6940416932F8700691086 /* TGBlockListRequestActor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGBlockListRequestActor.h; sourceTree = "<group>"; };
 		93F6940516932F8700691086 /* TGBlockListRequestActor.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TGBlockListRequestActor.mm; sourceTree = "<group>"; };
-		9C6C7E49F94BB376923B6948 /* Pods-Telegraph.debug hockeyapp.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Telegraph.debug hockeyapp.xcconfig"; path = "Pods/Target Support Files/Pods-Telegraph/Pods-Telegraph.debug hockeyapp.xcconfig"; sourceTree = "<group>"; };
 		D00040A315BCD2EA00AF9EBF /* TGMessage+Telegraph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TGMessage+Telegraph.h"; sourceTree = "<group>"; };
 		D00040A415BCD2EA00AF9EBF /* TGMessage+Telegraph.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TGMessage+Telegraph.m"; sourceTree = "<group>"; };
 		D00040AA15BCD53900AF9EBF /* TGImageInfo+Telegraph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TGImageInfo+Telegraph.h"; sourceTree = "<group>"; };
@@ -7613,8 +7613,8 @@
 		D0088D6219A54A2800ADABFA /* TGUpdate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGUpdate.m; sourceTree = "<group>"; };
 		D0088D6519A54ADF00ADABFA /* TGDatacenterContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGDatacenterContext.h; sourceTree = "<group>"; };
 		D0088D6619A54ADF00ADABFA /* TGDatacenterContext.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TGDatacenterContext.mm; sourceTree = "<group>"; };
-		D008C1D71C18CF76007D2855 /* TLWebPage$webPageExternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLWebPage$webPageExternal.h; sourceTree = "<group>"; };
-		D008C1D81C18CF76007D2855 /* TLWebPage$webPageExternal.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLWebPage$webPageExternal.mm; sourceTree = "<group>"; };
+		D008C1D71C18CF76007D2855 /* TLWebPage$webPageExternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLWebPage$webPageExternal.h"; sourceTree = "<group>"; };
+		D008C1D81C18CF76007D2855 /* TLWebPage$webPageExternal.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "TLWebPage$webPageExternal.mm"; sourceTree = "<group>"; };
 		D008C1F71C18E088007D2855 /* TGBotContextResults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGBotContextResults.h; sourceTree = "<group>"; };
 		D008C1F81C18E088007D2855 /* TGBotContextResults.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGBotContextResults.m; sourceTree = "<group>"; };
 		D008C1FB1C18E14B007D2855 /* TGBotContextMediaResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGBotContextMediaResult.h; sourceTree = "<group>"; };
@@ -7623,10 +7623,10 @@
 		D008C2001C18E1B7007D2855 /* TGBotContextExternalResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGBotContextExternalResult.m; sourceTree = "<group>"; };
 		D00BED231F7402EF00922292 /* TLRPCmessages_editGeoLive.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TLRPCmessages_editGeoLive.h; sourceTree = "<group>"; };
 		D00BED241F7402EF00922292 /* TLRPCmessages_editGeoLive.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = TLRPCmessages_editGeoLive.mm; sourceTree = "<group>"; };
-		D00BF03C1CF8986D00170DB1 /* TLDialog$dialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLDialog$dialog.h; sourceTree = "<group>"; };
-		D00BF03D1CF8986D00170DB1 /* TLDialog$dialog.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLDialog$dialog.mm; sourceTree = "<group>"; };
-		D00BF04E1CF89A4500170DB1 /* TLDraftMessage$draftMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLDraftMessage$draftMessage.h; sourceTree = "<group>"; };
-		D00BF04F1CF89A4500170DB1 /* TLDraftMessage$draftMessage.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLDraftMessage$draftMessage.mm; sourceTree = "<group>"; };
+		D00BF03C1CF8986D00170DB1 /* TLDialog$dialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLDialog$dialog.h"; sourceTree = "<group>"; };
+		D00BF03D1CF8986D00170DB1 /* TLDialog$dialog.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "TLDialog$dialog.mm"; sourceTree = "<group>"; };
+		D00BF04E1CF89A4500170DB1 /* TLDraftMessage$draftMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLDraftMessage$draftMessage.h"; sourceTree = "<group>"; };
+		D00BF04F1CF89A4500170DB1 /* TLDraftMessage$draftMessage.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "TLDraftMessage$draftMessage.mm"; sourceTree = "<group>"; };
 		D00C7192193F3FD40005349C /* ModernBubbleOutgoingPartialHighlightedPad@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ModernBubbleOutgoingPartialHighlightedPad@2x.png"; path = "Resources/ModernBubbleOutgoingPartialHighlightedPad@2x.png"; sourceTree = "<group>"; };
 		D00C7193193F3FD40005349C /* ModernBubbleOutgoingFullHighlightedPad@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ModernBubbleOutgoingFullHighlightedPad@2x.png"; path = "Resources/ModernBubbleOutgoingFullHighlightedPad@2x.png"; sourceTree = "<group>"; };
 		D00C7194193F3FD40005349C /* ModernBubbleIncomingPartialHighlightedPad@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ModernBubbleIncomingPartialHighlightedPad@2x.png"; path = "Resources/ModernBubbleIncomingPartialHighlightedPad@2x.png"; sourceTree = "<group>"; };
@@ -7642,8 +7642,8 @@
 		D00C791D1BBCA4CA00F979C8 /* HockeySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = HockeySDK.framework; sourceTree = "<group>"; };
 		D00C791F1BBCA4CA00F979C8 /* HockeySDK.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = HockeySDK.xcconfig; sourceTree = "<group>"; };
 		D00C79201BBCA4CA00F979C8 /* HockeySDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = HockeySDKResources.bundle; sourceTree = "<group>"; };
-		D00D03251E0D56E30000B005 /* TLMessageAction$messageActionPhoneCall.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMessageAction$messageActionPhoneCall.h; sourceTree = "<group>"; };
-		D00D03261E0D56E30000B005 /* TLMessageAction$messageActionPhoneCall.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLMessageAction$messageActionPhoneCall.mm; sourceTree = "<group>"; };
+		D00D03251E0D56E30000B005 /* TLMessageAction$messageActionPhoneCall.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLMessageAction$messageActionPhoneCall.h"; sourceTree = "<group>"; };
+		D00D03261E0D56E30000B005 /* TLMessageAction$messageActionPhoneCall.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "TLMessageAction$messageActionPhoneCall.mm"; sourceTree = "<group>"; };
 		D00D03371E0D71F80000B005 /* TGNetworkUsageController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGNetworkUsageController.h; sourceTree = "<group>"; };
 		D00D03381E0D71F80000B005 /* TGNetworkUsageController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGNetworkUsageController.m; sourceTree = "<group>"; };
 		D00EA0EC1D99A9A100F29663 /* SiriIntents.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SiriIntents.entitlements; sourceTree = "<group>"; };
@@ -8807,10 +8807,10 @@
 		D01526DC1902111B00656312 /* TGImageBlur.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGImageBlur.m; sourceTree = "<group>"; };
 		D01562AD1D01BB4C00B03E3E /* TLRPCmessages_saveDraft.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLRPCmessages_saveDraft.h; sourceTree = "<group>"; };
 		D01562AE1D01BB4C00B03E3E /* TLRPCmessages_saveDraft.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLRPCmessages_saveDraft.mm; sourceTree = "<group>"; };
-		D01659A81DEDA799006DCE14 /* TLPhoneCall$phoneCallDiscarded.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLPhoneCall$phoneCallDiscarded.h; sourceTree = "<group>"; };
-		D01659A91DEDA799006DCE14 /* TLPhoneCall$phoneCallDiscarded.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLPhoneCall$phoneCallDiscarded.mm; sourceTree = "<group>"; };
-		D01659C91DEDD8D0006DCE14 /* TLUpdate$updatePinnedDialogs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLUpdate$updatePinnedDialogs.h; sourceTree = "<group>"; };
-		D01659CA1DEDD8D0006DCE14 /* TLUpdate$updatePinnedDialogs.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLUpdate$updatePinnedDialogs.mm; sourceTree = "<group>"; };
+		D01659A81DEDA799006DCE14 /* TLPhoneCall$phoneCallDiscarded.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLPhoneCall$phoneCallDiscarded.h"; sourceTree = "<group>"; };
+		D01659A91DEDA799006DCE14 /* TLPhoneCall$phoneCallDiscarded.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "TLPhoneCall$phoneCallDiscarded.mm"; sourceTree = "<group>"; };
+		D01659C91DEDD8D0006DCE14 /* TLUpdate$updatePinnedDialogs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLUpdate$updatePinnedDialogs.h"; sourceTree = "<group>"; };
+		D01659CA1DEDD8D0006DCE14 /* TLUpdate$updatePinnedDialogs.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "TLUpdate$updatePinnedDialogs.mm"; sourceTree = "<group>"; };
 		D01777321F1F8FA80044446D /* LegacyComponents.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LegacyComponents.xcodeproj; path = submodules/LegacyComponents/LegacyComponents.xcodeproj; sourceTree = SOURCE_ROOT; };
 		D017785F1F1F96B20044446D /* TGChannelAdminRights+Telegraph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TGChannelAdminRights+Telegraph.h"; sourceTree = "<group>"; };
 		D01778601F1F96B20044446D /* TGChannelAdminRights+Telegraph.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TGChannelAdminRights+Telegraph.m"; sourceTree = "<group>"; };
@@ -8858,8 +8858,8 @@
 		D01945421A9FA5D600FDA2C4 /* TGUpdatesWithSeq.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGUpdatesWithSeq.m; sourceTree = "<group>"; };
 		D01945451A9FA65300FDA2C4 /* TGUpdatesWithDate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGUpdatesWithDate.h; sourceTree = "<group>"; };
 		D01945461A9FA65300FDA2C4 /* TGUpdatesWithDate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGUpdatesWithDate.m; sourceTree = "<group>"; };
-		D01945491AA0117500FDA2C4 /* TLMessage$modernMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMessage$modernMessage.h; sourceTree = "<group>"; };
-		D019454A1AA0117500FDA2C4 /* TLMessage$modernMessage.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLMessage$modernMessage.mm; sourceTree = "<group>"; };
+		D01945491AA0117500FDA2C4 /* TLMessage$modernMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLMessage$modernMessage.h"; sourceTree = "<group>"; };
+		D019454A1AA0117500FDA2C4 /* TLMessage$modernMessage.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "TLMessage$modernMessage.mm"; sourceTree = "<group>"; };
 		D01B0EA31A432AF2007ACE93 /* TGModernConversationAssociatedInputPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGModernConversationAssociatedInputPanel.h; sourceTree = "<group>"; };
 		D01B0EA41A432AF2007ACE93 /* TGModernConversationAssociatedInputPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGModernConversationAssociatedInputPanel.m; sourceTree = "<group>"; };
 		D01B0EA71A432BB7007ACE93 /* TGStickerAssociatedInputPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGStickerAssociatedInputPanel.h; sourceTree = "<group>"; };
@@ -8884,14 +8884,14 @@
 		D01BAA6F1ED47B5000295217 /* TGAdminLogConversationCompanion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGAdminLogConversationCompanion.m; sourceTree = "<group>"; };
 		D01BAA721ED4823400295217 /* TGChannelAdminLogEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGChannelAdminLogEntry.h; sourceTree = "<group>"; };
 		D01BAA731ED4823400295217 /* TGChannelAdminLogEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGChannelAdminLogEntry.m; sourceTree = "<group>"; };
-		D01C7EC01EF3EA59008305F1 /* TLChat$channelForbidden.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLChat$channelForbidden.h; sourceTree = "<group>"; };
-		D01C7EC11EF3EA59008305F1 /* TLChat$channelForbidden.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLChat$channelForbidden.mm; sourceTree = "<group>"; };
+		D01C7EC01EF3EA59008305F1 /* TLChat$channelForbidden.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLChat$channelForbidden.h"; sourceTree = "<group>"; };
+		D01C7EC11EF3EA59008305F1 /* TLChat$channelForbidden.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "TLChat$channelForbidden.mm"; sourceTree = "<group>"; };
 		D01C7ECE1EF44FB0008305F1 /* TGMessageUniqueIdContentProperty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGMessageUniqueIdContentProperty.h; sourceTree = "<group>"; };
 		D01C7ECF1EF44FB0008305F1 /* TGMessageUniqueIdContentProperty.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGMessageUniqueIdContentProperty.m; sourceTree = "<group>"; };
 		D01C7EF51EF95EEA008305F1 /* TGGroupInfoUserCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGGroupInfoUserCell.h; sourceTree = "<group>"; };
 		D01C7EF61EF95EEA008305F1 /* TGGroupInfoUserCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGGroupInfoUserCell.m; sourceTree = "<group>"; };
-		D01D6A2F1D2FDEBC00222936 /* TLChatInvite$chatInvite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLChatInvite$chatInvite.h; sourceTree = "<group>"; };
-		D01D6A301D2FDEBC00222936 /* TLChatInvite$chatInvite.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLChatInvite$chatInvite.mm; sourceTree = "<group>"; };
+		D01D6A2F1D2FDEBC00222936 /* TLChatInvite$chatInvite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLChatInvite$chatInvite.h"; sourceTree = "<group>"; };
+		D01D6A301D2FDEBC00222936 /* TLChatInvite$chatInvite.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "TLChatInvite$chatInvite.mm"; sourceTree = "<group>"; };
 		D01D6A4E1D2FE2CF00222936 /* TGGroupInviteSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGGroupInviteSheet.h; sourceTree = "<group>"; };
 		D01D6A4F1D2FE2CF00222936 /* TGGroupInviteSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGGroupInviteSheet.m; sourceTree = "<group>"; };
 		D01D6A521D2FE3F900222936 /* TGGroupInviteSheetItemView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGGroupInviteSheetItemView.h; sourceTree = "<group>"; };
@@ -9450,12 +9450,12 @@
 		D0309D421A1F87C7009571E9 /* TGPasswordInputItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPasswordInputItem.m; sourceTree = "<group>"; };
 		D0309D441A1F87DF009571E9 /* TGPasswordInputItemView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPasswordInputItemView.h; sourceTree = "<group>"; };
 		D0309D451A1F87DF009571E9 /* TGPasswordInputItemView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPasswordInputItemView.m; sourceTree = "<group>"; };
-		D03235721DC8ABFC003890A4 /* TLPageBlock$pageBlockEmbed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLPageBlock$pageBlockEmbed.h; sourceTree = "<group>"; };
-		D03235731DC8ABFC003890A4 /* TLPageBlock$pageBlockEmbed.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLPageBlock$pageBlockEmbed.mm; sourceTree = "<group>"; };
+		D03235721DC8ABFC003890A4 /* TLPageBlock$pageBlockEmbed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLPageBlock$pageBlockEmbed.h"; sourceTree = "<group>"; };
+		D03235731DC8ABFC003890A4 /* TLPageBlock$pageBlockEmbed.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "TLPageBlock$pageBlockEmbed.mm"; sourceTree = "<group>"; };
 		D033A70C1C75E580006A2EAB /* TLRPCmessages_editMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLRPCmessages_editMessage.h; sourceTree = "<group>"; };
 		D033A70D1C75E580006A2EAB /* TLRPCmessages_editMessage.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLRPCmessages_editMessage.mm; sourceTree = "<group>"; };
-		D033A7261C763525006A2EAB /* TLMessageFwdHeader$messageFwdHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMessageFwdHeader$messageFwdHeader.h; sourceTree = "<group>"; };
-		D033A7271C763525006A2EAB /* TLMessageFwdHeader$messageFwdHeader.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLMessageFwdHeader$messageFwdHeader.mm; sourceTree = "<group>"; };
+		D033A7261C763525006A2EAB /* TLMessageFwdHeader$messageFwdHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLMessageFwdHeader$messageFwdHeader.h"; sourceTree = "<group>"; };
+		D033A7271C763525006A2EAB /* TLMessageFwdHeader$messageFwdHeader.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "TLMessageFwdHeader$messageFwdHeader.mm"; sourceTree = "<group>"; };
 		D034A5D01914520B00C93C98 /* TGImageLuminanceMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGImageLuminanceMap.h; sourceTree = "<group>"; };
 		D034A5D11914520B00C93C98 /* TGImageLuminanceMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGImageLuminanceMap.m; sourceTree = "<group>"; };
 		D0351A671B08DE3C0040533C /* private_door@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "private_door@2x.png"; sourceTree = "<group>"; };
@@ -9470,8 +9470,8 @@
 		D035383B1AD3526600B0B33E /* TGLinkPreviewsContentProperty.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGLinkPreviewsContentProperty.m; sourceTree = "<group>"; };
 		D035EBB8194868B700EEEC17 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = InfoPlist.strings; sourceTree = "<group>"; };
 		D035EBBA194868B700EEEC17 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = Localizable.strings; sourceTree = "<group>"; };
-		D0381B951CA4750400BF709D /* TLauth_SentCode$auth_sentCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLauth_SentCode$auth_sentCode.h; sourceTree = "<group>"; };
-		D0381B961CA4750400BF709D /* TLauth_SentCode$auth_sentCode.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLauth_SentCode$auth_sentCode.mm; sourceTree = "<group>"; };
+		D0381B951CA4750400BF709D /* TLauth_SentCode$auth_sentCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLauth_SentCode$auth_sentCode.h"; sourceTree = "<group>"; };
+		D0381B961CA4750400BF709D /* TLauth_SentCode$auth_sentCode.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "TLauth_SentCode$auth_sentCode.mm"; sourceTree = "<group>"; };
 		D0381BA81CA477A000BF709D /* TLRPCauth_sendCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLRPCauth_sendCode.h; sourceTree = "<group>"; };
 		D0381BA91CA477A000BF709D /* TLRPCauth_sendCode.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLRPCauth_sendCode.mm; sourceTree = "<group>"; };
 		D0381BB71CA478D200BF709D /* TLRPCaccount_sendChangePhoneCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLRPCaccount_sendChangePhoneCode.h; sourceTree = "<group>"; };
@@ -9588,8 +9588,8 @@
 		D04325021DC3A97C00E0C528 /* TGItemCollectionGalleryItemView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGItemCollectionGalleryItemView.m; sourceTree = "<group>"; };
 		D0447367161003A800F11E8A /* TGApplyUpdatesActor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGApplyUpdatesActor.h; sourceTree = "<group>"; };
 		D0447368161003A800F11E8A /* TGApplyUpdatesActor.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TGApplyUpdatesActor.mm; sourceTree = "<group>"; };
-		D044CA3F1C626839002160FF /* TLDocumentAttribute$documentAttributeAudio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLDocumentAttribute$documentAttributeAudio.h; sourceTree = "<group>"; };
-		D044CA401C626839002160FF /* TLDocumentAttribute$documentAttributeAudio.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLDocumentAttribute$documentAttributeAudio.m; sourceTree = "<group>"; };
+		D044CA3F1C626839002160FF /* TLDocumentAttribute$documentAttributeAudio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLDocumentAttribute$documentAttributeAudio.h"; sourceTree = "<group>"; };
+		D044CA401C626839002160FF /* TLDocumentAttribute$documentAttributeAudio.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TLDocumentAttribute$documentAttributeAudio.m"; sourceTree = "<group>"; };
 		D044CA4D1C6279DD002160FF /* TGAudioDownloadActor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGAudioDownloadActor.h; sourceTree = "<group>"; };
 		D044CA4E1C6279DD002160FF /* TGAudioDownloadActor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGAudioDownloadActor.m; sourceTree = "<group>"; };
 		D044CB67192825430001C986 /* TGWeakReference.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGWeakReference.h; sourceTree = "<group>"; };
@@ -9666,8 +9666,8 @@
 		D05104101B6252E200F4E03D /* TGSingleStickerPreviewView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGSingleStickerPreviewView.m; sourceTree = "<group>"; };
 		D051041B1B62531600F4E03D /* TGSingleStickerPreviewWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGSingleStickerPreviewWindow.h; sourceTree = "<group>"; };
 		D051041C1B62531600F4E03D /* TGSingleStickerPreviewWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGSingleStickerPreviewWindow.m; sourceTree = "<group>"; };
-		D0514EF51DD1D0590008DF17 /* TLPhoneCall$phoneCallWaiting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLPhoneCall$phoneCallWaiting.h; sourceTree = "<group>"; };
-		D0514EF61DD1D0590008DF17 /* TLPhoneCall$phoneCallWaiting.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLPhoneCall$phoneCallWaiting.mm; sourceTree = "<group>"; };
+		D0514EF51DD1D0590008DF17 /* TLPhoneCall$phoneCallWaiting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLPhoneCall$phoneCallWaiting.h"; sourceTree = "<group>"; };
+		D0514EF61DD1D0590008DF17 /* TLPhoneCall$phoneCallWaiting.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "TLPhoneCall$phoneCallWaiting.mm"; sourceTree = "<group>"; };
 		D051AF031AF3BEB1003AFD52 /* TGStickerCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGStickerCollectionViewCell.h; sourceTree = "<group>"; };
 		D051AF041AF3BEB1003AFD52 /* TGStickerCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGStickerCollectionViewCell.m; sourceTree = "<group>"; };
 		D051AF131AF3EAAB003AFD52 /* TGStickersSignals.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGStickersSignals.h; sourceTree = "<group>"; };
@@ -9716,10 +9716,10 @@
 		D052F0E81576E35700D51E59 /* TGInterfaceManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TGInterfaceManager.mm; sourceTree = "<group>"; };
 		D052F1191576F42400D51E59 /* TGPushActionsRequestBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPushActionsRequestBuilder.h; sourceTree = "<group>"; };
 		D052F11A1576F42400D51E59 /* TGPushActionsRequestBuilder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPushActionsRequestBuilder.m; sourceTree = "<group>"; };
-		D053A39A1F15036D00E2D58A /* TLMessageMedia$messageMediaPhoto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMessageMedia$messageMediaPhoto.h; sourceTree = "<group>"; };
-		D053A39B1F15036D00E2D58A /* TLMessageMedia$messageMediaPhoto.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLMessageMedia$messageMediaPhoto.mm; sourceTree = "<group>"; };
-		D053A39E1F15049E00E2D58A /* TLMessageMedia$messageMediaDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMessageMedia$messageMediaDocument.h; sourceTree = "<group>"; };
-		D053A39F1F15049E00E2D58A /* TLMessageMedia$messageMediaDocument.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLMessageMedia$messageMediaDocument.mm; sourceTree = "<group>"; };
+		D053A39A1F15036D00E2D58A /* TLMessageMedia$messageMediaPhoto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLMessageMedia$messageMediaPhoto.h"; sourceTree = "<group>"; };
+		D053A39B1F15036D00E2D58A /* TLMessageMedia$messageMediaPhoto.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "TLMessageMedia$messageMediaPhoto.mm"; sourceTree = "<group>"; };
+		D053A39E1F15049E00E2D58A /* TLMessageMedia$messageMediaDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLMessageMedia$messageMediaDocument.h"; sourceTree = "<group>"; };
+		D053A39F1F15049E00E2D58A /* TLMessageMedia$messageMediaDocument.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "TLMessageMedia$messageMediaDocument.mm"; sourceTree = "<group>"; };
 		D053B4021F17BF0A00E2D58A /* SecretPhotoFire@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "SecretPhotoFire@3x.png"; path = "Resources/SecretPhotoFire@3x.png"; sourceTree = "<group>"; };
 		D053B4031F17BF0A00E2D58A /* SecretPhotoFireMask@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "SecretPhotoFireMask@3x.png"; path = "Resources/SecretPhotoFireMask@3x.png"; sourceTree = "<group>"; };
 		D053B41D1F1907D100E2D58A /* TGSecretPeerMediaTimerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGSecretPeerMediaTimerView.h; sourceTree = "<group>"; };
@@ -9964,10 +9964,10 @@
 		D069B1B01B3D94110034C967 /* MusicPlayerMinimizedClose@1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "MusicPlayerMinimizedClose@1x.png"; path = "Resources/MusicPlayerMinimizedClose@1x.png"; sourceTree = "<group>"; };
 		D069B1B11B3D94110034C967 /* MusicPlayerMinimizedClose@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "MusicPlayerMinimizedClose@2x.png"; path = "Resources/MusicPlayerMinimizedClose@2x.png"; sourceTree = "<group>"; };
 		D069B1B21B3D94110034C967 /* MusicPlayerMinimizedClose@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "MusicPlayerMinimizedClose@3x.png"; path = "Resources/MusicPlayerMinimizedClose@3x.png"; sourceTree = "<group>"; };
-		D06B21D61E49CFA500EE2F70 /* TLPayments_PaymentCeceipt$payments_paymentReceipt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLPayments_PaymentCeceipt$payments_paymentReceipt.h; sourceTree = "<group>"; };
-		D06B21D71E49CFA500EE2F70 /* TLPayments_PaymentCeceipt$payments_paymentReceipt.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLPayments_PaymentCeceipt$payments_paymentReceipt.mm; sourceTree = "<group>"; };
-		D06B21E31E49D0C900EE2F70 /* TLpayments_ValidatedRequestedInfo$payments_validatedRequestedInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLpayments_ValidatedRequestedInfo$payments_validatedRequestedInfo.h; sourceTree = "<group>"; };
-		D06B21E41E49D0C900EE2F70 /* TLpayments_ValidatedRequestedInfo$payments_validatedRequestedInfo.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLpayments_ValidatedRequestedInfo$payments_validatedRequestedInfo.mm; sourceTree = "<group>"; };
+		D06B21D61E49CFA500EE2F70 /* TLPayments_PaymentCeceipt$payments_paymentReceipt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLPayments_PaymentCeceipt$payments_paymentReceipt.h"; sourceTree = "<group>"; };
+		D06B21D71E49CFA500EE2F70 /* TLPayments_PaymentCeceipt$payments_paymentReceipt.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "TLPayments_PaymentCeceipt$payments_paymentReceipt.mm"; sourceTree = "<group>"; };
+		D06B21E31E49D0C900EE2F70 /* TLpayments_ValidatedRequestedInfo$payments_validatedRequestedInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLpayments_ValidatedRequestedInfo$payments_validatedRequestedInfo.h"; sourceTree = "<group>"; };
+		D06B21E41E49D0C900EE2F70 /* TLpayments_ValidatedRequestedInfo$payments_validatedRequestedInfo.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "TLpayments_ValidatedRequestedInfo$payments_validatedRequestedInfo.mm"; sourceTree = "<group>"; };
 		D06B21E71E49D18F00EE2F70 /* TLPayments_sendPaymentForm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLPayments_sendPaymentForm.h; sourceTree = "<group>"; };
 		D06B21E81E49D18F00EE2F70 /* TLPayments_sendPaymentForm.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLPayments_sendPaymentForm.mm; sourceTree = "<group>"; };
 		D06B21EB1E49F8C400EE2F70 /* TGPaymentCheckoutController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPaymentCheckoutController.h; sourceTree = "<group>"; };
@@ -9982,8 +9982,8 @@
 		D06B21FC1E49F94000EE2F70 /* TGPaymentCheckoutPriceItemView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPaymentCheckoutPriceItemView.m; sourceTree = "<group>"; };
 		D06B22331E4A287400EE2F70 /* TGPaymentMethodController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPaymentMethodController.h; sourceTree = "<group>"; };
 		D06B22341E4A287400EE2F70 /* TGPaymentMethodController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPaymentMethodController.m; sourceTree = "<group>"; };
-		D06BE8461B8E0C4400F394CF /* TLUpdates$updateShortSentMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLUpdates$updateShortSentMessage.h; sourceTree = "<group>"; };
-		D06BE8471B8E0C4400F394CF /* TLUpdates$updateShortSentMessage.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLUpdates$updateShortSentMessage.mm; sourceTree = "<group>"; };
+		D06BE8461B8E0C4400F394CF /* TLUpdates$updateShortSentMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLUpdates$updateShortSentMessage.h"; sourceTree = "<group>"; };
+		D06BE8471B8E0C4400F394CF /* TLUpdates$updateShortSentMessage.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "TLUpdates$updateShortSentMessage.mm"; sourceTree = "<group>"; };
 		D06BE8531B8F4BCF00F394CF /* TGHoleMessageViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGHoleMessageViewModel.h; sourceTree = "<group>"; };
 		D06BE8541B8F4BCF00F394CF /* TGHoleMessageViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGHoleMessageViewModel.m; sourceTree = "<group>"; };
 		D06BEC781F62FB310035A545 /* TLRPCmessages_readMentions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLRPCmessages_readMentions.h; sourceTree = "<group>"; };
@@ -10048,8 +10048,8 @@
 		D07498331B98CB32005F30CC /* TGChannelInfoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGChannelInfoController.m; sourceTree = "<group>"; };
 		D07498361B99ECB3005F30CC /* TGChannelLinkSetupController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGChannelLinkSetupController.h; sourceTree = "<group>"; };
 		D07498371B99ECB3005F30CC /* TGChannelLinkSetupController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGChannelLinkSetupController.m; sourceTree = "<group>"; };
-		D074983A1B99FFC2005F30CC /* TLChat$channel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLChat$channel.h; sourceTree = "<group>"; };
-		D074983B1B99FFC2005F30CC /* TLChat$channel.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLChat$channel.mm; sourceTree = "<group>"; };
+		D074983A1B99FFC2005F30CC /* TLChat$channel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLChat$channel.h"; sourceTree = "<group>"; };
+		D074983B1B99FFC2005F30CC /* TLChat$channel.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "TLChat$channel.mm"; sourceTree = "<group>"; };
 		D07587621B3B226600117DFF /* TGAudioSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGAudioSessionManager.h; sourceTree = "<group>"; };
 		D07587631B3B226600117DFF /* TGAudioSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGAudioSessionManager.m; sourceTree = "<group>"; };
 		D07587661B3B343300117DFF /* TGMusicPlayerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGMusicPlayerController.h; sourceTree = "<group>"; };
@@ -10304,8 +10304,8 @@
 		D09519E31D4A4FDA008CE27F /* TGConfirmationCodeData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGConfirmationCodeData.m; sourceTree = "<group>"; };
 		D09520B91BCE93AF0012BAF9 /* TGServiceSignals.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGServiceSignals.h; sourceTree = "<group>"; };
 		D09520BA1BCE93AF0012BAF9 /* TGServiceSignals.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGServiceSignals.m; sourceTree = "<group>"; };
-		D09520C61BCE960D0012BAF9 /* TLChatParticipants$chatParticipantsForbidden.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLChatParticipants$chatParticipantsForbidden.h; sourceTree = "<group>"; };
-		D09520C71BCE960D0012BAF9 /* TLChatParticipants$chatParticipantsForbidden.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLChatParticipants$chatParticipantsForbidden.mm; sourceTree = "<group>"; };
+		D09520C61BCE960D0012BAF9 /* TLChatParticipants$chatParticipantsForbidden.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLChatParticipants$chatParticipantsForbidden.h"; sourceTree = "<group>"; };
+		D09520C71BCE960D0012BAF9 /* TLChatParticipants$chatParticipantsForbidden.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "TLChatParticipants$chatParticipantsForbidden.mm"; sourceTree = "<group>"; };
 		D095D0391D05EBBB00E861EB /* TGDatabaseLegacy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGDatabaseLegacy.h; sourceTree = "<group>"; };
 		D095D03A1D05EBBB00E861EB /* TGDatabaseLegacy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGDatabaseLegacy.m; sourceTree = "<group>"; };
 		D0967BC71BB58751008A7B4B /* TGModernConversationControllerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGModernConversationControllerView.h; sourceTree = "<group>"; };
@@ -10530,19 +10530,19 @@
 		D098403F19CB9BE200CE5BB0 /* TLMetaRpc.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLMetaRpc.mm; sourceTree = "<group>"; };
 		D098404019CB9BE200CE5BB0 /* TLMetaType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMetaType.h; sourceTree = "<group>"; };
 		D098404119CB9BE200CE5BB0 /* TLMetaType.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLMetaType.mm; sourceTree = "<group>"; };
-		D098404219CB9BE200CE5BB0 /* TLMsgsAck$msgs_ack_manual.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMsgsAck$msgs_ack_manual.h; sourceTree = "<group>"; };
-		D098404319CB9BE200CE5BB0 /* TLMsgsAck$msgs_ack_manual.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMsgsAck$msgs_ack_manual.m; sourceTree = "<group>"; };
+		D098404219CB9BE200CE5BB0 /* TLMsgsAck$msgs_ack_manual.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLMsgsAck$msgs_ack_manual.h"; sourceTree = "<group>"; };
+		D098404319CB9BE200CE5BB0 /* TLMsgsAck$msgs_ack_manual.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TLMsgsAck$msgs_ack_manual.m"; sourceTree = "<group>"; };
 		D098404419CB9BE200CE5BB0 /* TLObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLObject.h; sourceTree = "<group>"; };
 		D098404519CB9BE200CE5BB0 /* TLObject.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLObject.mm; sourceTree = "<group>"; };
-		D098404619CB9BE200CE5BB0 /* TLResPQ$resPQ_manual.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLResPQ$resPQ_manual.h; sourceTree = "<group>"; };
-		D098404719CB9BE200CE5BB0 /* TLResPQ$resPQ_manual.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLResPQ$resPQ_manual.m; sourceTree = "<group>"; };
+		D098404619CB9BE200CE5BB0 /* TLResPQ$resPQ_manual.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLResPQ$resPQ_manual.h"; sourceTree = "<group>"; };
+		D098404719CB9BE200CE5BB0 /* TLResPQ$resPQ_manual.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TLResPQ$resPQ_manual.m"; sourceTree = "<group>"; };
 		D098404819CB9BE200CE5BB0 /* TLRpcResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLRpcResult.h; sourceTree = "<group>"; };
 		D098404919CB9BE200CE5BB0 /* TLRpcResult.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLRpcResult.mm; sourceTree = "<group>"; };
 		D098404A19CB9BE200CE5BB0 /* TLSerializationContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLSerializationContext.h; sourceTree = "<group>"; };
 		D098404B19CB9BE200CE5BB0 /* TLSerializationContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLSerializationContext.m; sourceTree = "<group>"; };
 		D098404C19CB9BE200CE5BB0 /* TLSerializationEnvironment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLSerializationEnvironment.h; sourceTree = "<group>"; };
-		D098404D19CB9BE200CE5BB0 /* TLUpdate$updateChangePts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLUpdate$updateChangePts.h; sourceTree = "<group>"; };
-		D098404E19CB9BE200CE5BB0 /* TLUpdate$updateChangePts.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLUpdate$updateChangePts.m; sourceTree = "<group>"; };
+		D098404D19CB9BE200CE5BB0 /* TLUpdate$updateChangePts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLUpdate$updateChangePts.h"; sourceTree = "<group>"; };
+		D098404E19CB9BE200CE5BB0 /* TLUpdate$updateChangePts.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TLUpdate$updateChangePts.m"; sourceTree = "<group>"; };
 		D098419719CB9C9C00CE5BB0 /* ActionStage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActionStage.h; sourceTree = "<group>"; };
 		D098419819CB9C9C00CE5BB0 /* ActionStage.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ActionStage.mm; sourceTree = "<group>"; };
 		D0984E3F189BC5C40042E1BD /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = InfoPlist.strings; sourceTree = "<group>"; };
@@ -10554,8 +10554,8 @@
 		D099D7371EEEE0AB00A3128C /* TGInstantPageAudioView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGInstantPageAudioView.h; sourceTree = "<group>"; };
 		D099D7381EEEE0AB00A3128C /* TGInstantPageAudioView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGInstantPageAudioView.m; sourceTree = "<group>"; };
 		D09A218715C9CF5100023542 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
-		D09A6B6D1C1A054600134687 /* TLMessages_BotResults$botResults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMessages_BotResults$botResults.h; sourceTree = "<group>"; };
-		D09A6B6E1C1A054600134687 /* TLMessages_BotResults$botResults.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLMessages_BotResults$botResults.mm; sourceTree = "<group>"; };
+		D09A6B6D1C1A054600134687 /* TLMessages_BotResults$botResults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLMessages_BotResults$botResults.h"; sourceTree = "<group>"; };
+		D09A6B6E1C1A054600134687 /* TLMessages_BotResults$botResults.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "TLMessages_BotResults$botResults.mm"; sourceTree = "<group>"; };
 		D09C750219EFC3EB00BF51BC /* TGSecretInfiniteLifetimePeerMediaGalleryModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGSecretInfiniteLifetimePeerMediaGalleryModel.h; sourceTree = "<group>"; };
 		D09C750319EFC3EB00BF51BC /* TGSecretInfiniteLifetimePeerMediaGalleryModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGSecretInfiniteLifetimePeerMediaGalleryModel.m; sourceTree = "<group>"; };
 		D09C750F19F1BBA800BF51BC /* TGUserInfoUsernameCollectionItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGUserInfoUsernameCollectionItem.h; sourceTree = "<group>"; };
@@ -10799,10 +10799,10 @@
 		D0C44B741FC74F9400227BE0 /* SecretLayer73.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SecretLayer73.h; path = API/SecretLayer73.h; sourceTree = "<group>"; };
 		D0C5AAED1AB4F8D100F209D7 /* TGModernConversationMentionsAssociatedPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGModernConversationMentionsAssociatedPanel.h; sourceTree = "<group>"; };
 		D0C5AAEE1AB4F8D100F209D7 /* TGModernConversationMentionsAssociatedPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGModernConversationMentionsAssociatedPanel.m; sourceTree = "<group>"; };
-		D0C5AAF11AB5B34A00F209D7 /* TLUpdates$modernUpdateShortMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLUpdates$modernUpdateShortMessage.h; sourceTree = "<group>"; };
-		D0C5AAF21AB5B34A00F209D7 /* TLUpdates$modernUpdateShortMessage.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLUpdates$modernUpdateShortMessage.mm; sourceTree = "<group>"; };
-		D0C5AAF51AB5B36300F209D7 /* TLUpdates$modernUpdateShortChatMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLUpdates$modernUpdateShortChatMessage.h; sourceTree = "<group>"; };
-		D0C5AAF61AB5B36300F209D7 /* TLUpdates$modernUpdateShortChatMessage.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLUpdates$modernUpdateShortChatMessage.mm; sourceTree = "<group>"; };
+		D0C5AAF11AB5B34A00F209D7 /* TLUpdates$modernUpdateShortMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLUpdates$modernUpdateShortMessage.h"; sourceTree = "<group>"; };
+		D0C5AAF21AB5B34A00F209D7 /* TLUpdates$modernUpdateShortMessage.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "TLUpdates$modernUpdateShortMessage.mm"; sourceTree = "<group>"; };
+		D0C5AAF51AB5B36300F209D7 /* TLUpdates$modernUpdateShortChatMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLUpdates$modernUpdateShortChatMessage.h"; sourceTree = "<group>"; };
+		D0C5AAF61AB5B36300F209D7 /* TLUpdates$modernUpdateShortChatMessage.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "TLUpdates$modernUpdateShortChatMessage.mm"; sourceTree = "<group>"; };
 		D0C5C3C91AC9B12E00F32FC6 /* TGPasswordEntryController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPasswordEntryController.h; sourceTree = "<group>"; };
 		D0C5C3CA1AC9B12E00F32FC6 /* TGPasswordEntryController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPasswordEntryController.m; sourceTree = "<group>"; };
 		D0C5C3CE1ACACC3B00F32FC6 /* TGPasswordRecoveryController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPasswordRecoveryController.h; sourceTree = "<group>"; };
@@ -10813,8 +10813,8 @@
 		D0C5C3D71ACAEF2A00F32FC6 /* TGTwoStepRecoverySignals.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGTwoStepRecoverySignals.m; sourceTree = "<group>"; };
 		D0C5C3DB1ACB30E500F32FC6 /* TGAccountSignals.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGAccountSignals.h; sourceTree = "<group>"; };
 		D0C5C3DC1ACB30E500F32FC6 /* TGAccountSignals.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGAccountSignals.m; sourceTree = "<group>"; };
-		D0C674621CB52C3C00183765 /* TLBotInlineMessage$botInlineMessageMediaContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLBotInlineMessage$botInlineMessageMediaContact.h; sourceTree = "<group>"; };
-		D0C674631CB52C3C00183765 /* TLBotInlineMessage$botInlineMessageMediaContact.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLBotInlineMessage$botInlineMessageMediaContact.mm; sourceTree = "<group>"; };
+		D0C674621CB52C3C00183765 /* TLBotInlineMessage$botInlineMessageMediaContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLBotInlineMessage$botInlineMessageMediaContact.h"; sourceTree = "<group>"; };
+		D0C674631CB52C3C00183765 /* TLBotInlineMessage$botInlineMessageMediaContact.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "TLBotInlineMessage$botInlineMessageMediaContact.mm"; sourceTree = "<group>"; };
 		D0C6746A1CB6848A00183765 /* TGStickerWebpageFooterModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGStickerWebpageFooterModel.h; sourceTree = "<group>"; };
 		D0C6746B1CB6848A00183765 /* TGStickerWebpageFooterModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGStickerWebpageFooterModel.m; sourceTree = "<group>"; };
 		D0C6746E1CB69E9900183765 /* botbutton_share@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "botbutton_share@2x.png"; path = "Resources/botbutton_share@2x.png"; sourceTree = "<group>"; };
@@ -10850,10 +10850,10 @@
 		D0C6AF581A7816140046833D /* TGSharedMediaFilesEmptyView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGSharedMediaFilesEmptyView.m; sourceTree = "<group>"; };
 		D0C6AF5B1A781E9E0046833D /* TGLegacyMediaPickerTipView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGLegacyMediaPickerTipView.h; sourceTree = "<group>"; };
 		D0C6AF5C1A781E9E0046833D /* TGLegacyMediaPickerTipView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGLegacyMediaPickerTipView.m; sourceTree = "<group>"; };
-		D0C7353B1C87560F00BB3149 /* TLUserFull$userFull.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLUserFull$userFull.h; sourceTree = "<group>"; };
-		D0C7353C1C87560F00BB3149 /* TLUserFull$userFull.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLUserFull$userFull.mm; sourceTree = "<group>"; };
-		D0C7354E1C876AE900BB3149 /* TLaccount_updateProfile$updateProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLaccount_updateProfile$updateProfile.h; sourceTree = "<group>"; };
-		D0C7354F1C876AE900BB3149 /* TLaccount_updateProfile$updateProfile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLaccount_updateProfile$updateProfile.m; sourceTree = "<group>"; };
+		D0C7353B1C87560F00BB3149 /* TLUserFull$userFull.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLUserFull$userFull.h"; sourceTree = "<group>"; };
+		D0C7353C1C87560F00BB3149 /* TLUserFull$userFull.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "TLUserFull$userFull.mm"; sourceTree = "<group>"; };
+		D0C7354E1C876AE900BB3149 /* TLaccount_updateProfile$updateProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLaccount_updateProfile$updateProfile.h"; sourceTree = "<group>"; };
+		D0C7354F1C876AE900BB3149 /* TLaccount_updateProfile$updateProfile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TLaccount_updateProfile$updateProfile.m"; sourceTree = "<group>"; };
 		D0C735611C882D4A00BB3149 /* TGPinnedMessageTitlePanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPinnedMessageTitlePanel.h; sourceTree = "<group>"; };
 		D0C735621C882D4A00BB3149 /* TGPinnedMessageTitlePanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPinnedMessageTitlePanel.m; sourceTree = "<group>"; };
 		D0C735651C884B9500BB3149 /* PinnedMessagePanelClose@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "PinnedMessagePanelClose@2x.png"; path = "Resources/PinnedMessagePanelClose@2x.png"; sourceTree = "<group>"; };
@@ -11000,8 +11000,8 @@
 		D0CB14A6199CEFAE00EBCEA7 /* TGGenericPeerMediaGalleryDeleteAccessoryView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGGenericPeerMediaGalleryDeleteAccessoryView.m; sourceTree = "<group>"; };
 		D0CB14A9199DF1E900EBCEA7 /* TGUpdateMediaHistoryActor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGUpdateMediaHistoryActor.h; sourceTree = "<group>"; };
 		D0CB14AA199DF1E900EBCEA7 /* TGUpdateMediaHistoryActor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGUpdateMediaHistoryActor.m; sourceTree = "<group>"; };
-		D0CBA92F1DDDF8520009D717 /* TLUpdate$updateServiceNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLUpdate$updateServiceNotification.h; sourceTree = "<group>"; };
-		D0CBA9301DDDF8520009D717 /* TLUpdate$updateServiceNotification.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLUpdate$updateServiceNotification.mm; sourceTree = "<group>"; };
+		D0CBA92F1DDDF8520009D717 /* TLUpdate$updateServiceNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLUpdate$updateServiceNotification.h"; sourceTree = "<group>"; };
+		D0CBA9301DDDF8520009D717 /* TLUpdate$updateServiceNotification.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "TLUpdate$updateServiceNotification.mm"; sourceTree = "<group>"; };
 		D0CC0BC91B9BB48500882D7A /* TGChannelAboutSetupController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGChannelAboutSetupController.h; sourceTree = "<group>"; };
 		D0CC0BCA1B9BB48500882D7A /* TGChannelAboutSetupController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGChannelAboutSetupController.m; sourceTree = "<group>"; };
 		D0CC0BCD1B9BB91B00882D7A /* TGCollectionMultilineInputItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGCollectionMultilineInputItem.h; sourceTree = "<group>"; };
@@ -11044,27 +11044,27 @@
 		D0D0364F158F7F5B00E39802 /* libstdc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.dylib"; path = "usr/lib/libstdc++.dylib"; sourceTree = SDKROOT; };
 		D0D17EB01CAD4BF200C4750B /* TGToastTitlePanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGToastTitlePanel.h; sourceTree = "<group>"; };
 		D0D17EB11CAD4BF200C4750B /* TGToastTitlePanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGToastTitlePanel.m; sourceTree = "<group>"; };
-		D0D17EBF1CAD6F0E00C4750B /* TLmessages_BotCallbackAnswer$botCallbackAnswer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLmessages_BotCallbackAnswer$botCallbackAnswer.h; sourceTree = "<group>"; };
-		D0D17EC01CAD6F0E00C4750B /* TLmessages_BotCallbackAnswer$botCallbackAnswer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLmessages_BotCallbackAnswer$botCallbackAnswer.mm; sourceTree = "<group>"; };
+		D0D17EBF1CAD6F0E00C4750B /* TLmessages_BotCallbackAnswer$botCallbackAnswer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLmessages_BotCallbackAnswer$botCallbackAnswer.h"; sourceTree = "<group>"; };
+		D0D17EC01CAD6F0E00C4750B /* TLmessages_BotCallbackAnswer$botCallbackAnswer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "TLmessages_BotCallbackAnswer$botCallbackAnswer.mm"; sourceTree = "<group>"; };
 		D0D17EC31CAEA8CE00C4750B /* TLRPCmessages_getInlineBotResults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLRPCmessages_getInlineBotResults.h; sourceTree = "<group>"; };
 		D0D17EC41CAEA8CE00C4750B /* TLRPCmessages_getInlineBotResults.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLRPCmessages_getInlineBotResults.mm; sourceTree = "<group>"; };
 		D0D17EDA1CAEB13A00C4750B /* TGBotContextResultSendMessageGeo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGBotContextResultSendMessageGeo.h; sourceTree = "<group>"; };
 		D0D17EDB1CAEB13A00C4750B /* TGBotContextResultSendMessageGeo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGBotContextResultSendMessageGeo.m; sourceTree = "<group>"; };
 		D0D17EE21CAEB17600C4750B /* TGBotContextResultSendMessageContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGBotContextResultSendMessageContact.h; sourceTree = "<group>"; };
 		D0D17EE31CAEB17600C4750B /* TGBotContextResultSendMessageContact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGBotContextResultSendMessageContact.m; sourceTree = "<group>"; };
-		D0D17EE61CB01F7E00C4750B /* TLBotInlineResult$botInlineMediaResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLBotInlineResult$botInlineMediaResult.h; sourceTree = "<group>"; };
-		D0D17EE71CB01F7E00C4750B /* TLBotInlineResult$botInlineMediaResult.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLBotInlineResult$botInlineMediaResult.mm; sourceTree = "<group>"; };
+		D0D17EE61CB01F7E00C4750B /* TLBotInlineResult$botInlineMediaResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLBotInlineResult$botInlineMediaResult.h"; sourceTree = "<group>"; };
+		D0D17EE71CB01F7E00C4750B /* TLBotInlineResult$botInlineMediaResult.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "TLBotInlineResult$botInlineMediaResult.mm"; sourceTree = "<group>"; };
 		D0D17EF91CB28A5F00C4750B /* TGPreparedDownloadExternalDocumentMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPreparedDownloadExternalDocumentMessage.h; sourceTree = "<group>"; };
 		D0D17EFA1CB28A5F00C4750B /* TGPreparedDownloadExternalDocumentMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPreparedDownloadExternalDocumentMessage.m; sourceTree = "<group>"; };
 		D0D17F0C1CB4102A00C4750B /* botbutton_phone@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "botbutton_phone@2x.png"; path = "Resources/botbutton_phone@2x.png"; sourceTree = "<group>"; };
 		D0D17F0D1CB4102A00C4750B /* botbutton_location@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "botbutton_location@2x.png"; path = "Resources/botbutton_location@2x.png"; sourceTree = "<group>"; };
 		D0D17F0E1CB4102A00C4750B /* botbutton_msg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "botbutton_msg@2x.png"; path = "Resources/botbutton_msg@2x.png"; sourceTree = "<group>"; };
-		D0D17F211CB5297200C4750B /* TLBotInlineMessage$botInlineMessageMediaAuto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLBotInlineMessage$botInlineMessageMediaAuto.h; sourceTree = "<group>"; };
-		D0D17F221CB5297200C4750B /* TLBotInlineMessage$botInlineMessageMediaAuto.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLBotInlineMessage$botInlineMessageMediaAuto.mm; sourceTree = "<group>"; };
-		D0D17F251CB52AA700C4750B /* TLBotInlineMessage$botInlineMessageMediaGeo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLBotInlineMessage$botInlineMessageMediaGeo.h; sourceTree = "<group>"; };
-		D0D17F261CB52AA700C4750B /* TLBotInlineMessage$botInlineMessageMediaGeo.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLBotInlineMessage$botInlineMessageMediaGeo.mm; sourceTree = "<group>"; };
-		D0D17F291CB52B4E00C4750B /* TLBotInlineMessage$botInlineMessageMediaVenue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLBotInlineMessage$botInlineMessageMediaVenue.h; sourceTree = "<group>"; };
-		D0D17F2A1CB52B4E00C4750B /* TLBotInlineMessage$botInlineMessageMediaVenue.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLBotInlineMessage$botInlineMessageMediaVenue.mm; sourceTree = "<group>"; };
+		D0D17F211CB5297200C4750B /* TLBotInlineMessage$botInlineMessageMediaAuto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLBotInlineMessage$botInlineMessageMediaAuto.h"; sourceTree = "<group>"; };
+		D0D17F221CB5297200C4750B /* TLBotInlineMessage$botInlineMessageMediaAuto.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "TLBotInlineMessage$botInlineMessageMediaAuto.mm"; sourceTree = "<group>"; };
+		D0D17F251CB52AA700C4750B /* TLBotInlineMessage$botInlineMessageMediaGeo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLBotInlineMessage$botInlineMessageMediaGeo.h"; sourceTree = "<group>"; };
+		D0D17F261CB52AA700C4750B /* TLBotInlineMessage$botInlineMessageMediaGeo.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "TLBotInlineMessage$botInlineMessageMediaGeo.mm"; sourceTree = "<group>"; };
+		D0D17F291CB52B4E00C4750B /* TLBotInlineMessage$botInlineMessageMediaVenue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLBotInlineMessage$botInlineMessageMediaVenue.h"; sourceTree = "<group>"; };
+		D0D17F2A1CB52B4E00C4750B /* TLBotInlineMessage$botInlineMessageMediaVenue.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "TLBotInlineMessage$botInlineMessageMediaVenue.mm"; sourceTree = "<group>"; };
 		D0D2CD0D1AC34C74001DD21C /* TGGoogleDriveThumbnailDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGGoogleDriveThumbnailDataSource.h; sourceTree = "<group>"; };
 		D0D2CD0E1AC34C74001DD21C /* TGGoogleDriveThumbnailDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGGoogleDriveThumbnailDataSource.m; sourceTree = "<group>"; };
 		D0D3314C15C8394400CFDB84 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = "TelegraphNetwork/TelegraphNetwork/Third-Party/lib/libcrypto.a"; sourceTree = "<group>"; };
@@ -11072,17 +11072,17 @@
 		D0D43CDF1B9F053300F6C78F /* TGQueuedReadChannelMessages.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGQueuedReadChannelMessages.m; sourceTree = "<group>"; };
 		D0D43CE21BA08DE500F6C78F /* TGQueuedLeaveChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGQueuedLeaveChannel.h; sourceTree = "<group>"; };
 		D0D43CE31BA08DE500F6C78F /* TGQueuedLeaveChannel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGQueuedLeaveChannel.m; sourceTree = "<group>"; };
-		D0D43CE61BA0A4AE00F6C78F /* TLChatFull$channelFull.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLChatFull$channelFull.h; sourceTree = "<group>"; };
-		D0D43CE71BA0A4AE00F6C78F /* TLChatFull$channelFull.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLChatFull$channelFull.mm; sourceTree = "<group>"; };
+		D0D43CE61BA0A4AE00F6C78F /* TLChatFull$channelFull.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLChatFull$channelFull.h"; sourceTree = "<group>"; };
+		D0D43CE71BA0A4AE00F6C78F /* TLChatFull$channelFull.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "TLChatFull$channelFull.mm"; sourceTree = "<group>"; };
 		D0D443B7195315D500CF2A7E /* Icon-76@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-76@2x.png"; sourceTree = "<group>"; };
-		D0D541C51B8632E9005F676C /* TLMessage$modernMessageService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMessage$modernMessageService.h; sourceTree = "<group>"; };
-		D0D541C61B8632E9005F676C /* TLMessage$modernMessageService.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLMessage$modernMessageService.mm; sourceTree = "<group>"; };
+		D0D541C51B8632E9005F676C /* TLMessage$modernMessageService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLMessage$modernMessageService.h"; sourceTree = "<group>"; };
+		D0D541C61B8632E9005F676C /* TLMessage$modernMessageService.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "TLMessage$modernMessageService.mm"; sourceTree = "<group>"; };
 		D0D541CA1B864735005F676C /* TGChannelManagementSignals.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGChannelManagementSignals.h; sourceTree = "<group>"; };
 		D0D541CB1B864735005F676C /* TGChannelManagementSignals.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGChannelManagementSignals.m; sourceTree = "<group>"; };
 		D0D541CE1B87391F005F676C /* TGChannelList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGChannelList.h; sourceTree = "<group>"; };
 		D0D541CF1B87391F005F676C /* TGChannelList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGChannelList.m; sourceTree = "<group>"; };
-		D0D541D21B877EB8005F676C /* TLmessages_Messages$modernChannelMessages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLmessages_Messages$modernChannelMessages.h; sourceTree = "<group>"; };
-		D0D541D31B877EB8005F676C /* TLmessages_Messages$modernChannelMessages.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLmessages_Messages$modernChannelMessages.mm; sourceTree = "<group>"; };
+		D0D541D21B877EB8005F676C /* TLmessages_Messages$modernChannelMessages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLmessages_Messages$modernChannelMessages.h"; sourceTree = "<group>"; };
+		D0D541D31B877EB8005F676C /* TLmessages_Messages$modernChannelMessages.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "TLmessages_Messages$modernChannelMessages.mm"; sourceTree = "<group>"; };
 		D0D5CFFE1B7A69AD00DAF839 /* SharedMediaEmptyLinks@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "SharedMediaEmptyLinks@2x.png"; path = "Resources/SharedMediaEmptyLinks@2x.png"; sourceTree = "<group>"; };
 		D0D5CFFF1B7A69AD00DAF839 /* SharedMediaEmptyLinks@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "SharedMediaEmptyLinks@3x.png"; path = "Resources/SharedMediaEmptyLinks@3x.png"; sourceTree = "<group>"; };
 		D0D670D3197EA36C0031B041 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = InfoPlist.strings; sourceTree = "<group>"; };
@@ -11114,16 +11114,16 @@
 		D0DB57CB1E5C6FC50071854C /* Enterprise.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Enterprise.entitlements; sourceTree = "<group>"; };
 		D0DB965918DC85030013B9DC /* TGDownloadLocalizationActor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGDownloadLocalizationActor.h; sourceTree = "<group>"; };
 		D0DB965A18DC85030013B9DC /* TGDownloadLocalizationActor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGDownloadLocalizationActor.m; sourceTree = "<group>"; };
-		D0DB9AE01E3B3E4D0040CE3A /* TLInvoice$invoice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLInvoice$invoice.h; sourceTree = "<group>"; };
-		D0DB9AE11E3B3E4D0040CE3A /* TLInvoice$invoice.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLInvoice$invoice.mm; sourceTree = "<group>"; };
-		D0DB9B411E3B406B0040CE3A /* TLMessageMedia$messageMediaInvoice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMessageMedia$messageMediaInvoice.h; sourceTree = "<group>"; };
-		D0DB9B421E3B406B0040CE3A /* TLMessageMedia$messageMediaInvoice.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLMessageMedia$messageMediaInvoice.mm; sourceTree = "<group>"; };
-		D0DB9B451E3B41EF0040CE3A /* TLpayments_PaymentForm$payments_paymentForm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLpayments_PaymentForm$payments_paymentForm.h; sourceTree = "<group>"; };
-		D0DB9B461E3B41EF0040CE3A /* TLpayments_PaymentForm$payments_paymentForm.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLpayments_PaymentForm$payments_paymentForm.mm; sourceTree = "<group>"; };
-		D0DB9B491E3B43050040CE3A /* TLpayments_SavedInfo$payments_savedInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLpayments_SavedInfo$payments_savedInfo.h; sourceTree = "<group>"; };
-		D0DB9B4A1E3B43050040CE3A /* TLpayments_SavedInfo$payments_savedInfo.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLpayments_SavedInfo$payments_savedInfo.mm; sourceTree = "<group>"; };
-		D0DB9B4D1E3B44070040CE3A /* TLPaymentRequestedInfo$paymentRequestedInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLPaymentRequestedInfo$paymentRequestedInfo.h; sourceTree = "<group>"; };
-		D0DB9B4E1E3B44070040CE3A /* TLPaymentRequestedInfo$paymentRequestedInfo.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLPaymentRequestedInfo$paymentRequestedInfo.mm; sourceTree = "<group>"; };
+		D0DB9AE01E3B3E4D0040CE3A /* TLInvoice$invoice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLInvoice$invoice.h"; sourceTree = "<group>"; };
+		D0DB9AE11E3B3E4D0040CE3A /* TLInvoice$invoice.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "TLInvoice$invoice.mm"; sourceTree = "<group>"; };
+		D0DB9B411E3B406B0040CE3A /* TLMessageMedia$messageMediaInvoice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLMessageMedia$messageMediaInvoice.h"; sourceTree = "<group>"; };
+		D0DB9B421E3B406B0040CE3A /* TLMessageMedia$messageMediaInvoice.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "TLMessageMedia$messageMediaInvoice.mm"; sourceTree = "<group>"; };
+		D0DB9B451E3B41EF0040CE3A /* TLpayments_PaymentForm$payments_paymentForm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLpayments_PaymentForm$payments_paymentForm.h"; sourceTree = "<group>"; };
+		D0DB9B461E3B41EF0040CE3A /* TLpayments_PaymentForm$payments_paymentForm.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "TLpayments_PaymentForm$payments_paymentForm.mm"; sourceTree = "<group>"; };
+		D0DB9B491E3B43050040CE3A /* TLpayments_SavedInfo$payments_savedInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLpayments_SavedInfo$payments_savedInfo.h"; sourceTree = "<group>"; };
+		D0DB9B4A1E3B43050040CE3A /* TLpayments_SavedInfo$payments_savedInfo.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "TLpayments_SavedInfo$payments_savedInfo.mm"; sourceTree = "<group>"; };
+		D0DB9B4D1E3B44070040CE3A /* TLPaymentRequestedInfo$paymentRequestedInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLPaymentRequestedInfo$paymentRequestedInfo.h"; sourceTree = "<group>"; };
+		D0DB9B4E1E3B44070040CE3A /* TLPaymentRequestedInfo$paymentRequestedInfo.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "TLPaymentRequestedInfo$paymentRequestedInfo.mm"; sourceTree = "<group>"; };
 		D0DC8BCB19A3C45600DBF43E /* TGModernGalleryZoomableItemViewContent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TGModernGalleryZoomableItemViewContent.h; sourceTree = "<group>"; };
 		D0DCF4F71AE9230F00D5B7A1 /* TGPeerInfoSignals.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPeerInfoSignals.h; sourceTree = "<group>"; };
 		D0DCF4F81AE9230F00D5B7A1 /* TGPeerInfoSignals.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPeerInfoSignals.m; sourceTree = "<group>"; };
@@ -11251,8 +11251,8 @@
 		D0E352581E5E4127007E6EB8 /* stp_icon_chevron_left@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_icon_chevron_left@3x.png"; sourceTree = "<group>"; };
 		D0E3525A1E5E4127007E6EB8 /* stp_icon_chevron_right_small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_icon_chevron_right_small@2x.png"; sourceTree = "<group>"; };
 		D0E3525B1E5E4127007E6EB8 /* stp_icon_chevron_right_small@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_icon_chevron_right_small@3x.png"; sourceTree = "<group>"; };
-		D0E3C2781D54D2240073C750 /* TLConfig$config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLConfig$config.h; sourceTree = "<group>"; };
-		D0E3C2791D54D2240073C750 /* TLConfig$config.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLConfig$config.mm; sourceTree = "<group>"; };
+		D0E3C2781D54D2240073C750 /* TLConfig$config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLConfig$config.h"; sourceTree = "<group>"; };
+		D0E3C2791D54D2240073C750 /* TLConfig$config.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "TLConfig$config.mm"; sourceTree = "<group>"; };
 		D0E3C28A1D54DD870073C750 /* TGRevokeLinkConversationItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGRevokeLinkConversationItem.h; sourceTree = "<group>"; };
 		D0E3C28B1D54DD870073C750 /* TGRevokeLinkConversationItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGRevokeLinkConversationItem.m; sourceTree = "<group>"; };
 		D0E3C28E1D54DD950073C750 /* TGRevokeLinkConversationItemView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGRevokeLinkConversationItemView.h; sourceTree = "<group>"; };
@@ -11376,16 +11376,16 @@
 		D0ECB9F71BBBED3A005C5525 /* ChannelVerifiedIconSmall@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ChannelVerifiedIconSmall@3x.png"; path = "Resources/ChannelVerifiedIconSmall@3x.png"; sourceTree = "<group>"; };
 		D0EDACBE1C8B59910021B80F /* TGConvertToSupergroupController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGConvertToSupergroupController.h; sourceTree = "<group>"; };
 		D0EDACBF1C8B59910021B80F /* TGConvertToSupergroupController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGConvertToSupergroupController.m; sourceTree = "<group>"; };
-		D0EDACCD1C8C3D4C0021B80F /* TLUpdate$updateChannelTooLong.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLUpdate$updateChannelTooLong.h; sourceTree = "<group>"; };
-		D0EDACCE1C8C3D4C0021B80F /* TLUpdate$updateChannelTooLong.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLUpdate$updateChannelTooLong.m; sourceTree = "<group>"; };
+		D0EDACCD1C8C3D4C0021B80F /* TLUpdate$updateChannelTooLong.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLUpdate$updateChannelTooLong.h"; sourceTree = "<group>"; };
+		D0EDACCE1C8C3D4C0021B80F /* TLUpdate$updateChannelTooLong.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TLUpdate$updateChannelTooLong.m"; sourceTree = "<group>"; };
 		D0EDACD11C8CAD630021B80F /* TGCachedUserData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGCachedUserData.h; sourceTree = "<group>"; };
 		D0EDACD21C8CAD630021B80F /* TGCachedUserData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGCachedUserData.m; sourceTree = "<group>"; };
 		D0EDACD61C8CB1850021B80F /* TGUserAboutSetupController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGUserAboutSetupController.h; sourceTree = "<group>"; };
 		D0EDACD71C8CB1850021B80F /* TGUserAboutSetupController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGUserAboutSetupController.m; sourceTree = "<group>"; };
 		D0EDACDA1C8DD2DA0021B80F /* TGCachedPeerSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGCachedPeerSettings.h; sourceTree = "<group>"; };
 		D0EDACDB1C8DD2DA0021B80F /* TGCachedPeerSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGCachedPeerSettings.m; sourceTree = "<group>"; };
-		D0EDE5561D9AB54C005D4CE8 /* TLGame$game.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLGame$game.h; sourceTree = "<group>"; };
-		D0EDE5571D9AB54C005D4CE8 /* TLGame$game.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLGame$game.mm; sourceTree = "<group>"; };
+		D0EDE5561D9AB54C005D4CE8 /* TLGame$game.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLGame$game.h"; sourceTree = "<group>"; };
+		D0EDE5571D9AB54C005D4CE8 /* TLGame$game.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "TLGame$game.mm"; sourceTree = "<group>"; };
 		D0EDE57A1D9AD597005D4CE8 /* TGPreparedGameMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPreparedGameMessage.h; sourceTree = "<group>"; };
 		D0EDE57B1D9AD597005D4CE8 /* TGPreparedGameMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPreparedGameMessage.m; sourceTree = "<group>"; };
 		D0EDECEA1924FA5F007314E3 /* TGAnimationThumbnailDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGAnimationThumbnailDataSource.h; sourceTree = "<group>"; };
@@ -11424,8 +11424,8 @@
 		D0F057FD15EFC16900005C73 /* TGConversationCreateChatRequestActor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGConversationCreateChatRequestActor.m; sourceTree = "<group>"; };
 		D0F0AAF51EC37770005EE2A5 /* Apple_Pay_Payment_Mark@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Apple_Pay_Payment_Mark@3x.png"; path = "Resources/Apple_Pay_Payment_Mark@3x.png"; sourceTree = "<group>"; };
 		D0F0AAF61EC37770005EE2A5 /* Apple_Pay_Payment_Mark@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Apple_Pay_Payment_Mark@2x.png"; path = "Resources/Apple_Pay_Payment_Mark@2x.png"; sourceTree = "<group>"; };
-		D0F223411D5659CB00248E33 /* TLauth_Authorization$auth_authorization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLauth_Authorization$auth_authorization.h; sourceTree = "<group>"; };
-		D0F223421D5659CB00248E33 /* TLauth_Authorization$auth_authorization.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLauth_Authorization$auth_authorization.mm; sourceTree = "<group>"; };
+		D0F223411D5659CB00248E33 /* TLauth_Authorization$auth_authorization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLauth_Authorization$auth_authorization.h"; sourceTree = "<group>"; };
+		D0F223421D5659CB00248E33 /* TLauth_Authorization$auth_authorization.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "TLauth_Authorization$auth_authorization.mm"; sourceTree = "<group>"; };
 		D0F2E1091E3B698A00759C97 /* TGPaymentForm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPaymentForm.h; sourceTree = "<group>"; };
 		D0F2E10A1E3B698A00759C97 /* TGPaymentForm.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPaymentForm.m; sourceTree = "<group>"; };
 		D0F2E10E1E3B725400759C97 /* TGPaymentCheckoutInfoController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPaymentCheckoutInfoController.h; sourceTree = "<group>"; };
@@ -11479,10 +11479,10 @@
 		D0F7B4F11C288361008C5DB1 /* TGPreparedDownloadExternalImageMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPreparedDownloadExternalImageMessage.h; sourceTree = "<group>"; };
 		D0F7B4F21C288361008C5DB1 /* TGPreparedDownloadExternalImageMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPreparedDownloadExternalImageMessage.m; sourceTree = "<group>"; };
 		D0F87BAB1DB76909009CFD01 /* TGCallState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGCallState.m; sourceTree = "<group>"; };
-		D0F904EA1C32C5380026ECAE /* TLBotInlineMessage$botInlineMessageText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLBotInlineMessage$botInlineMessageText.h; sourceTree = "<group>"; };
-		D0F904EB1C32C5380026ECAE /* TLBotInlineMessage$botInlineMessageText.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLBotInlineMessage$botInlineMessageText.mm; sourceTree = "<group>"; };
-		D0F904FC1C32C68A0026ECAE /* TLBotInlineResult$botInlineResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLBotInlineResult$botInlineResult.h; sourceTree = "<group>"; };
-		D0F904FD1C32C68A0026ECAE /* TLBotInlineResult$botInlineResult.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLBotInlineResult$botInlineResult.mm; sourceTree = "<group>"; };
+		D0F904EA1C32C5380026ECAE /* TLBotInlineMessage$botInlineMessageText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLBotInlineMessage$botInlineMessageText.h"; sourceTree = "<group>"; };
+		D0F904EB1C32C5380026ECAE /* TLBotInlineMessage$botInlineMessageText.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "TLBotInlineMessage$botInlineMessageText.mm"; sourceTree = "<group>"; };
+		D0F904FC1C32C68A0026ECAE /* TLBotInlineResult$botInlineResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLBotInlineResult$botInlineResult.h"; sourceTree = "<group>"; };
+		D0F904FD1C32C68A0026ECAE /* TLBotInlineResult$botInlineResult.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "TLBotInlineResult$botInlineResult.mm"; sourceTree = "<group>"; };
 		D0F905041C32CCC40026ECAE /* TLRPCmessages_sendInlineBotResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLRPCmessages_sendInlineBotResult.h; sourceTree = "<group>"; };
 		D0F905051C32CCC40026ECAE /* TLRPCmessages_sendInlineBotResult.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLRPCmessages_sendInlineBotResult.mm; sourceTree = "<group>"; };
 		D0F9050C1C32DB400026ECAE /* TGBotContextResultSendMessageAuto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGBotContextResultSendMessageAuto.h; sourceTree = "<group>"; };
@@ -11500,12 +11500,12 @@
 		D0F9E8851C5A954800037222 /* TGModernConversationAudioPreviewInputPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGModernConversationAudioPreviewInputPanel.h; sourceTree = "<group>"; };
 		D0F9E8861C5A954800037222 /* TGModernConversationAudioPreviewInputPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGModernConversationAudioPreviewInputPanel.m; sourceTree = "<group>"; };
 		D0FA83ED1BAF3A9D00CAD1DE /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = Localizable.strings; sourceTree = "<group>"; };
-		D0FB04DD1BEB6C8D0033901A /* TLChat$chat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLChat$chat.h; sourceTree = "<group>"; };
-		D0FB04DE1BEB6C8D0033901A /* TLChat$chat.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLChat$chat.mm; sourceTree = "<group>"; };
-		D0FC06E51B1C16B2008CC3BB /* TLUser$modernUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLUser$modernUser.h; sourceTree = "<group>"; };
-		D0FC06E61B1C16B2008CC3BB /* TLUser$modernUser.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLUser$modernUser.mm; sourceTree = "<group>"; };
-		D0FC07011B1C38DD008CC3BB /* TLDcOption$modernDcOption.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLDcOption$modernDcOption.h; sourceTree = "<group>"; };
-		D0FC07021B1C38DD008CC3BB /* TLDcOption$modernDcOption.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TLDcOption$modernDcOption.mm; sourceTree = "<group>"; };
+		D0FB04DD1BEB6C8D0033901A /* TLChat$chat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLChat$chat.h"; sourceTree = "<group>"; };
+		D0FB04DE1BEB6C8D0033901A /* TLChat$chat.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "TLChat$chat.mm"; sourceTree = "<group>"; };
+		D0FC06E51B1C16B2008CC3BB /* TLUser$modernUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLUser$modernUser.h"; sourceTree = "<group>"; };
+		D0FC06E61B1C16B2008CC3BB /* TLUser$modernUser.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "TLUser$modernUser.mm"; sourceTree = "<group>"; };
+		D0FC07011B1C38DD008CC3BB /* TLDcOption$modernDcOption.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLDcOption$modernDcOption.h"; sourceTree = "<group>"; };
+		D0FC07021B1C38DD008CC3BB /* TLDcOption$modernDcOption.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "TLDcOption$modernDcOption.mm"; sourceTree = "<group>"; };
 		D0FC070E1B1CF918008CC3BB /* TGBotUserInfoController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGBotUserInfoController.h; sourceTree = "<group>"; };
 		D0FC070F1B1CF918008CC3BB /* TGBotUserInfoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGBotUserInfoController.m; sourceTree = "<group>"; };
 		D0FC07131B1D0281008CC3BB /* TGBotSignals.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGBotSignals.h; sourceTree = "<group>"; };
@@ -11544,6 +11544,7 @@
 		D0FFBDDD1BAB0E7300F532C9 /* TGChannelMembersController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGChannelMembersController.h; sourceTree = "<group>"; };
 		D0FFBDDE1BAB0E7300F532C9 /* TGChannelMembersController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGChannelMembersController.m; sourceTree = "<group>"; };
 		D34639DB4BD9C4D4AE6A9E41 /* Pods_Telegraph.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Telegraph.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E001A04B3F310178EE785835 /* Pods-Telegraph.release hockeyapp.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Telegraph.release hockeyapp.xcconfig"; path = "Pods/Target Support Files/Pods-Telegraph/Pods-Telegraph.release hockeyapp.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -15564,7 +15565,8 @@
 		CA374ABCB5A1A91D77D2A462 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				9C6C7E49F94BB376923B6948 /* Pods-Telegraph.debug hockeyapp.xcconfig */,
+				0428CF207FCFF52BAD52D2CD /* Pods-Telegraph.debug hockeyapp.xcconfig */,
+				E001A04B3F310178EE785835 /* Pods-Telegraph.release hockeyapp.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -23167,7 +23169,7 @@
 				D01161941F41F1330039383E /* TLaccount_TmpPassword.h in Headers */,
 				D0115F721F41F1300039383E /* TLRPCchannels_reportSpam.h in Headers */,
 				D0115EF61F41F12F0039383E /* TLRPCaccount_checkUsername.h in Headers */,
-				D0177B7E1F2683BF0044446D /* (null) in Headers */,
+				D0177B7E1F2683BF0044446D /* BuildFile in Headers */,
 				68B639641BB2506F00205AC3 /* SDisposable.h in Headers */,
 				D0D43CE01B9F053300F6C78F /* TGQueuedReadChannelMessages.h in Headers */,
 				D01160121F41F1310039383E /* TLRPCmessages_getHistory.h in Headers */,
@@ -23445,7 +23447,7 @@
 				D011600A1F41F1310039383E /* TLRPCmessages_getDocumentByHash.h in Headers */,
 				D0115F1E1F41F12F0039383E /* TLRPCaccount_updateNotifySettings.h in Headers */,
 				D013FA841CDA698E00EF175C /* TGRecentPeersSignals.h in Headers */,
-				D0177BA91F2773E40044446D /* (null) in Headers */,
+				D0177BA91F2773E40044446D /* BuildFile in Headers */,
 				D0115E6A1F41F12E0039383E /* TLmessages_Chat.h in Headers */,
 				D04324CE1DC25D2900E0C528 /* MultipartFetch.h in Headers */,
 				681E538F1BE3770F00944370 /* TGDownloadAudioSignal.h in Headers */,
@@ -23460,7 +23462,7 @@
 				D01160A01F41F1320039383E /* TLRPCphotos_uploadProfilePhoto.h in Headers */,
 				0991B9C71FCB7445005EDFF2 /* TGDefaultPresentationPallete.h in Headers */,
 				D01F956A1E5E3F33002627A1 /* StripeError.h in Headers */,
-				D0177BB11F27769B0044446D /* (null) in Headers */,
+				D0177BB11F27769B0044446D /* BuildFile in Headers */,
 				D0F7B4C81C219E63008C5DB1 /* TGGifKeyboardBalancedPartition.h in Headers */,
 				D011629A1F41F1350039383E /* TLMaskCoords.h in Headers */,
 				68B63D7C1BB25B8D00205AC3 /* TGMediaSignals.h in Headers */,
@@ -23673,7 +23675,7 @@
 				D0D2CD0F1AC34C74001DD21C /* TGGoogleDriveThumbnailDataSource.h in Headers */,
 				D07587641B3B226600117DFF /* TGAudioSessionManager.h in Headers */,
 				D0EE7D241DF0C3690025BA6B /* TGDialogListCellEditingButton.h in Headers */,
-				D0177BAD1F2773F90044446D /* (null) in Headers */,
+				D0177BAD1F2773F90044446D /* BuildFile in Headers */,
 				D0F2E1101E3B725400759C97 /* TGPaymentCheckoutInfoController.h in Headers */,
 				D011628A1F41F1350039383E /* TLInvokeAfterMsg.h in Headers */,
 				D01161A01F41F1330039383E /* TLauth_PasswordRecovery.h in Headers */,
@@ -24944,7 +24946,7 @@
 				091D23771E609CC400A6A322 /* voip_fail.caf in Resources */,
 				0918B6DA1FA109D700EC302B /* SettingsCameraIcon@3x.png in Resources */,
 				D035EBBC194868B700EEEC17 /* Localizable.strings in Resources */,
-				D0177B971F26869C0044446D /* (null) in Resources */,
+				D0177B971F26869C0044446D /* BuildFile in Resources */,
 				68B22D2E1C171BD300EE8FF9 /* SettingsWallpaperIcon@2x.png in Resources */,
 				D08696B31943A8B300770FE7 /* pad-builtin-wallpaper-0-thumbnail.jpg in Resources */,
 				68D68B0E1C9C3A7E0016F742 /* EmbedScanForwardButton@2x.png in Resources */,
@@ -25260,7 +25262,7 @@
 				09BE542C1EA531920026E961 /* TooltipBackground@3x.png in Resources */,
 				D0E3529C1E5E4127007E6EB8 /* stp_icon_checkmark@2x.png in Resources */,
 				D058B6401AC229FE00C995C3 /* ModernMessageLocationPin.png in Resources */,
-				D0177B961F26869C0044446D /* (null) in Resources */,
+				D0177B961F26869C0044446D /* BuildFile in Resources */,
 				0978FEEB1E93C5B600F76E38 /* ModernConversationSend@3x.png in Resources */,
 				D061F28C1A928F580031BCBE /* NavigationBackArrow.png in Resources */,
 				09361CD41E725DCF007ED29C /* ModernBubbleOutgoingPartialHighlighted@3x.png in Resources */,
@@ -26371,7 +26373,7 @@
 				D07498391B99ECB3005F30CC /* TGChannelLinkSetupController.m in Sources */,
 				68B63D571BB25B5200205AC3 /* TGBridgeSignalManager.m in Sources */,
 				D01160631F41F1310039383E /* TLRPCmessages_sendScreenshotNotification.mm in Sources */,
-				09A982591F28B6A8007FF90D /* (null) in Sources */,
+				09A982591F28B6A8007FF90D /* BuildFile in Sources */,
 				684853E11C1A221E00007D21 /* TGBingSearchResultItem+TGMediaItem.m in Sources */,
 				D01162911F41F1350039383E /* TLKeyboardButtonRow.mm in Sources */,
 				6836F8DB1BB2601200D3A77B /* TGBridgeLocationMediaAttachment.m in Sources */,
@@ -26924,7 +26926,7 @@
 				D0083AE91BCD85B600CA1D77 /* TGAttachmentSheetView.m in Sources */,
 				D0249BDE1ABF5B470076ECBF /* GDOAuth2Credential.m in Sources */,
 				6887FE951C772CB700C49B4E /* TGOpenInCarouselItemView.m in Sources */,
-				D0177BB71F2780DB0044446D /* (null) in Sources */,
+				D0177BB71F2780DB0044446D /* BuildFile in Sources */,
 				9332691A16595EA100E87917 /* TGMenuSection.m in Sources */,
 				D01160FD1F41F1320039383E /* TLUserFull.mm in Sources */,
 				D051B1071B04EB85003AFD52 /* TGPhonebookSignals.m in Sources */,
@@ -27024,7 +27026,7 @@
 				932E00EE184B8CC40001D109 /* TGPreparedForwardedMessage.m in Sources */,
 				D0A4D7C81C10B03200537E74 /* TGVTAcceleratedVideoView.m in Sources */,
 				D01162091F41F1340039383E /* TLDataJSON.mm in Sources */,
-				D0177BB21F27769B0044446D /* (null) in Sources */,
+				D0177BB21F27769B0044446D /* BuildFile in Sources */,
 				D011602B1F41F1310039383E /* TLRPCmessages_getUnreadMentions.mm in Sources */,
 				68B63B891BB2581C00205AC3 /* TGBridgeSubscription.m in Sources */,
 				D01162451F41F1350039383E /* TLHighScore.mm in Sources */,
@@ -27496,7 +27498,7 @@
 				D01F95201E5E3DB5002627A1 /* UIView+Stripe_FirstResponder.m in Sources */,
 				D01162031F41F1340039383E /* TLcontacts_TopPeers.mm in Sources */,
 				93064E1A183553820024C05A /* TGModernSendSecretMessageActor.mm in Sources */,
-				D0177BAA1F2773E40044446D /* (null) in Sources */,
+				D0177BAA1F2773E40044446D /* BuildFile in Sources */,
 				D0115FE91F41F1310039383E /* TLRPCmessages_deleteMessages.mm in Sources */,
 				933E6A46170C424A00651252 /* TGVideoDownloadActor.mm in Sources */,
 				D01161C91F41F1340039383E /* TLchannels_AdminLogResults.mm in Sources */,
@@ -27634,7 +27636,7 @@
 				D01162391F41F1350039383E /* TLhelp_AppChangelog.mm in Sources */,
 				934280D7184900C0004F1C2A /* TGModernCheckButtonViewModel.m in Sources */,
 				D01160211F41F1310039383E /* TLRPCmessages_getPinnedDialogs.mm in Sources */,
-				D0177B7F1F2683BF0044446D /* (null) in Sources */,
+				D0177B7F1F2683BF0044446D /* BuildFile in Sources */,
 				D0FC35391B3CF0460041A938 /* TGMusicPlayerItemSignals.m in Sources */,
 				D0115F271F41F1300039383E /* TLRPCauth_cancelCode.mm in Sources */,
 				D008C1FA1C18E088007D2855 /* TGBotContextResults.m in Sources */,
@@ -27957,7 +27959,7 @@
 				D011629D1F41F1350039383E /* TLMessage.mm in Sources */,
 				93ED9EFC1863543200E22F84 /* TGSecretConversationEmptyListView.m in Sources */,
 				D071477B1A14BCC600D7896A /* TGStickerImageDataSource.m in Sources */,
-				D0177BAE1F2773F90044446D /* (null) in Sources */,
+				D0177BAE1F2773F90044446D /* BuildFile in Sources */,
 				D0DEAB1F1A67331A008311D1 /* TGMessageSearchSignals.m in Sources */,
 				D05EEA6D1CA551D900B7AE07 /* TGAudioWebpageFooterModel.m in Sources */,
 				D01161C71F41F1340039383E /* TLChannelParticipantsFilter.mm in Sources */,
@@ -28562,7 +28564,6 @@
 		};
 		099120D11EEAA63400F1366E /* Release Hockeyapp */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9C6C7E49F94BB376923B6948 /* Pods-Telegraph.debug hockeyapp.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -28863,16 +28864,7 @@
 					"$(SRCROOT)/Vendor",
 				);
 				OTHER_CFLAGS = "";
-				"OTHER_CFLAGS[arch=*]" = (
-					"-Wextra",
-					"-DSQLITE_TEMP_STORE=2",
-					"-DSQLITE_HAS_CODEC=1",
-					"-DSQLCIPHER_CRYPTO_CC=1",
-					"-DSQLITE_ENABLE_FTS3",
-					"-DTGVOIP_USE_CUSTOM_CRYPTO",
-					"-DTGVOIP_USE_AUDIO_SESSION",
-					"-DINTERNAL_RELEASE",
-				);
+				"OTHER_CFLAGS[arch=*]" = "-Wextra -DSQLITE_TEMP_STORE=2 -DSQLITE_HAS_CODEC=1 -DSQLCIPHER_CRYPTO_CC=1 -DSQLITE_ENABLE_FTS3 -DTGVOIP_USE_CUSTOM_CRYPTO -DTGVOIP_USE_AUDIO_SESSION -DINTERNAL_RELEASE";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"$(inherited)",
@@ -29393,7 +29385,6 @@
 		};
 		D064420C1E4E299800394D5F /* Release Hockeyapp */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9C6C7E49F94BB376923B6948 /* Pods-Telegraph.debug hockeyapp.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -29436,7 +29427,7 @@
 		};
 		D064420D1E4E299800394D5F /* Release Hockeyapp */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9C6C7E49F94BB376923B6948 /* Pods-Telegraph.debug hockeyapp.xcconfig */;
+			baseConfigurationReference = E001A04B3F310178EE785835 /* Pods-Telegraph.release hockeyapp.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -29505,16 +29496,7 @@
 					"$(SRCROOT)/Vendor",
 				);
 				OTHER_CFLAGS = "";
-				"OTHER_CFLAGS[arch=*]" = (
-					"-DNS_BLOCK_ASSERTIONS",
-					"-DSQLITE_TEMP_STORE=2",
-					"-DSQLITE_HAS_CODEC=1",
-					"-DSQLCIPHER_CRYPTO_CC=1",
-					"-DSQLITE_ENABLE_FTS3",
-					"-DTGVOIP_USE_CUSTOM_CRYPTO",
-					"-DTGVOIP_USE_AUDIO_SESSION",
-					"-DINTERNAL_RELEASE",
-				);
+				"OTHER_CFLAGS[arch=*]" = "-DNS_BLOCK_ASSERTIONS -DSQLITE_TEMP_STORE=2 -DSQLITE_HAS_CODEC=1 -DSQLCIPHER_CRYPTO_CC=1 -DSQLITE_ENABLE_FTS3 -DTGVOIP_USE_CUSTOM_CRYPTO -DTGVOIP_USE_AUDIO_SESSION -DINTERNAL_RELEASE";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"$(inherited)",
@@ -29536,7 +29518,6 @@
 		};
 		D064420E1E4E299800394D5F /* Release Hockeyapp */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9C6C7E49F94BB376923B6948 /* Pods-Telegraph.debug hockeyapp.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -29586,7 +29567,6 @@
 		};
 		D064420F1E4E299800394D5F /* Release Hockeyapp */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9C6C7E49F94BB376923B6948 /* Pods-Telegraph.debug hockeyapp.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = WatchAppIcon;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -29622,7 +29602,6 @@
 		};
 		D06442101E4E299800394D5F /* Release Hockeyapp */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9C6C7E49F94BB376923B6948 /* Pods-Telegraph.debug hockeyapp.xcconfig */;
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -29661,7 +29640,6 @@
 		};
 		D06442111E4E299800394D5F /* Release Hockeyapp */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9C6C7E49F94BB376923B6948 /* Pods-Telegraph.debug hockeyapp.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -29697,7 +29675,6 @@
 		};
 		D06442121E4E299800394D5F /* Release Hockeyapp */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9C6C7E49F94BB376923B6948 /* Pods-Telegraph.debug hockeyapp.xcconfig */;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -29845,7 +29822,7 @@
 		};
 		D08805C5156E8F3600311537 /* Debug Hockeyapp */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9C6C7E49F94BB376923B6948 /* Pods-Telegraph.debug hockeyapp.xcconfig */;
+			baseConfigurationReference = 0428CF207FCFF52BAD52D2CD /* Pods-Telegraph.debug hockeyapp.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -29915,16 +29892,7 @@
 					"$(SRCROOT)/Vendor",
 				);
 				OTHER_CFLAGS = "";
-				"OTHER_CFLAGS[arch=*]" = (
-					"-Wextra",
-					"-DSQLITE_TEMP_STORE=2",
-					"-DSQLITE_HAS_CODEC=1",
-					"-DSQLCIPHER_CRYPTO_CC=1",
-					"-DSQLITE_ENABLE_FTS3",
-					"-DTGVOIP_USE_CUSTOM_CRYPTO",
-					"-DTGVOIP_USE_AUDIO_SESSION",
-					"-DINTERNAL_RELEASE",
-				);
+				"OTHER_CFLAGS[arch=*]" = "-Wextra -DSQLITE_TEMP_STORE=2 -DSQLITE_HAS_CODEC=1 -DSQLCIPHER_CRYPTO_CC=1 -DSQLITE_ENABLE_FTS3 -DTGVOIP_USE_CUSTOM_CRYPTO -DTGVOIP_USE_AUDIO_SESSION -DINTERNAL_RELEASE";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"$(inherited)",
@@ -30015,15 +29983,7 @@
 					"$(SRCROOT)/Vendor",
 				);
 				OTHER_CFLAGS = "";
-				"OTHER_CFLAGS[arch=*]" = (
-					"-DNS_BLOCK_ASSERTIONS",
-					"-DSQLITE_TEMP_STORE=2",
-					"-DSQLITE_HAS_CODEC=1",
-					"-DSQLCIPHER_CRYPTO_CC=1",
-					"-DSQLITE_ENABLE_FTS3",
-					"-DTGVOIP_USE_CUSTOM_CRYPTO",
-					"-DTGVOIP_USE_AUDIO_SESSION",
-				);
+				"OTHER_CFLAGS[arch=*]" = "-DNS_BLOCK_ASSERTIONS -DSQLITE_TEMP_STORE=2 -DSQLITE_HAS_CODEC=1 -DSQLCIPHER_CRYPTO_CC=1 -DSQLITE_ENABLE_FTS3 -DTGVOIP_USE_CUSTOM_CRYPTO -DTGVOIP_USE_AUDIO_SESSION";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"$(inherited)",
