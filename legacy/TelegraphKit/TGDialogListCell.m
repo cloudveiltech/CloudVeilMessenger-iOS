@@ -1595,6 +1595,27 @@ static NSArray *editingButtonTypes(bool muted, bool pinned, bool mutable) {
                 [_avatarView loadGroupPlaceholderWithSize:CGSizeMake(62.0f, 62.0f) conversationId:_conversationId title:_isBroadcast ? @"" : _titleText placeholder:placeholder];
             }
         }
+    } else {
+        _avatarView.fadeTransitionDuration = 0.14;
+        
+        if (_isEncrypted || _conversationId > 0)
+        {
+            NSString *firstName = nil;
+            NSString *lastName = nil;
+            if (_titleLetters.count >= 2)
+            {
+                firstName = _titleLetters[0];
+                lastName = _titleLetters[1];
+            }
+            else if (_titleLetters.count == 1)
+            firstName = _titleLetters[0];
+            
+            [_avatarView loadUserPlaceholderWithSize:CGSizeMake(62.0f, 62.0f) uid:_isEncrypted ? _encryptedUserId : (int32_t)_conversationId firstName:firstName lastName:lastName placeholder:placeholder];
+        }
+        else
+        {
+            [_avatarView loadGroupPlaceholderWithSize:CGSizeMake(62.0f, 62.0f) conversationId:_conversationId title:_isBroadcast ? @"" : _titleText placeholder:placeholder];
+        }
     }
     
     _textView.isMultichat = _isGroupChat;
