@@ -22,6 +22,8 @@
 
 #import "TGDatabase.h"
 
+#import <CloudVeilSecurityManager/CloudVeilSecurityManager-Swift.h>
+
 @interface UIScrollView (CurrentPage)
 - (int)currentPage;
 - (void)setPage:(NSInteger)page;
@@ -550,6 +552,9 @@
         [_stillLogoView removeFromSuperview];
         _stillLogoView = nil;
     }
+    
+    // MARK: - CloudVeil
+    [[MainController shared] firstRunPopupAt:self];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
