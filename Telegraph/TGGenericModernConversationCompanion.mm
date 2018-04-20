@@ -154,6 +154,10 @@
 
 #import "TGSendMessageSignals.h"
 
+// MARK: - CloudVeil
+#import <CloudVeilSecurityManager/CloudVeilSecurityManager-Swift.h>
+
+
 #ifdef DEBUG
 #   define DEBUG_DONOTREAD
 #endif
@@ -764,6 +768,22 @@ static NSString *addGameShareHash(NSString *url, NSString *addHash) {
             }
         }
 #endif*/
+        
+        // MARK: - CloudVeil
+        if ([[MainController shared] disableStickers]) {
+            for (TGMessage *message in sortedTopMessages) {
+                for (id attachment in message.mediaAttachments) {
+                    if ([attachment isKindOfClass:[TGDocumentMediaAttachment class]]) {
+                        for (id attribute in ((TGDocumentMediaAttachment*)attachment).attributes) {
+                            if ([attribute isKindOfClass:[TGDocumentAttributeSticker class]]) {
+                                message.text = ((TGDocumentAttributeSticker*)attribute).alt;
+                                message.mediaAttachments = [NSArray new];
+                            }
+                        }
+                    }
+                }
+            }
+        }
         
         [self _replaceMessages:sortedTopMessages];
     }
