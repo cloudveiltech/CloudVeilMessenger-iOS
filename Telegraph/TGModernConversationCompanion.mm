@@ -61,6 +61,9 @@
 
 #import "TGLiveLocationSignals.h"
 
+// MARK: - CloudVeil
+#import <CloudVeilSecurityManager/CloudVeilSecurityManager-Swift.h>
+
 #if __IPHONE_OS_VERSION_MIN_REQUIRED >= 60000 // iOS 6.0 or later
 #define NEEDS_DISPATCH_RETAIN_RELEASE 0
 #else                                         // iOS 5.X or earlier
@@ -1897,6 +1900,23 @@ static void dispatchOnMessageQueue(dispatch_block_t block, bool synchronous)
 
 - (void)_addMessages:(NSArray *)addedMessages animated:(bool)animated intent:(TGModernConversationAddMessageIntent)intent
 {
+    
+    // MARK: - CloudVeil
+    if ([[MainController shared] disableStickers]) {
+        for (TGMessage *message in addedMessages) {
+            for (id attachment in message.mediaAttachments) {
+                if ([attachment isKindOfClass:[TGDocumentMediaAttachment class]]) {
+                    for (id attribute in ((TGDocumentMediaAttachment*)attachment).attributes) {
+                        if ([attribute isKindOfClass:[TGDocumentAttributeSticker class]]) {
+                            message.text = ((TGDocumentAttributeSticker*)attribute).alt;
+                            message.mediaAttachments = [NSArray new];
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
     [self _addMessages:addedMessages animated:animated intent:intent deletedMessageIds:nil];
 }
 
