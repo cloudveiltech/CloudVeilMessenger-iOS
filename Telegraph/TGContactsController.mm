@@ -1134,7 +1134,7 @@ static bool TGContactListSectionComparator(std::shared_ptr<TGContactListSection>
             inviteLabel.backgroundColor = [UIColor clearColor];
             inviteLabel.textColor = TGAccentColor();
             inviteLabel.font = TGMediumSystemFontOfSize(17);
-            inviteLabel.text = TGLocalized(@"Contacts.InviteToTelegram");
+            inviteLabel.text = TGLocalized(@"Invite to CloudVeil Messenger");
             [inviteLabel sizeToFit];
             inviteLabel.tag = 100;
             [alignmentContainer addSubview:inviteLabel];
@@ -2567,19 +2567,8 @@ static inline NSString *subtitleStringForUser(TGUser *user, bool &subtitleActive
 
 - (NSString *)downloadLink
 {
-    NSString *inviteText = [[NSUserDefaults standardUserDefaults] objectForKey:@"TG_inviteText"];
-    if (inviteText.length > 0)
-    {
-        NSDataDetector *detector = [NSDataDetector dataDetectorWithTypes:NSTextCheckingTypeLink error:nil];
-        NSArray *matches = [detector matchesInString:inviteText options:0 range:NSMakeRange(0, inviteText.length)];
-        if (matches.count > 0)
-        {
-            NSTextCheckingResult *result = matches.firstObject;
-            return [inviteText substringWithRange:result.range];
-        }
-    }
-    
-    return TGLocalized(@"InviteText.URL");;
+    // MARK: - CloudVeil
+    return @"https://itunes.apple.com/us/app/cloudveil-messenger/id1293233612?mt=8";
 }
 
 - (void)inviteInlineButtonPressed
