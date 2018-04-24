@@ -236,6 +236,8 @@ typedef enum {
 @property (nonatomic) bool isDeleted;
 @property (nonatomic) bool isBroadcast;
 @property (nonatomic) bool isChannel;
+@property (nonatomic) bool isBlocked; // MARK: - CloudVeil
+@property (nonatomic) bool isBot; // MARK: - CloudVeil
 
 @property (nonatomic) bool postAsChannel;
 @property (nonatomic) bool hasAdmins;

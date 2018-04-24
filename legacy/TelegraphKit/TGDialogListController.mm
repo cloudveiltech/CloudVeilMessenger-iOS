@@ -92,6 +92,7 @@
 
 // MARK: - CloudVeil
 #import <CloudVeilSecurityManager/CloudVeilSecurityManager-Swift.h>
+#import <MessageUI/MessageUI.h>
 // MARK: ----------------
 
 static bool _debugDoNotJump = false;
@@ -106,7 +107,7 @@ static int64_t lastAppearedConversationId = 0;
 
 @end
 
-@interface TGDialogListController () <TGViewControllerNavigationBarAppearance, UITableViewDelegate, UITableViewDataSource, UIActionSheetDelegate, TGSearchDisplayMixinDelegate, TGCreateContactControllerDelegate, TGKeyCommandResponder>
+@interface TGDialogListController () <TGViewControllerNavigationBarAppearance, UITableViewDelegate, UITableViewDataSource, UIActionSheetDelegate, TGSearchDisplayMixinDelegate, TGCreateContactControllerDelegate, TGKeyCommandResponder, MFMailComposeViewControllerDelegate>
 {
     std::map<int64_t, NSString *> _usersTypingInConversation;
     
@@ -1130,29 +1131,27 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
     
     
     // MARK: - CloudVeil Security
-    for (TGConversation *conversation in items) {
-        if (conversation.isChannelGroup) {
-            
-            if ([[MainController shared] isGroupAvailableWithGroupID:conversation.conversationId] == false) {
-                [_listModel removeObject:conversation];
-            }
-        }
+    for (TGConversation *conversation in _listModel) {
         
-        if (conversation.isChannel) {
-            if ([[MainController shared] isChannelAvailableWithChannelID:conversation.conversationId] == false) {
-                [_listModel removeObject:conversation];
-            }
-        }
+        if (conversation.isChannelGroup)
+            if ([[MainController shared] isGroupAvailableWithGroupID:conversation.conversationId] == false)
+                conversation.isBlocked = true;
         
+        if (conversation.isChannel)
+            if ([[MainController shared] isChannelAvailableWithChannelID:conversation.conversationId] == false)
+                conversation.isBlocked = true;
+       
         if (conversation.isEncrypted) {
             if ([[MainController shared] isSecretChatAvailable] == false)
-                [_listModel removeObject:conversation];
+                conversation.isBlocked = true;
         }
         
         user = [TGDatabaseInstance() loadUser:(int)conversation.conversationId];
         if (user.isBot) {
-            if ([[MainController shared] isBotAvailableWithBotID:conversation.conversationId] == false)
-                [_listModel removeObject:conversation];
+            if ([[MainController shared] isBotAvailableWithBotID:conversation.conversationId] == false) {
+                conversation.isBlocked = true;
+                conversation.isBot = true;
+            }
         }
     }
     // MARK: --------------------
@@ -1478,8 +1477,59 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
     [_dialogListCompanion composeMessageAndOpenSearch:false];
 }
 
+// MARK: - CloudVeil
+- (void)showCloudVeilBlockAlert:(TGConversation *)conversation
+{
+    NSString *type = @"";
+    if (conversation.isBot)
+        type = @"bot";
+    if (conversation.isChannel)
+        type = @"channel";
+    if (conversation.isChannelGroup)
+        type = @"group";
+    
+    NSString *message = [NSString stringWithFormat:@"This %@ is blocked by our server policy. Please contact CloudVeil Support at support@cloudveil.org to request it be unblocked.", type];
+    
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"CloudVeil!" message:message preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDefault handler:nil];
+    [alert addAction:cancel];
+    
+    UIAlertAction *mail = [UIAlertAction actionWithTitle:@"Contact" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        
+        [self showCloudVeilMailAction:conversation];
+    }];
+    [alert addAction:mail];
+    
+    [self presentViewController:alert animated:true completion:nil];
+}
+
+-(void)showCloudVeilMailAction:(TGConversation *)conversation
+{
+    MFMailComposeViewController *mail = [MFMailComposeViewController new];
+    mail.mailComposeDelegate = self;
+    [mail setSubject:[NSString stringWithFormat:@"CloudVeil conversation id: %lld", conversation.conversationId]];
+    [mail setMessageBody:@"" isHTML:false];
+    [mail setToRecipients:@[@"support@cloudveil.org"]];
+    
+    [self presentViewController:mail animated:YES completion:NULL];
+}
+
+- (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    
+    // MARK: - CloudVeil
+    
+    TGConversation *conv = [_listModel objectAtIndex: indexPath.row];
+    if (conv.isBlocked) {
+        [tableView deselectRowAtIndexPath:indexPath animated:false];
+        return [self showCloudVeilBlockAlert:conv];
+    }
+    
     static bool canSelect = true;
     if (canSelect)
     {

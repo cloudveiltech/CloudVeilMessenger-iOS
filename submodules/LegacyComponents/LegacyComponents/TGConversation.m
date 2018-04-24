@@ -516,6 +516,8 @@
         _isDeleted = false;
         _encryptedData = nil;
         _isBroadcast = false;
+        _isBlocked = false; // MARK: - CloudVeil
+        _isBot = false; // MARK: - CloudVeil
         _migratedToChannelId = [coder decodeInt32ForCKey:"mtci"];
         _migratedToChannelAccessHash = [coder decodeInt64ForCKey:"mtch"];
         _restrictionReason = [coder decodeStringForCKey:"rr"];
