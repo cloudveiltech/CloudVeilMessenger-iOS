@@ -104,6 +104,7 @@ typedef enum {
 @property (nonatomic) bool botInlineGeo;
 
 @property (nonatomic, readonly) bool isBot;
+@property (nonatomic) bool isBlocked;
 
 - (id)copyWithZone:(NSZone *)zone;
 

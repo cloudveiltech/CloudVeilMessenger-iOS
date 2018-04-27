@@ -582,7 +582,31 @@ static UIColor *mediaTextColor = nil;
     if ([[MainController shared] disableProfilePhoto] == false) {
         [_avatarView tryFillCache:dict];
     } else {
-        _avatarView.image = nil;
+        [self setDisabledImage];
+    }
+}
+
+-(void)setDisabledImage
+{
+    _avatarView.fadeTransitionDuration = 0.14;
+    
+    if (_isEncrypted || _conversationId > 0)
+    {
+        NSString *firstName = nil;
+        NSString *lastName = nil;
+        if (_titleLetters.count >= 2)
+        {
+            firstName = _titleLetters[0];
+            lastName = _titleLetters[1];
+        }
+        else if (_titleLetters.count == 1)
+            firstName = _titleLetters[0];
+        
+        [_avatarView loadUserPlaceholderWithSize:CGSizeMake(62.0f, 62.0f) uid:_isEncrypted ? _encryptedUserId : (int32_t)_conversationId firstName:firstName lastName:lastName placeholder:nil];
+    }
+    else
+    {
+        [_avatarView loadGroupPlaceholderWithSize:CGSizeMake(62.0f, 62.0f) conversationId:_conversationId title:_isBroadcast ? @"" : _titleText placeholder:nil];
     }
 }
 
@@ -1551,6 +1575,9 @@ static NSArray *editingButtonTypes(bool muted, bool pinned, bool mutable) {
                       placeholder = UIGraphicsGetImageFromCurrentImageContext();
                       UIGraphicsEndImageContext();
                   });
+    
+    // MARK: - CloudVeil
+    
     if ([[MainController shared] disableProfilePhoto] == false) {
         if (_isSavedMessages)
         {
@@ -1574,26 +1601,7 @@ static NSArray *editingButtonTypes(bool muted, bool pinned, bool mutable) {
         }
         else
         {
-            _avatarView.fadeTransitionDuration = 0.14;
-            
-            if (_isEncrypted || _conversationId > 0)
-            {
-                NSString *firstName = nil;
-                NSString *lastName = nil;
-                if (_titleLetters.count >= 2)
-                {
-                    firstName = _titleLetters[0];
-                    lastName = _titleLetters[1];
-                }
-                else if (_titleLetters.count == 1)
-                    firstName = _titleLetters[0];
-                
-                [_avatarView loadUserPlaceholderWithSize:CGSizeMake(62.0f, 62.0f) uid:_isEncrypted ? _encryptedUserId : (int32_t)_conversationId firstName:firstName lastName:lastName placeholder:placeholder];
-            }
-            else
-            {
-                [_avatarView loadGroupPlaceholderWithSize:CGSizeMake(62.0f, 62.0f) conversationId:_conversationId title:_isBroadcast ? @"" : _titleText placeholder:placeholder];
-            }
+            [self setDisabledImage];
         }
     } else {
         _avatarView.fadeTransitionDuration = 0.14;

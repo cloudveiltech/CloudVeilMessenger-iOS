@@ -692,7 +692,12 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
     if (![self _updateControllerInset:false])
         [self controllerInsetUpdated:UIEdgeInsetsZero];
     
+    
+    // MARK: - CloudVeil
     [[MainController shared] appendObserverWithObs:^{
+        
+        [weakSelf updateChannelsAvailability: self.listModel];
+        [weakSelf updateChannelsAvailability: self.searchResultsSections[1][@"items"]];
         [weakSelf.tableView reloadData];
     }];
 }
@@ -788,8 +793,10 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
     
     [self _performSizeChangesWithDuration:0.0f size:_tableView.frame.size];
     
-    
-    
+    // MARK: - CloudVeil
+    __weak TGDialogListController *weakSelf = self;
+    [weakSelf dialogListFullyReloaded:[NSArray arrayWithArray:_listModel]];
+    [weakSelf.tableView reloadData];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -1076,6 +1083,50 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
     _emptyListContainer = nil;
 }
 
+-(void)updateChannelsAvailability:(NSArray *)items
+{
+    // MARK: - CloudVeil Security
+    for (id item in items) {
+        if ([item isKindOfClass:[TGConversation class]]) {
+            
+            TGConversation *conv = item;
+            
+            if (conv.isChannelGroup)
+                if ([[MainController shared] isGroupAvailableWithGroupID:conv.conversationId] == false)
+                    conv.isBlocked = true;
+        
+            if (conv.isChannel)
+                if ([[MainController shared] isChannelAvailableWithChannelID:conv.conversationId] == false)
+                    conv.isBlocked = true;
+            
+            if (conv.isEncrypted)
+                if ([[MainController shared] isSecretChatAvailable] == false)
+                    conv.isBlocked = true;
+            
+            TGUser *user = nil;
+            user = [TGDatabaseInstance() loadUser:(int)conv.conversationId];
+            if (user.isBot) {
+                if ([[MainController shared] isBotAvailableWithBotID:conv.conversationId] == false) {
+                    conv.isBlocked = true;
+                    conv.isBot = true;
+                }
+            }
+        } else if ([item isKindOfClass:[TGUser class]]) {
+            
+            TGUser *user = item;
+            
+            if (user.isBot) {
+                if ([[MainController shared] isBotAvailableWithBotID:user.uid] == false) {
+                    user.isBlocked = true;
+                }
+            }
+        }
+    }
+    
+    [_tableView reloadData];
+    // MARK: --------------------
+}
+
 - (void)dialogListFullyReloaded:(NSArray *)items
 {
     if (_listModel.count == 0)
@@ -1127,34 +1178,6 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
     
     [_listModel removeAllObjects];
     [_listModel addObjectsFromArray:items];
-    
-    
-    
-    // MARK: - CloudVeil Security
-    for (TGConversation *conversation in _listModel) {
-        
-        if (conversation.isChannelGroup)
-            if ([[MainController shared] isGroupAvailableWithGroupID:conversation.conversationId] == false)
-                conversation.isBlocked = true;
-        
-        if (conversation.isChannel)
-            if ([[MainController shared] isChannelAvailableWithChannelID:conversation.conversationId] == false)
-                conversation.isBlocked = true;
-       
-        if (conversation.isEncrypted) {
-            if ([[MainController shared] isSecretChatAvailable] == false)
-                conversation.isBlocked = true;
-        }
-        
-        user = [TGDatabaseInstance() loadUser:(int)conversation.conversationId];
-        if (user.isBot) {
-            if ([[MainController shared] isBotAvailableWithBotID:conversation.conversationId] == false) {
-                conversation.isBlocked = true;
-                conversation.isBot = true;
-            }
-        }
-    }
-    // MARK: --------------------
     
     [self reloadData:_reloadWithAnimations];
     _reloadWithAnimations = false;
@@ -1407,6 +1430,10 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
     }
     
     _searchResultsSections = searchResultsSections;
+    
+    if (searchResultsSections.count != 0)
+        [self updateChannelsAvailability:searchResultsSections[0][@"items"]];
+    
     _searchResultsQuery = searchString;
     
     [_searchMixin reloadSearchResults];
@@ -1565,6 +1592,27 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
     }
     else
     {
+        
+        id conv = [_searchResultsSections[indexPath.section][@"items"] objectAtIndex: indexPath.row];
+        
+        if ([conv isKindOfClass:[TGConversation class]]){
+            TGConversation *conversation = conv;
+            if (conversation.isBlocked || conversation.isBlocked) {
+                [tableView deselectRowAtIndexPath:indexPath animated:false];
+                return [self showCloudVeilBlockAlert:conv];
+            }
+        } else if ([conv isKindOfClass:[TGUser class]]) {
+            
+            TGUser *user = conv;
+            if (user.isBlocked) {
+                [tableView deselectRowAtIndexPath:indexPath animated:false];
+                TGConversation *con = [TGConversation new];
+                con.isBot = true;
+                
+                return [self showCloudVeilBlockAlert:con];
+            }
+        }
+        
         id result = [_searchResultsSections[indexPath.section][@"items"] objectAtIndex:indexPath.row];
         
         if ([result isKindOfClass:[TGConversation class]])
@@ -1643,8 +1691,10 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
         
         return _listModel.count;
     }
-    else
+    else {
+        [self updateChannelsAvailability:self.searchResultsSections[section][@"items"]];
         return [(NSArray *)_searchResultsSections[section][@"items"] count];
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -2558,6 +2608,8 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
     
     [_searchMixin reloadSearchResults];
     [_searchMixin setSearchResultsTableViewHidden:false animated:true];
+    
+    [self updateChannelsAvailability:self.searchResultsSections[1][@"items"]];
 }
 
 - (void)searchMixinWillDeactivate:(bool)animated
