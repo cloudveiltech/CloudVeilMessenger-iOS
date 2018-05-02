@@ -1551,6 +1551,7 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
     
     // MARK: - CloudVeil
     
+    [self updateChannelsAvailability:_listModel];
     TGConversation *conv = [_listModel objectAtIndex: indexPath.row];
     if (conv.isBlocked) {
         [tableView deselectRowAtIndexPath:indexPath animated:false];
@@ -3266,6 +3267,13 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
                 previewingContext.sourceRect = [self.view convertRect:CGRectInset(cell.frame, 0.0f, 2.0f) fromView:_tableView];
                 
                 _previewPeerId = ((TGDialogListCell *)cell).conversationId;
+                
+                // MARK: - CloudVeil
+                NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+                TGConversation *conv = self.listModel[indexPath.row];
+                if (conv.isBlocked)
+                    return nil;
+                // ----------------
                 
                 TGModernConversationController *controller = [[TGInterfaceManager instance] configuredPreviewConversationControlerWithId:((TGDialogListCell *)cell).conversationId];
                 return controller;
