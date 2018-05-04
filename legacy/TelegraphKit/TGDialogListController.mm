@@ -797,6 +797,8 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
     __weak TGDialogListController *weakSelf = self;
     [weakSelf dialogListFullyReloaded:[NSArray arrayWithArray:_listModel]];
     [weakSelf.tableView reloadData];
+    
+    [self reciveChannelsAvailability:_listModel];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -1091,7 +1093,7 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
             
             TGConversation *conv = item;
             
-            if (conv.isChannelGroup)
+            if (conv.flags == 64)
                 if ([[MainController shared] isGroupAvailableWithGroupID:conv.conversationId] == false)
                     conv.isBlocked = true;
         
@@ -1127,6 +1129,42 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
     // MARK: --------------------
 }
 
+- (void)reciveChannelsAvailability:(NSArray *)items
+{
+    // MARK: - CloudVeil Security
+    TGUser *user = nil;
+    NSMutableArray *securityGroups = [NSMutableArray new];
+    NSMutableArray *securityChannels = [NSMutableArray new];
+    NSMutableArray *securityBots = [NSMutableArray new];
+    for (TGConversation *conversation in items) {
+        
+        TGRow *row = [TGRow alloc];
+        row.objectID = conversation.conversationId;
+        row.title = conversation.chatTitle;
+        row.userName = conversation.username;
+        
+        if (conversation.flags == 64)
+            [securityGroups addObject:row];
+        
+        if (conversation.isChannel)
+            [securityChannels addObject:row];
+        
+        user = [TGDatabaseInstance() loadUser:(int)conversation.conversationId];
+        if (user.isBot) {
+            
+            row.title = user.firstName;
+            row.userName = user.userName;
+            [securityBots addObject:row];
+        }
+    }
+    
+    if (securityGroups.count == 0 && securityBots.count == 0 && securityChannels.count == 0)
+        return;
+    
+    [[MainController shared] getSettingsWithGroups:securityGroups bots:securityBots channels:securityChannels];
+    // MARK: --------------------
+}
+
 - (void)dialogListFullyReloaded:(NSArray *)items
 {
     if (_listModel.count == 0)
@@ -1145,36 +1183,7 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
         }
     }
     
-    
-    // MARK: - CloudVeil Security
-    TGUser *user = nil;
-    NSMutableArray *securityGroups = [NSMutableArray new];
-    NSMutableArray *securityChannels = [NSMutableArray new];
-    NSMutableArray *securityBots = [NSMutableArray new];
-    for (TGConversation *conversation in items) {
-        
-        TGRow *row = [TGRow alloc];
-        row.objectID = conversation.conversationId;
-        row.title = conversation.chatTitle;
-        row.userName = conversation.username;
-        
-        if (conversation.isChannelGroup)
-            [securityGroups addObject:row];
-        
-        if (conversation.isChannel)
-            [securityChannels addObject:row];
-        
-        user = [TGDatabaseInstance() loadUser:(int)conversation.conversationId];
-        if (user.isBot) {
-        
-            row.title = user.firstName;
-            row.userName = user.userName;
-            [securityBots addObject:row];
-        }
-    }
-    
-    [[MainController shared] getSettingsWithGroups:securityGroups bots:securityBots channels:securityChannels];
-    // MARK: --------------------
+    [self reciveChannelsAvailability:_listModel];
     
     [_listModel removeAllObjects];
     [_listModel addObjectsFromArray:items];
@@ -1512,7 +1521,7 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
         type = @"bot";
     if (conversation.isChannel)
         type = @"channel";
-    if (conversation.isChannelGroup)
+    if (conversation.flags == 64) // MARK: - CloudVeil group flag = 64
         type = @"group";
     
     NSString *message = [NSString stringWithFormat:@"This %@ is blocked by our server policy. Please contact CloudVeil Support at support@cloudveil.org to request it be unblocked.", type];
@@ -1693,7 +1702,7 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
         return _listModel.count;
     }
     else {
-        [self updateChannelsAvailability:self.searchResultsSections[section][@"items"]];
+        
         return [(NSArray *)_searchResultsSections[section][@"items"] count];
     }
 }
@@ -2609,8 +2618,6 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
     
     [_searchMixin reloadSearchResults];
     [_searchMixin setSearchResultsTableViewHidden:false animated:true];
-    
-    [self updateChannelsAvailability:self.searchResultsSections[1][@"items"]];
 }
 
 - (void)searchMixinWillDeactivate:(bool)animated

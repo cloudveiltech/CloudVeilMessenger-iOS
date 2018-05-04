@@ -139,20 +139,20 @@
 }
 
 
--(BOOL)isChannelAvailable:(NSInteger)item
+-(BOOL)isChannelAvailable:(TGConversation *)item
 {
     // MARK: - CloudVeil Security
     
-    if ([[MainController shared] isGroupAvailableWithGroupID:item] == false)
+    if ([[MainController shared] isGroupAvailableWithGroupID:item.conversationId] == false)
         return true;
     
-    if ([[MainController shared] isChannelAvailableWithChannelID:item] == false)
+    if ([[MainController shared] isChannelAvailableWithChannelID:item.conversationId] == false)
         return true;
     
     TGUser *user = nil;
-    user = [TGDatabaseInstance() loadUser:(int)item];
+    user = [TGDatabaseInstance() loadUser:(int)item.conversationId];
     if (user.isBot) {
-        if ([[MainController shared] isBotAvailableWithBotID:item] == false) {
+        if ([[MainController shared] isBotAvailableWithBotID:item.conversationId] == false) {
             return true;
         }
     }
@@ -169,7 +169,7 @@
         type = @"bot";
     if (conversation.isChannel)
         type = @"channel";
-    if (conversation.isChannelGroup)
+    if (conversation.flags == 64)
         type = @"group";
     
     NSString *message = [NSString stringWithFormat:@"This %@ is blocked by our server policy. Please contact CloudVeil Support at support@cloudveil.org to request it be unblocked.", type];
@@ -209,7 +209,7 @@
     // MARK: - CloudVeil
     _cloudVeilViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
     TGConversation *conv = [TGDatabaseInstance() loadConversationWithId:conversationId];
-    if (conv.isBlocked || [self isChannelAvailable:conversationId])
+    if (conv.isBlocked || [self isChannelAvailable:conv])
         return [self showCloudVeilBlockAlert:conv];
     
     if (selectChat)
