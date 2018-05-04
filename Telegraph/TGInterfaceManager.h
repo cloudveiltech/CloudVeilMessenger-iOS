@@ -19,6 +19,7 @@
 @interface TGInterfaceManager : NSObject <ASWatcher>
 
 @property (nonatomic, strong) ASHandle *actionHandle;
+@property (nonatomic) UIViewController *cloudVeilViewController;
 
 + (TGInterfaceManager *)instance;
 

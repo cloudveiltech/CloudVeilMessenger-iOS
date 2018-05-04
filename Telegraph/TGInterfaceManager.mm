@@ -51,7 +51,12 @@
 
 #import "TGPresentation.h"
 
-@interface TGInterfaceManager ()
+// MARK: - CloudVeil
+#import <CloudVeilSecurityManager/CloudVeilSecurityManager-Swift.h>
+#import <MessageUI/MessageUI.h>
+
+
+@interface TGInterfaceManager () <MFMailComposeViewControllerDelegate>
 {
     TGNotificationController *_notificationController;
     SMetaDisposable *_incomingCallsDisposable;
@@ -75,9 +80,9 @@
     static TGInterfaceManager *singleton = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^
-    {
-        singleton = [[TGInterfaceManager alloc] init];
-    });
+                  {
+                      singleton = [[TGInterfaceManager alloc] init];
+                  });
     return singleton;
 }
 
@@ -130,11 +135,83 @@
 
 - (void)navigateToConversationWithId:(int64_t)conversationId conversation:(TGConversation *)conversation performActions:(NSDictionary *)performActions atMessage:(NSDictionary *)atMessage clearStack:(bool)clearStack openKeyboard:(bool)openKeyboard canOpenKeyboardWhileInTransition:(bool)canOpenKeyboardWhileInTransition navigationController:(TGNavigationController *)navigationController animated:(bool)animated
 {
-       [self navigateToConversationWithId:conversationId conversation:conversation performActions:performActions atMessage:atMessage clearStack:clearStack openKeyboard:openKeyboard canOpenKeyboardWhileInTransition:canOpenKeyboardWhileInTransition navigationController:navigationController selectChat:true animated:animated];
+    [self navigateToConversationWithId:conversationId conversation:conversation performActions:performActions atMessage:atMessage clearStack:clearStack openKeyboard:openKeyboard canOpenKeyboardWhileInTransition:canOpenKeyboardWhileInTransition navigationController:navigationController selectChat:true animated:animated];
+}
+
+
+-(BOOL)isChannelAvailable:(NSInteger)item
+{
+    // MARK: - CloudVeil Security
+    
+    if ([[MainController shared] isGroupAvailableWithGroupID:item] == false)
+        return true;
+    
+    if ([[MainController shared] isChannelAvailableWithChannelID:item] == false)
+        return true;
+    
+    TGUser *user = nil;
+    user = [TGDatabaseInstance() loadUser:(int)item];
+    if (user.isBot) {
+        if ([[MainController shared] isBotAvailableWithBotID:item] == false) {
+            return true;
+        }
+    }
+    // MARK: --------------------
+    
+    return false;
+}
+
+// MARK: - CloudVeil
+- (void)showCloudVeilBlockAlert:(TGConversation *)conversation
+{
+    NSString *type = @"";
+    if (conversation.isBot)
+        type = @"bot";
+    if (conversation.isChannel)
+        type = @"channel";
+    if (conversation.isChannelGroup)
+        type = @"group";
+    
+    NSString *message = [NSString stringWithFormat:@"This %@ is blocked by our server policy. Please contact CloudVeil Support at support@cloudveil.org to request it be unblocked.", type];
+    
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"CloudVeil!" message:message preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDefault handler:nil];
+    [alert addAction:cancel];
+    
+    UIAlertAction *mail = [UIAlertAction actionWithTitle:@"Contact" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        
+        [self showCloudVeilMailAction:conversation];
+    }];
+    [alert addAction:mail];
+    
+    [_cloudVeilViewController presentViewController:alert animated:true completion:nil];
+}
+
+-(void)showCloudVeilMailAction:(TGConversation *)conversation
+{
+    MFMailComposeViewController *mail = [MFMailComposeViewController new];
+    mail.mailComposeDelegate = self;
+    [mail setSubject:[NSString stringWithFormat:@"CloudVeil conversation id: %lld", conversation.conversationId]];
+    [mail setMessageBody:@"" isHTML:false];
+    [mail setToRecipients:@[@"support@cloudveil.org"]];
+    
+    [_cloudVeilViewController presentViewController:mail animated:YES completion:NULL];
+}
+
+- (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
+{
+    [_cloudVeilViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)navigateToConversationWithId:(int64_t)conversationId conversation:(TGConversation *)__unused conversation performActions:(NSDictionary *)performActions atMessage:(NSDictionary *)atMessage clearStack:(bool)clearStack openKeyboard:(bool)openKeyboard canOpenKeyboardWhileInTransition:(bool)canOpenKeyboardWhileInTransition navigationController:(TGNavigationController *)navigationController selectChat:(bool)selectChat animated:(bool)animated
 {
+    
+    // MARK: - CloudVeil
+    _cloudVeilViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
+    TGConversation *conv = [TGDatabaseInstance() loadConversationWithId:conversationId];
+    if (conv.isBlocked || [self isChannelAvailable:conversationId])
+        return [self showCloudVeilBlockAlert:conv];
+    
     if (selectChat)
         [TGAppDelegateInstance.rootController.dialogListController selectConversationWithId:conversationId];
     
@@ -289,7 +366,7 @@
                 [TGAppDelegateInstance.rootController pushContentController:conversationController];
             }
         }
-    
+        
         __weak TGModernConversationController *weakController = conversationController;
         _conversationControllerPipe.sink(weakController);
     }
@@ -342,7 +419,7 @@
             int mid = [atMessage[@"mid"] intValue];
             
             [conversationController.companion navigateToMessageId:mid scrollBackMessageId:0 forceUnseenMention:false animated:true];
-        
+            
             if ([atMessage[@"openMedia"] boolValue])
             {
                 if (atMessage[@"pipLocation"])
@@ -620,7 +697,7 @@
             }
         }
     }
-
+    
     if (controller != nil)
     {
         if (controller.mode != mode)
@@ -699,9 +776,9 @@
             {
                 [playerView switchToPictureInPicture];
                 TGDispatchAfter(0.3, dispatch_get_main_queue(), ^
-                {
-                    navigateBlock(conversationId);
-                });
+                                {
+                                    navigateBlock(conversationId);
+                                });
             }
             else
             {
@@ -722,7 +799,7 @@
 {
     if (TGAppDelegateInstance.isDisplayingPasscodeWindow || !TGAppDelegateInstance.bannerEnabled || TGAppDelegateInstance.rootController.isSplitView)
         return;
-        
+    
     TGBotReplyMarkup *replyMarkup = message.replyMarkup;
     if (replyMarkup.isInline)
     {
@@ -737,101 +814,101 @@
     }
     
     [ActionStageInstance() dispatchOnStageQueue:^
-    {
-        TGUser *user = nil;
-        TGConversation *conversation = [TGDatabaseInstance() loadConversationWithId:conversationId];
-        
-        if (!conversation.isChannel || conversation.isChannelGroup)
-            user = [TGDatabaseInstance() loadUser:(int)message.fromUid];
-        
-        if (conversationId > 0 || conversation != nil)
-        {
-            TGDispatchOnMainThread(^
-            {
-                if ([UIApplication sharedApplication] == nil || [UIApplication sharedApplication].applicationState != UIApplicationStateActive)
-                    return;
-                
-                [self _initializeNotificationControllerIfNeeded];
-
-                if ([_notificationController shouldDisplayNotificationForConversation:conversation])
-                {
-                    NSMutableDictionary *peers = [[NSMutableDictionary alloc] init];
-                    if (user != nil)
-                        peers[@"author"] = user;
-                    
-                    if (message.mediaAttachments.count != 0)
-                    {
-                        NSMutableArray *peerIds = [[NSMutableArray alloc] init];
-                        for (TGMediaAttachment *attachment in message.mediaAttachments)
-                        {
-                            if (attachment.type == TGActionMediaAttachmentType)
-                            {
-                                TGActionMediaAttachment *actionAttachment = (TGActionMediaAttachment *)attachment;
-                                switch (actionAttachment.actionType)
-                                {
-                                    case TGMessageActionChatAddMember:
-                                    case TGMessageActionChatDeleteMember:
+     {
+         TGUser *user = nil;
+         TGConversation *conversation = [TGDatabaseInstance() loadConversationWithId:conversationId];
+         
+         if (!conversation.isChannel || conversation.isChannelGroup)
+             user = [TGDatabaseInstance() loadUser:(int)message.fromUid];
+         
+         if (conversationId > 0 || conversation != nil)
+         {
+             TGDispatchOnMainThread(^
                                     {
-                                        if (actionAttachment.actionData[@"uids"] != nil) {
-                                            [peerIds addObjectsFromArray:actionAttachment.actionData[@"uids"]];
-                                        } else if (actionAttachment.actionData[@"uid"] != nil) {
-                                            NSNumber *nUid = [actionAttachment.actionData objectForKey:@"uid"];
-                                            [peerIds addObject:nUid];
+                                        if ([UIApplication sharedApplication] == nil || [UIApplication sharedApplication].applicationState != UIApplicationStateActive)
+                                            return;
+                                        
+                                        [self _initializeNotificationControllerIfNeeded];
+                                        
+                                        if ([_notificationController shouldDisplayNotificationForConversation:conversation])
+                                        {
+                                            NSMutableDictionary *peers = [[NSMutableDictionary alloc] init];
+                                            if (user != nil)
+                                                peers[@"author"] = user;
+                                            
+                                            if (message.mediaAttachments.count != 0)
+                                            {
+                                                NSMutableArray *peerIds = [[NSMutableArray alloc] init];
+                                                for (TGMediaAttachment *attachment in message.mediaAttachments)
+                                                {
+                                                    if (attachment.type == TGActionMediaAttachmentType)
+                                                    {
+                                                        TGActionMediaAttachment *actionAttachment = (TGActionMediaAttachment *)attachment;
+                                                        switch (actionAttachment.actionType)
+                                                        {
+                                                            case TGMessageActionChatAddMember:
+                                                            case TGMessageActionChatDeleteMember:
+                                                            {
+                                                                if (actionAttachment.actionData[@"uids"] != nil) {
+                                                                    [peerIds addObjectsFromArray:actionAttachment.actionData[@"uids"]];
+                                                                } else if (actionAttachment.actionData[@"uid"] != nil) {
+                                                                    NSNumber *nUid = [actionAttachment.actionData objectForKey:@"uid"];
+                                                                    [peerIds addObject:nUid];
+                                                                }
+                                                                break;
+                                                            }
+                                                            default:
+                                                                break;
+                                                        }
+                                                    }
+                                                    else if (attachment.type == TGReplyMessageMediaAttachmentType)
+                                                    {
+                                                        TGReplyMessageMediaAttachment *replyAttachment = (TGReplyMessageMediaAttachment *)attachment;
+                                                        if (replyAttachment.replyMessage.fromUid != 0)
+                                                            [peerIds addObject:@(replyAttachment.replyMessage.fromUid)];
+                                                    }
+                                                    else if (attachment.type == TGForwardedMessageMediaAttachmentType)
+                                                    {
+                                                        TGForwardedMessageMediaAttachment *forwardAttachment = (TGForwardedMessageMediaAttachment *)attachment;
+                                                        if (forwardAttachment.forwardPeerId != 0)
+                                                            [peerIds addObject:@(forwardAttachment.forwardPeerId)];
+                                                    }
+                                                    else if (attachment.type == TGContactMediaAttachmentType)
+                                                    {
+                                                        TGContactMediaAttachment *contactAttachment = (TGContactMediaAttachment *)attachment;
+                                                        if (contactAttachment.uid != 0)
+                                                            [peerIds addObject:@(contactAttachment.uid)];
+                                                    }
+                                                }
+                                                
+                                                for (NSNumber *peerIdValue in peerIds)
+                                                {
+                                                    int64_t peerId = peerIdValue.int64Value;
+                                                    if (TGPeerIdIsChannel(peerId))
+                                                    {
+                                                        TGConversation *channel = [TGDatabaseInstance() loadConversationWithId:peerId];
+                                                        if (channel != nil)
+                                                            peers[@(channel.conversationId)] = channel;
+                                                    }
+                                                    else
+                                                    {
+                                                        TGUser *user = [TGDatabaseInstance() loadUser:(int32_t)peerId];
+                                                        if (user != nil)
+                                                            peers[@(user.uid)] = user;
+                                                    }
+                                                }
+                                            }
+                                            
+                                            int32_t replyToMid = (TGPeerIdIsGroup(message.cid) || TGPeerIdIsChannel(message.cid)) ? message.mid : 0;
+                                            [_notificationController displayNotificationForConversation:conversation identifier:message.mid replyToMid:replyToMid duration:5.0 configure:^(TGNotificationContentView *view, bool *isRepliable)
+                                             {
+                                                 *isRepliable = (!conversation.isChannel || conversation.isChannelGroup) && (conversation.encryptedData == nil);
+                                                 [view configureWithMessage:message conversation:conversation peers:peers];
+                                             }];
                                         }
-                                        break;
-                                    }
-                                    default:
-                                        break;
-                                }
-                            }
-                            else if (attachment.type == TGReplyMessageMediaAttachmentType)
-                            {
-                                TGReplyMessageMediaAttachment *replyAttachment = (TGReplyMessageMediaAttachment *)attachment;
-                                if (replyAttachment.replyMessage.fromUid != 0)
-                                    [peerIds addObject:@(replyAttachment.replyMessage.fromUid)];
-                            }
-                            else if (attachment.type == TGForwardedMessageMediaAttachmentType)
-                            {
-                                TGForwardedMessageMediaAttachment *forwardAttachment = (TGForwardedMessageMediaAttachment *)attachment;
-                                if (forwardAttachment.forwardPeerId != 0)
-                                    [peerIds addObject:@(forwardAttachment.forwardPeerId)];
-                            }
-                            else if (attachment.type == TGContactMediaAttachmentType)
-                            {
-                                TGContactMediaAttachment *contactAttachment = (TGContactMediaAttachment *)attachment;
-                                if (contactAttachment.uid != 0)
-                                    [peerIds addObject:@(contactAttachment.uid)];
-                            }
-                        }
-                        
-                        for (NSNumber *peerIdValue in peerIds)
-                        {
-                            int64_t peerId = peerIdValue.int64Value;
-                            if (TGPeerIdIsChannel(peerId))
-                            {
-                                TGConversation *channel = [TGDatabaseInstance() loadConversationWithId:peerId];
-                                if (channel != nil)
-                                    peers[@(channel.conversationId)] = channel;
-                            }
-                            else
-                            {
-                                TGUser *user = [TGDatabaseInstance() loadUser:(int32_t)peerId];
-                                if (user != nil)
-                                    peers[@(user.uid)] = user;
-                            }
-                        }
-                    }
-                    
-                    int32_t replyToMid = (TGPeerIdIsGroup(message.cid) || TGPeerIdIsChannel(message.cid)) ? message.mid : 0;
-                    [_notificationController displayNotificationForConversation:conversation identifier:message.mid replyToMid:replyToMid duration:5.0 configure:^(TGNotificationContentView *view, bool *isRepliable)
-                    {
-                        *isRepliable = (!conversation.isChannel || conversation.isChannelGroup) && (conversation.encryptedData == nil);
-                        [view configureWithMessage:message conversation:conversation peers:peers];
-                    }];
-                }
-            });
-        }
-    }];
+                                    });
+         }
+     }];
 }
 
 - (void)dismissBannerForConversationId:(int64_t)conversationId
@@ -880,15 +957,15 @@
     __weak TGInterfaceManager *weakSelf = self;
     _incomingCallsDisposable = [[SMetaDisposable alloc] init];
     [_incomingCallsDisposable setDisposable:[[[callManager incomingCallInternalIds] deliverOn:[SQueue mainQueue]] startWithNext:^(id next)
-    {
-        __strong TGInterfaceManager *strongSelf = weakSelf;
-        if (strongSelf == nil || ![next respondsToSelector:@selector(intValue)])
-            return;
-        
-        [strongSelf presentCallWithSessionInitializer:^TGCallSession *{
-            return [TGTelegraphInstance.callManager sessionForIncomingCallWithInternalId:next];
-        } completion:nil];
-    }]];
+                                             {
+                                                 __strong TGInterfaceManager *strongSelf = weakSelf;
+                                                 if (strongSelf == nil || ![next respondsToSelector:@selector(intValue)])
+                                                     return;
+                                                 
+                                                 [strongSelf presentCallWithSessionInitializer:^TGCallSession *{
+                                                     return [TGTelegraphInstance.callManager sessionForIncomingCallWithInternalId:next];
+                                                 } completion:nil];
+                                             }]];
 }
 
 - (void)callPeerWithId:(int64_t)peerId
@@ -905,67 +982,67 @@
         return;
     
     [TGCallController requestMicrophoneAccess:^(bool granted)
-    {
-        if (!granted)
-            return;
-        
-        TGCallController *currentCallController = nil;
-        for (TGOverlayControllerWindow *window in TGAppDelegateInstance.rootController.associatedWindowStack)
-        {
-            if ([window.rootViewController isKindOfClass:[TGCallController class]])
-            {
-                TGCallController *callController = (TGCallController *)window.rootViewController;
-                if (callController.peerId == peerId)
-                {
-                    [callController presentController];
-                    return;
-                }
-                
-                currentCallController = callController;
-            }
-        }
-        
-        void (^actionBlock)(void) = ^
-        {
-            [self presentCallWithSessionInitializer:^TGCallSession *{
-                return [TGTelegraphInstance.callManager sessionForOutgoingCallWithPeerId:peerId];
-            } completion:completion];
-        };
-        
-        if (currentCallController != nil)
-        {
-            TGUser *newUser = [TGDatabaseInstance() loadUser:(int)peerId];
-            NSString *message = [NSString stringWithFormat:TGLocalized(@"Call.CallInProgressMessage"), currentCallController.peer.displayName, newUser.displayName];
-           
-            [[[TGAlertView alloc] initWithTitle:TGLocalized(@"Call.CallInProgressTitle") message:message cancelButtonTitle:TGLocalized(@"Common.No") okButtonTitle:TGLocalized(@"Common.Yes") completionBlock:
-            ^(bool okButtonPressed)
-            {
-                if (okButtonPressed)
-                {
-                    [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
-                    [currentCallController hangUpCallWithCompletion:^
-                    {
-                        actionBlock();
-                        TGDispatchOnMainThread(^
+     {
+         if (!granted)
+             return;
+         
+         TGCallController *currentCallController = nil;
+         for (TGOverlayControllerWindow *window in TGAppDelegateInstance.rootController.associatedWindowStack)
+         {
+             if ([window.rootViewController isKindOfClass:[TGCallController class]])
+             {
+                 TGCallController *callController = (TGCallController *)window.rootViewController;
+                 if (callController.peerId == peerId)
+                 {
+                     [callController presentController];
+                     return;
+                 }
+                 
+                 currentCallController = callController;
+             }
+         }
+         
+         void (^actionBlock)(void) = ^
+         {
+             [self presentCallWithSessionInitializer:^TGCallSession *{
+                 return [TGTelegraphInstance.callManager sessionForOutgoingCallWithPeerId:peerId];
+             } completion:completion];
+         };
+         
+         if (currentCallController != nil)
+         {
+             TGUser *newUser = [TGDatabaseInstance() loadUser:(int)peerId];
+             NSString *message = [NSString stringWithFormat:TGLocalized(@"Call.CallInProgressMessage"), currentCallController.peer.displayName, newUser.displayName];
+             
+             [[[TGAlertView alloc] initWithTitle:TGLocalized(@"Call.CallInProgressTitle") message:message cancelButtonTitle:TGLocalized(@"Common.No") okButtonTitle:TGLocalized(@"Common.Yes") completionBlock:
+               ^(bool okButtonPressed)
+               {
+                   if (okButtonPressed)
+                   {
+                       [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
+                       [currentCallController hangUpCallWithCompletion:^
                         {
-                            [[UIApplication sharedApplication] endIgnoringInteractionEvents];
-                        });
-                    }];
-                }
-            }] show];
-        }
-        else
-        {
-            if ([TGCallUtils isOnPhoneCall])
-            {
-                [[[TGAlertView alloc] initWithTitle:TGLocalized(@"Call.CallInProgressTitle") message:TGLocalized(@"Call.PhoneCallInProgressMessage") cancelButtonTitle:TGLocalized(@"Common.OK") okButtonTitle:nil completionBlock:nil] show];
-            }
-            else
-            {
-                actionBlock();
-            }
-        }
-    }];
+                            actionBlock();
+                            TGDispatchOnMainThread(^
+                                                   {
+                                                       [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+                                                   });
+                        }];
+                   }
+               }] show];
+         }
+         else
+         {
+             if ([TGCallUtils isOnPhoneCall])
+             {
+                 [[[TGAlertView alloc] initWithTitle:TGLocalized(@"Call.CallInProgressTitle") message:TGLocalized(@"Call.PhoneCallInProgressMessage") cancelButtonTitle:TGLocalized(@"Common.OK") okButtonTitle:nil completionBlock:nil] show];
+             }
+             else
+             {
+                 actionBlock();
+             }
+         }
+     }];
 }
 
 - (void)dismissAllCalls
@@ -1055,11 +1132,11 @@
 {
     UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"CallsTabBarInfo"]];
     [TGCallAlertView presentAlertWithTitle:TGLocalized(@"Calls.CallTabTitle") message:TGLocalized(@"Calls.CallTabDescription") customView:imageView cancelButtonTitle:TGLocalized(@"Calls.NotNow") doneButtonTitle:TGLocalized(@"Calls.AddTab") completionBlock:^(bool done)
-    {
-        TGAppDelegateInstance.showCallsTab = done;
-        if (done)
-            [TGAppDelegateInstance.rootController.mainTabsController setCallsHidden:false animated:true];
-    }];
+     {
+         TGAppDelegateInstance.showCallsTab = done;
+         if (done)
+             [TGAppDelegateInstance.rootController.mainTabsController setCallsHidden:false animated:true];
+     }];
 }
 
 - (SSignal *)callControllerInForeground
@@ -1082,50 +1159,50 @@
 - (SSignal *)messageVisibilitySignalWithConversationId:(int64_t)conversationId messageId:(int32_t)messageId
 {
     SSignal *initialConversationSignal = [[SSignal alloc] initWithGenerator:^id<SDisposable>(SSubscriber *subscriber)
-    {
-        TGModernConversationController *conversationController = nil;
-        for (UIViewController *viewController in TGAppDelegateInstance.rootController.viewControllers)
-        {
-            if ([viewController isKindOfClass:[TGModernConversationController class]])
-            {
-                TGModernConversationController *existingConversationController = (TGModernConversationController *)viewController;
-                id companion = existingConversationController.companion;
-                if ([companion isKindOfClass:[TGGenericModernConversationCompanion class]])
-                {
-                    if (((TGGenericModernConversationCompanion *)companion).conversationId == conversationId)
-                    {
-                        conversationController = existingConversationController;
-                        break;
-                    }
-                }
-            }
-        }
-        if (conversationController.navigationController.viewControllers.lastObject != conversationController)
-            conversationController = nil;
-    
-        [subscriber putNext:conversationController];
-        [subscriber putCompletion];
-        
-        return nil;
-    }];
+                                          {
+                                              TGModernConversationController *conversationController = nil;
+                                              for (UIViewController *viewController in TGAppDelegateInstance.rootController.viewControllers)
+                                              {
+                                                  if ([viewController isKindOfClass:[TGModernConversationController class]])
+                                                  {
+                                                      TGModernConversationController *existingConversationController = (TGModernConversationController *)viewController;
+                                                      id companion = existingConversationController.companion;
+                                                      if ([companion isKindOfClass:[TGGenericModernConversationCompanion class]])
+                                                      {
+                                                          if (((TGGenericModernConversationCompanion *)companion).conversationId == conversationId)
+                                                          {
+                                                              conversationController = existingConversationController;
+                                                              break;
+                                                          }
+                                                      }
+                                                  }
+                                              }
+                                              if (conversationController.navigationController.viewControllers.lastObject != conversationController)
+                                                  conversationController = nil;
+                                              
+                                              [subscriber putNext:conversationController];
+                                              [subscriber putCompletion];
+                                              
+                                              return nil;
+                                          }];
     
     return [[[initialConversationSignal then:_conversationControllerPipe.signalProducer()] mapToSignal:^SSignal *(TGModernConversationController *controller)
-    {
-        if (controller != nil)
-        {
-            id companion = controller.companion;
-            if ([companion isKindOfClass:[TGGenericModernConversationCompanion class]])
-            {
-                if (((TGGenericModernConversationCompanion *)companion).conversationId == conversationId)
-                    return [controller messageVisiblitySignalForMessageId:messageId];
-            }
-            return [SSignal single:@false];
-        }
-        else
-        {
-            return [SSignal single:@false];
-        }
-    }] deliverOn:[SQueue concurrentDefaultQueue]];
+             {
+                 if (controller != nil)
+                 {
+                     id companion = controller.companion;
+                     if ([companion isKindOfClass:[TGGenericModernConversationCompanion class]])
+                     {
+                         if (((TGGenericModernConversationCompanion *)companion).conversationId == conversationId)
+                             return [controller messageVisiblitySignalForMessageId:messageId];
+                     }
+                     return [SSignal single:@false];
+                 }
+                 else
+                 {
+                     return [SSignal single:@false];
+                 }
+             }] deliverOn:[SQueue concurrentDefaultQueue]];
 }
 
 @end
