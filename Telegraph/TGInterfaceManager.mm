@@ -174,7 +174,7 @@
         type = @"bot";
     if (conversation.isChannel)
         type = @"channel";
-    if (conversation.flags == 64)
+    if (conversation.chatVersion == 1 || conversation.chatVersion == 2)
         type = @"group";
     if (conversation.isEncrypted)
         type = @"secret chat";

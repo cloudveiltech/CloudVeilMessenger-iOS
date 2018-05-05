@@ -1093,7 +1093,7 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
             
             TGConversation *conv = item;
             
-            if (conv.flags == 64)
+            if (conv.chatVersion == 1 || conv.chatVersion == 2)
                 if ([[MainController shared] isGroupAvailableWithGroupID:conv.conversationId] == false)
                     conv.isBlocked = true;
         
@@ -1143,7 +1143,7 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
         row.title = conversation.chatTitle;
         row.userName = conversation.username;
         
-        if (conversation.flags == 64)
+        if (conversation.chatVersion == 1 || conversation.chatVersion == 2)
             [securityGroups addObject:row];
         
         if (conversation.isChannel)
@@ -1521,7 +1521,7 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
         type = @"bot";
     if (conversation.isChannel)
         type = @"channel";
-    if (conversation.flags == 64) // MARK: - CloudVeil group flag = 64
+    if (conversation.chatVersion == 1 || conversation.chatVersion == 2) // MARK: - CloudVeil group flag = 64
         type = @"group";
     
     NSString *message = [NSString stringWithFormat:@"This %@ is blocked by our server policy. Please contact CloudVeil Support at support@cloudveil.org to request it be unblocked.", type];
@@ -1562,6 +1562,7 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
     
     [self updateChannelsAvailability:_listModel];
     TGConversation *conv = [_listModel objectAtIndex: indexPath.row];
+    
     if (conv.isBlocked) {
         [tableView deselectRowAtIndexPath:indexPath animated:false];
         return [self showCloudVeilBlockAlert:conv];
