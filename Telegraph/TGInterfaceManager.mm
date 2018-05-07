@@ -151,8 +151,9 @@
     
     int timer = [TGDatabaseInstance() messageLifetimeForPeerId:item.conversationId];
     if (item.isEncrypted)
-        if ([[MainController shared] minimumSecretLenght] > timer)
-            return true;
+        if (timer != 0)
+            if ([[MainController shared] minimumSecretLenght] > timer)
+                return true;
     
     TGUser *user = nil;
     user = [TGDatabaseInstance() loadUser:(int)item.conversationId];
