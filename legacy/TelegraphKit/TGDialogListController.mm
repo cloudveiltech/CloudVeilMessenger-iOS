@@ -696,8 +696,11 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
     // MARK: - CloudVeil
     [[MainController shared] appendObserverWithObs:^{
         
-        [weakSelf updateChannelsAvailability: self.listModel];
-        [weakSelf updateChannelsAvailability: self.searchResultsSections[1][@"items"]];
+        [weakSelf updateChannelsAvailability: weakSelf.listModel];
+        
+        if (weakSelf.searchResultsSections.count > 1)
+            [weakSelf updateChannelsAvailability: weakSelf.searchResultsSections[1][@"items"]];
+        
         [weakSelf.tableView reloadData];
     }];
 }
