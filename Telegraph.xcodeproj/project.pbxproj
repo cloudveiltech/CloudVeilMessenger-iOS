@@ -391,6 +391,8 @@
 		09FCB6921FB2E98C0007D2CA /* PasswordPlaceholderIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 09FCB6901FB2E98B0007D2CA /* PasswordPlaceholderIcon@2x.png */; };
 		09FCB6951FB2FAE80007D2CA /* PasscodePlaceholderIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 09FCB6931FB2FAE60007D2CA /* PasscodePlaceholderIcon@2x.png */; };
 		09FCB6961FB2FAE80007D2CA /* PasscodePlaceholderIcon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 09FCB6941FB2FAE70007D2CA /* PasscodePlaceholderIcon@3x.png */; };
+		1566E28E20A1A40F00B5B645 /* NSMutableArray+Filtering.h in Headers */ = {isa = PBXBuildFile; fileRef = 1566E28D20A1A40F00B5B645 /* NSMutableArray+Filtering.h */; };
+		1566E29020A1A43900B5B645 /* NSMutableArray+Filtering.m in Sources */ = {isa = PBXBuildFile; fileRef = 1566E28F20A1A43900B5B645 /* NSMutableArray+Filtering.m */; };
 		158AB4FD20877B9F000606F6 /* Launch.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 158AB4FC20877B9F000606F6 /* Launch.storyboard */; };
 		6801D6681BEF6CC600533783 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D08805C9156E8F5100311537 /* AddressBook.framework */; };
 		6804D8AE1D1D624E0082E71F /* TGGifGalleryAddAccessoryView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6804D8AC1D1D624E0082E71F /* TGGifGalleryAddAccessoryView.h */; };
@@ -5460,6 +5462,8 @@
 		09FCB6931FB2FAE60007D2CA /* PasscodePlaceholderIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "PasscodePlaceholderIcon@2x.png"; path = "Resources/PasscodePlaceholderIcon@2x.png"; sourceTree = "<group>"; };
 		09FCB6941FB2FAE70007D2CA /* PasscodePlaceholderIcon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "PasscodePlaceholderIcon@3x.png"; path = "Resources/PasscodePlaceholderIcon@3x.png"; sourceTree = "<group>"; };
 		148CB59E356E4BDE1B604C7E /* Pods-Telegraph.release hockeyapp.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Telegraph.release hockeyapp.xcconfig"; path = "Pods/Target Support Files/Pods-Telegraph/Pods-Telegraph.release hockeyapp.xcconfig"; sourceTree = "<group>"; };
+		1566E28D20A1A40F00B5B645 /* NSMutableArray+Filtering.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+Filtering.h"; sourceTree = "<group>"; };
+		1566E28F20A1A43900B5B645 /* NSMutableArray+Filtering.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+Filtering.m"; sourceTree = "<group>"; };
 		158AB4FC20877B9F000606F6 /* Launch.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Launch.storyboard; sourceTree = "<group>"; };
 		17656EFF690C4BCE679AE2DA /* Pods-Telegraph.debug hockeyapp.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Telegraph.debug hockeyapp.xcconfig"; path = "Pods/Target Support Files/Pods-Telegraph/Pods-Telegraph.debug hockeyapp.xcconfig"; sourceTree = "<group>"; };
 		6803268D1D5D74FF0062725B /* TGPhotoPaintSettingsWrapperView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPhotoPaintSettingsWrapperView.h; sourceTree = "<group>"; };
@@ -11963,6 +11967,15 @@
 				0991B9C61FCB7445005EDFF2 /* TGDefaultPresentationPallete.m */,
 			);
 			name = Presentation;
+			sourceTree = "<group>";
+		};
+		1566E28C20A1A3D700B5B645 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				1566E28D20A1A40F00B5B645 /* NSMutableArray+Filtering.h */,
+				1566E28F20A1A43900B5B645 /* NSMutableArray+Filtering.m */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 		6811AE231A35E2E3009309A3 /* Crop */ = {
@@ -19527,6 +19540,7 @@
 		D08805A1156E8F3600311537 = {
 			isa = PBXGroup;
 			children = (
+				1566E28C20A1A3D700B5B645 /* Extensions */,
 				158AB4FC20877B9F000606F6 /* Launch.storyboard */,
 				D0DAA484197496240036E709 /* Icon-76.png */,
 				D0C6748E1CB8640400183765 /* Icon-167.png */,
@@ -24194,6 +24208,7 @@
 				D01162201F41F1340039383E /* TLEncryptedFile.h in Headers */,
 				68F7D3C51CADF1FB00265D0A /* TGPreviewWebPageItemView.h in Headers */,
 				D01F94FB1E5E3DB5002627A1 /* STPPhoneNumberValidator.h in Headers */,
+				1566E28E20A1A40F00B5B645 /* NSMutableArray+Filtering.h in Headers */,
 				D0FC23351BFF3E6E00CC49E7 /* TGCustomAlertWindow.h in Headers */,
 				D011616C1F41F1330039383E /* NSArray_ReceivedNotifyMessage.h in Headers */,
 				D064EF991F69A62B00AC0398 /* TLRPCmessages_getRecentLocations.h in Headers */,
@@ -27650,6 +27665,7 @@
 				D01160A31F41F1320039383E /* TLRPCping_delay_disconnect.mm in Sources */,
 				D051B0101AF99E31003AFD52 /* TGStickerPackPreviewView.m in Sources */,
 				D0C156751D424F3E00D573C4 /* TGArchivedStickerPacksAlertView.m in Sources */,
+				1566E29020A1A43900B5B645 /* NSMutableArray+Filtering.m in Sources */,
 				D0115EA31F41F12F0039383E /* TLNearestDc.mm in Sources */,
 				D0C6AF5A1A7816140046833D /* TGSharedMediaFilesEmptyView.m in Sources */,
 				D011616B1F41F1330039383E /* NSArray_PrivacyRule.mm in Sources */,

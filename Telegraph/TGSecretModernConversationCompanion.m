@@ -38,6 +38,11 @@
 
 #import "TGPresentationAssets.h"
 
+// MARK: - CloudVeil
+#import <CloudVeilSecurityManager/CloudVeilSecurityManager-Swift.h>
+#import "NSMutableArray+Filtering.h"
+
+
 @interface TGSecretModernConversationCompanion () <TGSecretModernConversationAccessoryTimerViewDelegate>
 {
     int64_t _encryptedConversationId;
@@ -230,6 +235,12 @@
     [timerValues addObject:@(1 * 60 * 60 * 24 * 7)];
     
     NSUInteger value = 7;
+    
+    // MARK: - CloudVeil
+
+    [timerValues filteringUsingStringPredicate:@"SELF == 0 OR SELF >= %i"
+                                     arguments:[[MainController shared] minimumSecretLenght]];
+    
     if (_selfDestructTimer != 0)
     {
         NSInteger closestValue = 7;
