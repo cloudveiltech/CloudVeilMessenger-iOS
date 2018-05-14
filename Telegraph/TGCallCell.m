@@ -10,6 +10,9 @@
 
 #import "TGPresentation.h"
 
+// MARK: - CloudVeil
+#import <CloudVeilSecurityManager/CloudVeilSecurityManager-Swift.h>
+
 @interface TGCallCell ()
 {
     CALayer *_separatorLayer;
@@ -203,6 +206,9 @@
     {
         [_avatarView loadUserPlaceholderWithSize:CGSizeMake(diameter, diameter) uid:(int32_t)peer.uid firstName:peer.firstName lastName:peer.lastName placeholder:placeholder];
     }
+    
+    if ([[MainController shared] disableProfilePhoto])
+        [_avatarView loadUserPlaceholderWithSize:CGSizeMake(diameter, diameter) uid:(int32_t)peer.uid firstName:peer.firstName lastName:peer.lastName placeholder:placeholder];
 
     [self setNeedsLayout];
 }
