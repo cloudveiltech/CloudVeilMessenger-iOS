@@ -7,6 +7,9 @@
 #import "TGCallSession.h"
 #import "TGMediaSignals.h"
 
+// MARK: - CloudVeil
+#import <CloudVeilSecurityManager/CloudVeilSecurityManager-Swift.h>
+
 @interface TGCallBackgroundView ()
 {
     SMetaDisposable *_disposable;
@@ -44,7 +47,8 @@
     
     _user = state.peer;
     
-    if (state.peer.photoUrlSmall.length == 0)
+    // MARK: - CloudVeil
+    if (state.peer.photoUrlSmall.length == 0 || [[MainController shared] disableProfilePhoto])
     {
         CGSize screenSize = TGScreenSize();
         UIGraphicsBeginImageContextWithOptions(CGSizeMake(8.0f, screenSize.height), true, 0.0f);

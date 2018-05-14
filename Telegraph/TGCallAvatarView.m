@@ -6,6 +6,9 @@
 
 #import <LegacyComponents/TGLetteredAvatarView.h>
 
+// MARK: - CloudVeil
+#import <CloudVeilSecurityManager/CloudVeilSecurityManager-Swift.h>
+
 const NSInteger TGCallSpeechRippleMaxCount = 2;
 const NSTimeInterval TGCallSpeechRippleInterval = 0.25;
 const NSTimeInterval TGCallSpeechRippleThreshold = 0.32;
@@ -173,6 +176,11 @@ const CGFloat TGCallAvatarNormalScale = 0.75f;
         {
             [_avatarView loadUserPlaceholderWithSize:TGCallAvatarLargeSize uid:state.peer.uid firstName:state.peer.firstName lastName:state.peer.lastName placeholder:placeholder];
         }
+        
+        // MARK: - CloudVeil
+        
+        if ([[MainController shared] disableProfilePhoto])
+            [_avatarView loadUserPlaceholderWithSize:TGCallAvatarLargeSize uid:state.peer.uid firstName:state.peer.firstName lastName:state.peer.lastName placeholder:placeholder];
     }
 }
 
