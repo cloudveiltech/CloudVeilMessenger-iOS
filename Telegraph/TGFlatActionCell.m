@@ -80,7 +80,7 @@ static UIImage *plusImage() {
     else if (mode == TGFlatActionCellModeAddPhoneNumber)
         _titleLabel.text = [NSString stringWithFormat:TGLocalized(@"Contacts.AddPhoneNumber"), _phoneNumber];
     else if (mode == TGFlatActionCellModeShareApp)
-        _titleLabel.text = TGLocalized(@"Contacts.ShareTelegram");
+        _titleLabel.text = @"Share CloudVeil Messenger"; // MARK: - CloudVeil
 
     CGFloat verticalOffset = TGIsPad() ? 4.0f : 0.0f;
     CGFloat horizontalOffset = TGIsPad() ? 8.0f : 0.0f;

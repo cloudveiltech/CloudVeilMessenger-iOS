@@ -105,7 +105,7 @@ const NSTimeInterval typingIntervalSecond = 0.14;
     {
         _titleLabel = [[UILabel alloc] init];
         _titleLabel.backgroundColor = [UIColor clearColor];
-        _titleLabel.textColor = _presentation.pallete.navigationTitleColor;
+        _titleLabel.textColor = [UIColor whiteColor]; // MARK: - CloudVeil
         _titleLabel.font = TGBoldSystemFontOfSize(17.0f);
         [self addSubview:_titleLabel];
     }
@@ -121,7 +121,7 @@ const NSTimeInterval typingIntervalSecond = 0.14;
         
         _statusLabel = [[UILabel alloc] init];
         _statusLabel.backgroundColor = [UIColor clearColor];
-        _statusLabel.textColor = _presentation.pallete.navigationSubtitleColor;
+        _statusLabel.textColor = [UIColor whiteColor]; // MARK: - CloudVeil
         _statusLabel.font = TGSystemFontOfSize(13.0f);
         [self addSubview:_statusLabel];
     }
@@ -133,7 +133,7 @@ const NSTimeInterval typingIntervalSecond = 0.14;
     if (_toggleLabel == nil) {
         _toggleLabel = [[UILabel alloc] init];
         _toggleLabel.backgroundColor = [UIColor clearColor];
-        _toggleLabel.textColor = _presentation.pallete.navigationSubtitleColor;
+        _toggleLabel.textColor = [UIColor whiteColor]; // MARK: - CloudVeil
         _toggleLabel.font = TGSystemFontOfSize(13.0f);
         [self addSubview:_toggleLabel];
     }
@@ -223,7 +223,7 @@ const NSTimeInterval typingIntervalSecond = 0.14;
         _statusHasAccentColor = statusHasAccentColor;
         
         if (_typingStatus == nil)
-            _statusLabel.textColor = _statusHasAccentColor ? _presentation.pallete.navigationActiveSubtitleColor : _presentation.pallete.navigationSubtitleColor;
+            _statusLabel.textColor = [UIColor whiteColor]; // MARK: - CloudVeil
     }
 }
 
@@ -280,12 +280,12 @@ const NSTimeInterval typingIntervalSecond = 0.14;
         if (typingStatus == nil)
         {
             [self statusLabel].attributedText = [[NSAttributedString alloc] initWithString:_status];
-            _statusLabel.textColor = _statusHasAccentColor ? _presentation.pallete.navigationActiveSubtitleColor : _presentation.pallete.navigationSubtitleColor;
+            _statusLabel.textColor = [UIColor whiteColor]; // MARK: - CloudVeil
         }
         else
         {
             [self statusLabel].attributedText = [[NSAttributedString alloc] initWithString:typingStatus];
-            _statusLabel.textColor = _presentation.pallete.navigationActiveSubtitleColor;
+            _statusLabel.textColor = [UIColor whiteColor]; // MARK: - CloudVeil
         }
         
         if (typingStatus == nil)

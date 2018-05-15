@@ -127,11 +127,12 @@
     {
         self.adjustsImageWhenHighlighted = false;
         [self setTitle:title forState:UIControlStateNormal];
-        [self setImage:icon forState:UIControlStateNormal];
+        [self setImage:[icon imageWithRenderingMode: UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
         self.imageView.contentMode = UIViewContentModeCenter;
         self.titleLabel.font = TGSystemFontOfSize(10.0f);
         self.titleLabel.textAlignment = NSTextAlignmentCenter;
-        [self setTitleColor:TGAccentColor()];
+        self.tintColor = [UIColor whiteColor]; // MARK: - CloudVeil
+        [self setTitleColor:[UIColor whiteColor]]; // MARK: - CloudVeil
     }
     return self;
 }
