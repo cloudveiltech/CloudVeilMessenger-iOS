@@ -171,16 +171,23 @@
 - (void)showCloudVeilBlockAlert:(TGConversation *)conversation
 {
     NSString *type = @"";
+    NSString *message = @"";
+    
     if (conversation.isBot)
         type = @"bot";
     if (conversation.isChannel)
         type = @"channel";
     if (conversation.chatVersion == 1 || conversation.chatVersion == 2)
         type = @"group";
-    if (conversation.isEncrypted)
-        type = @"secret chat";
-    
-    NSString *message = [NSString stringWithFormat:@"This %@ is blocked by our server policy. Please contact CloudVeil Support at support@cloudveil.org to request it be unblocked.", type];
+    if (conversation.isEncrypted) {
+        
+        NSInteger time = [[MainController shared] minimumSecretLenght];
+        NSString *val = [self getUserFrendlyDateFormat:time];
+        message = [NSString stringWithFormat:@"The self destruct timer in this secret chat does not meet the minimum  time of %@. Request that the other user in this chat increase the time of the self destruct timer to %@.", val, val];
+    }
+    else {
+        message = [NSString stringWithFormat:@"This %@ is blocked by our server policy. Please contact CloudVeil Support at support@cloudveil.org to request it be unblocked.", type];
+    }
     
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"CloudVeil!" message:message preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDefault handler:nil];
@@ -204,6 +211,26 @@
     [mail setToRecipients:@[@"support@cloudveil.org"]];
     
     [_cloudVeilViewController presentViewController:mail animated:YES completion:NULL];
+}
+
+- (NSString *)getUserFrendlyDateFormat: (int)time {
+    
+    switch (time) {
+        case 1:
+            return [NSString stringWithFormat: @"%d second", time];
+        case 2 ... 30:
+            return [NSString stringWithFormat: @"%d seconds", time];
+        case 60:
+            return @"1 minute";
+        case 3600:
+            return @"1 hour";
+        case 86400:
+            return @"1 day";
+        case 604800:
+            return @"1 week";
+        default:
+            return @"";
+    }
 }
 
 - (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
