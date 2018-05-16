@@ -146,6 +146,12 @@ static TGMusicPlayerDownloadingStatus TGMusicPlayerDownloadingStatusMake(bool do
     [_routeChangeDisposable dispose];
 }
 
+// MARK: - CloudVeil
+- (TGOpusAudioPlayerAU *)tgAudioPlayer
+{
+    return _currentStatus.player;
+}
+
 - (SSignal *)currentPlaylistAsync
 {
     __weak TGMusicPlayer *weakSelf = self;

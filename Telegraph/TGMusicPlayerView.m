@@ -22,6 +22,7 @@
     UILabel *_titleLabel;
     UILabel *_performerLabel;
     UIView *_scrubbingIndicator;
+    UIButton *_speedButton; // MARK: - CloudVeil
     
     TGModernButton *_closeButton;
     TGModernButton *_pauseButton;
@@ -138,6 +139,8 @@
     
     if (_updateLabelsLayout)
         [self setNeedsLayout];
+    
+    [_speedButton setTitle:@"1X" forState:UIControlStateNormal]; // MARK: - CloudVeil
 }
 
 - (void)inhibitVolumeOverlay
@@ -300,8 +303,56 @@
     
     _minimizedButton.frame = CGRectMake(44.0f, 0.0f, _minimizedBar.frame.size.width - 44.0f * 2.0f, _minimizedBar.frame.size.height);
     
+    [self createSpeedButton]; // MARK: - CloudVeil
+    
     [self layoutScrubbingIndicator];
 }
+
+
+// MARK: - CloudVeil
+
+- (void)createSpeedButton
+{
+    UIButton *speedButton = [UIButton new];
+    speedButton.frame = CGRectMake(44, 0, 44, self.frame.size.height);
+    [speedButton setTitle:@"1X" forState:UIControlStateNormal];
+    [speedButton addTarget:self action:@selector(speedButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [speedButton setTitleColor:TGColorWithHex(0x007EE5) forState:UIControlStateNormal];
+    speedButton.titleLabel.font = [UIFont systemFontOfSize:16 weight:UIFontWeightSemibold];
+    
+    [_speedButton removeFromSuperview];
+    _speedButton = speedButton;
+    [self addSubview:_speedButton];
+}
+
+- (void)speedButtonPressed:(UIButton *)button
+{
+    NSArray *array = [NSArray arrayWithObjects: @"1X", @"1.15", @"1.5X", @"2X", nil];
+    NSMutableArray *arrayDoubles = [[NSMutableArray alloc] initWithCapacity:0];
+    [arrayDoubles addObject:[NSNumber numberWithDouble:1.0]];
+    [arrayDoubles addObject:[NSNumber numberWithDouble:1.15]];
+    [arrayDoubles addObject:[NSNumber numberWithDouble:1.5]];
+    [arrayDoubles addObject:[NSNumber numberWithDouble:2.0]];
+    
+    NSInteger index = [array indexOfObject:button.titleLabel.text];
+    
+    if ((index + 1) < array.count) {
+        [button setTitle:(NSString *)array[index + 1] forState:UIControlStateNormal];
+        [self setPlayerSpeedForIndex:[[arrayDoubles objectAtIndex:(index + 1)] doubleValue]];
+    }
+    else {
+        [button setTitle:(NSString *)array[0] forState:UIControlStateNormal];
+        [self setPlayerSpeedForIndex:1];
+    }
+}
+
+- (void)setPlayerSpeedForIndex:(double)index
+{
+    TGOpusAudioPlayerAU *player = [TGTelegraphInstance.musicPlayer tgAudioPlayer];
+    [player setPlayerSpeed:index];
+}
+
+// MARK: -------------------
 
 - (void)closeButtonPressed
 {

@@ -35,6 +35,8 @@ static volatile OSSpinLock audioPositionLock = OS_SPINLOCK_INIT;
     NSString *_filePath;
     NSInteger _fileSize;
     
+    int currentSpeed; // MARK: - CloudVeil
+    
     bool _isSeekable;
     int64_t _totalPcmDuration;
     
@@ -81,6 +83,7 @@ static volatile OSSpinLock audioPositionLock = OS_SPINLOCK_INIT;
         _playerId = nextPlayerId++;
         
         _isPaused = true;
+        currentSpeed = TGOpusAudioPlayerSampleRate; // MARK: - CloudVeil
         
         [[TGAudioPlayer _playerQueue] dispatchOnQueue:^
         {
@@ -292,8 +295,9 @@ static OSStatus TGOpusAudioPlayerCallback(void *inRefCon, __unused AudioUnitRend
                 return;
             }
             
+            NSLog(@"------------- Speed is: %d", currentSpeed);
             AudioStreamBasicDescription outputAudioFormat;
-            outputAudioFormat.mSampleRate = TGOpusAudioPlayerSampleRate;
+            outputAudioFormat.mSampleRate = currentSpeed; // MARK: - CloudVeil
             outputAudioFormat.mFormatID = kAudioFormatLinearPCM;
             outputAudioFormat.mFormatFlags = kAudioFormatFlagIsSignedInteger | kAudioFormatFlagIsPacked;
             outputAudioFormat.mFramesPerPacket = 1;
@@ -301,6 +305,7 @@ static OSStatus TGOpusAudioPlayerCallback(void *inRefCon, __unused AudioUnitRend
             outputAudioFormat.mBitsPerChannel = 16;
             outputAudioFormat.mBytesPerPacket = 2;
             outputAudioFormat.mBytesPerFrame = 2;
+            
             status = AudioUnitSetProperty(_audioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, kOutputBus, &outputAudioFormat, sizeof(outputAudioFormat));
             if (status != noErr)
             {
@@ -420,6 +425,17 @@ static OSStatus TGOpusAudioPlayerCallback(void *inRefCon, __unused AudioUnitRend
             TG_SYNCHRONIZED_END(filledBuffersLock);
         }
     }];
+}
+
+// MARK: - CloudVeil
+
+- (void)setPlayerSpeed:(double)speed
+{
+    currentSpeed = (int)(speed * (double)TGOpusAudioPlayerSampleRate);
+    [self stop];
+    _isPaused = true;
+    
+    [self playFromPosition: -1.0];
 }
 
 - (void)fillBuffer:(TGAudioBuffer *)audioBuffer

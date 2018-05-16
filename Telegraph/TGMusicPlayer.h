@@ -5,6 +5,7 @@
 #import "TGMusicPlayerItem.h"
 
 #import "TGAudioPlayer.h"
+#import "TGOpusAudioPlayerAU.h" // MARK: - CloudVeil
 
 typedef struct {
     bool downloaded;
@@ -75,6 +76,7 @@ typedef enum {
 
 - (void)controlOrder;
 - (void)controlRepeat;
+- (TGOpusAudioPlayerAU *)tgAudioPlayer; // MARK: - CloudVeil
 
 + (bool)isHeadsetPluggedIn;
 
