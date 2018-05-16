@@ -327,7 +327,7 @@
 
 - (void)speedButtonPressed:(UIButton *)button
 {
-    NSArray *array = [NSArray arrayWithObjects: @"1X", @"1.15", @"1.5X", @"2X", nil];
+    NSArray *array = [NSArray arrayWithObjects: @"1X", @"1.15X", @"1.5X", @"2X", nil];
     NSMutableArray *arrayDoubles = [[NSMutableArray alloc] initWithCapacity:0];
     [arrayDoubles addObject:[NSNumber numberWithDouble:1.0]];
     [arrayDoubles addObject:[NSNumber numberWithDouble:1.15]];
