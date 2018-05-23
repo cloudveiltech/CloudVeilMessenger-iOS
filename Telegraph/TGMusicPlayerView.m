@@ -327,12 +327,11 @@
 
 - (void)speedButtonPressed:(UIButton *)button
 {
-    NSArray *array = [NSArray arrayWithObjects: @"1X", @"1.15X", @"1.5X", @"2X", nil];
+    NSArray *array = [NSArray arrayWithObjects: @"1X", @"1.15X", @"1.5X", nil];
     NSMutableArray *arrayDoubles = [[NSMutableArray alloc] initWithCapacity:0];
     [arrayDoubles addObject:[NSNumber numberWithDouble:1.0]];
     [arrayDoubles addObject:[NSNumber numberWithDouble:1.15]];
     [arrayDoubles addObject:[NSNumber numberWithDouble:1.5]];
-    [arrayDoubles addObject:[NSNumber numberWithDouble:2.0]];
     
     NSInteger index = [array indexOfObject:button.titleLabel.text];
     
