@@ -38,7 +38,7 @@
         _actionButton = [[TGModernButton alloc] init];
         _actionButton.adjustsImageWhenDisabled = false;
         _actionButton.adjustsImageWhenHighlighted = false;
-        [_actionButton setTitleColor:TGAccentColor()];
+        [_actionButton setTitleColor:[UIColor whiteColor]];
         _actionButton.titleLabel.font = TGSystemFontOfSize(15);
         [_actionButton addTarget:self action:@selector(actionButtonPressed) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:_actionButton];
@@ -46,7 +46,7 @@
         _secondaryActionButton = [[TGModernButton alloc] init];
         _secondaryActionButton.adjustsImageWhenDisabled = false;
         _secondaryActionButton.adjustsImageWhenHighlighted = false;
-        [_secondaryActionButton setTitleColor:TGAccentColor()];
+        [_secondaryActionButton setTitleColor:[UIColor whiteColor]];
         _secondaryActionButton.titleLabel.font = TGSystemFontOfSize(15);
         [_secondaryActionButton addTarget:self action:@selector(secondaryActionButtonPressed) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:_secondaryActionButton];
@@ -56,7 +56,8 @@
         _closeButton.adjustsImageWhenDisabled = false;
         _closeButton.adjustsImageWhenHighlighted = false;
         _closeButton.modernHighlight = true;
-        [_closeButton setImage:closeImage forState:UIControlStateNormal];
+        _closeButton.tintColor = [UIColor whiteColor];
+        [_closeButton setImage:[closeImage imageWithRenderingMode: UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
         [_closeButton addTarget:self action:@selector(closeButtonPressed) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:_closeButton];
     }

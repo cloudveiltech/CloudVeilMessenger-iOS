@@ -411,7 +411,7 @@
     else if (_editingMode)
         return [self actionBarButtonItem];
     
-    TGModernBarButton *newCallButton = [[TGModernBarButton alloc] initWithImage:TGPresentation.current.images.callsNewIcon];
+    TGModernBarButton *newCallButton = [[TGModernBarButton alloc] initWithImage:[TGPresentation.current.images.callsNewIcon imageWithRenderingMode: UIImageRenderingModeAlwaysTemplate]];
     CGPoint portraitOffset = CGPointZero;
     CGPoint landscapeOffset = CGPointZero;
     if (iosMajorVersion() >= 11)
@@ -423,6 +423,7 @@
     }
     newCallButton.portraitAdjustment = CGPointMake(2 + portraitOffset.x, -4 + portraitOffset.y);
     newCallButton.landscapeAdjustment = CGPointMake(2 + landscapeOffset.x, -4 + landscapeOffset.y);
+    newCallButton.tintColor = [UIColor whiteColor];
     [newCallButton addTarget:self action:@selector(newCallButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     return [[UIBarButtonItem alloc] initWithCustomView:newCallButton];
 }
