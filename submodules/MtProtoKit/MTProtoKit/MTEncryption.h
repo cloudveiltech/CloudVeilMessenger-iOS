@@ -1,10 +1,4 @@
-/*
- * This is the source code of Telegram for iOS v. 1.1
- * It is licensed under GNU GPL v. 2 or later.
- * You should have received a copy of the license in this archive (see LICENSE).
- *
- * Copyright Peter Iakovlev, 2013.
- */
+
 
 #ifndef MTEncryption_H
 #define MTEncryption_H
@@ -14,6 +8,11 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+    
+//Cloudveil start
+bool MTIsZero(NSData *value);
+bool MTCheckIsSafeB(NSData *b, NSData *p);
+//CloudVeil end
     
 NSData *MTSha1(NSData *data);
 NSData *MTSubdataSha1(NSData *data, NSUInteger offset, NSUInteger length);
@@ -36,6 +35,10 @@ NSData *MTAesEncrypt(NSData *data, NSData *key, NSData *iv);
 NSData *MTAesDecrypt(NSData *data, NSData *key, NSData *iv);
 NSData *MTRsaEncrypt(NSString *publicKey, NSData *data);
 NSData *MTExp(NSData *base, NSData *exp, NSData *modulus);
+NSData *MTModSub(NSData *a, NSData *b, NSData *modulus);
+NSData *MTModMul(NSData *a, NSData *b, NSData *modulus);
+NSData *MTMul(NSData *a, NSData *b);
+NSData *MTAdd(NSData *a, NSData *b);
 bool MTFactorize(uint64_t what, uint64_t *resA, uint64_t *resB);
     
 NSData *MTAesCtrDecrypt(NSData *data, NSData *key, NSData *iv);
@@ -46,25 +49,43 @@ bool MTCheckIsSafePrime(NSData *numberBytes, id<MTKeychain> keychain);
 bool MTCheckIsSafeGAOrB(NSData *gAOrB, NSData *p);
 bool MTCheckMod(NSData *numberBytes, unsigned int g, id<MTKeychain> keychain);
     
+@interface MTAesCtr : NSObject
+
+- (instancetype)initWithKey:(const void *)key keyLength:(int)keyLength iv:(const void *)iv decrypt:(bool)decrypt;
+- (instancetype)initWithKey:(const void *)key keyLength:(int)keyLength iv:(const void *)iv ecount:(void *)ecount num:(uint32_t)num;
+
+- (uint32_t)num;
+- (void *)ecount;
+- (void)getIv:(void *)iv;
+
+- (void)encryptIn:(const unsigned char *)in out:(unsigned char *)out len:(size_t)len;
+
+@end
+    
 uint64_t MTRsaFingerprint(NSString *key);
+    
+NSData *MTRsaEncryptPKCS1OAEP(NSString *key, NSData *data);
     
 @interface MTBackupDatacenterAddress : NSObject
 
+@property (nonatomic, readonly) int32_t datacenterId;
 @property (nonatomic, strong, readonly) NSString *ip;
 @property (nonatomic, readonly) int32_t port;
+@property (nonatomic, strong, readonly) NSData *secret;
 
 @end
 
 @interface MTBackupDatacenterData : NSObject
 
-@property (nonatomic, readonly) int32_t datacenterId;
 @property (nonatomic, readonly) int32_t timestamp;
 @property (nonatomic, readonly) int32_t expirationDate;
 @property (nonatomic, strong, readonly) NSArray<MTBackupDatacenterAddress *> *addressList;
 
 @end
 
-MTBackupDatacenterData *MTIPDataDecode(NSData *data);
+MTBackupDatacenterData *MTIPDataDecode(NSData *data, NSString *phoneNumber);
+    
+NSData * _Nullable MTPBKDF2(NSData * _Nonnull data, NSData * _Nonnull salt, int rounds);
 
 #ifdef __cplusplus
 }

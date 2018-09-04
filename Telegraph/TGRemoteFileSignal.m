@@ -95,15 +95,18 @@
 }];
 }
 
-+ (SSignal *)multipartDownload:(TLInputFileLocation *)location datacenterId:(NSInteger)datacenterId size:(NSUInteger)size mediaTypeTag:(TGNetworkMediaTypeTag)mediaTypeTag
++ (SSignal *)multipartDownload:(TLInputFileLocation *)location datacenterId:(NSInteger)datacenterId originInfo:(TGMediaOriginInfo *)originInfo identifier:(int64_t)identifier size:(NSUInteger)size mediaTypeTag:(TGNetworkMediaTypeTag)mediaTypeTag
 {
     id resource = nil;
     if ([location isKindOfClass:[TLInputFileLocation$inputFileLocation class]]) {
         TLInputFileLocation$inputFileLocation *concreteLocation = (TLInputFileLocation$inputFileLocation *)location;
-        resource = [[CloudFileMediaResource alloc] initWithDatacenterId:(int32_t)datacenterId volumeId:concreteLocation.volume_id localId:concreteLocation.local_id secret:concreteLocation.secret size:size == 0 ? nil : @(size) legacyCacheUrl:nil legacyCachePath:nil mediaType:@(mediaTypeTag)];
+        resource = [[CloudFileMediaResource alloc] initWithDatacenterId:(int32_t)datacenterId volumeId:concreteLocation.volume_id localId:concreteLocation.local_id secret:concreteLocation.secret size:size == 0 ? nil : @(size) legacyCacheUrl:nil legacyCachePath:nil mediaType:@(mediaTypeTag) originInfo:originInfo identifier:identifier];
     } else if ([location isKindOfClass:[TLInputFileLocation$inputDocumentFileLocation class]]) {
         TLInputFileLocation$inputDocumentFileLocation *concreteLocation = (TLInputFileLocation$inputDocumentFileLocation *)location;
-        resource = [[CloudDocumentMediaResource alloc] initWithDatacenterId:(int32_t)datacenterId fileId:concreteLocation.n_id accessHash:concreteLocation.access_hash size:size == 0 ? nil : @(size) mediaType:@(mediaTypeTag)];
+        resource = [[CloudDocumentMediaResource alloc] initWithDatacenterId:(int32_t)datacenterId fileId:concreteLocation.n_id accessHash:concreteLocation.access_hash size:size == 0 ? nil : @(size) mediaType:@(mediaTypeTag) originInfo:originInfo identifier:identifier];
+    } else if ([location isKindOfClass:[TLInputFileLocation$inputSecureFileLocation class]]) {
+        TLInputFileLocation$inputSecureFileLocation *concreteLocation = (TLInputFileLocation$inputSecureFileLocation *)location;
+        resource = [[CloudSecureMediaResource alloc] initWithDatacenterId:(int32_t)datacenterId fileId:concreteLocation.n_id accessHash:concreteLocation.access_hash size:size == 0 ? nil : @(size) fileHash:nil thumbnail:false mediaType:@(mediaTypeTag)];
     }
     
     if (resource != nil) {
@@ -235,10 +238,98 @@
     }];
 }
 
-+ (SSignal *)dataForLocation:(TLInputFileLocation *)location datacenterId:(NSInteger)datacenterId size:(NSUInteger)size reportProgress:(bool)reportProgress mediaTypeTag:(TGNetworkMediaTypeTag)mediaTypeTag
++ (SSignal *)indefiniteMultipartWebDownload:(TLInputWebFileLocation *)location datacenterId:(NSInteger)datacenterId mediaTypeTag:(TGNetworkMediaTypeTag)mediaTypeTag
 {
-    if (true || size >= 1 * 1024 * 1024) {
-        return [[[self multipartDownload:location datacenterId:datacenterId size:size mediaTypeTag:mediaTypeTag] filter:^bool(id next) {
+    NSUInteger initialPartSize = 64 * 1024;
+    SSignal *signal = [[[TGTelegramNetworking instance] downloadWorkerForDatacenterId:datacenterId type:mediaTypeTag] mapToSignal:^SSignal *(TGNetworkWorkerGuard *worker) {
+        
+        SSignal *initialPart = [SSignal defer:^SSignal *
+        {
+            TLRPCupload_getWebFile$upload_getWebFile *getFile = [[TLRPCupload_getWebFile$upload_getWebFile alloc] init];
+            getFile.location = location;
+            getFile.offset = 0;
+            getFile.limit = (int32_t)initialPartSize;
+            
+            return [[TGTelegramNetworking instance] requestSignal:getFile worker:worker];
+        }];
+        
+        return [initialPart mapToSignal:^SSignal *(id next)
+        {
+            if ([next isKindOfClass:[TLupload_WebFile class]]) {
+                TLupload_WebFile *part = next;
+                if ((int32_t)part.bytes.length >= part.size)
+                {
+                    return [SSignal single:[[TGRemoteFileDataEvent alloc] initWithData:part.bytes]];
+                }
+                else
+                {
+                    NSUInteger size = part.size;
+                    SSignal *parts = [SSignal single:[[TGRemoteFileDataEvent alloc] initWithData:part.bytes]];
+                    NSUInteger partSize = 0;
+                    if (size >= 2 * 1024 * 1024)
+                        partSize = 512 * 1024;
+                    else
+                        partSize = 12 * 1024;
+                    
+                    NSUInteger remainingSize = size - initialPartSize;
+                    NSUInteger numberOfParts = remainingSize / partSize + (remainingSize % partSize == 0 ? 0 : 1);
+                    for (NSUInteger index = 0; index < numberOfParts; index++) {
+                        TLRPCupload_getWebFile$upload_getWebFile *getFile = [[TLRPCupload_getWebFile$upload_getWebFile alloc] init];
+                        getFile.location = location;
+                        getFile.offset = (int32_t)(index * partSize + initialPartSize);
+                        getFile.limit = (int32_t)partSize;
+                        
+                        SSignal *part = [[[TGTelegramNetworking instance] requestSignal:getFile worker:worker] map:^id (id next) {
+                            if ([next isKindOfClass:[TLupload_WebFile class]]) {
+                                TLupload_WebFile *part = next;
+                                return [[TGRemoteFileDataEvent alloc] initWithData:part.bytes];
+                            } else {
+                                float baseProgress = (float)(index * partSize) / (float)remainingSize;
+                                float partProgress = ([next floatValue] * partSize) / remainingSize;
+                                return [[TGRemoteFileProgressEvent alloc] initWithProgress:MIN(1.0f, baseProgress + partProgress)];
+                            }
+                        }];
+                        
+                        parts = [parts then:part];
+                    }
+                    
+                    return parts;
+                }
+            } else {
+                return [SSignal single:[[TGRemoteFileProgressEvent alloc] initWithProgress:0.0f]];
+            }
+        }];
+    }];
+    
+    return [[SSignal alloc] initWithGenerator:^id<SDisposable>(SSubscriber *subscriber) {
+        SAtomic *data = [[SAtomic alloc] initWithValue:[[NSMutableData alloc] init]];
+        return [signal startWithNext:^(id next) {
+            if ([next isKindOfClass:[TGRemoteFileProgressEvent class]]) {
+                [subscriber putNext:@(((TGRemoteFileProgressEvent *)next).progress)];
+            } else if ([next isKindOfClass:[TGRemoteFileDataEvent class]]) {
+                [data modify:^id(NSMutableData *data) {
+                    [data appendData:((TGRemoteFileDataEvent *)next).data];
+                    return data;
+                }];
+            }
+        } error:^(id error) {
+            [subscriber putError:error];
+        } completed:^{
+            NSData *result = [data with:^id(NSData *data) {
+                return data;
+            }];
+            [subscriber putNext:result];
+            [subscriber putCompletion];
+        }];
+    }];
+}
+
+
+
++ (SSignal *)dataForLocation:(TLInputFileLocation *)location datacenterId:(NSInteger)datacenterId originInfo:(TGMediaOriginInfo *)originInfo identifier:(int64_t)identifier size:(NSUInteger)size reportProgress:(bool)reportProgress mediaTypeTag:(TGNetworkMediaTypeTag)mediaTypeTag
+{
+//    if (true || size >= 1 * 1024 * 1024) {
+        return [[[self multipartDownload:location datacenterId:datacenterId originInfo:originInfo identifier:identifier size:size mediaTypeTag:mediaTypeTag] filter:^bool(id next) {
             if (!reportProgress) {
                 return ![next respondsToSelector:@selector(floatValue)];
             } else {
@@ -250,24 +341,33 @@
             }
             return current;
         }];
-    } else {
-        return [[[self partsForLocation:location datacenterId:datacenterId size:size mediaTypeTag:mediaTypeTag] map:^id(id next)
-        {
-            if ([next isKindOfClass:[TGRemoteFileDataEvent class]])
-                return [next data];
-            else if (reportProgress && [next isKindOfClass:[TGRemoteFileProgressEvent class]])
-                return @([(TGRemoteFileProgressEvent *)next progress]);
-            
-            return nil;
-        }] filter:^bool(id value)
-        {
-            return value != nil;
-        }];
-    }
+//    } else {
+//        return [[[self partsForLocation:location datacenterId:datacenterId size:size mediaTypeTag:mediaTypeTag] map:^id(id next)
+//        {
+//            if ([next isKindOfClass:[TGRemoteFileDataEvent class]])
+//                return [next data];
+//            else if (reportProgress && [next isKindOfClass:[TGRemoteFileProgressEvent class]])
+//                return @([(TGRemoteFileProgressEvent *)next progress]);
+//
+//            return nil;
+//        }] filter:^bool(id value)
+//        {
+//            return value != nil;
+//        }];
+//    }
 }
 
 + (SSignal *)dataForWebLocation:(TLInputWebFileLocation *)location datacenterId:(NSInteger)datacenterId size:(NSUInteger)size reportProgress:(bool)reportProgress mediaTypeTag:(TGNetworkMediaTypeTag)mediaTypeTag {
-    if (size >= 1 * 1024 * 1024) {
+    if (size == 0) {
+        return [[self indefiniteMultipartWebDownload:location datacenterId:datacenterId mediaTypeTag:mediaTypeTag] filter:^bool(id next) {
+            if (!reportProgress) {
+                return ![next respondsToSelector:@selector(floatValue)];
+            } else {
+                return true;
+            }
+        }];
+    }
+    else if (size >= 1 * 1024 * 1024) {
         return [[self multipartWebDownload:location datacenterId:datacenterId size:size mediaTypeTag:mediaTypeTag] filter:^bool(id next) {
             if (!reportProgress) {
                 return ![next respondsToSelector:@selector(floatValue)];

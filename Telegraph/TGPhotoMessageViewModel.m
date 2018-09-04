@@ -46,7 +46,15 @@
         
         NSMutableString *previewUri = [[NSMutableString alloc] initWithString:@"photo-thumbnail://?"];
         if (imageMedia.imageId != 0)
+        {
             [previewUri appendFormat:@"id=%" PRId64 "", imageMedia.imageId];
+            
+            [previewUri appendFormat:@"&cid=%" PRId64 "", message.cid];
+            [previewUri appendFormat:@"&mid=%" PRId32 "", message.mid];
+            
+            if (imageMedia.originInfo != nil)
+                [previewUri appendFormat:@"&origin_info=%@", [imageMedia.originInfo stringRepresentation]];
+        }
         else
             [previewUri appendFormat:@"local-id=%" PRId64 "", localImageId];
         
@@ -77,7 +85,7 @@
         [previewImageInfo addImageWithSize:thumbnailSize url:previewUri];
     }
     
-    self = [super initWithMessage:message imageInfo:previewImageInfo authorPeer:authorPeer context:context forwardPeer:forwardPeer forwardAuthor:forwardAuthor forwardMessageId:forwardMessageId replyHeader:replyHeader replyAuthor:replyAuthor viaUser:viaUser caption:imageMedia.caption textCheckingResults:imageMedia.textCheckingResults webPage:webPage];
+    self = [super initWithMessage:message imageInfo:previewImageInfo authorPeer:authorPeer context:context forwardPeer:forwardPeer forwardAuthor:forwardAuthor forwardMessageId:forwardMessageId replyHeader:replyHeader replyAuthor:replyAuthor viaUser:viaUser caption:message.caption textCheckingResults:message.textCheckingResults webPage:webPage];
     if (self != nil)
     {
         _imageMedia = imageMedia;
@@ -101,8 +109,6 @@
 {
     [super updateMessage:message viewStorage:viewStorage sizeUpdated:sizeUpdated];
     
-    [self updateImage];
-    
     TGImageMediaAttachment *imageMedia = nil;
     for (id attachment in message.mediaAttachments)
     {
@@ -116,10 +122,8 @@
     _canDownload = _imageMedia.imageId != 0 || (![[imageMedia.imageInfo imageUrlForLargestSize:NULL] hasPrefix:@"http"]);
 }
 
-- (void)updateImage
+- (NSString *)updatedImageUriForMessage:(TGMessage *)message outImageInfo:(TGImageInfo **)outImageInfo
 {
-    TGMessage *message = _message;
-    
     TGImageMediaAttachment *imageMedia = nil;
     for (id attachment in message.mediaAttachments)
     {
@@ -149,8 +153,15 @@
             previewImageInfo = [[TGImageInfo alloc] init];
             
             NSMutableString *previewUri = [[NSMutableString alloc] initWithString:@"photo-thumbnail://?"];
-            if (imageMedia.imageId != 0)
+            if (imageMedia.imageId != 0) {
                 [previewUri appendFormat:@"id=%" PRId64 "", imageMedia.imageId];
+                
+                [previewUri appendFormat:@"&cid=%" PRId64 "", message.cid];
+                [previewUri appendFormat:@"&mid=%" PRId32 "", message.mid];
+                
+                if (imageMedia.originInfo != nil)
+                    [previewUri appendFormat:@"&origin_info=%@", [imageMedia.originInfo stringRepresentation]];
+            }
             else
                 [previewUri appendFormat:@"local-id=%" PRId64 "", localImageId];
             
@@ -159,7 +170,7 @@
             
             if (self.groupedLayout != nil)
             {
-                CGRect frame = [self.groupedLayout frameForMessageId:_message.mid];
+                CGRect frame = [self.groupedLayout frameForMessageId:message.mid];
                 thumbnailSize = frame.size;
                 renderSize = TGScaleToFill(largestSize, thumbnailSize);
             }
@@ -188,19 +199,12 @@
             [previewImageInfo addImageWithSize:renderSize url:previewUri];
         }
         
-        [self updateImageInfo:previewImageInfo];
+        if (outImageInfo != NULL)
+            *outImageInfo = previewImageInfo;
+        
+        return [self updatedImageUriForInfo:previewImageInfo];
     }
-}
-
-- (void)updateMessageAttributes
-{
-    [super updateMessageAttributes];
-    
-    //_overlayIconModel.hidden = [_context isSecretMessageViewed:_mid];
-    //_overlayIconMaskLeftModel.hidden = [_context isSecretMessageScreenshotted:_mid];
-    //_overlayIconMaskRightModel.hidden = _overlayIconMaskLeftModel.hidden;
-    //_overlayIconMaskTopModel.hidden = _overlayIconMaskLeftModel.hidden;
-    //_overlayIconMaskBottomModel.hidden = _overlayIconMaskLeftModel.hidden;
+    return nil;
 }
 
 - (bool)instantPreviewGesture
@@ -219,11 +223,6 @@
 - (void)bindSpecialViewsToContainer:(UIView *)container viewStorage:(TGModernViewStorage *)viewStorage atItemPosition:(CGPoint)itemPosition
 {
     [super bindSpecialViewsToContainer:container viewStorage:viewStorage atItemPosition:itemPosition];
-}
-
-- (void)layoutForContainerSize:(CGSize)containerSize
-{
-    [super layoutForContainerSize:containerSize];
 }
 
 - (bool)isInstant {

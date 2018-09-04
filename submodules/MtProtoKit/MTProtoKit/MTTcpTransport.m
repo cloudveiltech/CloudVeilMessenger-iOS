@@ -1,10 +1,4 @@
-/*
- * This is the source code of Telegram for iOS v. 1.1
- * It is licensed under GNU GPL v. 2 or later.
- * You should have received a copy of the license in this archive (see LICENSE).
- *
- * Copyright Peter Iakovlev, 2013.
- */
+
 
 #import "MTTcpTransport.h"
 
@@ -37,7 +31,7 @@ static const NSTimeInterval MTTcpTransportSleepWatchdogTimeout = 60.0;
 
 @property (nonatomic, strong) MTDatacenterAddress *address;
 @property (nonatomic, strong) MTTcpConnection *connection;
-@property (nonatomic) bool isUsingProxy;
+@property (nonatomic, strong) MTSocksProxySettings *proxySettings;
 
 @property (nonatomic) bool connectionConnected;
 @property (nonatomic) bool connectionIsValid;
@@ -91,7 +85,7 @@ static const NSTimeInterval MTTcpTransportSleepWatchdogTimeout = 60.0;
     return queue;
 }
 
-- (instancetype)initWithDelegate:(id<MTTransportDelegate>)delegate context:(MTContext *)context datacenterId:(NSInteger)datacenterId address:(MTDatacenterAddress *)address usageCalculationInfo:(MTNetworkUsageCalculationInfo *)usageCalculationInfo
+- (instancetype)initWithDelegate:(id<MTTransportDelegate>)delegate context:(MTContext *)context datacenterId:(NSInteger)datacenterId address:(MTDatacenterAddress *)address proxySettings:(MTSocksProxySettings *)proxySettings usageCalculationInfo:(MTNetworkUsageCalculationInfo *)usageCalculationInfo
 {
 #ifdef DEBUG
     NSAssert(context != nil, @"context should not be nil");
@@ -99,7 +93,7 @@ static const NSTimeInterval MTTcpTransportSleepWatchdogTimeout = 60.0;
     NSAssert(address != nil, @"address should not be nil");
 #endif
     
-    self = [super initWithDelegate:delegate context:context datacenterId:datacenterId address:address usageCalculationInfo:usageCalculationInfo];
+    self = [super initWithDelegate:delegate context:context datacenterId:datacenterId address:address proxySettings:proxySettings usageCalculationInfo:usageCalculationInfo];
     if (self != nil)
     {
         _context = context;
@@ -117,7 +111,7 @@ static const NSTimeInterval MTTcpTransportSleepWatchdogTimeout = 60.0;
             
             transportContext.isNetworkAvailable = true;
             
-            transportContext.isUsingProxy = context.apiEnvironment.socksProxySettings != nil;
+            transportContext.proxySettings = context.apiEnvironment.socksProxySettings;
         }];
     }
     return self;
@@ -163,8 +157,8 @@ static const NSTimeInterval MTTcpTransportSleepWatchdogTimeout = 60.0;
         id<MTTransportDelegate> delegate = self.delegate;
         if ([delegate respondsToSelector:@selector(transportNetworkAvailabilityChanged:isNetworkAvailable:)])
             [delegate transportNetworkAvailabilityChanged:self isNetworkAvailable:transportContext.isNetworkAvailable];
-        if ([delegate respondsToSelector:@selector(transportConnectionStateChanged:isConnected:isUsingProxy:)])
-            [delegate transportConnectionStateChanged:self isConnected:transportContext.connectionConnected isUsingProxy:transportContext.isUsingProxy];
+        if ([delegate respondsToSelector:@selector(transportConnectionStateChanged:isConnected:proxySettings:)])
+            [delegate transportConnectionStateChanged:self isConnected:transportContext.connectionConnected proxySettings:transportContext.proxySettings];
         if ([delegate respondsToSelector:@selector(transportConnectionContextUpdateStateChanged:isUpdatingConnectionContext:)])
             [delegate transportConnectionContextUpdateStateChanged:self isUpdatingConnectionContext:transportContext.currentActualizationPingMessageId != 0];
     }];
@@ -236,8 +230,8 @@ static const NSTimeInterval MTTcpTransportSleepWatchdogTimeout = 60.0;
         transportContext.connectionIsValid = false;
         
         id<MTTransportDelegate> delegate = self.delegate;
-        if ([delegate respondsToSelector:@selector(transportConnectionStateChanged:isConnected:isUsingProxy:)])
-            [delegate transportConnectionStateChanged:self isConnected:false isUsingProxy:transportContext.isUsingProxy];
+        if ([delegate respondsToSelector:@selector(transportConnectionStateChanged:isConnected:proxySettings:)])
+            [delegate transportConnectionStateChanged:self isConnected:false proxySettings:transportContext.proxySettings];
         
         transportContext.connectionBehaviour.needsReconnection = false;
         
@@ -407,8 +401,8 @@ static const NSTimeInterval MTTcpTransportSleepWatchdogTimeout = 60.0;
         [transportContext.connectionBehaviour connectionOpened];
         
         id<MTTransportDelegate> delegate = self.delegate;
-        if ([delegate respondsToSelector:@selector(transportConnectionStateChanged:isConnected:isUsingProxy:)])
-            [delegate transportConnectionStateChanged:self isConnected:true isUsingProxy:transportContext.isUsingProxy];
+        if ([delegate respondsToSelector:@selector(transportConnectionStateChanged:isConnected:proxySettings:)])
+            [delegate transportConnectionStateChanged:self isConnected:true proxySettings:transportContext.proxySettings];
         
         transportContext.didSendActualizationPingAfterConnection = false;
         transportContext.currentActualizationPingMessageId = 0;
@@ -438,8 +432,8 @@ static const NSTimeInterval MTTcpTransportSleepWatchdogTimeout = 60.0;
         [self restartSleepWatchdogTimer];
         
         id<MTTransportDelegate> delegate = self.delegate;
-        if ([delegate respondsToSelector:@selector(transportConnectionStateChanged:isConnected:isUsingProxy:)])
-            [delegate transportConnectionStateChanged:self isConnected:false isUsingProxy:transportContext.isUsingProxy];
+        if ([delegate respondsToSelector:@selector(transportConnectionStateChanged:isConnected:proxySettings:)])
+            [delegate transportConnectionStateChanged:self isConnected:false proxySettings:transportContext.proxySettings];
         
         if ([delegate respondsToSelector:@selector(transportTransactionsMayHaveFailed:transactionIds:)])
             [delegate transportTransactionsMayHaveFailed:self transactionIds:@[connection.internalId]];

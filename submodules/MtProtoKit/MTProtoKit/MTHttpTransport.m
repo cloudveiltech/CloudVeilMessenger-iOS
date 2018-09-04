@@ -1,10 +1,4 @@
-/*
- * This is the source code of Telegram for iOS v. 1.1
- * It is licensed under GNU GPL v. 2 or later.
- * You should have received a copy of the license in this archive (see LICENSE).
- *
- * Copyright Peter Iakovlev, 2013.
- */
+
 
 #import "MTHttpTransport.h"
 
@@ -63,9 +57,9 @@
     return queue;
 }
 
-- (instancetype)initWithDelegate:(id<MTTransportDelegate>)delegate context:(MTContext *)context datacenterId:(NSInteger)datacenterId address:(MTDatacenterAddress *)address usageCalculationInfo:(MTNetworkUsageCalculationInfo *)usageCalculationInfo
+- (instancetype)initWithDelegate:(id<MTTransportDelegate>)delegate context:(MTContext *)context datacenterId:(NSInteger)datacenterId address:(MTDatacenterAddress *)address proxySettings:(MTSocksProxySettings *)proxySettings usageCalculationInfo:(MTNetworkUsageCalculationInfo *)usageCalculationInfo
 {
-    self = [super initWithDelegate:delegate context:context datacenterId:datacenterId address:address usageCalculationInfo:usageCalculationInfo];
+    self = [super initWithDelegate:delegate context:context datacenterId:datacenterId address:address proxySettings:proxySettings usageCalculationInfo:usageCalculationInfo];
     if (self != nil)
     {
         _address = address;
@@ -150,8 +144,8 @@
         id<MTTransportDelegate> delegate = self.delegate;
         if ([delegate respondsToSelector:@selector(transportNetworkAvailabilityChanged:isNetworkAvailable:)])
             [delegate transportNetworkAvailabilityChanged:self isNetworkAvailable:_isNetworkAvailable];
-        if ([delegate respondsToSelector:@selector(transportConnectionStateChanged:isConnected:isUsingProxy:)])
-            [delegate transportConnectionStateChanged:self isConnected:_isConnected isUsingProxy:false];
+        if ([delegate respondsToSelector:@selector(transportConnectionStateChanged:isConnected:proxySettings:)])
+            [delegate transportConnectionStateChanged:self isConnected:_isConnected proxySettings:nil];
         if ([delegate respondsToSelector:@selector(transportConnectionContextUpdateStateChanged:isUpdatingConnectionContext:)])
             [delegate transportConnectionContextUpdateStateChanged:self isUpdatingConnectionContext:_currentActualizationPingId != 0];
     }];
@@ -199,8 +193,8 @@
             _isConnected = false;
          
             id<MTTransportDelegate> delegate = self.delegate;
-            if ([delegate respondsToSelector:@selector(transportConnectionStateChanged:isConnected:isUsingProxy:)])
-                [delegate transportConnectionStateChanged:self isConnected:_isConnected isUsingProxy:false];
+            if ([delegate respondsToSelector:@selector(transportConnectionStateChanged:isConnected:proxySettings:)])
+                [delegate transportConnectionStateChanged:self isConnected:_isConnected proxySettings:nil];
         }
     }];
 }
@@ -281,8 +275,8 @@
             _isConnected = true;
             
             id<MTTransportDelegate> delegate = self.delegate;
-            if ([delegate respondsToSelector:@selector(transportConnectionStateChanged:isConnected:isUsingProxy:)])
-                [delegate transportConnectionStateChanged:self isConnected:_isConnected isUsingProxy:false];
+            if ([delegate respondsToSelector:@selector(transportConnectionStateChanged:isConnected:proxySettings:)])
+                [delegate transportConnectionStateChanged:self isConnected:_isConnected proxySettings:nil];
         }
         
         [self stopConnectionWatchdogTimer];
@@ -355,6 +349,9 @@
         
         if (requestTransactionForLongPolling)
             [self setDelegateNeedsTransaction];
+
+        if ([delegate respondsToSelector:@selector(transportConnectionProblemsStatusChanged:hasConnectionProblems:isProbablyHttp:)])
+            [delegate transportConnectionProblemsStatusChanged:self hasConnectionProblems:true isProbablyHttp:false];
     }];
 }
 

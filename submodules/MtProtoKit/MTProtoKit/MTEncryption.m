@@ -1,10 +1,4 @@
-/*
- * This is the source code of Telegram for iOS v. 1.1
- * It is licensed under GNU GPL v. 2 or later.
- * You should have received a copy of the license in this archive (see LICENSE).
- *
- * Copyright Peter Iakovlev, 2013.
- */
+
 
 #import "MTEncryption.h"
 
@@ -287,6 +281,48 @@ NSData *MTAesEncrypt(NSData *data, NSData *key, NSData *iv)
     return [[NSData alloc] initWithBytesNoCopy:outData length:data.length freeWhenDone:true];
 }
 
+//Cloudveil start
+bool MTIsZero(NSData *value)
+{
+    BN_CTX *ctx = BN_CTX_new();
+    BIGNUM *bnValue = BN_bin2bn(value.bytes, (int)value.length, NULL);
+    
+    bool isZero = BN_is_zero(bnValue);
+    
+    BN_free(bnValue);
+    BN_CTX_free(ctx);
+    
+    return isZero;
+}
+
+
+bool MTCheckIsSafeB(NSData *b, NSData *p)
+{
+    BN_CTX *ctx = BN_CTX_new();
+    BIGNUM *bnB = BN_bin2bn(b.bytes, (int)b.length, NULL);
+    BIGNUM *bnP = BN_bin2bn(p.bytes, (int)p.length, NULL);
+    BIGNUM *bnZero = BN_new();
+    BN_zero(bnZero);
+    
+    bool result = false;
+    
+    if (BN_cmp(bnB, bnZero) == 1)
+    {
+        if (BN_cmp(bnB, bnP) == -1)
+        {
+            result = true;
+        }
+    }
+    
+    BN_free(bnB);
+    BN_free(bnP);
+    BN_free(bnZero);
+    BN_CTX_free(ctx);
+    
+    return result;
+}
+//CloudVeil end
+
 NSData *MTAesDecrypt(NSData *data, NSData *key, NSData *iv)
 {
     if (key == nil || iv == nil)
@@ -309,7 +345,6 @@ NSData *MTAesDecrypt(NSData *data, NSData *key, NSData *iv)
 NSData *MTRsaEncrypt(NSString *publicKey, NSData *data)
 {
 #if TARGET_OS_IOS
-    
     NSMutableData *updatedData = [[NSMutableData alloc] initWithData:data];
     while (updatedData.length < 256) {
         uint8_t zero = 0;
@@ -368,6 +403,108 @@ NSData *MTExp(NSData *base, NSData *exp, NSData *modulus)
     BN_free(bnBase);
     BN_free(bnExp);
     BN_free(bnModulus);
+    BN_free(bnRes);
+    
+    NSData *result = [[NSData alloc] initWithBytes:res length:(NSUInteger)resLen];
+    free(res);
+    
+    return result;
+}
+
+NSData *MTModSub(NSData *a, NSData *b, NSData *modulus) {
+    BN_CTX *ctx = BN_CTX_new();
+    BIGNUM *bnA = BN_bin2bn(a.bytes, (int)a.length, NULL);
+    
+    BIGNUM *bnB = BN_bin2bn(b.bytes, (int)b.length, NULL);
+    
+    BIGNUM *bnModulus = BN_bin2bn(modulus.bytes, (int)modulus.length, NULL);
+    
+    BIGNUM *bnRes = BN_new();
+    
+    BN_mod_sub(bnRes, bnA, bnB, bnModulus, ctx);
+    
+    unsigned char *res = malloc((size_t)BN_num_bytes(bnRes));
+    int resLen = BN_bn2bin(bnRes, res);
+    
+    BN_CTX_free(ctx);
+    BN_free(bnA);
+    BN_free(bnB);
+    BN_free(bnModulus);
+    BN_free(bnRes);
+    
+    NSData *result = [[NSData alloc] initWithBytes:res length:(NSUInteger)resLen];
+    free(res);
+    
+    return result;
+}
+
+NSData *MTModMul(NSData *a, NSData *b, NSData *modulus) {
+    BN_CTX *ctx = BN_CTX_new();
+    BIGNUM *bnA = BN_bin2bn(a.bytes, (int)a.length, NULL);
+    
+    BIGNUM *bnB = BN_bin2bn(b.bytes, (int)b.length, NULL);
+    
+    BIGNUM *bnModulus = BN_bin2bn(modulus.bytes, (int)modulus.length, NULL);
+    
+    BIGNUM *bnRes = BN_new();
+    
+    BN_mod_mul(bnRes, bnA, bnB, bnModulus, ctx);
+    
+    unsigned char *res = malloc((size_t)BN_num_bytes(bnRes));
+    int resLen = BN_bn2bin(bnRes, res);
+    
+    BN_CTX_free(ctx);
+    BN_free(bnA);
+    BN_free(bnB);
+    BN_free(bnModulus);
+    BN_free(bnRes);
+    
+    NSData *result = [[NSData alloc] initWithBytes:res length:(NSUInteger)resLen];
+    free(res);
+    
+    return result;
+}
+
+NSData *MTMul(NSData *a, NSData *b) {
+    BN_CTX *ctx = BN_CTX_new();
+    BIGNUM *bnA = BN_bin2bn(a.bytes, (int)a.length, NULL);
+    
+    BIGNUM *bnB = BN_bin2bn(b.bytes, (int)b.length, NULL);
+    
+    BIGNUM *bnRes = BN_new();
+    
+    BN_mul(bnRes, bnA, bnB, ctx);
+    
+    unsigned char *res = malloc((size_t)BN_num_bytes(bnRes));
+    int resLen = BN_bn2bin(bnRes, res);
+    
+    BN_CTX_free(ctx);
+    BN_free(bnA);
+    BN_free(bnB);
+    BN_free(bnRes);
+    
+    NSData *result = [[NSData alloc] initWithBytes:res length:(NSUInteger)resLen];
+    free(res);
+    
+    return result;
+}
+
+NSData *MTAdd(NSData *a, NSData *b) {
+    BN_CTX *ctx = BN_CTX_new();
+    BIGNUM *bnA = BN_bin2bn(a.bytes, (int)a.length, NULL);
+    
+    BIGNUM *bnB = BN_bin2bn(b.bytes, (int)b.length, NULL);
+    
+    BIGNUM *bnRes = BN_new();
+    
+    BN_add(bnRes, bnA, bnB);
+    
+    unsigned char *res = malloc((size_t)BN_num_bytes(bnRes));
+    int resLen = BN_bn2bin(bnRes, res);
+    
+    BN_CTX_free(ctx);
+    BN_free(bnA);
+    BN_free(bnB);
     BN_free(bnRes);
     
     NSData *result = [[NSData alloc] initWithBytes:res length:(NSUInteger)resLen];
@@ -707,6 +844,33 @@ uint64_t MTRsaFingerprint(NSString *key) {
     return fingerprint;
 }
 
+NSData *MTRsaEncryptPKCS1OAEP(NSString *key, NSData *data) {
+    BIO *keyBio = BIO_new(BIO_s_mem());
+    
+    NSData *keyData = [key dataUsingEncoding:NSUTF8StringEncoding];
+    BIO_write(keyBio, keyData.bytes, (int)keyData.length);
+    RSA *rsaKey = PEM_read_bio_RSA_PUBKEY(keyBio, NULL, NULL, NULL);
+    if (rsaKey == nil) {
+        BIO_free(keyBio);
+        return nil;
+    }
+    
+    NSMutableData *outData = [[NSMutableData alloc] initWithLength:data.length + 2048];
+    
+    int encryptedLength = RSA_public_encrypt((int)data.length, data.bytes, outData.mutableBytes, rsaKey, RSA_PKCS1_OAEP_PADDING);
+    RSA_free(rsaKey);
+    BIO_free(keyBio);
+    
+    if (encryptedLength < 0) {
+        return nil;
+    }
+    
+    assert(encryptedLength <= outData.length);
+    [outData setLength:encryptedLength];
+    
+    return outData;
+}
+
 static NSData *decrypt_TL_data(unsigned char buffer[256]) {
     NSString *keyString = @"-----BEGIN RSA PUBLIC KEY-----\n"
 "MIIBCgKCAQEAyr+18Rex2ohtVy8sroGPBwXD3DOoKCSpjDqYoXgCqB7ioln4eDCF\n"
@@ -780,11 +944,13 @@ static NSData *decrypt_TL_data(unsigned char buffer[256]) {
 
 @implementation MTBackupDatacenterAddress
 
-- (instancetype)initWithIp:(NSString *)ip port:(int32_t)port {
+- (instancetype)initWithDatacenterId:(int32_t)datacenterId ip:(NSString *)ip port:(int32_t)port secret:(NSData *)secret {
     self = [super init];
     if (self != nil) {
+        _datacenterId = datacenterId;
         _ip = ip;
         _port = port;
+        _secret = secret;
     }
     return self;
 }
@@ -793,10 +959,9 @@ static NSData *decrypt_TL_data(unsigned char buffer[256]) {
 
 @implementation MTBackupDatacenterData
 
-- (instancetype)initWithDatacenterId:(int32_t)datacenterId timestamp:(int32_t)timestamp expirationDate:(int32_t)expirationDate addressList:(NSArray<MTBackupDatacenterAddress *> *)addressList {
+- (instancetype)initWithTimestamp:(int32_t)timestamp expirationDate:(int32_t)expirationDate addressList:(NSArray<MTBackupDatacenterAddress *> *)addressList {
     self = [super init];
     if (self != nil) {
-        _datacenterId = datacenterId;
         _timestamp = timestamp;
         _expirationDate = expirationDate;
         _addressList = addressList;
@@ -806,7 +971,7 @@ static NSData *decrypt_TL_data(unsigned char buffer[256]) {
 
 @end
 
-MTBackupDatacenterData *MTIPDataDecode(NSData *data) {
+MTBackupDatacenterData *MTIPDataDecode(NSData *data, NSString *phoneNumber) {
     unsigned char buffer[256];
     memcpy(buffer, data.bytes, 256);
     NSData *result = decrypt_TL_data(buffer);
@@ -817,49 +982,155 @@ MTBackupDatacenterData *MTIPDataDecode(NSData *data) {
         if (![reader readInt32:&signature]) {
             return nil;
         }
-        if (signature != 0xd997c3c5) {
-            return nil;
-        }
-        int32_t timestamp = 0;
-        int32_t expirationDate = 0;
-        int32_t datacenterId = 0;
-        if (![reader readInt32:&timestamp]) {
-            return nil;
-        }
-        if (![reader readInt32:&expirationDate]) {
-            return nil;
-        }
-        if (![reader readInt32:&datacenterId]) {
-            return nil;
-        }
-        int32_t vectorSignature = 0;
-        if (![reader readInt32:&vectorSignature]) {
-            return nil;
-        }
-        if (vectorSignature != 0x1cb5c415) {
-            return nil;
-        }
-        
-        NSMutableArray<MTBackupDatacenterAddress *> *addressList = [[NSMutableArray alloc] init];
-        int32_t count = 0;
-        if (![reader readInt32:&count]) {
-            return nil;
-        }
-        
-        for (int i = 0; i < count; i++) {
-            int32_t ip = 0;
-            int32_t port = 0;
-            if (![reader readInt32:&ip]) {
+        if (signature == 0xd997c3c5) {
+            int32_t timestamp = 0;
+            int32_t expirationDate = 0;
+            int32_t datacenterId = 0;
+            if (![reader readInt32:&timestamp]) {
                 return nil;
             }
-            if (![reader readInt32:&port]) {
+            if (![reader readInt32:&expirationDate]) {
                 return nil;
             }
-            [addressList addObject:[[MTBackupDatacenterAddress alloc] initWithIp:[NSString stringWithFormat:@"%d.%d.%d.%d", (int)((ip >> 24) & 0xFF), (int)((ip >> 16) & 0xFF), (int)((ip >> 8) & 0xFF), (int)((ip >> 0) & 0xFF)] port:port]];
+            if (![reader readInt32:&datacenterId]) {
+                return nil;
+            }
+            int32_t vectorSignature = 0;
+            if (![reader readInt32:&vectorSignature]) {
+                return nil;
+            }
+            if (vectorSignature != 0x1cb5c415) {
+                return nil;
+            }
+            
+            NSMutableArray<MTBackupDatacenterAddress *> *addressList = [[NSMutableArray alloc] init];
+            int32_t count = 0;
+            if (![reader readInt32:&count]) {
+                return nil;
+            }
+            
+            for (int i = 0; i < count; i++) {
+                int32_t ip = 0;
+                int32_t port = 0;
+                if (![reader readInt32:&ip]) {
+                    return nil;
+                }
+                if (![reader readInt32:&port]) {
+                    return nil;
+                }
+                [addressList addObject:[[MTBackupDatacenterAddress alloc] initWithDatacenterId:datacenterId ip:[NSString stringWithFormat:@"%d.%d.%d.%d", (int)((ip >> 24) & 0xFF), (int)((ip >> 16) & 0xFF), (int)((ip >> 8) & 0xFF), (int)((ip >> 0) & 0xFF)] port:port secret:nil]];
+            }
+            
+            return [[MTBackupDatacenterData alloc] initWithTimestamp:timestamp expirationDate:expirationDate addressList:addressList];
+        } else if (signature == 0x5a592a6c) {
+            int32_t timestamp = 0;
+            int32_t expirationDate = 0;
+            if (![reader readInt32:&timestamp]) {
+                return nil;
+            }
+            if (![reader readInt32:&expirationDate]) {
+                return nil;
+            }
+            
+            NSMutableArray<MTBackupDatacenterAddress *> *addressList = [[NSMutableArray alloc] init];
+            int32_t count = 0;
+            if (![reader readInt32:&count]) {
+                return nil;
+            }
+            
+            for (int32_t i = 0; i < count; i++) {
+                int32_t signature = 0;
+                if (![reader readInt32:&signature]) {
+                    return nil;
+                }
+                if (signature != 0x4679b65f) {
+                    return nil;
+                }
+                NSString *phonePrefixRules = nil;
+                if (![reader readTLString:&phonePrefixRules]) {
+                    return nil;
+                }
+                int32_t datacenterId = 0;
+                if (![reader readInt32:&datacenterId]) {
+                    return nil;
+                }
+                
+                int32_t ipCount = 0;
+                if (![reader readInt32:&ipCount]) {
+                    return nil;
+                }
+                
+                NSMutableArray<MTBackupDatacenterAddress *> *ruleAddressList = [[NSMutableArray alloc] init];
+                
+                for (int j = 0; j < ipCount; j++) {
+                    int32_t signature = 0;
+                    if (![reader readInt32:&signature]) {
+                        return nil;
+                    }
+                    if (signature == 0xd433ad73) {
+                        int32_t ip = 0;
+                        int32_t port = 0;
+                        if (![reader readInt32:&ip]) {
+                            return nil;
+                        }
+                        if (![reader readInt32:&port]) {
+                            return nil;
+                        }
+                        [ruleAddressList addObject:[[MTBackupDatacenterAddress alloc] initWithDatacenterId:datacenterId ip:[NSString stringWithFormat:@"%d.%d.%d.%d", (int)((ip >> 24) & 0xFF), (int)((ip >> 16) & 0xFF), (int)((ip >> 8) & 0xFF), (int)((ip >> 0) & 0xFF)] port:port secret:nil]];
+                    } else if (signature == 0x37982646) {
+                        int32_t ip = 0;
+                        int32_t port = 0;
+                        if (![reader readInt32:&ip]) {
+                            return nil;
+                        }
+                        if (![reader readInt32:&port]) {
+                            return nil;
+                        }
+                        NSData *secret = nil;
+                        if (![reader readTLBytes:&secret]) {
+                            return nil;
+                        }
+                        [ruleAddressList addObject:[[MTBackupDatacenterAddress alloc] initWithDatacenterId:datacenterId ip:[NSString stringWithFormat:@"%d.%d.%d.%d", (int)((ip >> 24) & 0xFF), (int)((ip >> 16) & 0xFF), (int)((ip >> 8) & 0xFF), (int)((ip >> 0) & 0xFF)] port:port secret:secret]];
+                    } else {
+                        return nil;
+                    }
+                }
+                
+                bool includeIp = true;
+                for (NSString *rule in [phonePrefixRules componentsSeparatedByString:@","]) {
+                    if (rule.length == 0) {
+                        includeIp = true;
+                    } else if ([rule characterAtIndex:0] == '+' && [phoneNumber hasPrefix:[rule substringFromIndex:1]]) {
+                        includeIp = true;
+                    } else if ([rule characterAtIndex:0] == '-' && [phoneNumber hasPrefix:[rule substringFromIndex:1]]) {
+                        includeIp = false;
+                    } else {
+                        includeIp = false;
+                    }
+                }
+                if (includeIp) {
+                    [addressList addObjectsFromArray:ruleAddressList];
+                }
+            }
+            
+            return [[MTBackupDatacenterData alloc] initWithTimestamp:timestamp expirationDate:expirationDate addressList:addressList];
+        } else {
+            return nil;
         }
-        
-        return [[MTBackupDatacenterData alloc] initWithDatacenterId:datacenterId timestamp:timestamp expirationDate:expirationDate addressList:addressList];
     } else {
         return nil;
     }
+}
+
+NSData * _Nullable MTPBKDF2(NSData * _Nonnull data, NSData * _Nonnull salt, int rounds) {
+    if (rounds < 2) {
+        return nil;
+    }
+    const size_t hashLength = 64;
+    NSMutableData *result = [[NSMutableData alloc] initWithLength:hashLength];
+    CCStatus status = CCKeyDerivationPBKDF(kCCPBKDF2, data.bytes, data.length, salt.bytes, salt.length, kCCPRFHmacAlgSHA512, rounds, result.mutableBytes, hashLength);
+    if (status != kCCSuccess) {
+        return nil;
+    }
+    return result;
 }

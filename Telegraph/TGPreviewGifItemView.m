@@ -262,10 +262,10 @@
                                             return nil;
                                         }];
                                         return [dataSignal mapToSignal:^SSignal *(NSData *data) {
-                                            return [[TGGifConverter convertGifToMp4:data] mapToSignal:^SSignal *(NSString *tempPath) {
+                                            return [[TGGifConverter convertGifToMp4:data] mapToSignal:^SSignal *(NSDictionary *dict) {
                                                 return [[SSignal alloc] initWithGenerator:^id<SDisposable>(SSubscriber *subsctiber) {
                                                     NSError *error = nil;
-                                                    [[NSFileManager defaultManager] moveItemAtPath:tempPath toPath:videoPath error:&error];
+                                                    [[NSFileManager defaultManager] moveItemAtPath:dict[@"path"] toPath:videoPath error:&error];
                                                     if (error != nil) {
                                                         [subsctiber putError:nil];
                                                     } else {
@@ -312,7 +312,7 @@
                         }
                         if ([externalResult.resultId isEqualToString:currentExternalResult.resultId]) {
                             if (path != nil) {
-                                if ([externalResult.contentType isEqualToString:@"video/mp4"]) {
+                                if ([externalResult.content.mimeType isEqualToString:@"video/mp4"]) {
                                     [strongSelf->_videoView removeFromSuperview];
                                     strongSelf->_videoView = [[[TGVTAcceleratedVideoView videoViewClass] alloc] initWithFrame:strongSelf.bounds];
                                     [strongSelf insertSubview:strongSelf->_videoView aboveSubview:strongSelf->_overlayView];

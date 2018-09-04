@@ -33,52 +33,12 @@
 
 @end
 
-@implementation TLaccount_Password$account_noPassword : TLaccount_Password
+@implementation TLaccount_Password$account_passwordMeta : TLaccount_Password
 
 
 - (int32_t)TLconstructorSignature
 {
-    return (int32_t)0x96dabc18;
-}
-
-- (int32_t)TLconstructorName
-{
-    return (int32_t)0xaa4f01c3;
-}
-
-- (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)metaObject
-{
-    TLaccount_Password$account_noPassword *object = [[TLaccount_Password$account_noPassword alloc] init];
-    object.n_new_salt = metaObject->getBytes((int32_t)0x6b0fed36);
-    object.email_unconfirmed_pattern = metaObject->getString((int32_t)0x286c37b0);
-    return object;
-}
-
-- (void)TLfillFieldsWithValues:(std::map<int32_t, TLConstructedValue> *)values
-{
-    {
-        TLConstructedValue value;
-        value.type = TLConstructedValueTypeBytes;
-        value.nativeObject = self.n_new_salt;
-        values->insert(std::pair<int32_t, TLConstructedValue>((int32_t)0x6b0fed36, value));
-    }
-    {
-        TLConstructedValue value;
-        value.type = TLConstructedValueTypeString;
-        value.nativeObject = self.email_unconfirmed_pattern;
-        values->insert(std::pair<int32_t, TLConstructedValue>((int32_t)0x286c37b0, value));
-    }
-}
-
-
-@end
-
-@implementation TLaccount_Password$account_password : TLaccount_Password
-
-
-- (int32_t)TLconstructorSignature
-{
-    return (int32_t)0x7c18141c;
+    return (int32_t)0xca39b447;
 }
 
 - (int32_t)TLconstructorName
@@ -88,11 +48,9 @@
 
 - (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)metaObject
 {
-    TLaccount_Password$account_password *object = [[TLaccount_Password$account_password alloc] init];
-    object.current_salt = metaObject->getBytes((int32_t)0x80e59b22);
-    object.n_new_salt = metaObject->getBytes((int32_t)0x6b0fed36);
+    TLaccount_Password$account_passwordMeta *object = [[TLaccount_Password$account_passwordMeta alloc] init];
+    object.flags = metaObject->getInt32((int32_t)0x81915c23);
     object.hint = metaObject->getString((int32_t)0xb8a444ca);
-    object.has_recovery = metaObject->getBool((int32_t)0xc1620e28);
     object.email_unconfirmed_pattern = metaObject->getString((int32_t)0x286c37b0);
     return object;
 }
@@ -101,27 +59,15 @@
 {
     {
         TLConstructedValue value;
-        value.type = TLConstructedValueTypeBytes;
-        value.nativeObject = self.current_salt;
-        values->insert(std::pair<int32_t, TLConstructedValue>((int32_t)0x80e59b22, value));
-    }
-    {
-        TLConstructedValue value;
-        value.type = TLConstructedValueTypeBytes;
-        value.nativeObject = self.n_new_salt;
-        values->insert(std::pair<int32_t, TLConstructedValue>((int32_t)0x6b0fed36, value));
+        value.type = TLConstructedValueTypePrimitiveInt32;
+        value.primitive.int32Value = self.flags;
+        values->insert(std::pair<int32_t, TLConstructedValue>((int32_t)0x81915c23, value));
     }
     {
         TLConstructedValue value;
         value.type = TLConstructedValueTypeString;
         value.nativeObject = self.hint;
         values->insert(std::pair<int32_t, TLConstructedValue>((int32_t)0xb8a444ca, value));
-    }
-    {
-        TLConstructedValue value;
-        value.type = TLConstructedValueTypePrimitiveBool;
-        value.primitive.boolValue = self.has_recovery;
-        values->insert(std::pair<int32_t, TLConstructedValue>((int32_t)0xc1620e28, value));
     }
     {
         TLConstructedValue value;

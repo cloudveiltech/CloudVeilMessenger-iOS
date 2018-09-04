@@ -5,6 +5,8 @@
 #import <LegacyComponents/TGLetteredAvatarView.h>
 #import <LegacyComponents/TGCheckButtonView.h>
 
+#import "TGPresentation.h"
+
 @interface TGShareSheetSharePeersCell () <UIGestureRecognizerDelegate>
 {
     id _peer;
@@ -67,6 +69,13 @@
     return self;
 }
 
+- (void)setPresentation:(TGPresentation *)presentation
+{
+    _presentation = presentation;
+    
+    _titleLabel.textColor = presentation.pallete.textColor;
+}
+
 - (void)tapGesture:(UITapGestureRecognizer *)recognizer {
     if (recognizer.state == UIGestureRecognizerStateEnded) {
         if (_toggleSelected) {
@@ -82,7 +91,7 @@
     
     _peer = peer;
     CGSize size = _avatarView.bounds.size;
-    static UIImage *placeholder = nil;
+    static UIImage *staticPlaceholder = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^
     {
@@ -96,9 +105,13 @@
         CGContextSetLineWidth(context, 1.0f);
         CGContextStrokeEllipseInRect(context, CGRectMake(0.5f, 0.5f, size.width - 1.0f, size.height - 1.0f));
         
-        placeholder = UIGraphicsGetImageFromCurrentImageContext();
+        staticPlaceholder = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
     });
+    
+    UIImage *placeholder = staticPlaceholder;
+    if (_presentation != nil)
+        placeholder = [_presentation.images avatarPlaceholderWithDiameter:60.0f];
     
     int64_t peerId = 0;
     _isSecret = false;
@@ -111,14 +124,14 @@
             TGUser *user = conversation.additionalProperties[@"user"];
 
             if (user.photoUrlSmall.length != 0) {
-                [_avatarView loadImage:user.photoUrlSmall filter:@"circle:60x60" placeholder:placeholder];
+                [_avatarView loadImage:user.photoFullUrlSmall filter:@"circle:60x60" placeholder:placeholder];
             } else {
                 [_avatarView loadUserPlaceholderWithSize:size uid:user.uid firstName:user.firstName lastName:user.lastName placeholder:placeholder];
             }
             _titleLabel.text = user.displayFirstName;
         } else {
             if (conversation.chatPhotoSmall.length != 0) {
-                [_avatarView loadImage:conversation.chatPhotoSmall filter:@"circle:60x60" placeholder:placeholder];
+                [_avatarView loadImage:conversation.chatPhotoFullSmall filter:@"circle:60x60" placeholder:placeholder];
             } else {
                 [_avatarView loadGroupPlaceholderWithSize:size conversationId:conversation.conversationId title:conversation.chatTitle placeholder:placeholder];
             }
@@ -129,7 +142,7 @@
 
         peerId = user.uid;
         if (user.photoUrlSmall.length != 0) {
-            [_avatarView loadImage:user.photoUrlSmall filter:@"circle:60x60" placeholder:placeholder];
+            [_avatarView loadImage:user.photoFullUrlSmall filter:@"circle:60x60" placeholder:placeholder];
         } else {
             [_avatarView loadUserPlaceholderWithSize:size uid:user.uid firstName:user.firstName lastName:user.lastName placeholder:placeholder];
         }
@@ -137,7 +150,7 @@
     }
     
     if (!_isSelected) {
-        _titleLabel.textColor = _isSecret ? UIColorRGB(0x00a629) : [UIColor blackColor];
+        _titleLabel.textColor = _isSecret ? self.presentation.pallete.dialogEncryptedColor : self.presentation.pallete.textColor;
     }
     
     _peerId = peerId;
@@ -176,9 +189,11 @@
         _badgeLabel.backgroundColor = [UIColor clearColor];
         _badgeLabel.font = TGLightSystemFontOfSize(15);
         _badgeLabel.textAlignment = NSTextAlignmentCenter;
-        _badgeLabel.textColor = [UIColor whiteColor];
+        _badgeLabel.textColor = self.presentation.pallete.dialogBadgeTextColor;
         [_badgeBackgroundView addSubview:_badgeLabel];
     }
+    
+    _badgeBackgroundView.image = self.presentation.images.dialogRecentBadgeImage;
     
     if (text == nil)
     {

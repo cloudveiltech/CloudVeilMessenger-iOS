@@ -15,6 +15,8 @@
 #import "TGImageInfo+Telegraph.h"
 #import "TGTelegraph.h"
 
+#import "TGMediaOriginInfo+Telegraph.h"
+
 #import <libkern/OSAtomic.h>
 
 static bool alreadyReloadedStickerPacksFromRemote = false;
@@ -274,7 +276,13 @@ static OSSpinLock cachedPacksLock = 0;
     if (cachedStickerPacksData == nil)
         return nil;
     
-    NSDictionary *dict = [NSKeyedUnarchiver unarchiveObjectWithData:cachedStickerPacksData];
+    NSDictionary *dict = nil;
+    @try {
+        dict = [NSKeyedUnarchiver unarchiveObjectWithData:cachedStickerPacksData];
+    } @catch (NSException *e) {
+        
+    }
+    
     if ([dict[@"packs"] isKindOfClass:[NSArray class]])
     {
         NSArray *cachedPacks = dict[@"packs"];
@@ -765,13 +773,19 @@ static OSSpinLock cachedPacksLock = 0;
                 for (TLDocument *resultDocument in result.documents)
                 {
                     TGDocumentMediaAttachment *document = [[TGDocumentMediaAttachment alloc] initWithTelegraphDocumentDesc:resultDocument];
+                    if ([packReference isKindOfClass:[TGStickerPackIdReference class]])
+                    {
+                        int64_t stickerPackId = ((TGStickerPackIdReference *)packReference).packId;
+                        int64_t stickerPackAccessHash = ((TGStickerPackIdReference *)packReference).packAccessHash;
+                        document.originInfo = [TGMediaOriginInfo mediaOriginInfoForDocument:resultDocument stickerPackId:stickerPackId stickerPackAccessHash:stickerPackAccessHash];
+                    }
                     if (document.documentId != 0)
                     {
                         [documents addObject:document];
                     }
                 }
                 
-                return [[TGStickerPack alloc] initWithPackReference:resultPackReference title:result.set.title stickerAssociations:stickerAssociations documents:documents packHash:packHash hidden:(result.set.flags & (1 << 1)) isMask:(result.set.flags & (1 << 3))];
+                return [[TGStickerPack alloc] initWithPackReference:resultPackReference title:result.set.title stickerAssociations:stickerAssociations documents:documents packHash:packHash hidden:(result.set.flags & (1 << 1)) isMask:(result.set.flags & (1 << 3)) isFeatured:false installedDate:result.set.installed_date];
             }];
 }
 
@@ -1076,15 +1090,16 @@ static OSSpinLock cachedPacksLock = 0;
                             location.volume_id = volumeId;
                             location.local_id = localId;
                             location.secret = secret;
+                            location.file_reference = [document.originInfo fileReferenceForVolumeId:volumeId localId:localId];
                             
-                            SSignal *downloadSignal = [[TGRemoteFileSignal dataForLocation:location datacenterId:datacenterId size:0 reportProgress:false mediaTypeTag:TGNetworkMediaTypeTagImage] onNext:^(id next)
-                                                       {
-                                                           if ([next isKindOfClass:[NSData class]])
-                                                           {
-                                                               TGLog(@"preloaded sticker preview to %@", path);
-                                                               [(NSData *)next writeToFile:path atomically:true];
-                                                           }
-                                                       }];
+                            SSignal *downloadSignal = [[TGRemoteFileSignal dataForLocation:location datacenterId:datacenterId originInfo:document.originInfo identifier:document.documentId size:0 reportProgress:false mediaTypeTag:TGNetworkMediaTypeTagImage] onNext:^(id next)
+                            {
+                                if ([next isKindOfClass:[NSData class]])
+                                {
+                                    TGLog(@"preloaded sticker preview to %@", path);
+                                    [(NSData *)next writeToFile:path atomically:true];
+                                }
+                            }];
                             
                             signal = [signal then:downloadSignal];
                         }

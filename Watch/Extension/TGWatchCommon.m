@@ -103,6 +103,7 @@ void TGResetLocalization()
 
 NSString *TGLocalized(NSString *s)
 {
+    // Mark - Cloudveil start
     static NSString *untranslatedString = nil;
     
     static dispatch_once_t onceToken1;
@@ -118,7 +119,7 @@ NSString *TGLocalized(NSString *s)
     {
         NSString *string = [customLocalizationBundle localizedStringForKey:s value:untranslatedString table:nil];
         if (string != nil && ![string isEqualToString:untranslatedString])
-            return string;
+            return [string stringByReplacingOccurrencesOfString:@"Telegram" withString:@"CloudVeil Messsenger"];
     }
     
     static NSBundle *localizationBundle = nil;
@@ -158,14 +159,15 @@ NSString *TGLocalized(NSString *s)
     
     NSString *string = [localizationBundle localizedStringForKey:s value:untranslatedString table:nil];
     if (string != nil && ![string isEqualToString:untranslatedString])
-        return string;
+        return [string stringByReplacingOccurrencesOfString:@"Telegram" withString:@"CloudVeil Messsenger"];
     
     if (localizationBundle != fallbackBundle)
     {
         NSString *string = [fallbackBundle localizedStringForKey:s value:untranslatedString table:nil];
         if (string != nil && ![string isEqualToString:untranslatedString])
-            return string;
+            return [string stringByReplacingOccurrencesOfString:@"Telegram" withString:@"CloudVeil Messsenger"];
     }
     
-    return s;
+    return [s stringByReplacingOccurrencesOfString:@"Telegram" withString:@"CloudVeil Messsenger"];
+    // Mark - Cloudveil end
 }

@@ -10,6 +10,8 @@
 #import "PSKeyValueCoder.h"
 
 #import "TGConversation.h"
+#import "TGMediaOriginInfo.h"
+#import "TGImageInfo.h"
 
 typedef enum {
     TGUserFlagVerified = (1 << 0),
@@ -59,6 +61,8 @@ typedef enum {
             _contextBotPlaceholder = [coder decodeStringForCKey:"cbp"];
         }
         _about = [coder decodeStringForCKey:"a"];
+        _photoFileReferenceSmall = [coder decodeDataCorCKey:"frs"];
+        _photoFileReferenceBig = [coder decodeDataCorCKey:"frb"];
     }
     return self;
 }
@@ -77,6 +81,8 @@ typedef enum {
         [coder encodeString:_contextBotPlaceholder forCKey:"cbp"];
     }
     [coder encodeString:_about forCKey:"a"];
+    [coder encodeData:_photoFileReferenceSmall forCKey:"frs"];
+    [coder encodeData:_photoFileReferenceBig forCKey:"frb"];
 }
 
 - (id)copyWithZone:(NSZone *)__unused zone
@@ -95,6 +101,8 @@ typedef enum {
     user.photoUrlSmall = _photoUrlSmall;
     user.photoUrlMedium = _photoUrlMedium;
     user.photoUrlBig = _photoUrlBig;
+    user.photoFileReferenceSmall = _photoFileReferenceSmall;
+    user.photoFileReferenceBig = _photoFileReferenceBig;
     user.presence = _presence;
     user.customProperties = _customProperties;
     user.contactId = _contactId;
@@ -118,6 +126,10 @@ typedef enum {
 
 - (bool)isBot {
     return _kind == TGUserKindBot || _kind == TGUserKindSmartBot;
+}
+
+- (bool)isDeleted {
+    return (_phonebookFirstName.length != 0 || _phonebookLastName.length != 0) ? false : ((_firstName.length != 0 || _lastName.length != 0) ? false : (_phoneNumber.length == 0 ? true : false));
 }
 
 - (NSString *)firstName
@@ -261,8 +273,7 @@ typedef enum {
         anotherUser.phoneNumberHash == _phoneNumberHash &&
         ((anotherUser.photoUrlSmall == nil && _photoUrlSmall == nil) || [anotherUser.photoUrlSmall isEqualToString:_photoUrlSmall]) &&
         ((anotherUser.photoUrlMedium == nil && _photoUrlMedium == nil) || [anotherUser.photoUrlMedium isEqualToString:_photoUrlMedium]) &&
-        ((anotherUser.photoUrlBig == nil && _photoUrlBig == nil) || [anotherUser.photoUrlBig isEqualToString:_photoUrlBig]) &&
-        anotherUser.presence.online == _presence.online && anotherUser.presence.lastSeen == _presence.lastSeen && TGStringCompare(_userName, anotherUser.userName) && anotherUser.kind == _kind && anotherUser.botKind == _botKind &&
+        ((anotherUser.photoUrlBig == nil && _photoUrlBig == nil) || [anotherUser.photoUrlBig isEqualToString:_photoUrlBig]) && TGObjectCompare(anotherUser.photoFileReferenceSmall, _photoFileReferenceSmall) && TGObjectCompare(anotherUser.photoFileReferenceBig, _photoFileReferenceBig) && anotherUser.presence.online == _presence.online && anotherUser.presence.lastSeen == _presence.lastSeen && TGStringCompare(_userName, anotherUser.userName) && anotherUser.kind == _kind && anotherUser.botKind == _botKind &&
         TGStringCompare(_restrictionReason, anotherUser.restrictionReason))
     {
         return true;
@@ -410,6 +421,50 @@ typedef enum {
     } else {
         _flags &= ~TGUserFlagBotInlineGeo;
     }
+}
+
+- (NSString *)photoFullUrlSmall
+{
+    NSString *finalAvatarUrl = self.photoUrlSmall;
+    if (finalAvatarUrl.length == 0)
+        return finalAvatarUrl;
+    
+    int64_t volumeId = 0;
+    int32_t localId = 0;
+    if (extractFileUrlComponents(self.photoUrlSmall, NULL, &volumeId, &localId, NULL))
+    {
+        NSString *key = [NSString stringWithFormat:@"%lld_%d", volumeId, localId];
+        NSDictionary *fileReferences = nil;
+        if (self.photoFileReferenceSmall != nil) {
+            fileReferences = @{ key: self.photoFileReferenceSmall };
+        }
+        TGMediaOriginInfo *originInfo = [TGMediaOriginInfo mediaOriginInfoWithFileReference:self.photoFileReferenceSmall fileReferences:fileReferences userId:_uid offset:0];
+        finalAvatarUrl = [finalAvatarUrl stringByAppendingFormat:@"_o%@", [originInfo stringRepresentation]];
+    }
+    
+    return finalAvatarUrl;
+}
+
+- (NSString *)photoFullUrlBig
+{
+    NSString *finalAvatarUrl = self.photoUrlBig;
+    if (finalAvatarUrl.length == 0)
+        return finalAvatarUrl;
+    
+    int64_t volumeId = 0;
+    int32_t localId = 0;
+    if (extractFileUrlComponents(self.photoUrlBig, NULL, &volumeId, &localId, NULL))
+    {
+        NSString *key = [NSString stringWithFormat:@"%lld_%d", volumeId, localId];
+        NSDictionary *fileReferences = nil;
+        if (self.photoFileReferenceBig != nil) {
+            fileReferences = @{ key: self.photoFileReferenceBig };
+        }
+        TGMediaOriginInfo *originInfo = [TGMediaOriginInfo mediaOriginInfoWithFileReference:self.photoFileReferenceBig fileReferences:fileReferences userId:_uid offset:0];
+        finalAvatarUrl = [finalAvatarUrl stringByAppendingFormat:@"_o%@", [originInfo stringRepresentation]];
+    }
+    
+    return finalAvatarUrl;
 }
 
 @end

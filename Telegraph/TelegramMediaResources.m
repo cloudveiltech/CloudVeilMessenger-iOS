@@ -1,5 +1,8 @@
 #import "TelegramMediaResources.h"
 
+#import <LegacyComponents/TGStringUtils.h>
+#import <LegacyComponents/TGMediaOriginInfo.h>
+
 #import "TL/TLMetaScheme.h"
 
 @interface CloudFileMediaResourceId : NSObject <MediaResourceId>
@@ -44,7 +47,7 @@
 
 @implementation CloudFileMediaResource
 
-- (instancetype)initWithDatacenterId:(int32_t)datacenterId volumeId:(int64_t)volumeId localId:(int32_t)localId secret:(int64_t)secret size:(NSNumber *)size legacyCacheUrl:(NSString *)legacyCacheUrl legacyCachePath:(NSString *)legacyCachePath mediaType:(id)mediaType {
+- (instancetype)initWithDatacenterId:(int32_t)datacenterId volumeId:(int64_t)volumeId localId:(int32_t)localId secret:(int64_t)secret size:(NSNumber *)size legacyCacheUrl:(NSString *)legacyCacheUrl legacyCachePath:(NSString *)legacyCachePath mediaType:(id)mediaType originInfo:(TGMediaOriginInfo *)originInfo identifier:(int64_t)identifier {
     self = [super init];
     if (self != nil) {
         _datacenterId = datacenterId;
@@ -55,6 +58,8 @@
         _legacyCacheUrl = legacyCacheUrl;
         _legacyCachePath = legacyCachePath;
         _mediaType = mediaType;
+        _originInfo = originInfo;
+                _identifier = identifier;
     }
     return self;
 }
@@ -72,6 +77,7 @@
     location.volume_id = _volumeId;
     location.local_id = _localId;
     location.secret = _secret;
+    location.file_reference = [_originInfo fileReferenceForVolumeId:_volumeId localId:_localId];
     return location;
 }
 
@@ -113,7 +119,7 @@
 
 @implementation CloudDocumentMediaResource
 
-- (instancetype)initWithDatacenterId:(int32_t)datacenterId fileId:(int64_t)fileId accessHash:(int64_t)accessHash size:(NSNumber *)size mediaType:(id)mediaType {
+- (instancetype)initWithDatacenterId:(int32_t)datacenterId fileId:(int64_t)fileId accessHash:(int64_t)accessHash size:(NSNumber *)size mediaType:(id)mediaType originInfo:(TGMediaOriginInfo *)originInfo identifier:(int64_t)identifier {
     self = [super init];
     if (self != nil) {
         _datacenterId = datacenterId;
@@ -121,6 +127,8 @@
         _accessHash = accessHash;
         _size = size;
         _mediaType = mediaType;
+        _originInfo = originInfo;
+        _identifier = identifier;
     }
     return self;
 }
@@ -135,6 +143,83 @@
 
 - (TLInputFileLocation *)apiInputLocation {
     TLInputFileLocation$inputDocumentFileLocation *location = [[TLInputFileLocation$inputDocumentFileLocation alloc] init];
+    location.n_id = _fileId;
+    location.access_hash = _accessHash;
+    location.file_reference = [_originInfo fileReference];
+    return location;
+}
+
+@end
+
+@interface CloudSecureMediaResourceId : NSObject <MediaResourceId>
+
+@property (nonatomic, readonly) NSString *fileHash;
+@property (nonatomic, readonly) int64_t fileId;
+@property (nonatomic, readonly) bool thumbnail;
+
+@end
+
+@implementation CloudSecureMediaResourceId
+
+- (instancetype)initWithFileHash:(NSString *)fileHash fileId:(int64_t)fileId thumbnail:(bool)thumbnail {
+    self = [super init];
+    if (self != nil) {
+        _fileHash = fileHash;
+        _fileId = fileId;
+        _thumbnail = thumbnail;
+    }
+    return self;
+}
+
+- (NSUInteger)hash {
+    return _fileHash.hash;
+}
+
+- (BOOL)isEqual:(id)object {
+    return [object isKindOfClass:[CloudSecureMediaResourceId class]] && TGObjectCompare(_fileHash, ((CloudSecureMediaResourceId *)object)->_fileHash) && _thumbnail == ((CloudSecureMediaResourceId *)object)->_thumbnail;
+}
+
+- (NSString *)uniqueId {
+    NSString *uniqueId = [[NSString alloc] initWithFormat:@"telegram-secure-document-%@", _fileHash];
+    if (_thumbnail)
+        uniqueId = [uniqueId stringByAppendingString:@"-thumb"];
+    return uniqueId;
+}
+
+- (instancetype)copyWithZone:(NSZone *)__unused zone {
+    return self;
+}
+
+@end
+
+@implementation CloudSecureMediaResource
+
+- (instancetype)initWithDatacenterId:(int32_t)datacenterId fileId:(int64_t)fileId accessHash:(int64_t)accessHash size:(NSNumber *)size fileHash:(NSData *)fileHash thumbnail:(bool)thumbnail mediaType:(id)mediaType {
+    self = [super init];
+    if (self != nil) {
+        _datacenterId = datacenterId;
+        _fileId = fileId;
+        _accessHash = accessHash;
+        _size = size;
+        _fileHash = fileHash;
+        _thumbnail = thumbnail;
+        _mediaType = mediaType;
+    }
+    return self;
+}
+
+- (BOOL)isEqual:(id)object {
+    return [object isKindOfClass:[CloudSecureMediaResource class]] && [_fileHash isEqual:((CloudSecureMediaResource *)object)->_fileHash] && _thumbnail == ((CloudSecureMediaResource *)object)->_thumbnail;
+}
+
+- (id<MediaResourceId>)resourceId {
+    return [[CloudSecureMediaResourceId alloc] initWithFileHash:[_fileHash stringByEncodingInHex] fileId:_fileId thumbnail:_thumbnail];
+}
+
+- (TLInputFileLocation *)apiInputLocation {
+    if (_thumbnail)
+        return nil;
+    TLInputFileLocation$inputSecureFileLocation *location = [[TLInputFileLocation$inputSecureFileLocation alloc] init];
     location.n_id = _fileId;
     location.access_hash = _accessHash;
     return location;

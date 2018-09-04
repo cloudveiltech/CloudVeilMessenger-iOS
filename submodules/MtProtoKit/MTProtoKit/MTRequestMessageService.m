@@ -1,10 +1,4 @@
-/*
- * This is the source code of Telegram for iOS v. 1.1
- * It is licensed under GNU GPL v. 2 or later.
- * You should have received a copy of the license in this archive (see LICENSE).
- *
- * Copyright Peter Iakovlev, 2013.
- */
+
 
 #import "MTRequestMessageService.h"
 
@@ -274,7 +268,21 @@
 }
     
 - (void)mtProtoApiEnvironmentUpdated:(MTProto *)mtProto apiEnvironment:(MTApiEnvironment *)apiEnvironment {
+    bool updateApiInitialization = ![_apiEnvironment.apiInitializationHash isEqualToString:apiEnvironment.apiInitializationHash];
+    
     _apiEnvironment = apiEnvironment;
+    
+    if (updateApiInitialization) {
+        MTRequest *request = [[MTRequest alloc] init];
+        __autoreleasing NSData *noopData = nil;
+        MTRequestNoopParser responseParser = [[_context serialization] requestNoop:&noopData];
+        [request setPayload:noopData metadata:@"noop" responseParser:responseParser];
+        
+        [request setCompleted:^(__unused id result, __unused NSTimeInterval timestamp, __unused id error) {
+        }];
+        
+        [self addRequest:request];
+    }
 }
 
 - (NSData *)decorateRequestData:(MTRequest *)request initializeApi:(bool)initializeApi unresolvedDependencyOnRequestInternalId:(__autoreleasing id *)unresolvedDependencyOnRequestInternalId
@@ -289,20 +297,30 @@
         [buffer appendInt32:(int32_t)0xda9b0d0d];
         [buffer appendInt32:(int32_t)[_serialization currentLayer]];
         
-        //initConnection#c7481da6 {X:Type} api_id:int device_model:string system_version:string app_version:string system_lang_code:string lang_pack:string lang_code:string query:!X = X;
-
-        bool layerSupportsLangpacks = [_serialization currentLayer] >= 67;
+        //initConnection#785188b8 {X:Type} flags:# api_id:int device_model:string system_version:string app_version:string system_lang_code:string lang_pack:string lang_code:string proxy:flags.0?InputClientProxy query:!X = X;
         
-        [buffer appendInt32:(int32_t)(layerSupportsLangpacks ? 0xc7481da6 : 0x69796de9)];
+        //inputClientProxy address:string port:int = InputClientProxy;
+
+        int32_t flags = 0;
+        if (_apiEnvironment.socksProxySettings.secret != nil) {
+            flags |= (1 << 0);
+        }
+        
+        [buffer appendInt32:(int32_t)0x785188b8];
+        [buffer appendInt32:flags];
         [buffer appendInt32:(int32_t)_apiEnvironment.apiId];
         [buffer appendTLString:_apiEnvironment.deviceModel];
         [buffer appendTLString:_apiEnvironment.systemVersion];
         [buffer appendTLString:_apiEnvironment.appVersion];
         [buffer appendTLString:_apiEnvironment.systemLangCode];
         
-        if (layerSupportsLangpacks) {
-            [buffer appendTLString:_apiEnvironment.langPack];
-            [buffer appendTLString:_apiEnvironment.langPackCode];
+        [buffer appendTLString:_apiEnvironment.langPack];
+        [buffer appendTLString:_apiEnvironment.langPackCode];
+        
+        if (_apiEnvironment.socksProxySettings.secret != nil) {
+            [buffer appendInt32:(int32_t)0x75588b3f];
+            [buffer appendTLString:_apiEnvironment.socksProxySettings.ip];
+            [buffer appendInt32:_apiEnvironment.socksProxySettings.port];
         }
         
         [buffer appendBytes:currentData.bytes length:currentData.length];
@@ -539,7 +557,8 @@
                         rpcError = maybeInternalMessage;
                     else
                     {
-                        rpcResult = request.responseParser([MTInternalMessageParser unwrapMessage:rpcResultMessage.data]);
+                        NSData *unwrappedData = [MTInternalMessageParser unwrapMessage:rpcResultMessage.data];
+                        rpcResult = request.responseParser(unwrappedData);
                         if (rpcResult == nil)
                         {
                             rpcError = [[MTRpcError alloc] initWithErrorCode:500 errorDescription:@"TL_PARSING_ERROR"];
@@ -568,7 +587,7 @@
                             NSMutableDictionary *authKeyAttributes = [[NSMutableDictionary alloc] initWithDictionary:authInfo.authKeyAttributes];
                             authKeyAttributes[@"apiInitializationHash"] = _apiEnvironment.apiInitializationHash;
                             
-                            authInfo = [[MTDatacenterAuthInfo alloc] initWithAuthKey:authInfo.authKey authKeyId:authInfo.authKeyId saltSet:authInfo.saltSet authKeyAttributes:authKeyAttributes tempAuthKey:authInfo.tempAuthKey];
+                            authInfo = [authInfo withUpdatedAuthKeyAttributes:authKeyAttributes];
                             [_context updateAuthInfoForDatacenterWithId:mtProto.datacenterId authInfo:authInfo];
                         }
                     }
@@ -656,7 +675,7 @@
                                 NSMutableDictionary *authKeyAttributes = [[NSMutableDictionary alloc] initWithDictionary:authInfo.authKeyAttributes];
                                 [authKeyAttributes removeObjectForKey:@"apiInitializationHash"];
                                 
-                                authInfo = [[MTDatacenterAuthInfo alloc] initWithAuthKey:authInfo.authKey authKeyId:authInfo.authKeyId saltSet:authInfo.saltSet authKeyAttributes:authKeyAttributes tempAuthKey:authInfo.tempAuthKey];
+                                authInfo = [authInfo withUpdatedAuthKeyAttributes:authKeyAttributes];
                                 [_context updateAuthInfoForDatacenterWithId:mtProto.datacenterId authInfo:authInfo];
                             }];
                         }

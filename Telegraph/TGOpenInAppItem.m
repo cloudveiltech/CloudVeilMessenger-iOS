@@ -85,8 +85,7 @@ NSString *const TGOpenInEmbedURLKey = @"embedURL";
 
 + (void)openURL:(NSURL *)url
 {
-    //[(TGApplication *)[TGApplication sharedApplication] nativeOpenURL:url];
-    [[UIApplication sharedApplication] openURL:url];
+    [(TGApplication *)[TGApplication sharedApplication] nativeOpenURL:url];
 }
 
 @end

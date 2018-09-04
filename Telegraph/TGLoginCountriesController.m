@@ -14,9 +14,11 @@
 
 #import <LegacyComponents/TGListsTableView.h>
 
-static NSArray *countryCodes()
+#import "TGPresentation.h"
+
+static NSDictionary *countryCodes()
 {
-    static NSArray *list = nil;
+    static NSDictionary *result = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^
     {
@@ -33,6 +35,7 @@ static NSArray *countryCodes()
         NSString *endOfLine = @"\n";
         
         NSMutableArray *array = [[NSMutableArray alloc] init];
+        NSMutableDictionary *map = [[NSMutableDictionary alloc] init];
         
         int currentLocation = 0;
         while (true)
@@ -49,7 +52,7 @@ static NSArray *countryCodes()
             
             NSString *countryId = [[data substringWithRange:NSMakeRange(codeRange.location + 1, idRange.location - (codeRange.location + 1))] lowercaseString];
             
-            NSRange nameRange = [data rangeOfString:endOfLine options:0 range:NSMakeRange(idRange.location + 1, data.length - (idRange.location + 1))];
+            NSRange nameRange = [data rangeOfString:delimiter options:0 range:NSMakeRange(idRange.location + 1, data.length - (idRange.location + 1))];
             if (nameRange.location == NSNotFound)
                 nameRange = NSMakeRange(data.length, INT_MAX);
             
@@ -57,17 +60,31 @@ static NSArray *countryCodes()
             if ([countryName hasSuffix:@"\r"])
                 countryName = [countryName substringToIndex:countryName.length - 1];
             
+            NSRange mrzRange = [data rangeOfString:endOfLine options:0 range:NSMakeRange(nameRange.location + 1, data.length - (nameRange.location + 1))];
+            if (mrzRange.location == NSNotFound)
+                mrzRange = NSMakeRange(data.length, INT_MAX);
+            
+            NSString *mrzCodes = [data substringWithRange:NSMakeRange(nameRange.location + 1, mrzRange.location - (nameRange.location + 1))];
+            if ([mrzCodes hasSuffix:@"\r"])
+                mrzCodes = [mrzCodes substringToIndex:mrzCodes.length - 1];
+            
+            NSArray *mrzCodesList = [mrzCodes componentsSeparatedByString:@","];
+            for (NSString *mrzCode in mrzCodesList)
+            {
+                map[mrzCode] = countryId;
+            }
+            
             [array addObject:[[NSArray alloc] initWithObjects:[[NSNumber alloc] initWithInt:countryCode], countryId, countryName, nil]];
             //TGLog(@"%d, %@, %@", countryCode, countryId, countryName);
             
-            currentLocation = (int)(nameRange.location + nameRange.length);
-            if (nameRange.length > 1)
+            currentLocation = (int)(mrzRange.location + mrzRange.length);
+            if (mrzRange.length > 1)
                 break;
         }
         
-        list = array;
+        result = @{ @"countries": array, @"codeMap": map };
     });
-    return list;
+    return result;
 }
 
 @interface TGCountrySection : NSObject
@@ -93,6 +110,7 @@ static NSArray *countryCodes()
 }
 
 @property (nonatomic, strong) TGListsTableView *tableView;
+@property (nonatomic, strong) TGSearchBar *searchBar;
 
 @property (nonatomic, strong) NSMutableArray *sections;
 @property (nonatomic, strong) NSMutableArray *sectionIndexTitles;
@@ -105,9 +123,17 @@ static NSArray *countryCodes()
 
 @implementation TGLoginCountriesController
 
++ (NSString *)countryCodeByMRZCode:(NSString *)code
+{
+    if (code.length == 0)
+        return nil;
+    
+    return [countryCodes()[@"codeMap"] objectForKey:code];
+}
+
 + (NSString *)countryNameByCode:(int)code
 {
-    for (NSArray *array in countryCodes())
+    for (NSArray *array in countryCodes()[@"countries"])
     {
         NSNumber *countryCode = [array objectAtIndex:0];
         if ([countryCode intValue] == code)
@@ -117,9 +143,26 @@ static NSArray *countryCodes()
     return nil;
 }
 
++ (NSString *)localizedCountryNameByCode:(int)code
+{
+    for (NSArray *array in countryCodes()[@"countries"])
+    {
+        NSNumber *countryCode = [array objectAtIndex:0];
+        if ([countryCode intValue] == code)
+        {
+            if (iosMajorVersion() >= 10)
+                return [self localizedCountryNameByCountryId:[array objectAtIndex:1]];
+            else
+                return [array objectAtIndex:2];
+        }
+    }
+    
+    return nil;
+}
+
 + (NSString *)countryIdByCode:(int)code
 {
-    for (NSArray *array in countryCodes())
+    for (NSArray *array in countryCodes()[@"countries"])
     {
         NSNumber *countryCode = [array objectAtIndex:0];
         if ([countryCode intValue] == code)
@@ -132,7 +175,7 @@ static NSArray *countryCodes()
 + (NSString *)countryNameByCountryId:(NSString *)countryId code:(int *)code
 {
     NSString *normalizedCountryId = [countryId lowercaseString];
-    for (NSArray *array in countryCodes())
+    for (NSArray *array in countryCodes()[@"countries"])
     {
         NSString *itemCountryId = [array objectAtIndex:1];
         if ([itemCountryId isEqualToString:normalizedCountryId])
@@ -144,6 +187,27 @@ static NSArray *countryCodes()
         }
     }
     return nil;
+}
+
++ (NSString *)localizedCountryNameByCountryId:(NSString *)countryId
+{
+    return [self localizedCountryNameByCountryId:countryId code:NULL];
+}
+
++ (NSString *)localizedCountryNameByCountryId:(NSString *)countryId code:(int *)code
+{
+    if (iosMajorVersion() < 10)
+        return [self countryNameByCountryId:countryId code:code];
+        
+    NSLocale *locale = [effectiveLocalization() locale];
+    NSString *name = [locale localizedStringForCountryCode:countryId];
+    if (name.length == 0 || code != NULL)
+    {
+        NSString *enName = [self countryNameByCountryId:countryId code:code];
+        if (name.length == 0)
+            name = enName;
+    }
+    return name;
 }
 
 - (id)init {
@@ -206,6 +270,32 @@ static NSArray *countryCodes()
     [super controllerInsetUpdated:previousInset];
 }
 
+- (NSArray *)localizedCountries:(NSArray *)countries
+{
+    NSLocale *locale = [effectiveLocalization() locale];
+    NSMutableArray *newCountries = [[NSMutableArray alloc] init];
+    for (NSArray *array in countries)
+    {
+        NSNumber *countryId = [array objectAtIndex:0];
+        NSString *code = [array objectAtIndex:1];
+        NSString *name = [array objectAtIndex:2];
+        
+        NSString *localizedName = nil;
+        if (iosMajorVersion() >= 10 && ![locale.languageCode isEqualToString:@"en"])
+            localizedName = [locale localizedStringForCountryCode:code];
+            
+        NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+        dict[@"id"] = countryId;
+        dict[@"code"] = code;
+        dict[@"name"] = name;
+        if (localizedName != nil)
+            dict[@"localizedName"] = localizedName;
+        
+        [newCountries addObject:dict];
+    }
+    return newCountries;
+}
+
 - (void)loadView
 {
     [super loadView];
@@ -216,9 +306,11 @@ static NSArray *countryCodes()
         
         NSMutableDictionary *sectionsDict = [[NSMutableDictionary alloc] init];
         
-        for (NSArray *array in countryCodes())
+        NSArray *localizedCountries = [self localizedCountries:countryCodes()[@"countries"]];
+
+        for (NSDictionary *dict in localizedCountries)
         {
-            NSString *countryName = [array objectAtIndex:2];
+            NSString *countryName = dict[@"localizedName"] ?: dict[@"name"];
             NSNumber *countryKey = [[NSNumber alloc] initWithInt:[countryName characterAtIndex:0]];
             TGCountrySection *section = [sectionsDict objectForKey:countryKey];
             if (section == nil)
@@ -230,7 +322,7 @@ static NSArray *countryCodes()
                 
                 [_sections addObject:section];
             }
-            [section.items addObject:array];
+            [section.items addObject:dict];
         }
         
         [_sections sortUsingComparator:^NSComparisonResult(TGCountrySection *section1, TGCountrySection *section2)
@@ -250,16 +342,16 @@ static NSArray *countryCodes()
             section.headerView = [self generateSectionHeader:section.title first:index == 0];
             
             [_sectionIndexTitles addObject:section.title];
-            [section.items sortUsingComparator:^NSComparisonResult(NSArray *item1, NSArray *item2)
+            [section.items sortUsingComparator:^NSComparisonResult(NSDictionary *item1, NSDictionary *item2)
             {
-                NSString *name1 = [item1 objectAtIndex:2];
-                NSString *name2 = [item2 objectAtIndex:2];
+                NSString *name1 = item1[@"localizedName"] ?: item1[@"name"];
+                NSString *name2 = item2[@"localizedName"] ?: item2[@"name"];
                 return [name1 compare:name2 options:NSDiacriticInsensitiveSearch | NSWidthInsensitiveSearch | NSForcedOrderingSearch];
             }];
         }
     }
     
-    self.view.backgroundColor = [UIColor whiteColor];
+    self.view.backgroundColor = _presentation != nil ? _presentation.pallete.backgroundColor : [UIColor whiteColor];
     
     _tableView = [[TGListsTableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
     ((TGListsTableView *)_tableView).mayHaveIndex = true;
@@ -271,7 +363,18 @@ static NSArray *countryCodes()
     _tableView.delegate = self;
     _tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
-    TGSearchBar *_searchBar = [[TGSearchBar alloc] initWithFrame:CGRectMake(0, 0, _tableView.frame.size.width, 44)];
+    if (iosMajorVersion() >= 7) {
+        _tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+    }
+    
+    _searchBar = [[TGSearchBar alloc] initWithFrame:CGRectMake(0, 0, _tableView.frame.size.width, 44)];
+    if (self.presentation != nil)
+    {
+        _tableView.backgroundColor = self.view.backgroundColor;
+        _tableView.sectionIndexColor = self.presentation.pallete.accentColor;
+        [_searchBar setPallete:self.presentation.searchBarPallete];
+        _tableView.separatorColor = self.presentation.pallete.separatorColor;
+    }
     
     _tableView.tableHeaderView = _searchBar;
     
@@ -283,6 +386,26 @@ static NSArray *countryCodes()
     
     if (![self _updateControllerInset:false])
         [self controllerInsetUpdated:UIEdgeInsetsZero];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    [self.view endEditing:true];
+}
+
+- (void)setPresentation:(TGPresentation *)presentation
+{
+    _presentation = presentation;
+    
+    if (self.isViewLoaded)
+        self.view.backgroundColor = presentation.pallete.backgroundColor;
+    _tableView.backgroundColor = self.view.backgroundColor;
+    _tableView.sectionIndexColor = presentation.pallete.accentColor;
+    [_searchBar setPallete:presentation.searchBarPallete];
+    
+    _tableView.separatorColor = presentation.pallete.separatorColor;
 }
 
 - (UIView *)generateSectionHeader:(NSString *)title first:(bool)first
@@ -298,19 +421,19 @@ static NSArray *countryCodes()
         
         UIView *sectionView = [[UIView alloc] initWithFrame:CGRectMake(0, first ? 0 : -1, 10, first ? 10 : 11)];
         sectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        sectionView.backgroundColor = UIColorRGB(0xf7f7f7);
+        sectionView.backgroundColor = self.presentation != nil ? self.presentation.pallete.sectionHeaderBackgroundColor : UIColorRGB(0xf7f7f7);
         [sectionContainer addSubview:sectionView];
         
         UILabel *sectionLabel = [[UILabel alloc] init];
         sectionLabel.tag = 100;
-        sectionLabel.font = TGBoldSystemFontOfSize(17);
+        sectionLabel.font = TGBoldSystemFontOfSize(12.0f);
         sectionLabel.backgroundColor = sectionView.backgroundColor;
-        sectionLabel.textColor = [UIColor blackColor];
+        sectionLabel.textColor = self.presentation != nil ? self.presentation.pallete.sectionHeaderTextColor : [UIColor blackColor];
         sectionLabel.numberOfLines = 1;
         
         sectionLabel.text = title;
         [sectionLabel sizeToFit];
-        sectionLabel.frame = CGRectOffset(sectionLabel.frame, 14 + self.controllerSafeAreaInset.left, TGRetinaPixel);
+        sectionLabel.frame = CGRectMake(14.0f + self.controllerSafeAreaInset.left, 6.0f, sectionLabel.frame.size.width, sectionLabel.frame.size.height);
         
         [sectionContainer addSubview:sectionLabel];
     }
@@ -319,7 +442,7 @@ static NSArray *countryCodes()
         UILabel *sectionLabel = (UILabel *)[sectionContainer viewWithTag:100];
         sectionLabel.text = title;
         [sectionLabel sizeToFit];
-        sectionLabel.frame = CGRectMake(14 + self.controllerSafeAreaInset.left, sectionLabel.frame.origin.y, sectionLabel.frame.size.width, sectionLabel.frame.size.height);
+        sectionLabel.frame = CGRectMake(14.0f + self.controllerSafeAreaInset.left, 6.0f, sectionLabel.frame.size.width, sectionLabel.frame.size.height);
     }
     
     return sectionContainer;
@@ -388,6 +511,14 @@ static NSArray *countryCodes()
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    NSDictionary *item = nil;
+    if (tableView == _tableView)
+        item = [((TGCountrySection *)[_sections objectAtIndex:indexPath.section]).items objectAtIndex:indexPath.row];
+    else
+        item = [_searchResults objectAtIndex:indexPath.row];
+    
+    bool requiresSubtitle = item[@"localizedName"] != nil;
+    
     static NSString *CountryCellIdentifier = @"CC";
     TGLoginCountryCell *cell = (TGLoginCountryCell *)[tableView dequeueReusableCellWithIdentifier:CountryCellIdentifier];
     if (cell == nil)
@@ -397,18 +528,23 @@ static NSArray *countryCodes()
             [cell setUseIndex:true];
     }
     
-    NSArray *item = nil;
-    
-    if (tableView == _tableView)
-        item = [((TGCountrySection *)[_sections objectAtIndex:indexPath.section]).items objectAtIndex:indexPath.row];
-    else
-        item = [_searchResults objectAtIndex:indexPath.row];
+    if (self.presentation != nil)
+        [cell setPresentation:self.presentation];
     
     if (item != nil)
-    {   
-        [cell setTitle:[item objectAtIndex:2]];
+    {
+        if (requiresSubtitle)
+        {
+            [cell setTitle:item[@"localizedName"]];
+            [cell setSubtitle:item[@"name"]];
+        }
+        else
+        {
+            [cell setTitle:item[@"name"]];
+        }
+        
         if (_displayCodes) {
-            [cell setCode:[[NSString alloc] initWithFormat:@"+%d", [((NSNumber *)[item objectAtIndex:0]) intValue]]];
+            [cell setCode:[[NSString alloc] initWithFormat:@"+%d", [((NSNumber *)item[@"id"]) intValue]]];
         }
     }
     
@@ -417,7 +553,7 @@ static NSArray *countryCodes()
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSArray *item = nil;
+    NSDictionary *item = nil;
     
     if (tableView == _tableView)
         item = [((TGCountrySection *)[_sections objectAtIndex:indexPath.section]).items objectAtIndex:indexPath.row];
@@ -426,13 +562,15 @@ static NSArray *countryCodes()
     
     if (item != nil)
     {
+        NSString *name = item[@"localizedName"] ?: item[@"name"];
+        
         if (_countrySelected)
-            _countrySelected([item[0] intValue], item[2], item[1]);
+            _countrySelected([item[@"id"] intValue], name, item[@"code"]);
         
         id<ASWatcher> watcher = _watcherHandle.delegate;
         if (watcher != nil && [watcher respondsToSelector:@selector(actionStageActionRequested:options:)])
         {
-            [watcher actionStageActionRequested:@"countryCodeSelected" options:[NSDictionary dictionaryWithObjectsAndKeys:[item objectAtIndex:0], @"code", [item objectAtIndex:2], @"name", nil]];
+            [watcher actionStageActionRequested:@"countryCodeSelected" options:[NSDictionary dictionaryWithObjectsAndKeys:item[@"id"], @"code", name, @"name", nil]];
         }
         
         if (watcher == nil)
@@ -449,6 +587,12 @@ static NSArray *countryCodes()
     tableView.dataSource = self;
     tableView.delegate = self;
     tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    
+    if (self.presentation != nil)
+    {
+        tableView.backgroundColor = self.presentation.pallete.backgroundColor;
+        tableView.separatorColor = self.presentation.pallete.separatorColor;
+    }
     
     return tableView;
 }
@@ -470,10 +614,11 @@ static NSArray *countryCodes()
     
     for (TGCountrySection *section in _sections)
     {
-        for (NSArray *item in section.items)
+        for (NSDictionary *item in section.items)
         {
-            NSString *countryName = [[item objectAtIndex:2] lowercaseString];
-            if ([countryName hasPrefix:string] || [countryName hasPrefix:mutableQuery])
+            NSString *countryName = [item[@"name"] lowercaseString];
+            NSString *localizedCountryName = [item[@"localizedName"] lowercaseString];
+            if ([countryName hasPrefix:string] || [countryName hasPrefix:mutableQuery] || [localizedCountryName hasPrefix:string])
             {
                 [_searchResults addObject:item];
             }

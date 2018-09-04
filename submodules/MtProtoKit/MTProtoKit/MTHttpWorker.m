@@ -1,10 +1,4 @@
-/*
- * This is the source code of Telegram for iOS v. 1.1
- * It is licensed under GNU GPL v. 2 or later.
- * You should have received a copy of the license in this archive (see LICENSE).
- *
- * Copyright Peter Iakovlev, 2013.
- */
+
 
 #import "MTHttpWorker.h"
 
@@ -98,11 +92,11 @@ MTInternalIdClass(MTHttpWorker)
             [_operation setSuccessCallbackQueue:[MTHttpWorker httpWorkerProcessingQueue].nativeQueue];
             [_operation setFailureCallbackQueue:[MTHttpWorker httpWorkerProcessingQueue].nativeQueue];
             
-            [_operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, __unused id responseObject)
+            [_operation setCompletionBlockWithSuccess:^(NSOperation *operation, __unused id responseObject)
             {
                 MTHttpWorker *strongSelf = weakSelf;
-                [strongSelf requestCompleted:[operation responseData] error:nil];
-            } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error)
+                [strongSelf requestCompleted:[(AFHTTPRequestOperation *)operation responseData] error:nil];
+            } failure:^(__unused NSOperation *operation, NSError *error)
             {
                 MTHttpWorker *strongSelf = weakSelf;
                 [strongSelf requestCompleted:nil error:error];

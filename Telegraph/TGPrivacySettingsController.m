@@ -1,9 +1,15 @@
 #import "TGPrivacySettingsController.h"
 
 #import <LegacyComponents/LegacyComponents.h>
-
 #import <LegacyComponents/ActionStage.h>
 #import <LegacyComponents/SGraphObjectNode.h>
+
+#import <LocalAuthentication/LocalAuthentication.h>
+
+#import "TGAppDelegate.h"
+#import "TGTelegraph.h"
+#import "TGDatabase.h"
+#import "TGTelegramNetworking.h"
 
 #import "TGVariantCollectionItem.h"
 #import "TGDisclosureActionCollectionItem.h"
@@ -13,6 +19,7 @@
 #import "TGSwitchCollectionItem.h"
 
 #import "TGAccountSettings.h"
+#import "TGAccountSettingsActor.h"
 
 #import "TGPrivacyLastSeenController.h"
 #import "TGBlockedController.h"
@@ -20,32 +27,18 @@
 #import "TGPasswordSettingsController.h"
 #import "TGPasscodeSettingsController.h"
 #import "TGPasswordConfirmationController.h"
-
-#import "TGAlertView.h"
-#import "TGPickerSheet.h"
-#import <LegacyComponents/TGProgressWindow.h>
-
-#import "TGAccountSettingsActor.h"
-
+#import "TGPrivateDataSettingsController.h"
 #import "TGAuthSessionsController.h"
-
-#import "TGDatabase.h"
-
-#import <LocalAuthentication/LocalAuthentication.h>
-
-#import "TGTwoStepConfigSignal.h"
 #import "TGPasswordEntryController.h"
 
+#import "TGCustomAlertView.h"
+#import "TGCustomActionSheet.h"
+#import <LegacyComponents/TGProgressWindow.h>
+
+#import "TGTwoStepConfigSignal.h"
 #import "TGTwoStepSetPaswordSignal.h"
 
-#import "TGAppDelegate.h"
-
-#import "TGShareSheetWindow.h"
-#import "TGShareSheetButtonItemView.h"
-#import "TGAttachmentSheetCheckmarkVariantItemView.h"
-
-#import "TGTelegramNetworking.h"
-#import "TL/TLMetaScheme.h"
+#import "TGPresentation.h"
 
 @interface TGPrivacySettingsController () <ASWatcher>
 {
@@ -60,11 +53,7 @@
     TGVariantCollectionItem *_lastSeenItem;
     TGVariantCollectionItem *_accountExpirationItem;
     
-    TGPickerSheet *_pickerSheet;
-    
     SMetaDisposable *_twoStepConfigDisposable;
-    
-    TGShareSheetWindow *_attachmentSheetWindow;
 }
 
 @property (nonatomic, strong) ASHandle *actionHandle;
@@ -180,14 +169,12 @@
         ]];
         [self.menuSections addSection:deleteAccountSection];
         
-        TGButtonCollectionItem *clearPaymentInfoItem = [[TGButtonCollectionItem alloc] initWithTitle:TGLocalized(@"Privacy.PaymentsClearInfo") action:@selector(clearPaymentsPressed)];
-        clearPaymentInfoItem.deselectAutomatically = true;
-        TGCollectionMenuSection *paymentsSection = [[TGCollectionMenuSection alloc] initWithItems:@[
-            [[TGHeaderCollectionItem alloc] initWithTitle:TGLocalized(@"Privacy.PaymentsTitle")],
-            clearPaymentInfoItem,
-            [[TGCommentCollectionItem alloc] initWithText:TGLocalized(@"Privacy.PaymentsClearInfoHelp")]
+        TGDisclosureActionCollectionItem *dataItem = [[TGDisclosureActionCollectionItem alloc] initWithTitle:TGLocalized(@"PrivacySettings.DataSettings") action:@selector(dataSettingsPressed)];
+        TGCollectionMenuSection *dataSection = [[TGCollectionMenuSection alloc] initWithItems:@[
+            dataItem,
+            [[TGCommentCollectionItem alloc] initWithText:TGLocalized(@"PrivacySettings.DataSettingsHelp")]
         ]];
-        [self.menuSections addSection:paymentsSection];
+        [self.menuSections addSection:dataSection];
         
         TGAccountSettings *accountSettings = [TGAccountSettingsActor accountSettingsFotCurrentStateId];
         if (accountSettings != nil)
@@ -228,6 +215,7 @@
         if (_activityIndicator == nil)
         {
             _activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+            _activityIndicator.color = self.presentation.pallete.collectionMenuCommentColor;
             _activityIndicator.frame = CGRectMake(CGFloor((self.view.frame.size.width - _activityIndicator.frame.size.width) / 2.0f), CGFloor((self.view.frame.size.height - _activityIndicator.frame.size.height) / 2.0f), _activityIndicator.frame.size.width, _activityIndicator.frame.size.height);
             _activityIndicator.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
             [_activityIndicator startAnimating];
@@ -321,53 +309,47 @@
     [timerValues addObject:@(1 * 60 * 60 * 24 * 182)];
     [timerValues addObject:@(1 * 60 * 60 * 24 * 365)];
     
-    NSUInteger selectedIndex = 0;
-    if (_accountSettings.accountTTLSetting.accountTTL != nil)
-    {
-        NSInteger closestMatchIndex = 0;
-        NSInteger index = -1;
-        for (NSNumber *nValue in timerValues)
-        {
-            index++;
-            if ([nValue intValue] != 0 && ABS([nValue intValue] - [_accountSettings.accountTTLSetting.accountTTL intValue]) < ABS([timerValues[closestMatchIndex] intValue] - [_accountSettings.accountTTLSetting.accountTTL intValue]))
-            {
-                closestMatchIndex = index;
-            }
-        }
-        selectedIndex = closestMatchIndex;
-    }
+    NSMutableArray *actions = [[NSMutableArray alloc] init];
+    [actions addObject:[[TGActionSheetAction alloc] initWithTitle:[effectiveLocalization() getPluralized:@"MessageTimer.Months" count:1] action:@"30"]];
+    [actions addObject:[[TGActionSheetAction alloc] initWithTitle:[effectiveLocalization() getPluralized:@"MessageTimer.Months" count:3] action:@"91"]];
+    [actions addObject:[[TGActionSheetAction alloc] initWithTitle:[effectiveLocalization() getPluralized:@"MessageTimer.Months" count:6] action:@"182"]];
+    [actions addObject:[[TGActionSheetAction alloc] initWithTitle:[effectiveLocalization() getPluralized:@"MessageTimer.Months" count:12] action:@"365"]];
+    [actions addObject:[[TGActionSheetAction alloc] initWithTitle:TGLocalized(@"Common.Cancel") action:@"cancel" type:TGActionSheetActionTypeCancel]];
     
     __weak TGPrivacySettingsController *weakSelf = self;
-    _pickerSheet = [[TGPickerSheet alloc] initWithItems:timerValues selectedIndex:selectedIndex action:^(NSNumber *item)
+    TGCustomActionSheet *actionSheet = [[TGCustomActionSheet alloc] initWithTitle:nil actions:actions actionBlock:^(__unused id target, NSString *action)
     {
         __strong TGPrivacySettingsController *strongSelf = weakSelf;
         if (strongSelf != nil)
         {
-            TGAccountTTLSetting *accountTTLSetting = [[TGAccountTTLSetting alloc] initWithAccountTTL:[item intValue] == 0 ? nil : item];
-            
-            TGAccountSettings *accountSettings = [[TGAccountSettings alloc] initWithNotificationSettings:strongSelf->_accountSettings.notificationSettings groupsAndChannelsSettings:strongSelf->_accountSettings.groupsAndChannelsSettings callSettings:strongSelf->_accountSettings.callSettings accountTTLSetting:accountTTLSetting];
-            
-            if (![strongSelf->_accountSettings.accountTTLSetting isEqual:accountTTLSetting])
+            if (![action isEqualToString:@"cancel"])
             {
-                strongSelf->_progressWindow = [[TGProgressWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-                [strongSelf->_progressWindow show:true];
+                int value = [action intValue] * 60 * 60 * 24;
+                TGAccountTTLSetting *accountTTLSetting = [[TGAccountTTLSetting alloc] initWithAccountTTL:value == 0 ? nil : @(value)];
                 
-                [strongSelf setAccountSettings:accountSettings];
-                [ActionStageInstance() requestActor:@"/updateAccountSettings" options:@{@"settingList": @[@{@"accountTTL": accountTTLSetting}]} flags:0 watcher:strongSelf];
+                TGAccountSettings *accountSettings = [[TGAccountSettings alloc] initWithNotificationSettings:strongSelf->_accountSettings.notificationSettings groupsAndChannelsSettings:strongSelf->_accountSettings.groupsAndChannelsSettings callSettings:strongSelf->_accountSettings.callSettings accountTTLSetting:accountTTLSetting];
+    
+                if (![strongSelf->_accountSettings.accountTTLSetting isEqual:accountTTLSetting])
+                {
+                    strongSelf->_progressWindow = [[TGProgressWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+                    [strongSelf->_progressWindow show:true];
+    
+                    [strongSelf setAccountSettings:accountSettings];
+                    [ActionStageInstance() requestActor:@"/updateAccountSettings" options:@{@"settingList": @[@{@"accountTTL": accountTTLSetting}]} flags:0 watcher:strongSelf];
+                }
             }
         }
-    }];
-    _pickerSheet.emptyValue = @"";
+    } target:self];
     
     if (TGAppDelegateInstance.rootController.currentSizeClass == UIUserInterfaceSizeClassCompact) {
-        [_pickerSheet show];
+        [actionSheet showInView:self.view];
     } else {
         NSIndexPath *indexPath = [self indexPathForItem:_accountExpirationItem];
         if (indexPath != nil)
         {
             UIView *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
             if (cell != nil)
-                [_pickerSheet showFromRect:[cell convertRect:cell.bounds toView:self.view] inView:self.view];
+                [actionSheet showFromRect:[cell convertRect:cell.bounds toView:self.view] inView:self.view animated:true];
         }
     }
 }
@@ -391,7 +373,7 @@
         __strong TGPrivacySettingsController *strongSelf = weakSelf;
         if (strongSelf != nil)
         {
-            if (next.currentSalt.length != 0)
+            if (next.hasPassword)
             {
                 [strongSelf displayPasswordEntryControllerWithConfig:next replaceController:false];
             }
@@ -487,7 +469,7 @@
     TGProgressWindow *progressWindow = [[TGProgressWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     [progressWindow show:true];
     
-    [_twoStepConfigDisposable setDisposable:[[[[TGTwoStepSetPaswordSignal setPasswordWithCurrentSalt:nil currentPassword:nil nextSalt:config.nextSalt nextPassword:@"" nextHint:nil email:nil] deliverOn:[SQueue mainQueue]] onDispose:^
+    [_twoStepConfigDisposable setDisposable:[[[[TGTwoStepSetPaswordSignal setPasswordWithCurrentAlgo:nil currentPassword:nil currentSecret:nil nextAlgo:config.nextAlgo nextPassword:@"" nextHint:nil email:nil nextSecureAlgo:nil secureRandom:nil srpId:0 srpB:nil] deliverOn:[SQueue mainQueue]] onDispose:^
     {
         TGDispatchOnMainThread(^
         {
@@ -495,10 +477,12 @@
         });
     }] startWithNext:nil error:^(id error)
     {
-        NSString *errorText = TGLocalized(@"Login.UnknownError");
-        if ([error hasPrefix:@"FLOOD_WAIT"])
-            errorText = TGLocalized(@"TwoStepAuth.FloodError");
-        [[[TGAlertView alloc] initWithTitle:nil message:errorText cancelButtonTitle:TGLocalized(@"Common.OK") okButtonTitle:nil completionBlock:nil] show];
+        NSString *errorText = [[TGTelegramNetworking instance] extractNetworkErrorType:error];
+        
+        NSString *displayText = TGLocalized(@"Login.UnknownError");
+        if ([errorText hasPrefix:@"FLOOD_WAIT"])
+            displayText = TGLocalized(@"TwoStepAuth.FloodError");
+        [TGCustomAlertView presentAlertWithTitle:nil message:displayText cancelButtonTitle:TGLocalized(@"Common.OK") okButtonTitle:nil completionBlock:nil];
     } completed:^
     {
         __strong TGPrivacySettingsController *strongSelf = weakSelf;
@@ -520,14 +504,14 @@
 - (void)terminateSessionsPressed
 {
     __weak TGPrivacySettingsController *weakSelf = self;
-    [[[TGAlertView alloc] initWithTitle:nil message:TGLocalized(@"ChatSettings.ClearOtherSessionsConfirmation") cancelButtonTitle:TGLocalized(@"Common.Cancel") okButtonTitle:TGLocalized(@"Common.OK") completionBlock:^(bool okButtonPressed)
+    [TGCustomAlertView presentAlertWithTitle:nil message:TGLocalized(@"ChatSettings.ClearOtherSessionsConfirmation") cancelButtonTitle:TGLocalized(@"Common.Cancel") okButtonTitle:TGLocalized(@"Common.OK") completionBlock:^(bool okButtonPressed)
     {
         if (okButtonPressed)
         {
             TGPrivacySettingsController *strongSelf = weakSelf;
             [strongSelf _commitTerminateSessions];
         }
-    }] show];
+    }];
 }
 
 - (void)_commitTerminateSessions
@@ -536,6 +520,11 @@
     [_progressWindow show:true];
     
     [ActionStageInstance() requestActor:@"/tg/service/revokesessions" options:nil watcher:self];
+}
+
+- (void)dataSettingsPressed
+{
+    [self.navigationController pushViewController:[[TGPrivateDataSettingsController alloc] init] animated:true];
 }
 
 - (void)touchIdToggle:(bool)enable
@@ -618,7 +607,7 @@
                     accountSettings = [[TGAccountSettings alloc] initWithDefaultValues];
                 [self setAccountSettings:accountSettings];
                 
-                [[[TGAlertView alloc] initWithTitle:nil message:TGLocalized(@"Login.UnknownError") cancelButtonTitle:TGLocalized(@"Common.OK") okButtonTitle:nil completionBlock:nil] show];
+                [TGCustomAlertView presentAlertWithTitle:nil message:TGLocalized(@"Login.UnknownError") cancelButtonTitle:TGLocalized(@"Common.OK") okButtonTitle:nil completionBlock:nil];
             }
         });
     }
@@ -636,106 +625,10 @@
                 [_progressWindow dismiss:true];
                 _progressWindow = nil;
                 
-                [[[TGAlertView alloc] initWithTitle:nil message:TGLocalized(@"ChatSettings.ClearOtherSessionsFailed") cancelButtonTitle:nil okButtonTitle:TGLocalized(@"Common.OK") completionBlock:nil] show];
+                [TGCustomAlertView presentAlertWithTitle:nil message:TGLocalized(@"ChatSettings.ClearOtherSessionsFailed") cancelButtonTitle:TGLocalized(@"Common.OK") okButtonTitle:nil completionBlock:nil];
             }
         });
     }
-}
-
-- (void)clearPaymentsDataWithShipping:(bool)shipping payment:(bool)payment {
-    TGProgressWindow *progressWindow = [[TGProgressWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-    [progressWindow show:true];
-    
-    TLRPCpayments_clearSavedInfo$payments_clearSavedInfo *clearSavedInfo = [[TLRPCpayments_clearSavedInfo$payments_clearSavedInfo alloc] init];
-    if (shipping) {
-        clearSavedInfo.flags |= (1 << 1);
-    }
-    if (payment) {
-        clearSavedInfo.flags |= (1 << 0);
-    }
-    
-    [[[[[TGTelegramNetworking instance] requestSignal:clearSavedInfo] deliverOn:[SQueue mainQueue]] onDispose:^ {
-        TGDispatchOnMainThread(^{
-            [progressWindow dismissWithSuccess];
-        });
-    }] startWithNext:nil];
-}
-
-- (void)clearPaymentsPressed {
-    [_attachmentSheetWindow dismissAnimated:true completion:nil];
-    
-    __weak TGPrivacySettingsController *weakSelf = self;
-    _attachmentSheetWindow = [[TGShareSheetWindow alloc] init];
-    _attachmentSheetWindow.dismissalBlock = ^
-    {
-        __strong TGPrivacySettingsController *strongSelf = weakSelf;
-        if (strongSelf == nil)
-            return;
-        
-        strongSelf->_attachmentSheetWindow.rootViewController = nil;
-        strongSelf->_attachmentSheetWindow = nil;
-    };
-    
-    NSMutableArray *items = [[NSMutableArray alloc] init];
-    
-    NSMutableSet *checkedTypes = [[NSMutableSet alloc] initWithArray:@[@(0), @(1)]];
-    
-    TGShareSheetButtonItemView *clearButtonItem = [[TGShareSheetButtonItemView alloc] initWithTitle:TGLocalized(@"Cache.ClearNone") pressed:^ {
-        __strong TGPrivacySettingsController *strongSelf = weakSelf;
-        if (strongSelf != nil) {
-            [strongSelf->_attachmentSheetWindow dismissAnimated:true completion:nil];
-            strongSelf->_attachmentSheetWindow = nil;
-            
-            [strongSelf clearPaymentsDataWithShipping:[checkedTypes containsObject:@1] payment:[checkedTypes containsObject:@0]];
-        }
-    }];
-    
-    void (^updateCheckedTypes)() = ^{
-        [clearButtonItem setEnabled:checkedTypes.count != 0];
-        /*[evaluatedSizeByType enumerateKeysAndObjectsUsingBlock:^(NSNumber *nType, NSNumber *nSize, __unused BOOL *stop) {
-            if ([checkedTypes containsObject:nType]) {
-                totalSize += [nSize longLongValue];
-            }
-        }];
-        if (totalSize > 0) {
-            [clearButtonItem setTitle:[[NSString alloc] initWithFormat:TGLocalized(@"Cache.Clear"), [TGStringUtils stringForFileSize:totalSize]]];
-            //[clearButtonItem setDisabled:false];
-        } else {
-            [clearButtonItem setTitle:TGLocalized(@"Cache.ClearNone")];
-            //[clearButtonItem setDisabled:true];
-        }*/
-    };
-    
-    updateCheckedTypes();
-    
-    NSArray *possibleTypes = @[@0, @1];
-    NSDictionary *typeTitles = @{@0: TGLocalized(@"Privacy.PaymentsClear.PaymentInfo"), @1: TGLocalized(@"Privacy.PaymentsClear.ShippingInfo")};
-    
-    for (NSNumber *nType in possibleTypes) {
-        TGAttachmentSheetCheckmarkVariantItemView *itemView = [[TGAttachmentSheetCheckmarkVariantItemView alloc] initWithTitle:typeTitles[nType] variant:@"" checked:true];
-        itemView.onCheckedChanged = ^(bool value) {
-            if (value) {
-                [checkedTypes addObject:nType];
-            } else {
-                [checkedTypes removeObject:nType];
-            }
-            updateCheckedTypes();
-        };
-        [items addObject:itemView];
-    }
-    
-    [items addObject:clearButtonItem];
-    
-    _attachmentSheetWindow.view.cancel = ^{
-        __strong TGPrivacySettingsController *strongSelf = weakSelf;
-        if (strongSelf != nil) {
-            [strongSelf->_attachmentSheetWindow dismissAnimated:true completion:nil];
-            strongSelf->_attachmentSheetWindow = nil;
-        }
-    };
-    
-    _attachmentSheetWindow.view.items = items;
-    [_attachmentSheetWindow showAnimated:true completion:nil];
 }
 
 @end

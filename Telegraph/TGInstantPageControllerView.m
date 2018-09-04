@@ -281,6 +281,12 @@
     }
 }
 
+- (void)setDisableActions:(bool)disableActions
+{
+    _disableActions = disableActions;
+    [_navigationBar setShareHidden:disableActions];
+}
+
 - (TGInstantPagePresentation *)presentation {
     if (_presentation)
         return _presentation;
@@ -339,7 +345,7 @@
     if (self.frame.size.width > self.frame.size.height)
         orientation = UIInterfaceOrientationLandscapeLeft;
     UIEdgeInsets safeAreaInset = [TGViewController safeAreaInsetForOrientation:orientation];
-    _currentLayout = [TGInstantPageLayout makeLayoutForWebPage:_webPage peerId:_peerId messageId:_messageId boundingWidth:self.bounds.size.width safeAreaInset:safeAreaInset presentation:self.presentation];
+    _currentLayout = [TGInstantPageLayout makeLayoutForWebPage:_webPage peerId:_peerId messageId:_messageId boundingWidth:self.bounds.size.width safeAreaInset:safeAreaInset presentation:self.presentation showFeedbackButton:!self.disableActions];
     [_visibleTiles enumerateKeysAndObjectsUsingBlock:^(__unused NSNumber *key, TGInstantPageTileView *tileView, __unused BOOL *stop) {
         [tileView removeFromSuperview];
     }];
@@ -472,20 +478,33 @@
             _scrollView.contentOffset = CGPointMake(0.0f, -expandedHeight);
         }
         if (_initialAnchor != nil) {
-            NSString *anchor = _initialAnchor;
-            _initialAnchor = nil;
-            if (anchor.length != 0) {
-                for (id<TGInstantPageLayoutItem> item in self->_currentLayout.items) {
-                    if ([item respondsToSelector:@selector(matchesAnchor:)] && [item matchesAnchor:anchor]) {
-                        [self->_scrollView setContentOffset:CGPointMake(0.0f, item.frame.origin.y) animated:false];
-                        break;
-                    }
-                }
-            }
+            [self scrollToAnchor];
         }
         [self updateVisibleItems];
         
         [self updateNavigationBar];
+    }
+}
+
+- (void)setInitialAnchor:(NSString *)initialAnchor
+{
+    _initialAnchor = initialAnchor;
+    if (self.bounds.size.height > FLT_EPSILON) {
+        [self scrollToAnchor];
+    }
+}
+
+- (void)scrollToAnchor
+{
+    NSString *anchor = [_initialAnchor lowercaseString];
+    _initialAnchor = nil;
+    if (anchor.length != 0) {
+        for (id<TGInstantPageLayoutItem> item in self->_currentLayout.items) {
+            if ([item respondsToSelector:@selector(matchesAnchor:)] && [item matchesAnchor:anchor]) {
+                [self->_scrollView setContentOffset:CGPointMake(0.0f, item.frame.origin.y) animated:false];
+                break;
+            }
+        }
     }
 }
 
@@ -963,6 +982,18 @@
         }
     }
     return nil;
+}
+
+- (void)setContentHidden:(bool)hidden animated:(bool)animated {
+    void (^block)(void) = ^{
+        _scrollView.alpha = hidden ? 0.0f : 1.0f;
+    };
+    
+    if (animated) {
+        [UIView animateWithDuration:0.2 animations:block];
+    } else {
+        block();
+    }
 }
 
 @end

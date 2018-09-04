@@ -18,6 +18,9 @@
 #import "TLRPCmessages_sendMultiMedia.h"
 #import "TLRPCmessages_forwardMessages.h"
 
+#import "TLInputMediaUploadedPhoto.h"
+#import "TLInputMediaUploadedDocument.h"
+
 #import "TLUpdates+TG.h"
 #import "TGMessage+Telegraph.h"
 #import "TLMessage$modernMessage.h"
@@ -80,7 +83,7 @@ NSString *const TGChannelGroupKey = @"channelGroup";
                             break;
                         }
                     }
-                    [attachments addObjectsFromArray:[TGMessage parseTelegraphMedia:sentMessage.media mediaLifetime:nil]];
+                    [attachments addObjectsFromArray:[TGMessage parseTelegraphMedia:sentMessage.media mediaLifetime:nil cid:updatedMessage.cid mid:updatedMessage.mid]];
                     updatedMessage.mediaAttachments = attachments;
                 }
                 
@@ -212,6 +215,12 @@ NSString *const TGChannelGroupKey = @"channelGroup";
     if (TGPeerIdIsChannel(peerId) && !isChannelGroup)
         flags |= 16;
     
+    sendMedia.message = message.text;
+    if (message.entities.count > 0) {
+        sendMedia.entities = [TGModernSendCommonMessageActor convertEntities:message.entities];
+        flags |= (1 << 3);
+    }
+    
     sendMedia.flags = flags;
     
     return [[SSignal single:message] then:[[[[[TGTelegramNetworking instance] requestSignal:sendMedia] mapToSignal:^SSignal *(TLUpdates *updates)
@@ -257,13 +266,14 @@ NSString *const TGChannelGroupKey = @"channelGroup";
             {
                 TGImageMediaAttachment *photo = (TGImageMediaAttachment *)attachment;
                 
-                TLInputMedia$inputMediaPhoto *remotePhoto = [[TLInputMedia$inputMediaPhoto alloc] init];
+                TLInputMediaPhoto *remotePhoto = [[TLInputMediaPhoto alloc] init];
                 TLInputPhoto$inputPhoto *inputId = [[TLInputPhoto$inputPhoto alloc] init];
                 inputId.n_id = photo.imageId;
                 inputId.access_hash = photo.accessHash;
+                inputId.file_reference = photo.originInfo.fileReference;
                 remotePhoto.n_id = inputId;
                 
-                TLInputSingleMedia$inputSingleMedia *singleMedia = [[TLInputSingleMedia$inputSingleMedia alloc] init];
+                TLInputSingleMedia$inputSingleMediaMeta *singleMedia = [[TLInputSingleMedia$inputSingleMediaMeta alloc] init];
                 singleMedia.random_id = message.randomId;
                 singleMedia.media = remotePhoto;
                 
@@ -273,13 +283,14 @@ NSString *const TGChannelGroupKey = @"channelGroup";
             {
                 TGVideoMediaAttachment *video = (TGVideoMediaAttachment *)attachment;
                 
-                TLInputMedia$inputMediaDocument *remoteDocument = [[TLInputMedia$inputMediaDocument alloc] init];
+                TLInputMediaDocument *remoteDocument = [[TLInputMediaDocument alloc] init];
                 TLInputDocument$inputDocument *inputDocument = [[TLInputDocument$inputDocument alloc] init];
                 inputDocument.n_id = video.videoId;
                 inputDocument.access_hash = video.accessHash;
+                inputDocument.file_reference = video.originInfo.fileReference;
                 remoteDocument.n_id = inputDocument;
                 
-                TLInputSingleMedia$inputSingleMedia *singleMedia = [[TLInputSingleMedia$inputSingleMedia alloc] init];
+                TLInputSingleMedia$inputSingleMediaMeta *singleMedia = [[TLInputSingleMedia$inputSingleMediaMeta alloc] init];
                 singleMedia.random_id = message.randomId;
                 singleMedia.media = remoteDocument;
                 
@@ -469,11 +480,12 @@ NSString *const TGChannelGroupKey = @"channelGroup";
     
     return [self sendMediaWithPeerId:peerId replyToMid:replyToMid attachment:documentAttachment uploadSignal:nil mediaProducer:^TLInputMedia *(__unused NSDictionary *uploadInfo)
     {
-        TLInputMedia$inputMediaDocument *remoteDocument = [[TLInputMedia$inputMediaDocument alloc] init];
+        TLInputMediaDocument *remoteDocument = [[TLInputMediaDocument alloc] init];
         
         TLInputDocument$inputDocument *inputDocument = [[TLInputDocument$inputDocument alloc] init];
         inputDocument.n_id = documentAttachment.documentId;
         inputDocument.access_hash = documentAttachment.accessHash;
+        inputDocument.file_reference = documentAttachment.originInfo.fileReference;
         remoteDocument.n_id = inputDocument;
         
         return remoteDocument;
@@ -691,10 +703,11 @@ NSString *const TGChannelGroupKey = @"channelGroup";
 
 + (SSignal *)sharePhoto:(TGImageMediaAttachment *)photo toPeerIds:(NSArray *)peerIds caption:(NSString *)caption
 {
-    TLInputMedia$inputMediaPhoto *remotePhoto = [[TLInputMedia$inputMediaPhoto alloc] init];
+    TLInputMediaPhoto *remotePhoto = [[TLInputMediaPhoto alloc] init];
     TLInputPhoto$inputPhoto *inputId = [[TLInputPhoto$inputPhoto alloc] init];
     inputId.n_id = photo.imageId;
     inputId.access_hash = photo.accessHash;
+    inputId.file_reference = photo.originInfo.fileReference;
     remotePhoto.n_id = inputId;
     
     TGImageMediaAttachment *attachment = [photo copy];
@@ -705,10 +718,11 @@ NSString *const TGChannelGroupKey = @"channelGroup";
 
 + (SSignal *)shareVideo:(TGVideoMediaAttachment *)video toPeerIds:(NSArray *)peerIds caption:(NSString *)caption
 {
-    TLInputMedia$inputMediaDocument *remoteDocument = [[TLInputMedia$inputMediaDocument alloc] init];
+    TLInputMediaDocument *remoteDocument = [[TLInputMediaDocument alloc] init];
     TLInputDocument$inputDocument *inputDocument = [[TLInputDocument$inputDocument alloc] init];
     inputDocument.n_id = video.videoId;
     inputDocument.access_hash = video.accessHash;
+    inputDocument.file_reference = video.originInfo.fileReference;
     remoteDocument.n_id = inputDocument;
     
     TGVideoMediaAttachment *attachment = [video copy];
@@ -792,10 +806,11 @@ NSString *const TGChannelGroupKey = @"channelGroup";
 
 + (SSignal *)shareDocument:(TGDocumentMediaAttachment *)document toPeerIds:(NSArray *)peerIds caption:(NSString *)caption
 {
-    TLInputMedia$inputMediaDocument *remoteDocument = [[TLInputMedia$inputMediaDocument alloc] init];
+    TLInputMediaDocument *remoteDocument = [[TLInputMediaDocument alloc] init];
     TLInputDocument$inputDocument *inputDocument = [[TLInputDocument$inputDocument alloc] init];
     inputDocument.n_id = document.documentId;
     inputDocument.access_hash = document.accessHash;
+    inputDocument.file_reference = document.originInfo.fileReference;
     remoteDocument.n_id = inputDocument;
     
     TGDocumentMediaAttachment *attachment = [document copy];

@@ -1,10 +1,4 @@
-/*
- * This is the source code of Telegram for iOS v. 1.1
- * It is licensed under GNU GPL v. 2 or later.
- * You should have received a copy of the license in this archive (see LICENSE).
- *
- * Copyright Peter Iakovlev, 2013.
- */
+
 
 #import "MTApiEnvironment.h"
 
@@ -132,13 +126,14 @@ typedef enum {
 
 @implementation MTSocksProxySettings
 
-- (instancetype)initWithIp:(NSString *)ip port:(uint16_t)port username:(NSString *)username password:(NSString *)password {
+- (instancetype)initWithIp:(NSString *)ip port:(uint16_t)port username:(NSString *)username password:(NSString *)password secret:(NSData *)secret {
     self = [super init];
     if (self != nil) {
         _ip = ip;
         _port = port;
         _username = username;
         _password = password;
+        _secret = secret;
     }
     return self;
 }
@@ -158,6 +153,45 @@ typedef enum {
         return false;
     }
     if ((other->_password != nil) != (_password != nil) || (_password != nil && ![_password isEqual:other->_password])) {
+        return false;
+    }
+    if ((other->_secret != nil) != (_secret != nil) || (_secret != nil && ![_secret isEqual:other->_secret])) {
+        return false;
+    }
+    return true;
+}
+
+- (NSString *)description {
+    return [NSString stringWithFormat:@"%@:%d+%@+%@+%@", _ip, (int)_port, _username, _password, _secret];
+}
+
++ (bool)secretSupportsExtendedPadding:(NSData *)data {
+    if (data.length == 17) {
+        uint8_t first = 0;
+        [data getBytes:&first length:1];
+        return (first == 0xdd);
+    }
+    return false;
+}
+
+@end
+
+@implementation MTNetworkSettings
+
+- (instancetype)initWithReducedBackupDiscoveryTimeout:(bool)reducedBackupDiscoveryTimeout {
+    self = [super init];
+    if (self != nil) {
+        _reducedBackupDiscoveryTimeout = reducedBackupDiscoveryTimeout;
+    }
+    return self;
+}
+
+- (BOOL)isEqual:(id)object {
+    if (![object isKindOfClass:[MTNetworkSettings class]]) {
+        return false;
+    }
+    MTNetworkSettings *other = object;
+    if (_reducedBackupDiscoveryTimeout != other->_reducedBackupDiscoveryTimeout) {
         return false;
     }
     return true;
@@ -180,7 +214,21 @@ typedef enum {
         _systemVersion = [[[pInfo operatingSystemVersionString] componentsSeparatedByString:@" "] objectAtIndex:1];
 #endif
         
-        NSString *versionString = [[NSString alloc] initWithFormat:@"%@ (%@)", [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"], [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]];
+NSString *suffix = @"";
+#if TARGET_OS_OSX
+#ifdef BETA
+        suffix = @" BETA";
+#endif
+        
+#ifdef APPSTORE
+        suffix = @" APPSTORE";
+#endif
+        
+#ifdef STABLE
+        suffix = @" STABLE";
+#endif
+#endif
+        NSString *versionString = [[NSString alloc] initWithFormat:@"%@ (%@)%@", [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"], [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"], suffix];
         _appVersion = versionString;
         
         _systemLangCode = [[NSLocale preferredLanguages] objectAtIndex:0];
@@ -194,7 +242,7 @@ typedef enum {
 }
 
 - (void)_updateApiInitializationHash {
-    _apiInitializationHash = [[NSString alloc] initWithFormat:@"apiId=%" PRId32 "&deviceModel=%@&systemVersion=%@&appVersion=%@&langCode=%@&layer=%@&langPack=%@&langPackCode=%@", _apiId, _deviceModel, _systemVersion, _appVersion, _systemLangCode, _layer, _langPack, _langPackCode];
+    _apiInitializationHash = [[NSString alloc] initWithFormat:@"apiId=%" PRId32 "&deviceModel=%@&systemVersion=%@&appVersion=%@&langCode=%@&layer=%@&langPack=%@&langPackCode=%@&proxy=%@", _apiId, _deviceModel, _systemVersion, _appVersion, _systemLangCode, _layer, _langPack, _langPackCode, _socksProxySettings];
 }
 
 - (void)setLayer:(NSNumber *)layer {
@@ -272,10 +320,23 @@ typedef enum {
             
         case UIDeviceIFPGA: return IFPGA_NAMESTRING;
             
-        case UIDeviceOSX: return @"macOS";
-            
+        case UIDeviceOSX: return [self macHWName];
+        
         default: return IOS_FAMILY_UNKNOWN_DEVICE;
     }
+}
+    
+-(NSString *)macHWName {
+    size_t len = 0;
+    sysctlbyname("hw.model", NULL, &len, NULL, 0);
+    if (len) {
+        char *model = malloc(len*sizeof(char));
+        sysctlbyname("hw.model", model, &len, NULL, 0);
+        NSString *name = [[NSString alloc] initWithUTF8String:model];
+        free(model);
+        return name;
+    };
+    return @"macOS";
 }
 
 - (NSUInteger)platformType
@@ -384,6 +445,7 @@ typedef enum {
     result.tcpPayloadPrefix = self.tcpPayloadPrefix;
     result.datacenterAddressOverrides = self.datacenterAddressOverrides;
     result->_socksProxySettings = self.socksProxySettings;
+    result->_networkSettings = self.networkSettings;
     
     [result _updateApiInitializationHash];
     
@@ -401,6 +463,7 @@ typedef enum {
     
     result->_langPackCode = self.langPackCode;
     result->_socksProxySettings = self.socksProxySettings;
+    result->_networkSettings = self.networkSettings;
     
     result.disableUpdates = self.disableUpdates;
     result.tcpPayloadPrefix = self.tcpPayloadPrefix;
@@ -422,6 +485,29 @@ typedef enum {
     
     result->_langPackCode = self.langPackCode;
     result->_socksProxySettings = socksProxySettings;
+    result->_networkSettings = self.networkSettings;
+    
+    result.disableUpdates = self.disableUpdates;
+    result.tcpPayloadPrefix = self.tcpPayloadPrefix;
+    result.datacenterAddressOverrides = self.datacenterAddressOverrides;
+    
+    [result _updateApiInitializationHash];
+    
+    return result;
+}
+
+- (MTApiEnvironment *)withUpdatedNetworkSettings:(MTNetworkSettings *)networkSettings {
+    MTApiEnvironment *result = [[MTApiEnvironment alloc] init];
+    
+    result.apiId = self.apiId;
+    result.appVersion = self.appVersion;
+    result.layer = self.layer;
+    
+    result.langPack = self.langPack;
+    
+    result->_langPackCode = self.langPackCode;
+    result->_socksProxySettings = self.socksProxySettings;
+    result->_networkSettings = networkSettings;
     
     result.disableUpdates = self.disableUpdates;
     result.tcpPayloadPrefix = self.tcpPayloadPrefix;

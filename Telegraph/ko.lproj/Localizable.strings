@@ -253,7 +253,7 @@
 "WelcomeScreen.Logout" = "로그아웃";
 "WelcomeScreen.Greeting" = "%@님 환영합니다!";
 "WelcomeScreen.ContactsAccessDisabled" = "연락처를 동기화할 수 없습니다.";
-"WelcomeScreen.ContactsAccessHelp" = "CloudVeil Messenger에서는 기존 연락처 목록을 토대로 메시지를 보냅니다. %@의 '설정' - '개인 정보 보호' - '연락처'로 가서 CloudVeil Messenger을 활성화하세요.";
+"WelcomeScreen.ContactsAccessHelp" = "Telegram에서는 기존 연락처 목록을 토대로 메시지를 보냅니다. %@의 '설정' - '개인 정보 보호' - '연락처'로 가서 Telegram을 활성화하세요.";
 "WelcomeScreen.ContactsAccessSettings" = "설정";
 "WelcomeScreen.UpdatingTitle" = "업데이트 중";
 
@@ -468,7 +468,7 @@
 "Conversation.SlideToCancel" = "밀어서 취소";
 "Conversation.ApplyLocalization" = "언어 파일 적용";
 "Conversation.OpenFile" = "파일 열기";
-"Conversation.MicrophoneAccessDisabled" = "CloudVeil Messenger이 음성 메시지를 보내기 위해 마이크에 대한 접근 권한을 필요로 합니다.\n설정>'개인 정보 보호>마이크로 가서 CloudVeil Messenger을 활성화하세요.";
+"Conversation.MicrophoneAccessDisabled" = "Telegram이 음성 메시지를 보내기 위해 마이크에 대한 접근 권한을 필요로 합니다.\n설정>'개인 정보 보호>마이크로 가서 Telegram을 활성화하세요.";
 
 // Media Picker
 "MediaPicker.Send" = "전송";
@@ -1107,32 +1107,32 @@
 
 "AccessDenied.Title" = "접근을 허용해주세요";
 
-"AccessDenied.Contacts" = "CloudVeil Messenger에서는 기존 연락처 목록을 토대로 메시지를 보냅니다. \n\n'설정' - '개인 정보 보호' - '연락처'로 가서 CloudVeil Messenger을 활성화하세요.";
+"AccessDenied.Contacts" = "Telegram에서는 기존 연락처 목록을 토대로 메시지를 보냅니다. \n\n'설정' - '개인 정보 보호' - '연락처'로 가서 Telegram을 활성화하세요.";
 
-"AccessDenied.VoiceMicrophone" = "CloudVeil Messenger이 음성 메시지를 보내기 위해 마이크에 대한 접근 권한을 필요로 합니다.\n\n'설정' - '개인 정보 보호' - '마이크'로 가서 CloudVeil Messenger을 활성화하세요.";
+"AccessDenied.VoiceMicrophone" = "Telegram이 음성 메시지를 보내기 위해 마이크에 대한 접근 권한을 필요로 합니다.\n\n'설정' - '개인 정보 보호' - '마이크'로 가서 Telegram을 활성화하세요.";
 
-"AccessDenied.VideoMicrophone" = "CloudVeil Messenger이 음성 메시지를 보내기 위해 마이크에 대한 접근 권한을 필요로 합니다. \n\n'설정' - '개인 정보 보호' - '마이크'로 가서 CloudVeil Messenger을 활성화하세요.";
+"AccessDenied.VideoMicrophone" = "Telegram이 음성 메시지를 보내기 위해 마이크에 대한 접근 권한을 필요로 합니다. \n\n'설정' - '개인 정보 보호' - '마이크'로 가서 Telegram을 활성화하세요.";
 
-"AccessDenied.MicrophoneRestricted" = "CloudVeil Messenger이 마이크에 접근이 제한되어 있습니다.\n\n'설정' - '일반' - '접근 제한' - '마이크'로 가서 CloudVeil Messenger을 활성화하세요.";
+"AccessDenied.MicrophoneRestricted" = "Telegram이 마이크에 접근이 제한되어 있습니다.\n\n'설정' - '일반' - '접근 제한' - '마이크'로 가서 Telegram을 활성화하세요.";
 
 
-"AccessDenied.Camera" = "CloudVeil Messenger이 사진 및 동영상 촬영을 위해 카메라에 대한 접근 권한을 필요로 합니다.\n\n'설정' - '개인 정보 보호' - '카메라'로 가서 CloudVeil Messenger을 활성화하세요.";
+"AccessDenied.Camera" = "Telegram이 사진 및 동영상 촬영을 위해 카메라에 대한 접근 권한을 필요로 합니다.\n\n'설정' - '개인 정보 보호' - '카메라'로 가서 Telegram을 활성화하세요.";
 
-"AccessDenied.CameraRestricted" = "CloudVeil Messenger이 카메라에 접근이 제한되어 있습니다.\n\n'설정' - '일반' - '접근 제한' - '카메라'로 가서 CloudVeil Messenger을 활성화하세요.";
+"AccessDenied.CameraRestricted" = "Telegram이 카메라에 접근이 제한되어 있습니다.\n\n'설정' - '일반' - '접근 제한' - '카메라'로 가서 Telegram을 활성화하세요.";
 
-"AccessDenied.CameraDisabled" = "카메라의 모든 접근이 제한되어 있습니다.\n\n'설정' - '일반' - '접근 제한' - '마이크'로 가서 CloudVeil Messenger을 활성화하세요.";
+"AccessDenied.CameraDisabled" = "카메라의 모든 접근이 제한되어 있습니다.\n\n'설정' - '일반' - '접근 제한' - '마이크'로 가서 Telegram을 활성화하세요.";
 
-"AccessDenied.PhotosAndVideos" = "CloudVeil Messenger이 사진 및 동영상을 보내기 위해 사진 라이브러리에 대한 접근 권한을 필요로 합니다.\n\n'설정' - '개인 정보 보호' - '사진'로 가서 CloudVeil Messenger을 활성화하세요.";
+"AccessDenied.PhotosAndVideos" = "Telegram이 사진 및 동영상을 보내기 위해 사진 라이브러리에 대한 접근 권한을 필요로 합니다.\n\n'설정' - '개인 정보 보호' - '사진'로 가서 Telegram을 활성화하세요.";
 
-"AccessDenied.SaveMedia" = "CloudVeil Messenger이 사진 및 동영상 저장을 위해 사진 라이브러리에 대한 접근 권한을 필요로 합니다.\n\n'설정' - '개인 정보 보호' - '사진'로 가서 CloudVeil Messenger을 활성화하세요.";
+"AccessDenied.SaveMedia" = "Telegram이 사진 및 동영상 저장을 위해 사진 라이브러리에 대한 접근 권한을 필요로 합니다.\n\n'설정' - '개인 정보 보호' - '사진'로 가서 Telegram을 활성화하세요.";
 
-"AccessDenied.PhotosRestricted" = "CloudVeil Messenger이 사진에 접근이 제한되어 있습니다.\n\n'설정' - '일반' - '접근 제한' - '사진'으로 가서 CloudVeil Messenger을 활성화하세요.";
+"AccessDenied.PhotosRestricted" = "Telegram이 사진에 접근이 제한되어 있습니다.\n\n'설정' - '일반' - '접근 제한' - '사진'으로 가서 Telegram을 활성화하세요.";
 
-"AccessDenied.LocationDenied" = "CloudVeil Messenger이 위치를 친구분들과 공유하기 위해 위치에 대한 접근 권한을 필요로 합니다.\n\n'설정' - '개인 정보 보호' - '위치'로 가서 CloudVeil Messenger을 활성화하세요.";
+"AccessDenied.LocationDenied" = "Telegram이 위치를 친구분들과 공유하기 위해 위치에 대한 접근 권한을 필요로 합니다.\n\n'설정' - '개인 정보 보호' - '위치'로 가서 Telegram을 활성화하세요.";
 
-"AccessDenied.LocationDisabled" = "CloudVeil Messenger이 위치를 친구분들과 공유하기 위해 위치에 대한 접근 권한을 필요로 합니다.\n\n'설정' - '개인 정보 보호' - '위치'로 가서 CloudVeil Messenger을 활성화하세요.";
+"AccessDenied.LocationDisabled" = "Telegram이 위치를 친구분들과 공유하기 위해 위치에 대한 접근 권한을 필요로 합니다.\n\n'설정' - '개인 정보 보호' - '위치'로 가서 Telegram을 활성화하세요.";
 
-"AccessDenied.LocationTracking" = "CloudVeil Messenger이 위치를 지도에 표시하기 위해 위치에 대한 접근 권한을 필요로 합니다.\n\n'설정' - '개인 정보 보호' - '위치'로 가서 활성화하세요.";
+"AccessDenied.LocationTracking" = "Telegram이 위치를 지도에 표시하기 위해 위치에 대한 접근 권한을 필요로 합니다.\n\n'설정' - '개인 정보 보호' - '위치'로 가서 활성화하세요.";
 
 "AccessDenied.Settings" = "설정";
 
@@ -1301,7 +1301,7 @@
 
 "ChangePhone.ErrorOccupied" = "그 번호는 이미 텔레그램 계정에 연결되어 있습니다. 새 번호로 이동하기 전에 %@ 계정에서 탈퇴해 주세요.";
 
-"AccessDenied.LocationTracking" = "CloudVeil Messenger이 위치를 지도에 표시하기 위해 위치에 대한 접근 권한을 필요로 합니다.\n\n'설정' - '개인 정보 보호' - '위치'로 가서 활성화하세요.";
+"AccessDenied.LocationTracking" = "Telegram이 위치를 지도에 표시하기 위해 위치에 대한 접근 권한을 필요로 합니다.\n\n'설정' - '개인 정보 보호' - '위치'로 가서 활성화하세요.";
 
 "PrivacySettings.AuthSessions" = "활성화된 세션";
 "AuthSessions.Title" = "활성화된 세션";
@@ -1444,7 +1444,7 @@
 "Channel.Edit.LinkItem" = "링크";
 
 "Channel.Username.Title" = "링크";
-"Channel.Username.Help" = "**CloudVeil Messenger**에서 채널명을 선택 할 수 있습니다. 설정을 하셨을 경우 다른 유저들이 검색할 수 있습니다.\n\n채널명으로  **a-z**, **0-9** 과 _ 를 사용가능하며,  최소 **5** 글자 이상을 기입하셔야 합니다";
+"Channel.Username.Help" = "**Telegram**에서 채널명을 선택 할 수 있습니다. 설정을 하셨을 경우 다른 유저들이 검색할 수 있습니다.\n\n채널명으로  **a-z**, **0-9** 과 _ 를 사용가능하며,  최소 **5** 글자 이상을 기입하셔야 합니다";
 "Channel.Username.LinkHint" = "이 링크는 회원님의 텔레그램 채널로 이동합니다.:[\nhttps://t.me/%@]";
 "Channel.Username.InvalidTooShort" = "채널명은 최소 5 글자 이상 입력해야 합니다.";
 "Channel.Username.InvalidStartsWithNumber" = "채널명은 숫자로 시작 할 수 없습니다.";
@@ -1657,7 +1657,7 @@
 
 "Group.Management.AddModeratorHelp" = "채널 관리를 도울 수 있는 관리자를 추가 할 수 있습니다. ";
 
-"Watch.AppName" = "CloudVeil Messenger";
+"Watch.AppName" = "Telegram";
 "Watch.Compose.AddContact" = "주소록 선택";
 "Watch.Compose.CreateMessage" = "새 메시지";
 "Watch.Compose.CurrentLocation" = "현재 위치";
@@ -1690,7 +1690,7 @@
 
 "Watch.Message.ForwardedFrom" = "님으로 부터 전달됨";
 
-"Watch.Notification.Joined" = "님이 CloudVeil Messenger을 가입하였습니다.";
+"Watch.Notification.Joined" = "님이 Telegram을 가입하였습니다.";
 
 "Watch.MessageView.Title" = "메시지";
 "Watch.MessageView.Forward" = "전달";
@@ -1892,7 +1892,7 @@
 "Conversation.Moderate.Report" = "스팸 신고";
 "Conversation.Moderate.DeleteAllMessages" = "%@ 전부 삭제";
 
-"Group.Username.Help" = "**CloudVeil Messenger**에서 그룹명을 선택 할 수 있습니다. 설정을 하셨을 경우 다른 유저들이 검색할 수 있습니다.\n\n채널명으로  **a-z**, **0-9** 과 _ 를 사용가능하며,  최소 **5** 글자 이상을 기입하셔야 합니다";
+"Group.Username.Help" = "**Telegram**에서 그룹명을 선택 할 수 있습니다. 설정을 하셨을 경우 다른 유저들이 검색할 수 있습니다.\n\n채널명으로  **a-z**, **0-9** 과 _ 를 사용가능하며,  최소 **5** 글자 이상을 기입하셔야 합니다";
 
 "Group.Username.InvalidTooShort" = "그룹명은 최소 5 글자 이상 입력해야 합니다.";
 "Group.Username.InvalidStartsWithNumber" = "그룹명은 숫자로 시작 할 수 없습니다.";
@@ -2180,12 +2180,12 @@
 "Conversation.JumpToDate" = "날자로 이동";
 "Conversation.AddToReadingList" = "읽기 리스트에 추가";
 
-"AccessDenied.CallMicrophone" = "CloudVeil Messenger이 음성 전화를 걸기 위하여 마이크에 대한 접근 권한을 필요로 합니다.\n설정>'개인 정보 보호>마이크로 가서 CloudVeil Messenger을 활성화하세요.";
+"AccessDenied.CallMicrophone" = "Telegram이 음성 전화를 걸기 위하여 마이크에 대한 접근 권한을 필요로 합니다.\n설정>'개인 정보 보호>마이크로 가서 Telegram을 활성화하세요.";
 
 "Call.EncryptionKey.Title" = "암호화 키";
 "Call.EncryptionKey.Description" = "이 이미지와 텍스트는 %1$@ 님과의 현재 음성 전화에 대한 비밀키에서 파생된 것입니다.\n\n이 이미지와 텍스트가 %2$@ 님의 휴대전화와 동일하다면 단말기간의 암호화가 정상적으로 진행되고 있음을 보장합니다.";
 
-"Application.Name" = "CloudVeil Messenger";
+"Application.Name" = "Telegram";
 "DialogList.Pin" = "고정";
 "DialogList.Unpin" = "고정제거";
 "DialogList.PinLimitError" = "죄송합니다, 고정할 수 있는 개수는 %@개입니다.";
@@ -2468,7 +2468,7 @@
 
 "Message.VideoMessage" = "영상 메시지";
 
-"Conversation.HoldForAudio" = "꾹 눌러 음성을 녹음하세요.";
+"Conversation.HoldForAudio" = "꾹 눌러 음성을 녹음하세요. 탭하여 영상으로 전환하세요.";
 "Conversation.HoldForVideo" = "꾹 눌러 영상을 녹화하세요. 탭하여 음성으로 전환하세요.";
 
 "UserInfo.TelegramCall" = "텔레그램 전화";
@@ -2479,8 +2479,8 @@
 "SharedMedia.CategoryLinks" = "링크";
 "SharedMedia.CategoryOther" = "오디오";
 
-"AccessDenied.VideoMessageCamera" = "CloudVeil Messenger이 영상 메시지를 보내기 위해 카메라에 대한 접근 권한을 필요로 합니다.\n\n'설정' - '개인 정보 보호' - '카메라'로 가서 CloudVeil Messenger을 활성화하세요.";
-"AccessDenied.VideoMessageMicrophone" = "CloudVeil Messenger이 영상 메시지를 보내기 위해 마이크에 대한 접근 권한을 필요로 합니다.\n\n'설정' - '개인 정보 보호' - '마이크'로 가서 CloudVeil Messenger을 활성화하세요.";
+"AccessDenied.VideoMessageCamera" = "Telegram이 영상 메시지를 보내기 위해 카메라에 대한 접근 권한을 필요로 합니다.\n\n'설정' - '개인 정보 보호' - '카메라'로 가서 Telegram을 활성화하세요.";
+"AccessDenied.VideoMessageMicrophone" = "Telegram이 영상 메시지를 보내기 위해 마이크에 대한 접근 권한을 필요로 합니다.\n\n'설정' - '개인 정보 보호' - '마이크'로 가서 Telegram을 활성화하세요.";
 
 "ChatSettings.AutomaticVideoMessageDownload" = "영상 메시지 자동 다운로드";
 
@@ -2502,6 +2502,6 @@
 
 "Privacy.PaymentsTitle" = "PAYMENTS";
 "Privacy.PaymentsClearInfo" = "Clear payment & shipping info";
-"Privacy.PaymentsClearInfoHelp" = "You can delete your shipping info and instruct all payment providers to remove your saved credit cards. Note that CloudVeil Messenger never stores your credit card data.";
+"Privacy.PaymentsClearInfoHelp" = "You can delete your shipping info and instruct all payment providers to remove your saved credit cards. Note that Telegram never stores your credit card data.";
 "Privacy.PaymentsClear.PaymentInfo" = "Payment Info";
 "Privacy.PaymentsClear.ShippingInfo" = "Shipping Info";

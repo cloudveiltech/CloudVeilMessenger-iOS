@@ -23,7 +23,7 @@
 
 #import "TGTelegramNetworking.h"
 
-#import "TGAlertView.h"
+#import "TGCustomAlertView.h"
 
 #import "TGPresentation.h"
 
@@ -134,7 +134,7 @@
             [items addObject:_shippindAddressState];
             
             _shippingAddressCountryId = currentInfo.shippingAddress.countryIso2;
-            NSString *countryName = _shippingAddressCountryId.length != 0 ? [TGLoginCountriesController countryNameByCountryId:_shippingAddressCountryId code:NULL] : nil;
+            NSString *countryName = _shippingAddressCountryId.length != 0 ? [TGLoginCountriesController localizedCountryNameByCountryId:_shippingAddressCountryId code:NULL] : nil;
             _shippingAddressCountry = [[TGVariantCollectionItem alloc] initWithTitle:TGLocalized(@"CheckoutInfo.ShippingInfoCountry") variant:countryName == nil ? @"" : countryName action:@selector(countryPressed)];
             _shippingAddressCountry.minLeftPadding = minimalInset + 20.0f;
             _shippingAddressCountry.variantColor = TGPresentation.current.pallete.collectionMenuTextColor;
@@ -335,7 +335,7 @@
         } else if ([errorType isEqualToString:@"REQ_INFO_PHONE_INVALID"]) {
             alertText = TGLocalized(@"CheckoutInfo.ErrorPhoneInvalid");
         }
-        [TGAlertView presentAlertWithTitle:nil message:alertText cancelButtonTitle:TGLocalized(@"Common.OK") okButtonTitle:nil completionBlock:nil];
+        [TGCustomAlertView presentAlertWithTitle:nil message:alertText cancelButtonTitle:TGLocalized(@"Common.OK") okButtonTitle:nil completionBlock:nil];
     } completed:nil]];
 }
 
@@ -387,12 +387,13 @@
 
 - (void)countryPressed {
     TGLoginCountriesController *countriesController = [[TGLoginCountriesController alloc] initWithCodes:false];
+    countriesController.presentation = self.presentation;
     __weak TGPaymentCheckoutInfoController *weakSelf = self;
     countriesController.countrySelected = ^(__unused int code, __unused NSString *name, NSString *countryId) {
         __strong TGPaymentCheckoutInfoController *strongSelf = weakSelf;
         if (strongSelf != nil) {
             strongSelf->_shippingAddressCountryId = countryId;
-            NSString *countryName = countryId.length != 0 ? [TGLoginCountriesController countryNameByCountryId:countryId code:NULL] : nil;
+            NSString *countryName = countryId.length != 0 ? [TGLoginCountriesController localizedCountryNameByCountryId:countryId code:NULL] : nil;
             strongSelf->_shippingAddressCountry.variant = countryName;
             [strongSelf checkInputValues];
         }

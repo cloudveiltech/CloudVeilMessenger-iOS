@@ -7,13 +7,15 @@
 #import <LegacyComponents/ActionStage.h>
 #import "TGDatabase.h"
 
+#import "TGImageInfo+Telegraph.h"
+
 #import "TGGenericPeerMediaGalleryDefaultHeaderView.h"
 #import "TGGenericPeerMediaGalleryActionsAccessoryView.h"
 #import "TGGenericPeerMediaGalleryDefaultFooterView.h"
 
 #import "TGGenericPeerGalleryGroupItem.h"
 
-#import "TGActionSheet.h"
+#import "TGCustomActionSheet.h"
 #import <LegacyComponents/TGProgressWindow.h>
 
 #import <LegacyComponents/TGMediaAssetsLibrary.h>
@@ -58,6 +60,9 @@
 
 - (void)_transitionCompleted
 {
+    if (_peerId == 777000 || _peerId == 333000)
+        return;
+    
     [ActionStageInstance() dispatchOnStageQueue:^
     {
         [ActionStageInstance() watchForPath:[[NSString alloc] initWithFormat:@"/tg/profilePhotos/(%" PRId64 ")", _peerId] watcher:self];
@@ -124,7 +129,29 @@
         index++;
         
         NSString *legacyThumbnailUrl = [imageMedia.imageInfo closestImageUrlWithSize:CGSizeMake(160.0f, 160.0f) resultingSize:NULL];
+        {
+            int datacenterId = 0;
+            int64_t volumeId = 0;
+            int localId = 0;
+            int64_t secret = 0;
+            if (extractFileUrlComponents(legacyThumbnailUrl, &datacenterId, &volumeId, &localId, &secret)) {
+                NSData *fileReference = [imageMedia.originInfo fileReferenceForVolumeId:volumeId localId:localId];
+                if (fileReference != nil)
+                    legacyThumbnailUrl = [legacyThumbnailUrl stringByAppendingFormat:@"_%@", [fileReference stringByEncodingInHex]];
+            }
+        }
         NSString *legacyUrl = [imageMedia.imageInfo closestImageUrlWithSize:CGSizeMake(640.0f, 640.0f) resultingSize:NULL];
+        {
+            int datacenterId = 0;
+            int64_t volumeId = 0;
+            int localId = 0;
+            int64_t secret = 0;
+            if (extractFileUrlComponents(legacyUrl, &datacenterId, &volumeId, &localId, &secret)) {
+                NSData *fileReference = [imageMedia.originInfo fileReferenceForVolumeId:volumeId localId:localId];
+                if (fileReference != nil)
+                    legacyUrl = [legacyUrl stringByAppendingFormat:@"_%@", [fileReference stringByEncodingInHex]];
+            }
+        }
         bool isCurrent = false;
         
         if (index == 0)
@@ -191,6 +218,7 @@
 {
     TGGenericPeerMediaGalleryActionsAccessoryView *accessoryView = [[TGGenericPeerMediaGalleryActionsAccessoryView alloc] init];
     __weak TGUserAvatarGalleryModel *weakSelf = self;
+    __weak TGGenericPeerMediaGalleryActionsAccessoryView *weakAccessoryView = accessoryView;
     accessoryView.action = ^(id<TGModernGalleryItem> item)
     {
         if ([item isKindOfClass:[TGUserAvatarGalleryItem class]])
@@ -212,12 +240,12 @@
                     }
                     [actions addObject:[[TGActionSheetAction alloc] initWithTitle:TGLocalized(@"Common.Cancel") action:@"cancel" type:TGActionSheetActionTypeCancel]];
                     
-                    [[[TGActionSheet alloc] initWithTitle:nil actions:actions actionBlock:^(__unused id target, NSString *action)
+                    [[[TGCustomActionSheet alloc] initWithTitle:nil actions:actions actionBlock:^(__unused id target, NSString *action)
                     {
                         __strong TGUserAvatarGalleryModel *strongSelf = weakSelf;
                         if ([action isEqualToString:@"save"])
                             [strongSelf _commitSaveItemToCameraRoll:item];
-                    } target:strongSelf] showInView:actionSheetView];
+                    } target:strongSelf] showFromRect:[weakAccessoryView convertRect:weakAccessoryView.bounds toView:actionSheetView] inView:actionSheetView animated:true];
                 }
             }
         }

@@ -16,6 +16,8 @@
 @property (nonatomic, copy) void (^deleteConversation)(int64_t);
 @property (nonatomic, copy) void (^toggleMuteConversation)(int64_t, bool);
 @property (nonatomic, copy) void (^togglePinConversation)(int64_t, bool);
+@property (nonatomic, copy) void (^toggleGroupConversation)(int64_t, bool);
+@property (nonatomic, copy) void (^toggleReadConversation)(int64_t, bool);
 
 @property (nonatomic, strong) ASHandle *watcherHandle;
 
@@ -28,6 +30,7 @@
 @property (nonatomic, strong) NSString *messageText;
 @property (nonatomic) bool rawText;
 @property (nonatomic, strong) NSArray *messageAttachments;
+@property (nonatomic, strong) NSString *caption;
 @property (nonatomic, strong) NSDictionary *users;
 
 @property (nonatomic, strong) NSArray *titleLetters;
@@ -37,12 +40,16 @@
 @property (nonatomic) bool outgoing;
 @property (nonatomic) bool unread;
 @property (nonatomic) bool pinnedToTop;
+@property (nonatomic) bool isAd;
+@property (nonatomic) bool groupedInFeed;
 @property (nonatomic) TGMessageDeliveryState deliveryState;
 @property (nonatomic) int unreadCount;
 @property (nonatomic) int serviceUnreadCount;
 @property (nonatomic) int unreadMentionCount;
+@property (nonatomic) bool unreadMark;
 
 @property (nonatomic, strong) NSString *avatarUrl;
+@property (nonatomic, strong) NSData *avatarFileReference;
 @property (nonatomic) bool isOnline;
 
 @property (nonatomic) bool isMuted;
@@ -69,11 +76,19 @@
 @property (nonatomic) bool isChannelGroup;
 
 @property (nonatomic) bool isVerified;
+@property (nonatomic) bool hasExplicitContent;
 
 @property (nonatomic) bool isLastCell;
 @property (nonatomic) bool disableActions;
 
 @property (nonatomic) int isSavedMessages;
+
+@property (nonatomic) bool isFeed;
+@property (nonatomic, strong) NSArray *feedChatIds;
+@property (nonatomic, strong) NSArray *feedChatTitles;
+@property (nonatomic, strong) NSArray *feedAvatarUrls;
+
+@property (nonatomic) bool isFeedChannels;
 
 @property (nonatomic, strong) TGDatabaseMessageDraft *draft;
 
@@ -91,8 +106,11 @@
 
 - (bool)showingDeleteConfirmationButton;
 
+- (bool)isEditingControlsTracking;
 - (bool)isEditingControlsExpanded;
 - (void)setEditingConrolsExpanded:(bool)expanded animated:(bool)animated;
+
+- (void)animateHighlight;
 
 - (void)resetLocalization;
 

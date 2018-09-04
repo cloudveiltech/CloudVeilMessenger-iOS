@@ -1,10 +1,4 @@
-/*
- * This is the source code of Telegram for iOS v. 1.1
- * It is licensed under GNU GPL v. 2 or later.
- * You should have received a copy of the license in this archive (see LICENSE).
- *
- * Copyright Peter Iakovlev, 2013.
- */
+
 
 #import "MTDiscoverDatacenterAddressAction.h"
 
@@ -78,7 +72,7 @@
         if (datacenterAddressIsKnown)
             [self complete];
         else if (currentDatacenterId != 0)
-            [self askForAnAddressDatacenterWithId:currentDatacenterId];
+            [self askForAnAddressDatacenterWithId:currentDatacenterId useTempAuthKeys:context.useTempAuthKeys];
         else
             [self fail];
     }
@@ -86,7 +80,7 @@
         [self fail];
 }
 
-- (void)askForAnAddressDatacenterWithId:(NSInteger)targetDatacenterId
+- (void)askForAnAddressDatacenterWithId:(NSInteger)targetDatacenterId useTempAuthKeys:(bool)useTempAuthKeys
 {
     _targetDatacenterId = targetDatacenterId;
     
@@ -99,6 +93,7 @@
         if ([context authInfoForDatacenterWithId:_targetDatacenterId] != nil)
         {
             _mtProto = [[MTProto alloc] initWithContext:context datacenterId:_targetDatacenterId usageCalculationInfo:nil];
+            _mtProto.useTempAuthKeys = useTempAuthKeys;
             _requestService = [[MTRequestMessageService alloc] initWithContext:_context];
             [_mtProto addMessageService:_requestService];
             
@@ -137,7 +132,7 @@
     {
         _awaitingAddresSetUpdate = false;
         
-        [self askForAnAddressDatacenterWithId:datacenterId];
+        [self askForAnAddressDatacenterWithId:datacenterId useTempAuthKeys:context.useTempAuthKeys];
     }
 }
 

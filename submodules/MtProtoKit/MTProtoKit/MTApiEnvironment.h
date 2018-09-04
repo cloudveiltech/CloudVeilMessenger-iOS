@@ -1,10 +1,4 @@
-/*
- * This is the source code of Telegram for iOS v. 1.1
- * It is licensed under GNU GPL v. 2 or later.
- * You should have received a copy of the license in this archive (see LICENSE).
- *
- * Copyright Peter Iakovlev, 2013.
- */
+
 
 #import <Foundation/Foundation.h>
 
@@ -14,8 +8,19 @@
 @property (nonatomic, readonly) uint16_t port;
 @property (nonatomic, strong, readonly) NSString *username;
 @property (nonatomic, strong, readonly) NSString *password;
+@property (nonatomic, strong, readonly) NSData *secret;
 
-- (instancetype)initWithIp:(NSString *)ip port:(uint16_t)port username:(NSString *)username password:(NSString *)password;
+- (instancetype)initWithIp:(NSString *)ip port:(uint16_t)port username:(NSString *)username password:(NSString *)password secret:(NSData *)secret;
+
++ (bool)secretSupportsExtendedPadding:(NSData *)data;
+
+@end
+
+@interface MTNetworkSettings : NSObject
+
+@property (nonatomic, readonly) bool reducedBackupDiscoveryTimeout;
+
+- (instancetype)initWithReducedBackupDiscoveryTimeout:(bool)reducedBackupDiscoveryTimeout;
 
 @end
 
@@ -38,10 +43,12 @@
 @property (nonatomic) NSDictionary *datacenterAddressOverrides;
 
 @property (nonatomic, strong, readonly) MTSocksProxySettings *socksProxySettings;
+@property (nonatomic, strong, readonly) MTNetworkSettings *networkSettings;
 
 @property (nonatomic, copy) void (^passwordInputHandler)();
 
 - (MTApiEnvironment *)withUpdatedLangPackCode:(NSString *)langPackCode;
 - (MTApiEnvironment *)withUpdatedSocksProxySettings:(MTSocksProxySettings *)socksProxySettings;
+- (MTApiEnvironment *)withUpdatedNetworkSettings:(MTNetworkSettings *)networkSettings;
 
 @end

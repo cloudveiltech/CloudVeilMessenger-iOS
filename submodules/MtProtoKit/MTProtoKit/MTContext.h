@@ -1,8 +1,15 @@
 #import <Foundation/Foundation.h>
 
+#if defined(MtProtoKitDynamicFramework)
+#   import <MTProtoKitDynamic/MTDatacenterAuthInfo.h>
+#elif defined(MtProtoKitMacFramework)
+#   import <MTProtoKitMac/MTDatacenterAuthInfo.h>
+#else
+#   import <MTProtoKit/MTDatacenterAuthInfo.h>
+#endif
+
 @class MTDatacenterAddress;
 @class MTDatacenterAddressSet;
-@class MTDatacenterAuthInfo;
 @protocol MTSerialization;
 @class MTContext;
 @class MTTransportScheme;
@@ -23,6 +30,7 @@
 - (void)contextDatacenterPublicKeysUpdated:(MTContext *)context datacenterId:(NSInteger)datacenterId publicKeys:(NSArray<NSDictionary *> *)publicKeys;
 - (MTSignal *)fetchContextDatacenterPublicKeys:(MTContext *)context datacenterId:(NSInteger)datacenterId;
 - (void)contextApiEnvironmentUpdated:(MTContext *)context apiEnvironment:(MTApiEnvironment *)apiEnvironment;
+- (MTSignal *)isContextNetworkAccessAllowed:(MTContext *)context;
 
 @end
 
@@ -30,6 +38,7 @@
 
 @property (nonatomic, copy) void (^contextIsPasswordRequiredUpdated)(MTContext *, NSInteger);
 @property (nonatomic, copy) MTSignal *(^fetchContextDatacenterPublicKeys)(MTContext *, NSInteger);
+@property (nonatomic, copy) MTSignal *(^isContextNetworkAccessAllowed)(MTContext *);
 
 @end
 
@@ -39,8 +48,10 @@
 
 @property (nonatomic, strong, readonly) id<MTSerialization> serialization;
 @property (nonatomic, strong, readonly) MTApiEnvironment *apiEnvironment;
+@property (nonatomic, readonly) bool isTestingEnvironment;
+@property (nonatomic, readonly) bool useTempAuthKeys;
 
-- (instancetype)initWithSerialization:(id<MTSerialization>)serialization apiEnvironment:(MTApiEnvironment *)apiEnvironment;
+- (instancetype)initWithSerialization:(id<MTSerialization>)serialization apiEnvironment:(MTApiEnvironment *)apiEnvironment isTestingEnvironment:(bool)isTestingEnvironment useTempAuthKeys:(bool)useTempAuthKeys;
 
 - (void)performBatchUpdates:(void (^)())block;
 
@@ -71,6 +82,8 @@
 - (void)enumerateAddressSetsForDatacenters:(void (^)(NSInteger datacenterId, MTDatacenterAddressSet *addressSet, BOOL *stop))block;
 
 - (MTDatacenterAddressSet *)addressSetForDatacenterWithId:(NSInteger)datacenterId;
+- (void)invalidateTransportSchemesForDatacenterIds:(NSArray<NSNumber *> * _Nonnull)datacenterIds;
+- (void)invalidateTransportSchemesForKnownDatacenterIds;
 - (MTTransportScheme *)transportSchemeForDatacenterWithId:(NSInteger)datacenterId media:(bool)media isProxy:(bool)isProxy;
 - (void)transportSchemeForDatacenterWithIdRequired:(NSInteger)datacenterId media:(bool)media;
 - (void)invalidateTransportSchemeForDatacenterId:(NSInteger)datacenterId transportScheme:(MTTransportScheme *)transportScheme isProbablyHttp:(bool)isProbablyHttp media:(bool)media;
@@ -87,11 +100,13 @@
 
 - (void)addressSetForDatacenterWithIdRequired:(NSInteger)datacenterId;
 - (void)authInfoForDatacenterWithIdRequired:(NSInteger)datacenterId isCdn:(bool)isCdn;
-- (void)tempAuthKeyForDatacenterWithIdRequired:(NSInteger)datacenterId;
+- (void)tempAuthKeyForDatacenterWithIdRequired:(NSInteger)datacenterId keyType:(MTDatacenterAuthTempKeyType)keyType;
 - (void)authTokenForDatacenterWithIdRequired:(NSInteger)datacenterId authToken:(id)authToken masterDatacenterId:(NSInteger)masterDatacenterId;
 
 - (void)reportProblemsWithDatacenterAddressForId:(NSInteger)datacenterId address:(MTDatacenterAddress *)address;
     
 - (void)updateApiEnvironment:(MTApiEnvironment *(^)(MTApiEnvironment *))f;
+
+- (void)beginExplicitBackupAddressDiscovery;
 
 @end

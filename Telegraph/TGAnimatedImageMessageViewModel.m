@@ -49,7 +49,7 @@
     return queue;
 }
 
-- (instancetype)initWithMessage:(TGMessage *)message imageInfo:(TGImageInfo *)imageInfo document:(TGDocumentMediaAttachment *)document authorPeer:(id)authorPeer context:(TGModernViewContext *)context forwardPeer:(id)forwardPeer forwardAuthor:(id)forwardAuthor forwardMessageId:(int32_t)forwardMessageId replyHeader:(TGMessage *)replyHeader replyAuthor:(id)replyAuthor viaUser:(TGUser *)viaUser caption:(NSString *)caption textCheckingResults:(NSArray *)textCheckingResults
+- (instancetype)initWithMessage:(TGMessage *)message imageInfo:(TGImageInfo *)imageInfo document:(TGDocumentMediaAttachment *)document authorPeer:(id)authorPeer context:(TGModernViewContext *)context forwardPeer:(id)forwardPeer forwardAuthor:(id)forwardAuthor forwardMessageId:(int32_t)forwardMessageId replyHeader:(TGMessage *)replyHeader replyAuthor:(id)replyAuthor viaUser:(TGUser *)viaUser caption:(NSString *)caption textCheckingResults:(NSArray *)__unused textCheckingResults
 {
     TGImageInfo *previewImageInfo = imageInfo;
     
@@ -65,7 +65,15 @@
         
         NSMutableString *previewUri = [[NSMutableString alloc] initWithString:@"animation-thumbnail://?"];
         if (document.documentId != 0)
+        {
             [previewUri appendFormat:@"id=%" PRId64 "", document.documentId];
+            
+            [previewUri appendFormat:@"&cid=%" PRId64 "", message.cid];
+            [previewUri appendFormat:@"&mid=%" PRId32 "", message.mid];
+            
+            if (document.originInfo != nil)
+                [previewUri appendFormat:@"&origin_info=%@", [document.originInfo stringRepresentation]];
+        }
         else
             [previewUri appendFormat:@"local-id=%" PRId64 "", document.localDocumentId];
         
@@ -88,7 +96,7 @@
         [previewImageInfo addImageWithSize:renderSize url:previewUri];
     }
     
-    self = [super initWithMessage:message imageInfo:previewImageInfo authorPeer:authorPeer context:context forwardPeer:forwardPeer forwardAuthor:forwardAuthor forwardMessageId:forwardMessageId replyHeader:replyHeader replyAuthor:replyAuthor viaUser:viaUser caption:caption textCheckingResults:textCheckingResults];
+    self = [super initWithMessage:message imageInfo:previewImageInfo authorPeer:authorPeer context:context forwardPeer:forwardPeer forwardAuthor:forwardAuthor forwardMessageId:forwardMessageId replyHeader:replyHeader replyAuthor:replyAuthor viaUser:viaUser caption:caption textCheckingResults:message.textCheckingResults];
     if (self != nil)
     {
         _document = document;
@@ -149,7 +157,15 @@
         
         NSMutableString *previewUri = [[NSMutableString alloc] initWithString:@"animation-thumbnail://?"];
         if (_document.documentId != 0)
+        {
             [previewUri appendFormat:@"id=%" PRId64 "", _document.documentId];
+            
+            [previewUri appendFormat:@"&cid=%" PRId64 "", message.cid];
+            [previewUri appendFormat:@"&mid=%" PRId32 "", message.mid];
+            
+            if (_document.originInfo != nil)
+                [previewUri appendFormat:@"&origin_info=%@", [_document.originInfo stringRepresentation]];
+        }
         else
             [previewUri appendFormat:@"local-id=%" PRId64 "", _document.localDocumentId];
         
@@ -172,7 +188,8 @@
         
         [previewImageInfo addImageWithSize:renderSize url:previewUri];
         
-        [self updateImageInfo:previewImageInfo];
+        NSString *updatedImageUri = [self updatedImageUriForInfo:previewImageInfo];
+        self.imageModel.uri = updatedImageUri;
     }
     
     _canDownload = _document.documentId != 0 || (_document.documentUri != nil && ![_document.documentUri hasPrefix:@"http"]);
@@ -250,7 +267,7 @@
 - (void)activateMedia:(bool)instant
 {
     if (_activatedMedia)
-        [_context.companionHandle requestAction:@"openMediaRequested" options:@{@"mid": @(_mid), @"instant": @(instant)}];
+        [_context.companionHandle requestAction:@"openMediaRequested" options:@{@"mid": @(_mid), @"instant": @(instant), @"peerId": @(_authorPeerId)}];
     else
         [self activateMediaPlayback];
 }
@@ -315,10 +332,10 @@
                         return nil;
                     }];
                     return [dataSignal mapToSignal:^SSignal *(NSData *data) {
-                        return [[TGGifConverter convertGifToMp4:data] mapToSignal:^SSignal *(NSString *tempPath) {
+                        return [[TGGifConverter convertGifToMp4:data] mapToSignal:^SSignal *(NSDictionary *dict) {
                             return [[SSignal alloc] initWithGenerator:^id<SDisposable>(SSubscriber *subsctiber) {
                                 NSError *error = nil;
-                                [[NSFileManager defaultManager] moveItemAtPath:tempPath toPath:videoPath error:&error];
+                                [[NSFileManager defaultManager] moveItemAtPath:dict[@"path"] toPath:videoPath error:&error];
                                 if (error != nil) {
                                     [subsctiber putError:nil];
                                 } else {

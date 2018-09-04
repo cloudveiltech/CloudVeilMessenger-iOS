@@ -1,12 +1,15 @@
-/*
- * This is the source code of Telegram for iOS v. 1.1
- * It is licensed under GNU GPL v. 2 or later.
- * You should have received a copy of the license in this archive (see LICENSE).
- *
- * Copyright Peter Iakovlev, 2013.
- */
-
 #import <UIKit/UIKit.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+    
+    bool extractFileUrlComponents(NSString *fileUrl, int *datacenterId, int64_t *volumeId, int *localId, int64_t *secret);
+    bool extractFileUrlComponentsWithFileRef(NSString *fileUrl, int *datacenterId, int64_t *volumeId, int *localId, int64_t *secret, NSString **fileReferenceStr);
+    
+#ifdef __cplusplus
+}
+#endif
 
 @interface TGImageInfo : NSObject <NSCoding>
 
@@ -24,6 +27,7 @@
 - (NSString *)imageUrlForSizeLargerThanSize:(CGSize)size actualSize:(CGSize *)actualSize;
 
 - (bool)containsSizeWithUrl:(NSString *)url;
+- (int)fileSizeForUrl:(NSString *)url;
 
 - (NSDictionary *)allSizes;
 - (bool)empty;

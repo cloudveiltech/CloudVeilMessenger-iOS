@@ -170,7 +170,7 @@ const CGFloat TGCallAvatarNormalScale = 0.75f;
         
         if (state.peer.photoUrlSmall.length > 0)
         {
-            [_avatarView loadImage:state.peer.photoUrlBig filter:@"circle:128x128" placeholder:placeholder];
+            [_avatarView loadImage:state.peer.photoFullUrlBig filter:@"circle:128x128" placeholder:placeholder];
         }
         else
         {
@@ -178,7 +178,6 @@ const CGFloat TGCallAvatarNormalScale = 0.75f;
         }
         
         // MARK: - CloudVeil
-        
         if ([[MainController shared] disableProfilePhoto])
             [_avatarView loadUserPlaceholderWithSize:TGCallAvatarLargeSize uid:state.peer.uid firstName:state.peer.firstName lastName:state.peer.lastName placeholder:placeholder];
     }

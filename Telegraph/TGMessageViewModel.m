@@ -18,6 +18,8 @@
 
 #import "TGTelegraphConversationMessageAssetsSource.h"
 
+#import "TGPresentation.h"
+
 // MARK: - CloudVeil
 #import <CloudVeilSecurityManager/CloudVeilSecurityManager-Swift.h>
 
@@ -40,10 +42,6 @@ const TGMessageViewModelLayoutConstants *TGGetMessageViewModelLayoutConstants()
         CGFloat minTextFontSize = 0.0f;
         CGFloat maxTextFontSize = 0.0f;
         CGFloat defaultTextFontSize = 0.0f;
-        
-        CGSize screenSize = TGScreenSize();
-        CGFloat screenSide = MAX(screenSize.width, screenSize.height);
-        bool isLargeScreen = screenSide >= 667.0f - FLT_EPSILON;
         
         if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone)
         {
@@ -68,12 +66,9 @@ const TGMessageViewModelLayoutConstants *TGGetMessageViewModelLayoutConstants()
             constants.bottomPostInset = 2.0f;
             
             minTextFontSize = 12.0f;
-            maxTextFontSize = 24.0f;
+            maxTextFontSize = 26.0f;
             
-            if (isLargeScreen)
-                defaultTextFontSize = 17.0f;
-            else
-                defaultTextFontSize = 16.0f;
+            defaultTextFontSize = 17.0f;
         }
         else
         {
@@ -98,14 +93,13 @@ const TGMessageViewModelLayoutConstants *TGGetMessageViewModelLayoutConstants()
             constants.textBubbleTextOffsetTop = 1.0f + TGScreenPixel;
             
             minTextFontSize = 13.0f;
-            maxTextFontSize = 25.0f;
+            maxTextFontSize = 26.0f;
             defaultTextFontSize = 17.0f;
         }
         
         if (iosMajorVersion() >= 7 && [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone)
         {
-            CGFloat fontSize = [UIFont preferredFontForTextStyle:UIFontTextStyleBody].pointSize - (isLargeScreen ? 0 : 1.0f);
-            constants.textFontSize = MAX(minTextFontSize, MIN(maxTextFontSize, fontSize));
+            constants.textFontSize = MAX(minTextFontSize, MIN(maxTextFontSize, defaultTextFontSize));
         }
         else
         {
@@ -123,6 +117,8 @@ const TGMessageViewModelLayoutConstants *TGGetMessageViewModelLayoutConstants()
 
 void TGUpdateMessageViewModelLayoutConstants(CGFloat baseFontPointSize)
 {
+    TGGetMessageViewModelLayoutConstants();
+    
     CGFloat minTextFontSize = 0.0f;
     CGFloat maxTextFontSize = 0.0f;
     
@@ -134,14 +130,10 @@ void TGUpdateMessageViewModelLayoutConstants(CGFloat baseFontPointSize)
     else
     {
         minTextFontSize = 13.0f;
-        maxTextFontSize = 25.0f;
+        maxTextFontSize = 26.0f;
     }
-    
-    CGSize screenSize = TGScreenSize();
-    CGFloat screenSide = MAX(screenSize.width, screenSize.height);
-    bool isLargeScreen = screenSide >= 667.0f - FLT_EPSILON;
-    
-    CGFloat fontSize = baseFontPointSize - (isLargeScreen ? 0 : 1.0f);
+        
+    CGFloat fontSize = baseFontPointSize;
     currentMessageViewModelLayoutConstants.textFontSize = MAX(minTextFontSize, MIN(maxTextFontSize, fontSize));
 }
 
@@ -174,6 +166,7 @@ void TGUpdateMessageViewModelLayoutConstants(CGFloat baseFontPointSize)
         _context = context;
         _authorPeer = authorPeer;
         
+        UIImage *placeholder = [context.presentation.images avatarPlaceholderWithDiameter:40.0f];
         if (authorPeer != nil && [authorPeer isKindOfClass:[TGUser class]])
         {
             TGUser *author = authorPeer;
@@ -181,54 +174,14 @@ void TGUpdateMessageViewModelLayoutConstants(CGFloat baseFontPointSize)
             _firstName = author.firstName;
             _lastName = author.lastName;
             
-            static UIImage *placeholder = nil;
-            static dispatch_once_t onceToken2;
-            dispatch_once(&onceToken2, ^
-            {
-                UIGraphicsBeginImageContextWithOptions(CGSizeMake(40.0f, 40.0f), false, 0.0f);
-                CGContextRef context = UIGraphicsGetCurrentContext();
-                
-                //!placeholder
-                CGContextSetFillColorWithColor(context, [UIColor whiteColor].CGColor);
-                CGContextFillEllipseInRect(context, CGRectMake(0.0f, 0.0f, 40.0f, 40.0f));
-                CGContextSetStrokeColorWithColor(context, UIColorRGB(0xd9d9d9).CGColor);
-                CGContextSetLineWidth(context, 1.0f);
-                CGContextStrokeEllipseInRect(context, CGRectMake(0.5f, 0.5f, 39.0f, 39.0f));
-                
-                placeholder = UIGraphicsGetImageFromCurrentImageContext();
-                UIGraphicsEndImageContext();
-            });
-            
             _avatarModel = [[TGModernLetteredAvatarViewModel alloc] initWithSize:CGSizeMake(38.0f, 38.0f) placeholder:placeholder];
             _avatarModel.skipDrawInContext = true;
-            
             [self addSubmodel:_avatarModel];
-            
-        } else if ([authorPeer isKindOfClass:[TGConversation class]] && context != nil && (context.isAdminLog || context.isSavedMessages)) {
+        } else if ([authorPeer isKindOfClass:[TGConversation class]] && context != nil && (context.isAdminLog || context.isSavedMessages || context.isFeed)) {
             TGConversation *author = authorPeer;
             _firstName = author.chatTitle;
-            
-            static UIImage *placeholder = nil;
-            static dispatch_once_t onceToken2;
-            dispatch_once(&onceToken2, ^
-            {
-                UIGraphicsBeginImageContextWithOptions(CGSizeMake(40.0f, 40.0f), false, 0.0f);
-                CGContextRef context = UIGraphicsGetCurrentContext();
-                
-                //!placeholder
-                CGContextSetFillColorWithColor(context, [UIColor whiteColor].CGColor);
-                CGContextFillEllipseInRect(context, CGRectMake(0.0f, 0.0f, 40.0f, 40.0f));
-                CGContextSetStrokeColorWithColor(context, UIColorRGB(0xd9d9d9).CGColor);
-                CGContextSetLineWidth(context, 1.0f);
-                CGContextStrokeEllipseInRect(context, CGRectMake(0.5f, 0.5f, 39.0f, 39.0f));
-                
-                placeholder = UIGraphicsGetImageFromCurrentImageContext();
-                UIGraphicsEndImageContext();
-            });
-            
             _avatarModel = [[TGModernLetteredAvatarViewModel alloc] initWithSize:CGSizeMake(38.0f, 38.0f) placeholder:placeholder];
             _avatarModel.skipDrawInContext = true;
-            
             [self addSubmodel:_avatarModel];
         }
         
@@ -412,7 +365,7 @@ void TGUpdateMessageViewModelLayoutConstants(CGFloat baseFontPointSize)
                 if (_checkButtonModel == nil)
                 {
                     _checkButtonModel = [[TGModernCheckButtonViewModel alloc] initWithFrame:self.editingCheckButtonFrame];
-                    _checkButtonModel.isChecked = [_context isMessageChecked:_mid];
+                    _checkButtonModel.isChecked = [_context isMessageChecked:_mid peerId:_authorPeerId];
                     [self addSubmodel:_checkButtonModel];
                     
                     if (container != nil)
@@ -495,7 +448,7 @@ void TGUpdateMessageViewModelLayoutConstants(CGFloat baseFontPointSize)
                 if (_checkButtonModel == nil)
                 {
                     _checkButtonModel = [[TGModernCheckButtonViewModel alloc] initWithFrame:self.editingCheckButtonFrame];
-                    _checkButtonModel.isChecked = [_context isMessageChecked:_mid];
+                    _checkButtonModel.isChecked = [_context isMessageChecked:_mid peerId:_authorPeerId];
                     [self addSubmodel:_checkButtonModel];
                 
                     if (container != nil)
@@ -519,7 +472,7 @@ void TGUpdateMessageViewModelLayoutConstants(CGFloat baseFontPointSize)
         }
     }
     else if (editing)
-        _checkButtonModel.isChecked = [_context isMessageChecked:_mid];
+        _checkButtonModel.isChecked = [_context isMessageChecked:_mid peerId:_authorPeerId];
 }
 
 - (void)bindSpecialViewsToContainer:(UIView *)container viewStorage:(TGModernViewStorage *)viewStorage atItemPosition:(CGPoint)itemPosition
@@ -599,7 +552,7 @@ void TGUpdateMessageViewModelLayoutConstants(CGFloat baseFontPointSize)
         {
             CGFloat x = _replyPanOffset > 0 ? inset : self.frame.size.width;
 
-            _replyIconModel = [[TGModernImageViewModel alloc] initWithImage:[[TGTelegraphConversationMessageAssetsSource instance] systemSwipeReplyIcon]];
+            _replyIconModel = [[TGModernImageViewModel alloc] initWithImage:_context.presentation.images.chatActionReplyImage];
             _replyIconModel.frame = CGRectMake(x, CGFloor((self.frame.size.height - 33.0f) / 2.0f), 33.0f, 33.0f);
             _replyIconModel.skipDrawInContext = true;
             [self addSubmodel:_replyIconModel];
@@ -674,7 +627,7 @@ void TGUpdateMessageViewModelLayoutConstants(CGFloat baseFontPointSize)
     if (recognizer.state == UIGestureRecognizerStateChanged)
     {
         CGFloat translation = [recognizer translationInView:recognizer.view.superview].x * -1.0f;
-        _replyPanOffset = MAX(-80.0f, MIN(0.0f, _replyPanOffset + translation));
+        _replyPanOffset = MAX(TGIsRTL() ? 0.0f : -80.0f, MIN(TGIsRTL() ? 80.0f : 0.0f, _replyPanOffset + translation));
         [recognizer setTranslation:CGPointZero inView:recognizer.view.superview];
         
         if (fabs(_replyPanOffset) >= activationOffset)
@@ -737,7 +690,7 @@ void TGUpdateMessageViewModelLayoutConstants(CGFloat baseFontPointSize)
             
         UIPanGestureRecognizer *panGestureRecognizer = (UIPanGestureRecognizer *)gestureRecognizer;
         CGPoint velocity = [panGestureRecognizer velocityInView:gestureRecognizer.view];
-        if (fabs(velocity.y) > fabs(velocity.x) || velocity.x > FLT_EPSILON)
+        if (fabs(velocity.y) > fabs(velocity.x) || ((TGIsRTL() && velocity.x < FLT_EPSILON) || (!TGIsRTL() && velocity.x > FLT_EPSILON)))
             return false;
         
         return _context.canReplyToMessageId(_mid);
@@ -750,7 +703,7 @@ void TGUpdateMessageViewModelLayoutConstants(CGFloat baseFontPointSize)
     if (_checkButtonModel != nil)
     {
         _checkButtonModel.isChecked = !_checkButtonModel.isChecked;
-        [_context.companionHandle requestAction:@"messageSelectionChanged" options:@{@"mid": @(_mid), @"selected": @(_checkButtonModel.isChecked)}];
+        [_context.companionHandle requestAction:@"messageSelectionChanged" options:@{@"mid": @(_mid), @"peerId": @(_authorPeerId), @"selected": @(_checkButtonModel.isChecked)}];
     }
 }
 

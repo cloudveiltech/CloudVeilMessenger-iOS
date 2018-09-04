@@ -1,10 +1,4 @@
-/*
- * This is the source code of Telegram for iOS v. 1.1
- * It is licensed under GNU GPL v. 2 or later.
- * You should have received a copy of the license in this archive (see LICENSE).
- *
- * Copyright Peter Iakovlev, 2013.
- */
+
 
 #import "MTDatacenterTransferAuthAction.h"
 
@@ -91,6 +85,7 @@
     }
     
     _sourceDatacenterMtProto = [[MTProto alloc] initWithContext:context datacenterId:sourceDatacenterId usageCalculationInfo:nil];
+    _sourceDatacenterMtProto.useTempAuthKeys = context.useTempAuthKeys;
     
     MTRequestMessageService *requestService = [[MTRequestMessageService alloc] initWithContext:context];
     [_sourceDatacenterMtProto addMessageService:requestService];
@@ -127,6 +122,7 @@
     
     MTContext *context = _context;
     _destinationDatacenterMtProto = [[MTProto alloc] initWithContext:context datacenterId:_destinationDatacenterId usageCalculationInfo:nil];
+    _destinationDatacenterMtProto.useTempAuthKeys = context.useTempAuthKeys;
     
     MTRequestMessageService *requestService = [[MTRequestMessageService alloc] initWithContext:context];
     [_destinationDatacenterMtProto addMessageService:requestService];

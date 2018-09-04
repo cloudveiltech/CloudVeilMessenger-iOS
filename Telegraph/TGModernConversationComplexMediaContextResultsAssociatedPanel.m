@@ -67,21 +67,18 @@
         UIColor *backgroundColor = [UIColor whiteColor];
         UIColor *bottomColor = UIColorRGBA(0xfafafa, 0.98f);
         UIColor *separatorColor = UIColorRGB(0xc5c7d0);
-        UIColor *cellSeparatorColor = UIColorRGB(0xdbdbdb);
         
         if (self.style == TGModernConversationAssociatedInputPanelDarkStyle)
         {
             backgroundColor = UIColorRGB(0x171717);
             bottomColor = backgroundColor;
             separatorColor = UIColorRGB(0x292929);
-            cellSeparatorColor = separatorColor;
         }
         else if (self.style == TGModernConversationAssociatedInputPanelDarkBlurredStyle)
         {
             backgroundColor = [UIColor clearColor];
             bottomColor = [UIColor clearColor];
             separatorColor = UIColorRGBA(0xb2b2b2, 0.7f);
-            cellSeparatorColor = separatorColor;
             
             CGFloat backgroundAlpha = 0.8f;
             if (iosMajorVersion() >= 8)
@@ -166,6 +163,20 @@
 
 - (void)dealloc {
     [_loadMoreDisposable dispose];
+}
+
+- (void)setPallete:(TGConversationAssociatedInputPanelPallete *)pallete
+{
+    [super setPallete:pallete];
+    if (self.pallete == nil)
+        return;
+    
+    self.backgroundColor = pallete.backgroundColor;
+    _stripeView.backgroundColor = pallete.barSeparatorColor;
+    _tableViewBackground.backgroundColor = pallete.backgroundColor;
+    _tableViewSeparator.backgroundColor = pallete.barSeparatorColor;
+    _bottomView.backgroundColor = pallete.barBackgroundColor;
+    _separatorView.backgroundColor = pallete.barSeparatorColor;
 }
 
 - (TGItemPreviewController *)presentPreviewForResultIfAvailable:(TGBotContextResult *)result immediately:(bool)immediately
@@ -268,6 +279,7 @@
     if (results.switchPm != nil) {
         if (_switchPm == nil) {
             _switchPm = [[TGModernConversationGenericContextResultsAssociatedPanelSwitchPm alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.frame.size.width, 32.0f)];
+            [_switchPm setBackgroundColor:self.pallete.backgroundColor separatorColor:self.pallete.barSeparatorColor accentColor:self.pallete.accentColor];
             _switchPm.autoresizingMask = UIViewAutoresizingFlexibleWidth;
             __weak TGModernConversationComplexMediaContextResultsAssociatedPanel *weakSelf = self;
             _switchPm.pressed = ^{
@@ -423,7 +435,7 @@
             _loadingMore = true;
             TGBotContextResultsSwitchPm *switchPm = _results.switchPm;
             __weak TGModernConversationComplexMediaContextResultsAssociatedPanel *weakSelf = self;
-            [_loadMoreDisposable setDisposable:[[[TGBotSignals botContextResultForUserId:_results.userId peerId:_results.peerId accessHash:_results.accessHash query:_results.query geoPoint:nil offset:_results.nextOffset] deliverOn:[SQueue mainQueue]] startWithNext:^(TGBotContextResults *nextResults) {
+            [_loadMoreDisposable setDisposable:[[[TGBotSignals botContextResultForUserId:_results.userId peerId:_results.peerId accessHash:_results.accessHash query:_results.query geoPoint:nil offset:_results.nextOffset forceAllowLocation:false] deliverOn:[SQueue mainQueue]] startWithNext:^(TGBotContextResults *nextResults) {
                 __strong TGModernConversationComplexMediaContextResultsAssociatedPanel *strongSelf = weakSelf;
                 if (strongSelf != nil) {
                     TGBotContextResults *mergedResults = [[TGBotContextResults alloc] initWithUserId:strongSelf->_results.userId peerId:strongSelf->_results.peerId accessHash:strongSelf->_results.accessHash isMedia:strongSelf->_results.isMedia query:strongSelf->_results.query nextOffset:nextResults.nextOffset results:[strongSelf->_results.results arrayByAddingObjectsFromArray:nextResults.results] switchPm:switchPm];

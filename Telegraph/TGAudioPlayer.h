@@ -29,11 +29,11 @@
 - (instancetype)init;
 - (instancetype)initWithMusic:(bool)music controlAudioSession:(bool)controlAudioSession;
 
+- (void)setRate:(CGFloat)rate;
 - (void)play;
 - (void)playFromPosition:(NSTimeInterval)position;
 - (void)pause:(void (^)())completion;
 - (void)stop;
-- (void)setPlayerSpeed:(double)speed; // MARK: - CloudVeil
 - (NSTimeInterval)currentPositionSync:(bool)sync;
 - (NSTimeInterval)duration;
 

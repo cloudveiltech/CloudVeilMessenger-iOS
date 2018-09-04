@@ -23,7 +23,6 @@
 
 #import "TGCallSession.h"
 
-
 // MARK: - CloudVeil
 #import <CloudVeilSecurityManager/CloudVeilSecurityManager-Swift.h>
 
@@ -290,12 +289,6 @@ const CGFloat TGCallSwipeDistanceThreshold = 128.0f;
         background = [[TGImageBasedPasscodeBackground alloc] initWithImage:_backgroundImage size:self.frame.size];
     else
         background = [[TGDefaultPasscodeBackground alloc] initWithSize:self.frame.size];
-    
-    if ([[MainController shared] disableProfilePhoto]) {
-        
-        background = [[TGImageBasedPasscodeBackground alloc] initWithImage:[UIImage new] size:self.frame.size];
-    }
-    
     
     [_buttonsView setBackground:background];
 }

@@ -38,6 +38,8 @@
 
 #import "TGMessageReplyButtonsModel.h"
 
+#import "TGPresentation.h"
+
 @interface TGRoundMessageViewModel () <TGDoubleTapGestureRecognizerDelegate, UIGestureRecognizerDelegate, TGMessageImageViewDelegate>
 {
     TGMessage *_message;
@@ -137,10 +139,19 @@
         
         NSMutableString *previewUri = [[NSMutableString alloc] initWithString:@"video-thumbnail://?"];
         if (video.videoId != 0)
+        {
             [previewUri appendFormat:@"id=%" PRId64 "", video.videoId];
+            
+            [previewUri appendFormat:@"&cid=%" PRId64 "", message.cid];
+            [previewUri appendFormat:@"&mid=%" PRId32 "", message.mid];
+            
+            if (video.originInfo != nil)
+                [previewUri appendFormat:@"&origin_info=%@", [video.originInfo stringRepresentation]];
+        }
         else
+        {
             [previewUri appendFormat:@"local-id=%" PRId64 "", video.localVideoId];
-        
+        }
         [previewUri appendFormat:@"&width=%d&height=%d&renderWidth=%d&renderHeight=%d", (int)roundSize.width, (int)roundSize.height, (int)renderSize.width, (int)renderSize.height];
         
         [previewUri appendFormat:@"&legacy-video-file-path=%@", legacyVideoFilePath];
@@ -158,6 +169,7 @@
     self = [super initWithAuthorPeer:authorPeer context:context];
     if (self != nil)
     {
+        _authorPeerId = message.fromUid;
         _mid = message.mid;
         _message = message;
         _video = video;
@@ -176,7 +188,7 @@
         
         _hasAvatar = authorPeer != nil && [authorPeer isKindOfClass:[TGUser class]];
         if ([authorPeer isKindOfClass:[TGConversation class]]) {
-            if ([context isAdminLog] || context.isSavedMessages) {
+            if (context.isAdminLog || context.isSavedMessages || context.isFeed) {
                 _hasAvatar = true;
             }
         }
@@ -198,26 +210,7 @@
         _incomingAppearance = _incoming || [authorPeer isKindOfClass:[TGConversation class]] || _savedMessage;
         
         CGFloat scale = [UIScreen mainScreen].scale;
-        static dispatch_once_t onceToken;
-        static UIImage *backgroundImage;
-        dispatch_once(&onceToken, ^
-        {
-            UIGraphicsBeginImageContextWithOptions(roundSize, false, 0.0f);
-            
-            CGContextRef context = UIGraphicsGetCurrentContext();
-            CGContextSetFillColorWithColor(context, [UIColor whiteColor].CGColor);
-            CGContextSetStrokeColorWithColor(context, UIColorRGBA(0x86a9c9, 0.5f).CGColor);
-            CGContextSetLineWidth(context, TGScreenPixel);
-            
-            CGRect rect = CGRectInset(CGRectMake(0.0f, 0.0f, roundSize.width, roundSize.height), TGScreenPixel, TGScreenPixel);
-            CGContextFillEllipseInRect(context, rect);
-            CGContextStrokeEllipseInRect(context, rect);
-
-            backgroundImage = UIGraphicsGetImageFromCurrentImageContext();
-            UIGraphicsEndImageContext();
-        });
-        
-        _backgroundModel = [[TGModernImageViewModel alloc] initWithImage:backgroundImage];
+        _backgroundModel = [[TGModernImageViewModel alloc] initWithImage:context.presentation.images.chatRoundMessageBackgroundImage];
         [self addSubmodel:_backgroundModel];
         
         NSString *imageUri = [previewImageInfo imageUrlForLargestSize:NULL];
@@ -232,7 +225,11 @@
             _legacyThumbnailCacheUri = dict[@"legacy-thumbnail-cache-url"];
         }
         
+        UIColor *overlayBackgroundColor = context.presentation.pallete.chatSystemBackgroundColor ?: [[TGTelegraphConversationMessageAssetsSource instance] systemMessageBackgroundColor];
         _imageModel.overlayBackgroundColorHint = UIColorRGBA(0x000000, 0.4f);
+        _imageModel.timestampTextColor = context.presentation.pallete.chatSystemTextColor;
+        _imageModel.timestampColor = overlayBackgroundColor;
+        _imageModel.serviceTimestampStyle = true;
 
         CGFloat inset = 2.0f;
         if (TGScreenScaling() == 2.0f)
@@ -252,7 +249,7 @@
         }
         else
         {
-            [_imageModel setTimestampOffset:CGPointMake(8.0f, 8.0f)];
+            [_imageModel setTimestampOffset:CGPointMake(9.0f + TGScreenPixel, 8.0f)];
         }
         
         _imageModel.flexibleTimestamp = true;
@@ -261,7 +258,6 @@
         _imageModel.timestampHidden = false;
         
         [self updateAdditionalDataString];
-        [_imageModel setTimestampColor:[[TGTelegraphConversationMessageAssetsSource instance] systemMessageBackgroundColor]];
         
         if (_messageLifetime != 0 && message.layer >= 17)
         {
@@ -289,7 +285,7 @@
         {
             _replyMessageId = replyHeader.mid;
             
-            _headerBackgroundModel = [[TGModernImageViewModel alloc] initWithImage:[[TGTelegraphConversationMessageAssetsSource instance] systemReplyBackground]];
+            _headerBackgroundModel = [[TGModernImageViewModel alloc] initWithImage:context.presentation.images.chatReplyBackground];
             _headerBackgroundModel.skipDrawInContext = true;
             [self addSubmodel:_headerBackgroundModel];
             
@@ -298,7 +294,7 @@
             
             if (replyHeader != nil)
             {
-                _replyHeaderModel = [TGContentBubbleViewModel replyHeaderModelFromMessage:replyHeader peer:replyPeer incoming:_incomingAppearance system:true];
+                _replyHeaderModel = [TGContentBubbleViewModel replyHeaderModelFromMessage:replyHeader peer:replyPeer incoming:_incomingAppearance system:true presentation:context.presentation];
                 [_contentModel addSubmodel:_replyHeaderModel];
             }
             else if (!_context.isSavedMessages)
@@ -331,7 +327,7 @@
         
         if (_incomingAppearance && ((_savedMessage && hasForwardPostId) || isChannel || _context.isBot || (_context.isPublicGroup) || isBot || forwardedFromChannel) && !_context.isAdminLog) {
             _shareButtonModel = [[TGModernButtonViewModel alloc] init];
-            _shareButtonModel.image = _savedMessage ? [[TGTelegraphConversationMessageAssetsSource instance] systemGoToButton] : [[TGTelegraphConversationMessageAssetsSource instance] systemShareButton];
+            _shareButtonModel.image = _savedMessage ? context.presentation.images.chatActionGoToImage : context.presentation.images.chatActionShareImage;
             _shareButtonModel.modernHighlight = true;
             _shareButtonModel.frame = CGRectMake(0.0f, 0.0f, 29.0f, 29.0f);
             [self addSubmodel:_shareButtonModel];
@@ -340,7 +336,7 @@
         TGBotReplyMarkup *replyMarkup = message.replyMarkup;
         if (replyMarkup != nil && replyMarkup.isInline) {
             _replyMarkup = replyMarkup;
-            _replyButtonsModel = [[TGMessageReplyButtonsModel alloc] init];
+            _replyButtonsModel = [[TGMessageReplyButtonsModel alloc] initWithContext:context];
             __weak TGRoundMessageViewModel *weakSelf = self;
             _replyButtonsModel.buttonActivated = ^(TGBotReplyMarkupButton *button, NSInteger index) {
                 __strong TGRoundMessageViewModel *strongSelf = weakSelf;
@@ -424,13 +420,7 @@
 {
     if (_unsentButtonModel == nil)
     {
-        static UIImage *image = nil;
-        static dispatch_once_t onceToken;
-        dispatch_once(&onceToken, ^
-        {
-            image = TGImageNamed(@"ModernMessageUnsentButton.png");
-        });
-        
+        UIImage *image = _context.presentation.images.chatUnsentIcon;
         _unsentButtonModel = [[TGModernImageViewModel alloc] initWithImage:image];
         _unsentButtonModel.frame = CGRectMake(0.0f, 0.0f, image.size.width, image.size.height);
         _unsentButtonModel.extendedEdges = UIEdgeInsetsMake(6, 6, 6, 6);
@@ -514,10 +504,17 @@
             
             NSMutableString *previewUri = [[NSMutableString alloc] initWithString:@"video-thumbnail://?"];
             if (video.videoId != 0)
+            {
                 [previewUri appendFormat:@"id=%" PRId64 "", video.videoId];
-            else
+                [previewUri appendFormat:@"&cid=%" PRId64 "", message.cid];
+                [previewUri appendFormat:@"&mid=%" PRId32 "", message.mid];
+                
+                if (video.originInfo != nil)
+                    [previewUri appendFormat:@"&origin_info=%@", [video.originInfo stringRepresentation]];
+            }
+            else{
                 [previewUri appendFormat:@"local-id=%" PRId64 "", video.localVideoId];
-            
+            }
             [previewUri appendFormat:@"&width=%d&height=%d&renderWidth=%d&renderHeight=%d", (int)roundSize.width, (int)roundSize.height, (int)renderSize.width, (int)renderSize.height];
             
             [previewUri appendFormat:@"&legacy-video-file-path=%@", legacyVideoFilePath];
@@ -652,7 +649,7 @@
         _replyMarkup = replyMarkup;
         
         if (_replyButtonsModel == nil) {
-            _replyButtonsModel = [[TGMessageReplyButtonsModel alloc] init];
+            _replyButtonsModel = [[TGMessageReplyButtonsModel alloc] initWithContext:_context];
             __weak TGRoundMessageViewModel *weakSelf = self;
             _replyButtonsModel.buttonActivated = ^(TGBotReplyMarkupButton *button, NSInteger index) {
                 __strong TGRoundMessageViewModel *strongSelf = weakSelf;
@@ -756,7 +753,7 @@
 - (void)updateAssets {
     [super updateAssets];
     
-    _shareButtonModel.image = [[TGTelegraphConversationMessageAssetsSource instance] systemShareButton];
+    _shareButtonModel.image = _savedMessage ? _context.presentation.images.chatActionGoToImage : _context.presentation.images.chatActionShareImage;
 }
 
 - (void)updateImageOverlay:(bool)animated
@@ -842,7 +839,7 @@
 
 - (void)updateMediaVisibility
 {
-    _imageModel.mediaVisible = [_context isMediaVisibleInMessage:_mid];
+    _imageModel.mediaVisible = [_context isMediaVisibleInMessage:_mid peerId:_authorPeerId];
 }
 
 - (void)subscribeStatus {
@@ -1070,7 +1067,7 @@
     }
     else
     {
-        [_context.companionHandle requestAction:@"fastForwardMessage" options:@{@"mid": @(_mid)}];
+        [_context.companionHandle requestAction:@"fastForwardMessage" options:@{@"mid": @(_mid), @"peerId": @(_message.cid)}];
     }
 }
 
@@ -1239,7 +1236,7 @@
     if (recognizer.state == UIGestureRecognizerStateRecognized)
     {
         if (recognizer.longTapped)
-            [_context.companionHandle requestAction:@"messageSelectionRequested" options:@{@"mid": @(_mid)}];
+            [_context.companionHandle requestAction:@"messageSelectionRequested" options:@{@"mid": @(_mid), @"peerId": @(_authorPeerId)}];
     }
 }
 
@@ -1287,17 +1284,17 @@
     if (_mediaIsAvailable)
         [self playPressed];
     else
-        [_context.companionHandle requestAction:@"mediaDownloadRequested" options:@{@"mid": @(_mid)}];
+        [_context.companionHandle requestAction:@"mediaDownloadRequested" options:@{@"mid": @(_mid), @"peerId": @(_authorPeerId)}];
 }
 
 - (void)deactivateMedia:(bool)instant
 {
-    [_context.companionHandle requestAction:@"closeMediaRequested" options:@{@"mid": @(_mid), @"instant": @(instant)}];
+    [_context.companionHandle requestAction:@"closeMediaRequested" options:@{@"mid": @(_mid), @"instant": @(instant), @"peerId": @(_authorPeerId)}];
 }
 
 - (void)cancelMediaDownload
 {
-    [_context.companionHandle requestAction:@"mediaProgressCancelRequested" options:@{@"mid": @(_mid)}];
+    [_context.companionHandle requestAction:@"mediaProgressCancelRequested" options:@{@"mid": @(_mid), @"peerId": @(_authorPeerId)}];
 }
 
 - (void)setForwardHeader:(id)forwardPeer forwardAuthor:(id)forwardAuthor messageId:(int32_t)messageId

@@ -97,13 +97,19 @@
 {
     _presentation = presentation;
     
-    self.backgroundColor = presentation.pallete.backgroundColor;
+    [_wrapView setPresentation:presentation];
+    
+    self.backgroundColor = self.inSettings ? presentation.pallete.collectionMenuCellBackgroundColor : presentation.pallete.backgroundColor;
     
     [self updateName];
+    _subLabel.backgroundColor = self.backgroundColor;
     _subLabel.textColor = presentation.pallete.secondaryTextColor;
     _dateLabel.textColor = presentation.pallete.secondaryTextColor;
+    _dateLabel.backgroundColor = self.backgroundColor;
     [_infoButton setImage:presentation.images.callsInfoIcon forState:UIControlStateNormal];
     _typeIcon.image = presentation.images.callsOutgoingIcon;
+    
+    _nameLabel.backgroundColor = self.backgroundColor;
     
     _separatorLayer.backgroundColor = presentation.pallete.separatorColor.CGColor;
     self.selectedBackgroundView.backgroundColor = presentation.pallete.selectionColor;
@@ -155,7 +161,7 @@
     
     TGMessage *message = group.message;
     
-    [_wrapView setButtonBytes:@[ @(TGDialogListCellEditingControlsDelete) ]];
+    [_wrapView setLeftButtonTypes:@[] rightButtonTypes:@[ @(TGDialogListCellEditingControlsDelete) ]];
     
     [self updateName];
     [_nameLabel sizeToFit];
@@ -169,46 +175,26 @@
     
     CGFloat diameter = TGIsPad() ? 45.0f : 40.0f;
     
-    static UIImage *placeholder = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^
-    {
-        UIGraphicsBeginImageContextWithOptions(CGSizeMake(diameter, diameter), false, 0.0f);
-        CGContextRef context = UIGraphicsGetCurrentContext();
-        
-        //!placeholder
-        CGContextSetFillColorWithColor(context, [UIColor whiteColor].CGColor);
-        CGContextFillEllipseInRect(context, CGRectMake(0.0f, 0.0f, diameter, diameter));
-        CGContextSetStrokeColorWithColor(context, UIColorRGB(0xd9d9d9).CGColor);
-        CGContextSetLineWidth(context, 1.0f);
-        CGContextStrokeEllipseInRect(context, CGRectMake(0.5f, 0.5f, diameter - 1.0f, diameter - 1.0f));
-        
-        placeholder = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
-    });
-    
+    UIImage *placeholder = [self.presentation.images avatarPlaceholderWithDiameter:diameter];    
     bool animateState = false;
     if (peer.photoUrlSmall.length != 0)
     {
         _avatarView.fadeTransitionDuration = animateState ? 0.14 : 0.3;
-        if (![peer.photoUrlSmall isEqualToString:_avatarView.currentUrl])
+        if (![peer.photoFullUrlSmall isEqualToString:_avatarView.currentUrl])
         {
             if (animateState)
             {
                 UIImage *currentImage = [_avatarView currentImage];
-                [_avatarView loadImage:peer.photoUrlSmall filter:TGIsPad() ? @"circle:45x45" : @"circle:40x40" placeholder:(currentImage != nil ? currentImage : placeholder) forceFade:true];
+                [_avatarView loadImage:peer.photoFullUrlSmall filter:TGIsPad() ? @"circle:45x45" : @"circle:40x40" placeholder:(currentImage != nil ? currentImage : placeholder) forceFade:true];
             }
             else
-                [_avatarView loadImage:peer.photoUrlSmall filter:TGIsPad() ? @"circle:45x45" : @"circle:40x40" placeholder:placeholder];
+                [_avatarView loadImage:peer.photoFullUrlSmall filter:TGIsPad() ? @"circle:45x45" : @"circle:40x40" placeholder:placeholder];
         }
     }
     else
     {
         [_avatarView loadUserPlaceholderWithSize:CGSizeMake(diameter, diameter) uid:(int32_t)peer.uid firstName:peer.firstName lastName:peer.lastName placeholder:placeholder];
     }
-    
-    if ([[MainController shared] disableProfilePhoto])
-        [_avatarView loadUserPlaceholderWithSize:CGSizeMake(diameter, diameter) uid:(int32_t)peer.uid firstName:peer.firstName lastName:peer.lastName placeholder:placeholder];
 
     [self setNeedsLayout];
 }

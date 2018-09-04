@@ -7,11 +7,12 @@
 
 #import "TGInterfaceManager.h"
 #import "TGTelegraph.h"
-#import "TGActionSheet.h"
 #import "TGAlertView.h"
 #import "TGSecretChatUserInfoController.h"
 
 #import "TGMessageModernConversationItem.h"
+
+#import "TGModernViewContext.h"
 
 #import "TGModernConversationController.h"
 #import "TGModernConversationTitleIcon.h"
@@ -36,12 +37,11 @@
 
 #import "TGLegacyComponentsContext.h"
 
-#import "TGPresentationAssets.h"
+#import "TGPresentation.h"
 
 // MARK: - CloudVeil
 #import <CloudVeilSecurityManager/CloudVeilSecurityManager-Swift.h>
 #import "NSMutableArray+Filtering.h"
-
 
 @interface TGSecretModernConversationCompanion () <TGSecretModernConversationAccessoryTimerViewDelegate>
 {
@@ -107,7 +107,7 @@
     lockIcon.bounds = CGRectMake(0.0f, 0.0f, 16, 16);
     lockIcon.offsetWeight = 0.5f;
     lockIcon.imageOffset = CGPointMake(3.0f, 5.0f);
-    lockIcon.image = [TGPresentationAssets chatTitleEncryptedIcon];
+    lockIcon.image = self.controller.presentation.images.chatTitleEncryptedIcon;
     lockIcon.iconPosition = TGModernConversationTitleIconPositionBeforeTitle;
     
     [self setAdditionalTitleIcons:@[lockIcon]];
@@ -150,9 +150,13 @@
     return [self layer] >= 45;
 }
 
+- (bool)allowCaptionEntities {
+    return false;
+}
+
 - (bool)allowContactSharing
 {
-    return false;
+    return true;
 }
 
 - (bool)allowVenueSharing
@@ -161,6 +165,11 @@
 }
 
 - (bool)allowCaptionedMedia
+{
+    return [self layer] >= 45;
+}
+
+- (bool)allowCaptionedDocuments
 {
     return [self layer] >= 45;
 }
@@ -201,7 +210,7 @@
 
 - (TGModernConversationEmptyListPlaceholderView *)_conversationEmptyListPlaceholder
 {
-    TGSecretConversationEmptyListView *placeholder = [[TGSecretConversationEmptyListView alloc] initWithIncoming:_encryptedConversationIsIncoming userName:_encryptedConversationUserName];
+    TGSecretConversationEmptyListView *placeholder = [[TGSecretConversationEmptyListView alloc] initWithIncoming:_encryptedConversationIsIncoming userName:_encryptedConversationUserName presentation:self.viewContext.presentation];
     
     return placeholder;
 }
@@ -211,6 +220,7 @@
     if (_selfDestructTimerView == nil)
     {
         _selfDestructTimerView = [[TGSecretModernConversationAccessoryTimerView alloc] init];
+        _selfDestructTimerView.presentation = self.controller.presentation;
         _selfDestructTimerView.delegate = self;
         _selfDestructTimerView.timerValue = _selfDestructTimer;
     }
@@ -236,8 +246,7 @@
     
     NSUInteger value = 7;
     
-    // MARK: - CloudVeil
-
+    // MARK: - CloudVeil    
     [timerValues filteringUsingStringPredicate:@"SELF == 0 OR SELF >= %i"
                                      arguments:[[MainController shared] minimumSecretLenght]];
     
@@ -503,6 +512,12 @@
             [ActionStageInstance() dispatchResource:[[NSString alloc] initWithFormat:@"/tg/conversation/(%" PRId64 ")/messageFlagChanges", _conversationId] resource:messageFlagChanges];
         }
     }];
+}
+
+- (void)controllerWantsToSendContact:(TGUser *)contactUser asReplyToMessageId:(int32_t)replyMessageId botContextResult:(TGBotContextResultAttachment *)botContextResult botReplyMarkup:(TGBotReplyMarkup *)botReplyMarkup
+{
+    contactUser.customProperties = nil;
+    [super controllerWantsToSendContact:contactUser asReplyToMessageId:replyMessageId botContextResult:botContextResult botReplyMarkup:botReplyMarkup];
 }
 
 #pragma mark -

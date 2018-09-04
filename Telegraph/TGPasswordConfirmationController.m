@@ -4,6 +4,8 @@
 
 #import "TGCommentCollectionItem.h"
 
+#import "TGPresentation.h"
+
 @interface TGPasswordConfirmationController ()
 {
     SMetaDisposable *_twoStepConfigDisposable;
@@ -29,7 +31,7 @@
         emailItem.topInset = 4.0f;
         TGCommentCollectionItem *abortItem = [[TGCommentCollectionItem alloc] initWithText:TGLocalized(@"TwoStepAuth.ConfirmationAbort")];
         abortItem.topInset = 0.0f;
-        abortItem.textColor = TGAccentColor();
+        abortItem.textColor = self.presentation.pallete.collectionMenuAccentColor;
         abortItem.action = ^
         {
             __strong TGPasswordConfirmationController *strongSelf = weakSelf;
@@ -66,7 +68,7 @@
         __strong TGPasswordConfirmationController *strongSelf = weakSelf;
         if (strongSelf != nil)
         {
-            if (config.currentSalt.length != 0)
+            if (config.hasPassword)
             {
                 if (strongSelf->_completion)
                     strongSelf->_completion();

@@ -6,6 +6,8 @@
 #import "TGWorkerTask.h"
 #import "TGMediaPreviewTask.h"
 
+#import "TGPhotoThumbnailDataSource.h"
+
 #import <LegacyComponents/TGMemoryImageCache.h>
 
 #import <LegacyComponents/TGRemoteImageView.h>
@@ -120,7 +122,23 @@ static ASQueue *taskManagementQueue()
                 
                 NSString *temporaryThumbnailImagePath = [videoDirectory stringByAppendingPathComponent:@"video-thumb.jpg"];
                 
-                [previewTask executeWithTargetFilePath:temporaryThumbnailImagePath uri:args[@"legacy-thumbnail-cache-url"] completion:^(bool success)
+                NSMutableDictionary *options = [[NSMutableDictionary alloc] init];
+                TGMediaOriginInfo *originInfo = nil;
+                if (args[@"origin_info"] != nil)
+                {
+                    originInfo = [TGMediaOriginInfo mediaOriginInfoWithStringRepresentation:args[@"origin_info"]];
+                }
+                else if (args[@"cid"] != nil)
+                {
+                    int64_t cid = [args[@"cid"] longLongValue];
+                    int32_t mid = [args[@"mid"] intValue];
+                    originInfo = [TGMediaOriginInfo mediaOriginInfoWithFileReference:nil fileReferences:nil cid:cid mid:mid];
+                }
+                
+                if (originInfo != nil)
+                    options[@"originInfo"] = originInfo;
+                
+                [previewTask executeWithTargetFilePath:temporaryThumbnailImagePath uri:args[@"legacy-thumbnail-cache-url"] options:options completion:^(bool success)
                 {
                     if (success)
                     {
@@ -228,51 +246,7 @@ static ASQueue *taskManagementQueue()
 
 + (TGDataResource *)resultForUnavailableImage:(bool)isFlat cornerRadius:(int)cornerRadius position:(int)position
 {
-    static TGDataResource *normalData = nil;
-    static NSMutableDictionary *flatDatas = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^
-    {
-        normalData = [[TGDataResource alloc] initWithImage:TGAverageColorAttachmentImage([UIColor whiteColor], true, 0) decoded:true];
-        flatDatas = [[NSMutableDictionary alloc] init];
-    });
-    
-    if (isFlat)
-    {
-        TGDataResource *flatData = flatDatas[@(cornerRadius)];
-        if (flatData == nil)
-        {
-            if (cornerRadius == 0)
-            {
-                flatData = [[TGDataResource alloc] initWithImage:TGAverageColorAttachmentImage([UIColor whiteColor], false, 0) decoded:true];
-            }
-            else
-            {
-                flatData = [[TGDataResource alloc] initWithImage:TGAverageColorAttachmentWithCornerRadiusImage([UIColor whiteColor], false, cornerRadius, 0) decoded:true];
-            }
-            
-            flatDatas[@(cornerRadius)] = flatData;
-        }
-        return flatData;
-    }
-    else
-    {
-        if (isFlat)
-        {
-            if (cornerRadius == 0)
-            {
-                return [[TGDataResource alloc] initWithImage:TGAverageColorAttachmentImage([UIColor whiteColor], false, position) decoded:true];
-            }
-            else
-            {
-                return [[TGDataResource alloc] initWithImage:TGAverageColorAttachmentWithCornerRadiusImage([UIColor whiteColor], false, cornerRadius, position) decoded:true];
-            }
-        }
-        else
-        {
-            return [[TGDataResource alloc] initWithImage:TGAverageColorAttachmentImage([UIColor whiteColor], true, position) decoded:true];
-        }
-    }
+    return [TGPhotoThumbnailDataSource resultForUnavailableImage:isFlat cornerRadius:cornerRadius position:position];
 }
 
 - (id)loadAttributeSyncForUri:(NSString *)uri attribute:(NSString *)attribute

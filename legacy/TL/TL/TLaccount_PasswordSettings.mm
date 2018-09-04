@@ -33,12 +33,12 @@
 
 @end
 
-@implementation TLaccount_PasswordSettings$account_passwordSettings : TLaccount_PasswordSettings
+@implementation TLaccount_PasswordSettings$account_passwordSettingsMeta : TLaccount_PasswordSettings
 
 
 - (int32_t)TLconstructorSignature
 {
-    return (int32_t)0xb7b72ab3;
+    return (int32_t)0x48ec1750;
 }
 
 - (int32_t)TLconstructorName
@@ -48,7 +48,7 @@
 
 - (id<TLObject>)TLbuildFromMetaObject:(std::shared_ptr<TLMetaObject>)metaObject
 {
-    TLaccount_PasswordSettings$account_passwordSettings *object = [[TLaccount_PasswordSettings$account_passwordSettings alloc] init];
+    TLaccount_PasswordSettings$account_passwordSettingsMeta *object = [[TLaccount_PasswordSettings$account_passwordSettingsMeta alloc] init];
     object.email = metaObject->getString((int32_t)0x5b2095e7);
     return object;
 }

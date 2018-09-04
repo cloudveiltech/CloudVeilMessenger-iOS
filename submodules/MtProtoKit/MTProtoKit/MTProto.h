@@ -1,10 +1,4 @@
-/*
- * This is the source code of Telegram for iOS v. 1.1
- * It is licensed under GNU GPL v. 2 or later.
- * You should have received a copy of the license in this archive (see LICENSE).
- *
- * Copyright Peter Iakovlev, 2013.
- */
+
 
 #import <Foundation/Foundation.h>
 
@@ -20,7 +14,8 @@
 @interface MTProtoConnectionState : NSObject
 
 @property (nonatomic, readonly) bool isConnected;
-@property (nonatomic, readonly) bool isUsingProxy;
+@property (nonatomic, readonly) NSString *proxyAddress;
+@property (nonatomic, readonly) bool proxyHasConnectionIssues;
 
 @end
 
@@ -47,7 +42,9 @@
 @property (nonatomic) bool useUnauthorizedMode;
 @property (nonatomic) bool useTempAuthKeys;
 @property (nonatomic) bool media;
+@property (nonatomic) bool enforceMedia;
 @property (nonatomic) bool cdn;
+@property (nonatomic) bool checkForProxyConnectionIssues;
 @property (nonatomic) id requiredAuthToken;
 @property (nonatomic) NSInteger authTokenMasterDatacenterId;
 
@@ -58,6 +55,7 @@
 - (void)pause;
 - (void)resume;
 - (void)stop;
+- (void)finalizeSession;
 
 - (void)addMessageService:(id<MTMessageService>)messageService;
 - (void)removeMessageService:(id<MTMessageService>)messageService;
@@ -68,7 +66,5 @@
 - (void)requestTimeResync;
 
 - (void)_messageResendRequestFailed:(int64_t)messageId;
-
-- (void)bindToPersistentKey:(MTDatacenterAuthKey *)persistentKey completion:(void (^)())completion;
 
 @end

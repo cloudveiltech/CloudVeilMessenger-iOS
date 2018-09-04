@@ -23,6 +23,7 @@
 + (TGMediaVideoConversionPreset)bestAvailablePresetForDimensions:(CGSize)dimensions;
 + (CGSize)_renderSizeWithCropSize:(CGSize)cropSize;
 
++ (TGMediaVideoConversionPreset)presetFromAdjustments:(TGMediaVideoEditAdjustments *)adjustments;
 + (CGSize)dimensionsFor:(CGSize)dimensions adjustments:(TGMediaVideoEditAdjustments *)adjustments preset:(TGMediaVideoConversionPreset)preset;
 
 @end
@@ -47,17 +48,5 @@
 + (CGSize)maximumSizeForPreset:(TGMediaVideoConversionPreset)preset;
 + (NSDictionary *)videoSettingsForPreset:(TGMediaVideoConversionPreset)preset dimensions:(CGSize)dimensions;
 + (NSDictionary *)audioSettingsForPreset:(TGMediaVideoConversionPreset)preset;
-
-
-//REMOVE
-
-+ (bool)showVMSize;
-+ (void)setShowVMSize:(bool)on;
-
-+ (NSInteger)vmSide;
-+ (NSInteger)vmBitrate;
-
-+ (void)setVMSide:(NSInteger)side;
-+ (void)setVMBitrate:(NSInteger)bitrate;
 
 @end

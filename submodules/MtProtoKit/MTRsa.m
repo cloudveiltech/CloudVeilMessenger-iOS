@@ -9,16 +9,6 @@
 
 @implementation MTRsa
 
-/*
- static NSString *base64_encode(NSString *str){
-	NSData* data = [str dataUsingEncoding:NSUTF8StringEncoding];
-	if(!data){
- return nil;
-	}
-	return base64_encode_data(data);
- }
- */
-
 NSString *MTStringByEncodingInBase64(NSData *data) {
     NSUInteger length = [data length];
     NSMutableData *mutableData = [[NSMutableData alloc] initWithLength:((length + 2) / 3) * 4];
@@ -387,7 +377,7 @@ static NSData *base64_decode(NSString *str) {
 
 
 + (NSString *)decryptString:(NSString *)str privateKey:(NSString *)privKey{
-    NSData *data = [[NSData alloc] initWithBase64EncodedString:str options:NSDataBase64DecodingIgnoreUnknownCharacters];
+    NSData *data = base64_decode(str);
     data = [MTRsa decryptData:data privateKey:privKey];
     NSString *ret = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     return ret;
@@ -426,7 +416,7 @@ static NSData *base64_decode(NSString *str) {
 }
 
 + (NSString *)decryptString:(NSString *)str publicKey:(NSString *)pubKey{
-    NSData *data = [[NSData alloc] initWithBase64EncodedString:str options:NSDataBase64DecodingIgnoreUnknownCharacters];
+    NSData *data = base64_decode(str);
     data = [MTRsa decryptData:data publicKey:pubKey];
     NSString *ret = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     return ret;

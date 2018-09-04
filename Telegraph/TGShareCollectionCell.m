@@ -8,6 +8,8 @@
 
 #import "TGTelegraph.h"
 
+#import "TGPresentation.h"
+
 NSString *const TGShareCollectionCellIdentifier = @"TGShareCollectionCell";
 
 @interface TGShareCollectionCell ()
@@ -81,25 +83,20 @@ NSString *const TGShareCollectionCellIdentifier = @"TGShareCollectionCell";
     _titleLabel.numberOfLines = showOnlyFirstName ? 1 : 2;
 }
 
+- (void)setPresentation:(TGPresentation *)presentation
+{
+    if (presentation == nil || _presentation == presentation)
+        return;
+    
+    _presentation = presentation;
+    self.backgroundColor = presentation.pallete.menuBackgroundColor;
+    _selectedCircleView.image = presentation.images.shareSelectionImage;
+}
+
 - (void)setPeer:(id)peer
 {
     CGSize size = _avatarView.bounds.size;
-    static UIImage *placeholder = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^
-    {
-        UIGraphicsBeginImageContextWithOptions(size, false, 0.0f);
-        CGContextRef context = UIGraphicsGetCurrentContext();
-        
-        CGContextSetFillColorWithColor(context, [UIColor whiteColor].CGColor);
-        CGContextFillEllipseInRect(context, CGRectMake(0.0f, 0.0f, size.width, size.height));
-        CGContextSetStrokeColorWithColor(context, UIColorRGB(0xd9d9d9).CGColor);
-        CGContextSetLineWidth(context, 1.0f);
-        CGContextStrokeEllipseInRect(context, CGRectMake(0.5f, 0.5f, size.width - 1.0f, size.height - 1.0f));
-        
-        placeholder = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
-    });
+    UIImage *placeholder = [self.presentation.images avatarPlaceholderWithDiameter:60.0f];
     
     int64_t peerId = 0;
     _isSecret = false;
@@ -124,7 +121,7 @@ NSString *const TGShareCollectionCellIdentifier = @"TGShareCollectionCell";
             TGUser *user = conversation.additionalProperties[@"user"];
             
             if (user.photoUrlSmall.length != 0)
-                [_avatarView loadImage:user.photoUrlSmall filter:@"circle:60x60" placeholder:placeholder];
+                [_avatarView loadImage:user.photoFullUrlSmall filter:@"circle:60x60" placeholder:placeholder];
             else
                 [_avatarView loadUserPlaceholderWithSize:size uid:user.uid firstName:user.firstName lastName:user.lastName placeholder:placeholder];
             
@@ -135,8 +132,8 @@ NSString *const TGShareCollectionCellIdentifier = @"TGShareCollectionCell";
         }
         else
         {
-            if (conversation.chatPhotoSmall.length != 0)
-                [_avatarView loadImage:conversation.chatPhotoSmall filter:@"circle:60x60" placeholder:placeholder];
+            if (conversation.chatPhotoFullSmall.length != 0)
+                [_avatarView loadImage:conversation.chatPhotoFullSmall filter:@"circle:60x60" placeholder:placeholder];
             else
                 [_avatarView loadGroupPlaceholderWithSize:size conversationId:conversation.conversationId title:conversation.chatTitle placeholder:placeholder];
             title = conversation.chatTitle;
@@ -148,7 +145,7 @@ NSString *const TGShareCollectionCellIdentifier = @"TGShareCollectionCell";
         
         peerId = user.uid;
         if (user.photoUrlSmall.length != 0)
-            [_avatarView loadImage:user.photoUrlSmall filter:@"circle:60x60" placeholder:placeholder];
+            [_avatarView loadImage:user.photoFullUrlSmall filter:@"circle:60x60" placeholder:placeholder];
         else
             [_avatarView loadUserPlaceholderWithSize:size uid:user.uid firstName:user.firstName lastName:user.lastName placeholder:placeholder];
         
@@ -170,7 +167,7 @@ NSString *const TGShareCollectionCellIdentifier = @"TGShareCollectionCell";
         [_titleLabel sizeToFit];
     
     if (!_isChecked)
-        _titleLabel.textColor = _isSecret ? UIColorRGB(0x00a629) : [UIColor blackColor];
+        _titleLabel.textColor = _isSecret ? self.presentation.pallete.dialogEncryptedColor : self.presentation.pallete.dialogTitleColor;
     
     _singleWord = singleWord;
     _peerId = peerId;
@@ -198,7 +195,7 @@ NSString *const TGShareCollectionCellIdentifier = @"TGShareCollectionCell";
     
     _isChecked = checked;
     
-    _titleLabel.textColor = checked ? TGAccentColor() : (_isSecret ? UIColorRGB(0x00a629) : [UIColor blackColor]);
+    _titleLabel.textColor = checked ? self.presentation.pallete.accentColor : (_isSecret ? self.presentation.pallete.dialogEncryptedColor : self.presentation.pallete.dialogTitleColor);
     
     if (animated && iosMajorVersion() >= 8)
     {

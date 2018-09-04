@@ -47,6 +47,8 @@
     bool _editing;
     bool _showCameraIcon;
     
+    bool _multilineName;
+    
     UIView *_editingFirstNameSeparator;
     UIView *_editingLastNameSeparator;
     
@@ -71,7 +73,7 @@
 {
     self = [super initWithFrame:frame];
     if (self)
-    {
+    {   
         _avatarView = [[TGLetteredAvatarView alloc] initWithFrame:CGRectMake(15, 15 + TGScreenPixel, 66, 66)];
         [_avatarView setSingleFontSize:28.0f doubleFontSize:28.0f useBoldFont:false];
         _avatarView.fadeTransition = true;
@@ -173,10 +175,20 @@
     _lastNameField.textColor = presentation.pallete.collectionMenuTextColor;
     _lastNameField.placeholderColor = presentation.pallete.collectionMenuPlaceholderColor;
     
+    _firstNameField.keyboardAppearance = presentation.pallete.isDark ? UIKeyboardAppearanceAlert : UIKeyboardAppearanceDefault;
+    _lastNameField.keyboardAppearance = presentation.pallete.isDark ? UIKeyboardAppearanceAlert : UIKeyboardAppearanceDefault;
+    
     _editingFirstNameSeparator.backgroundColor = presentation.pallete.collectionMenuSeparatorColor;
     _editingLastNameSeparator.backgroundColor = presentation.pallete.collectionMenuSeparatorColor;
     
     [_callButton setImage:presentation.images.profileCallIcon forState:UIControlStateNormal];
+}
+
+- (void)setMultilineName:(bool)multilineName
+{
+    _multilineName = multilineName;
+    _nameLabel.numberOfLines = multilineName ? 2 : 1;
+    [self setNeedsLayout];
 }
 
 - (void)setAvatarHidden:(bool)hidden animated:(bool)animated
@@ -185,10 +197,10 @@
     {
         _avatarView.alpha = hidden ? 0.0f : 1.0f;
         [UIView animateWithDuration:0.2 animations:^
-         {
-             _avatarOverlay.alpha = hidden ? 0.0f : 1.0f;;
-             _avatarIconView.alpha = hidden ? 0.0f : 1.0f;;
-         }];
+        {
+            _avatarOverlay.alpha = hidden ? 0.0f : 1.0f;;
+            _avatarIconView.alpha = hidden ? 0.0f : 1.0f;;
+        }];
     }
     else
     {
@@ -236,12 +248,31 @@
     _lastName = lastName;
     
     NSString *nameText = nil;
-    if (firstName != nil && lastName != nil)
-        nameText = [[NSString alloc] initWithFormat:@"%@ %@", firstName, lastName];
-    else if (firstName != nil)
-        nameText = firstName;
-    else if (lastName != nil)
-        nameText = lastName;
+    NSString *displayFirstName = firstName;
+    NSString *displayLastName = lastName;
+    if (TGIsKorean())
+    {
+        displayFirstName = lastName;
+        displayLastName = firstName;
+    }
+    
+    NSString *prefix = self.customProperties[@"prefix"];
+    NSString *middleName = self.customProperties[@"middleName"];
+    NSString *suffix = self.customProperties[@"suffix"];
+    
+    NSMutableArray *nameComponents = [[NSMutableArray alloc] init];
+    if (prefix != nil)
+        [nameComponents addObject:prefix];
+    if (displayFirstName != nil)
+        [nameComponents addObject:displayFirstName];
+    if (middleName != nil)
+        [nameComponents addObject:middleName];
+    if (displayLastName != nil)
+        [nameComponents addObject:displayLastName];
+    if (suffix != nil)
+        [nameComponents addObject:suffix];
+    
+    nameText = [nameComponents componentsJoinedByString:@" "];
     
     if (!TGStringCompare(nameText, _nameLabel.text))
     {
@@ -313,16 +344,16 @@
             if (animated)
             {
                 [UIView animateWithDuration:0.3 animations:^
-                 {
-                     _nameLabel.alpha = 0.0f;
-                     _statusLabel.alpha = 0.0f;
-                     _callButton.alpha = 0.0f;
-                     
-                     _firstNameField.alpha = 1.0f;
-                     _lastNameField.alpha = 1.0f;
-                     _editingFirstNameSeparator.alpha = 1.0f;
-                     _editingLastNameSeparator.alpha = 1.0f;
-                 }];
+                {
+                    _nameLabel.alpha = 0.0f;
+                    _statusLabel.alpha = 0.0f;
+                    _callButton.alpha = 0.0f;
+                    
+                    _firstNameField.alpha = 1.0f;
+                    _lastNameField.alpha = 1.0f;
+                    _editingFirstNameSeparator.alpha = 1.0f;
+                    _editingLastNameSeparator.alpha = 1.0f;
+                }];
             }
             else
             {
@@ -345,25 +376,25 @@
             if (animated)
             {
                 [UIView animateWithDuration:0.3 animations:^
-                 {
-                     _nameLabel.alpha = 1.0f;
-                     _statusLabel.alpha = 1.0f;
-                     _callButton.alpha = 1.0f;
-                     
-                     _firstNameField.alpha = 0.0f;
-                     _lastNameField.alpha = 0.0f;
-                     _editingFirstNameSeparator.alpha = 0.0f;
-                     _editingLastNameSeparator.alpha = 0.0f;
-                 } completion:^(BOOL finished)
-                 {
-                     if (finished)
-                     {
-                         _firstNameField.hidden = true;
-                         _lastNameField.hidden = true;
-                         _editingFirstNameSeparator.hidden = true;
-                         _editingLastNameSeparator.hidden = true;
-                     }
-                 }];
+                {
+                    _nameLabel.alpha = 1.0f;
+                    _statusLabel.alpha = 1.0f;
+                    _callButton.alpha = 1.0f;
+                    
+                    _firstNameField.alpha = 0.0f;
+                    _lastNameField.alpha = 0.0f;
+                    _editingFirstNameSeparator.alpha = 0.0f;
+                    _editingLastNameSeparator.alpha = 0.0f;
+                } completion:^(BOOL finished)
+                {
+                    if (finished)
+                    {
+                        _firstNameField.hidden = true;
+                        _lastNameField.hidden = true;
+                        _editingFirstNameSeparator.hidden = true;
+                        _editingLastNameSeparator.hidden = true;
+                    }
+                }];
             }
             else
             {
@@ -402,45 +433,25 @@
 
 - (void)setAvatarUri:(NSString *)avatarUri animated:(bool)animated synchronous:(bool)synchronous
 {
+    UIImage *placeholder = [self.presentation.images avatarPlaceholderWithDiameter:64.0f];
+
+    UIImage *currentPlaceholder = [_avatarView currentImage];
+    if (currentPlaceholder == nil)
+        currentPlaceholder = placeholder;
+    
     // MARK: - CloudVeil
-    if ([[MainController shared] disableProfilePhoto] == false) {
-        static UIImage *placeholder = nil;
-        static dispatch_once_t onceToken;
-        dispatch_once(&onceToken, ^
-                      {
-                          //!placeholder
-                          UIGraphicsBeginImageContextWithOptions(CGSizeMake(64.0f, 64.0f), false, 0.0f);
-                          CGContextRef context = UIGraphicsGetCurrentContext();
-                          
-                          CGContextSetFillColorWithColor(context, [UIColor whiteColor].CGColor);
-                          CGContextFillEllipseInRect(context, CGRectMake(0.0f, 0.0f, 64.0f, 64.0f));
-                          CGContextSetStrokeColorWithColor(context, UIColorRGB(0xd9d9d9).CGColor);
-                          CGContextSetLineWidth(context, 1.0f);
-                          CGContextStrokeEllipseInRect(context, CGRectMake(0.5f, 0.5f, 63.0f, 63.0f));
-                          
-                          placeholder = UIGraphicsGetImageFromCurrentImageContext();
-                          UIGraphicsEndImageContext();
-                      });
-        
-        UIImage *currentPlaceholder = [_avatarView currentImage];
-        if (currentPlaceholder == nil)
-            currentPlaceholder = placeholder;
-        
-        if (avatarUri.length == 0)
-        {
-            int uid = _avatarPlaceholderDisabled ? 0 : _uidForPlaceholderCalculation;
-            NSString *firstName = _avatarPlaceholderDisabled ? nil : _firstName;
-            NSString *lastName = _avatarPlaceholderDisabled ? nil : _lastName;
-            [_avatarView loadUserPlaceholderWithSize:CGSizeMake(64.0f, 64.0f) uid:uid firstName:firstName lastName:lastName placeholder:placeholder];
-        }
-        else if (!TGStringCompare([_avatarView currentUrl], avatarUri))
-        {
-            _avatarView.fadeTransitionDuration = animated ? 0.3 : 0.1;
-            _avatarView.contentHints = synchronous ? TGRemoteImageContentHintLoadFromDiskSynchronously : 0;
-            [_avatarView loadImage:avatarUri filter:@"circle:64x64" placeholder:currentPlaceholder forceFade:animated];
-        }
-    } else {
-        [_avatarView loadUserPlaceholderWithSize:CGSizeMake(64.0f, 64.0f) uid:_uidForPlaceholderCalculation firstName:_firstName lastName:_lastName placeholder:nil];
+    if ([[MainController shared] disableProfilePhoto] == true || avatarUri.length == 0)
+    {
+        int uid = _avatarPlaceholderDisabled ? 0 : _uidForPlaceholderCalculation;
+        NSString *firstName = _avatarPlaceholderDisabled ? nil : _firstName;
+        NSString *lastName = _avatarPlaceholderDisabled ? nil : _lastName;
+        [_avatarView loadUserPlaceholderWithSize:CGSizeMake(64.0f, 64.0f) uid:uid firstName:firstName lastName:lastName placeholder:placeholder];
+    }
+    else if (!TGStringCompare([_avatarView currentUrl], avatarUri))
+    {
+        _avatarView.fadeTransitionDuration = animated ? 0.3 : 0.1;
+        _avatarView.contentHints = synchronous ? TGRemoteImageContentHintLoadFromDiskSynchronously : 0;
+        [_avatarView loadImage:avatarUri filter:@"circle:64x64" placeholder:currentPlaceholder forceFade:animated];
     }
 }
 
@@ -458,16 +469,16 @@
         static UIImage *overlayImage = nil;
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^
-                      {
-                          UIGraphicsBeginImageContextWithOptions(CGSizeMake(64.0f, 64.0f), false, 0.0f);
-                          CGContextRef context = UIGraphicsGetCurrentContext();
-                          
-                          CGContextSetFillColorWithColor(context, UIColorRGBA(0x000000, 0.5f).CGColor);
-                          CGContextFillEllipseInRect(context, CGRectMake(0.0f, 0.0f, 64.0f, 64.0f));
-                          
-                          overlayImage = UIGraphicsGetImageFromCurrentImageContext();
-                          UIGraphicsEndImageContext();
-                      });
+        {
+            UIGraphicsBeginImageContextWithOptions(CGSizeMake(64.0f, 64.0f), false, 0.0f);
+            CGContextRef context = UIGraphicsGetCurrentContext();
+            
+            CGContextSetFillColorWithColor(context, UIColorRGBA(0x000000, 0.5f).CGColor);
+            CGContextFillEllipseInRect(context, CGRectMake(0.0f, 0.0f, 64.0f, 64.0f));
+            
+            overlayImage = UIGraphicsGetImageFromCurrentImageContext();
+            UIGraphicsEndImageContext();
+        });
         
         _avatarOverlay = [[UIImageView alloc] initWithImage:overlayImage];
         _avatarOverlay.frame = _avatarView.frame;
@@ -513,11 +524,11 @@
             avatarOverlay.alpha = 0.0f;
             _activityIndicator.alpha = 0.0f;
             [UIView animateWithDuration:0.3 animations:^
-             {
-                 _avatarIconView.alpha = 0.0f;
-                 avatarOverlay.alpha = 1.0f;
-                 _activityIndicator.alpha = 1.0f;
-             }];
+            {
+                _avatarIconView.alpha = 0.0f;
+                avatarOverlay.alpha = 1.0f;
+                _activityIndicator.alpha = 1.0f;
+            }];
         }
         else
         {
@@ -531,16 +542,16 @@
         if (animated)
         {
             [UIView animateWithDuration:0.3 animations:^
-             {
-                 if (!_showCameraIcon)
-                     _avatarOverlay.alpha = 0.0f;
-                 else
-                     [self avatarIconView].alpha = 1.0f;
-                 _activityIndicator.alpha = 0.0f;
-             } completion:^(BOOL finished) {
-                 if (finished)
-                     [_activityIndicator stopAnimating];
-             }];
+            {
+                if (!_showCameraIcon)
+                    _avatarOverlay.alpha = 0.0f;
+                else
+                    [self avatarIconView].alpha = 1.0f;
+                _activityIndicator.alpha = 0.0f;
+            } completion:^(BOOL finished) {
+                if (finished)
+                    [_activityIndicator stopAnimating];
+            }];
         }
         else
         {
@@ -601,14 +612,26 @@
         maxStatusWidth -= 40.0f;
     }
     
-    CGSize nameLabelSize = [_nameLabel sizeThatFits:CGSizeMake(maxNameWidth, 1000)];
-    nameLabelSize.width = MIN(nameLabelSize.width, maxNameWidth);
-    CGRect firstNameLabelFrame = CGRectMake(92 + _nameOffset.width + self.safeAreaInset.left, 26 + TGRetinaPixel + _nameOffset.height, nameLabelSize.width, nameLabelSize.height);
-    _nameLabel.frame = firstNameLabelFrame;
+    CGSize nameSize = [_nameLabel sizeThatFits:CGSizeMake(maxNameWidth, CGFLOAT_MAX)];
+    nameSize.width = MIN(nameSize.width, maxNameWidth);
+    if (nameSize.height < FLT_EPSILON)
+    {
+        NSString *currentText = _nameLabel.text;
+        _nameLabel.text = @" ";
+        nameSize = [_nameLabel sizeThatFits:CGSizeMake(maxNameWidth, CGFLOAT_MAX)];
+        _nameLabel.text = currentText;
+    }
+    
+    CGFloat nameY = (_statusLabel.text.length > 0 || _phoneLabel != nil || _usernameLabel != nil) ? 81.0f : 98.0f;
+    
+    nameSize.width = MIN(nameSize.width, maxNameWidth);
+    CGRect nameLabelFrame = CGRectMake(92 + _nameOffset.width + self.safeAreaInset.left, floor((nameY - nameSize.height) / 2.0f) + _nameOffset.height, nameSize.width, nameSize.height);
+    _nameLabel.frame = nameLabelFrame;
+    
     
     CGSize statusLabelSize = [_statusLabel sizeThatFits:CGSizeMake(maxStatusWidth, 1000)];
     statusLabelSize.width = MIN(statusLabelSize.width, maxStatusWidth);
-    CGRect statusLabelFrame = CGRectMake(92 + _nameOffset.width + self.safeAreaInset.left, 53 + _nameOffset.height, statusLabelSize.width, statusLabelSize.height);
+    CGRect statusLabelFrame = CGRectMake(92 + _nameOffset.width + self.safeAreaInset.left, CGRectGetMaxY(nameLabelFrame) + 2.0f, statusLabelSize.width, statusLabelSize.height);
     _statusLabel.frame = statusLabelFrame;
     
     if (_phoneLabel != nil)
@@ -634,10 +657,10 @@
     
     CGFloat fieldLeftPadding = 100.0f + self.safeAreaInset.left;
     
-    CGRect firstNameFieldFrame = CGRectMake(fieldLeftPadding + 13.0f, 12 + TGRetinaPixel, bounds.size.width - fieldLeftPadding - 14.0f - 13.0f, 30);
+    CGRect firstNameFieldFrame = CGRectMake(fieldLeftPadding + 13.0f, 12 + TGScreenPixel, bounds.size.width - fieldLeftPadding - 14.0f - 13.0f, 30);
     _firstNameField.frame = firstNameFieldFrame;
     
-    CGRect lastNameFieldFrame = CGRectMake(fieldLeftPadding + 13.0f, 56 + TGRetinaPixel, bounds.size.width - fieldLeftPadding - 14.0f - 13.0f, 30);
+    CGRect lastNameFieldFrame = CGRectMake(fieldLeftPadding + 13.0f, 56 + TGScreenPixel, bounds.size.width - fieldLeftPadding - 14.0f - 13.0f, 30);
     _lastNameField.frame = lastNameFieldFrame;
     
     CGFloat separatorHeight = TGScreenPixel;
@@ -645,7 +668,7 @@
     _editingLastNameSeparator.frame = CGRectMake(fieldLeftPadding, 88.0f, bounds.size.width - fieldLeftPadding, separatorHeight);
     
     if (_verifiedIcon.superview != nil) {
-        _verifiedIcon.frame = CGRectOffset(_verifiedIcon.bounds, firstNameLabelFrame.origin.x + nameLabelSize.width + 4.0f, firstNameLabelFrame.origin.y + 5.0f + TGRetinaPixel);
+        _verifiedIcon.frame = CGRectOffset(_verifiedIcon.bounds, nameLabelFrame.origin.x + nameLabelFrame.size.width + 4.0f, nameLabelFrame.origin.y + 4.0f + TGScreenPixel);
     }
     
     _avatarOverlay.frame = _avatarView.frame;
@@ -668,7 +691,7 @@
     {
         if (textField.text.length > 64)
             textField.text = [textField.text substringToIndex:64];
-        
+     
         if (_editing)
         {
             NSString *nameText = nil;
@@ -745,6 +768,16 @@
         _usernameLabel.text = username;
         [self setNeedsLayout];
     }
+}
+
+- (void)copyPhoneNumber:(id)__unused sender
+{
+    [[UIPasteboard generalPasteboard] setString:_phoneLabel.text];
+}
+
+- (void)copyUsername:(id)__unused sender
+{
+    [[UIPasteboard generalPasteboard] setString:_usernameLabel.text];
 }
 
 @end

@@ -58,7 +58,7 @@
             UIGraphicsEndImageContext();
         });
         
-        NSString *avatarUrl = isUser ? ((TGUser *)peer).photoUrlSmall : ((TGConversation *)peer).chatPhotoSmall;
+        NSString *avatarUrl = isUser ? ((TGUser *)peer).photoFullUrlSmall : ((TGConversation *)peer).chatPhotoFullSmall;
         if (avatarUrl.length != 0)
         {
             _avatarView.fadeTransitionDuration = 0.3;
@@ -104,6 +104,14 @@
 - (void)dealloc
 {
     [_disposable dispose];
+}
+
+- (void)setPallete:(TGMenuSheetPallete *)pallete
+{
+    [super setPallete:pallete];
+    
+    _label.textColor = pallete.textColor;
+    [_elapsedView setColor:pallete.accentColor];
 }
 
 - (void)layoutSubviews

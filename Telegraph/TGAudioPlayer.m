@@ -93,9 +93,18 @@
     }
 }
 
+
+- (void)setRate:(CGFloat)__unused rate {
+    
+}
+
 - (void)play
 {
     [self playFromPosition:-1.0];
+}
+
+- (void)playFromPosition:(NSTimeInterval)__unused position
+{
 }
 
 - (void)pause:(void (^)())completion

@@ -24,7 +24,7 @@ static NSArray *defaultPublicKeys() {
     static NSArray *serverPublicKeys = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^
-    {
+                  {
         serverPublicKeys = [[NSArray alloc] initWithObjects:
 [[NSDictionary alloc] initWithObjectsAndKeys:@"-----BEGIN RSA PUBLIC KEY-----\n"
 "MIIBCgKCAQEAxq7aeLAqJR20tkQQMfRn+ocfrtMlJsQ2Uksfs7Xcoo77jAid0bRt\n"
@@ -90,6 +90,14 @@ static NSArray *defaultPublicKeys() {
 "Pji9NP3tJUFQjcECqcm0yV7/2d0t/pbCm+ZH1sadZspQCEPPrtbkQBlvHb4OLiIW\n"
 "PGHKSMeRFvp3IWcmdJqXahxLCUS1Eh6MAQIDAQAB\n"
 "-----END RSA PUBLIC KEY-----", @"key", [[NSNumber alloc] initWithUnsignedLongLong:0x5a181b2235057d98UL], @"fingerprint", nil],
+[[NSDictionary alloc] initWithObjectsAndKeys:@"-----BEGIN RSA PUBLIC KEY-----\n"
+"MIIBCgKCAQEAr4v4wxMDXIaMOh8bayF/NyoYdpcysn5EbjTIOZC0RkgzsRj3SGlu\n"
+"52QSz+ysO41dQAjpFLgxPVJoOlxXokaOq827IfW0bGCm0doT5hxtedu9UCQKbE8j\n"
+"lDOk+kWMXHPZFJKWRgKgTu9hcB3y3Vk+JFfLpq3d5ZB48B4bcwrRQnzkx5GhWOFX\n"
+"x73ZgjO93eoQ2b/lDyXxK4B4IS+hZhjzezPZTI5upTRbs5ljlApsddsHrKk6jJNj\n"
+"8Ygs/ps8e6ct82jLXbnndC9s8HjEvDvBPH9IPjv5JUlmHMBFZ5vFQIfbpo0u0+1P\n"
+"n6bkEi5o7/ifoyVv2pAZTRwppTz0EuXD8QIDAQAB\n"
+"-----END RSA PUBLIC KEY-----", @"key", [[NSNumber alloc] initWithUnsignedLongLong:0x9692106da14b9f02UL], @"fingerprint", nil],
 nil];
     });
     return serverPublicKeys;
@@ -97,11 +105,12 @@ nil];
 
 static NSDictionary *selectPublicKey(NSArray *fingerprints, NSArray<NSDictionary *> *publicKeys)
 {
-    for (NSDictionary *keyDesc in publicKeys)
+    for (NSNumber *nFingerprint in fingerprints)
     {
-        int64_t keyFingerprint = [[keyDesc objectForKey:@"fingerprint"] longLongValue];
-        for (NSNumber *nFingerprint in fingerprints)
+        for (NSDictionary *keyDesc in publicKeys)
         {
+            int64_t keyFingerprint = [[keyDesc objectForKey:@"fingerprint"] longLongValue];
+            
             if ([nFingerprint longLongValue] == keyFingerprint)
                 return keyDesc;
         }
@@ -231,7 +240,7 @@ typedef enum {
                 [reqPqBuffer appendInt32:(int32_t)0x60469778];
                 [reqPqBuffer appendBytes:_nonce.bytes length:_nonce.length];
                 
-                MTOutgoingMessage *message = [[MTOutgoingMessage alloc] initWithData:reqPqBuffer.data metadata:@"reqPq" messageId:_currentStageMessageId messageSeqNo:_currentStageMessageSeqNo];
+                MTOutgoingMessage *message = [[MTOutgoingMessage alloc] initWithData:reqPqBuffer.data metadata:[NSString stringWithFormat:@"reqPq nonce:%@", _nonce] messageId:_currentStageMessageId messageSeqNo:_currentStageMessageSeqNo];
                 return [[MTMessageTransaction alloc] initWithMessagePayload:@[message] prepared:nil failed:nil completion:^(NSDictionary *messageInternalIdToTransactionId, NSDictionary *messageInternalIdToPreparedMessage, __unused NSDictionary *messageInternalIdToQuickAckId)
                 {
                     if (_stage == MTDatacenterAuthStagePQ && messageInternalIdToTransactionId[message.internalId] != nil && messageInternalIdToPreparedMessage[message.internalId] != nil)
@@ -254,7 +263,7 @@ typedef enum {
                 [reqDhBuffer appendInt64:_dhPublicKeyFingerprint];
                 [reqDhBuffer appendTLBytes:_dhEncryptedData];
                 
-                MTOutgoingMessage *message = [[MTOutgoingMessage alloc] initWithData:reqDhBuffer.data metadata:@"reqDh" messageId:_currentStageMessageId messageSeqNo:_currentStageMessageSeqNo];
+                MTOutgoingMessage *message = [[MTOutgoingMessage alloc] initWithData:reqDhBuffer.data metadata:[NSString stringWithFormat:@"reqDh nonce:%@ serverNonce:%@ p:%@ q:%@ fingerprint:%llx", _nonce, _serverNonce, _dhP, _dhQ, _dhPublicKeyFingerprint] messageId:_currentStageMessageId messageSeqNo:_currentStageMessageSeqNo];
                 return [[MTMessageTransaction alloc] initWithMessagePayload:@[message] prepared:nil failed:nil completion:^(NSDictionary *messageInternalIdToTransactionId, NSDictionary *messageInternalIdToPreparedMessage, __unused NSDictionary *messageInternalIdToQuickAckId)
                 {
                     if (_stage == MTDatacenterAuthStageReqDH && messageInternalIdToTransactionId[message.internalId] != nil && messageInternalIdToPreparedMessage[message.internalId] != nil)
@@ -360,6 +369,11 @@ typedef enum {
                 uint8_t nonceBytes[32];
                 __unused int result = SecRandomCopyBytes(kSecRandomDefault, 32, nonceBytes);
                 _newNonce = [[NSData alloc] initWithBytes:nonceBytes length:32];
+                
+                /*
+                 p_q_inner_data_dc#a9f55f95 pq:string p:string q:string nonce:int128 server_nonce:int128 new_nonce:int256 dc:int = P_Q_inner_data;
+                 p_q_inner_data_temp_dc#56fddf88 pq:string p:string q:string nonce:int128 server_nonce:int128 new_nonce:int256 dc:int expires_in:int = P_Q_inner_data;
+                 */
                 
                 if (_tempAuth) {
                     MTBuffer *innerDataBuffer = [[MTBuffer alloc] init];
@@ -598,7 +612,9 @@ typedef enum {
                 NSData *authKey = MTExp(innerDataGA, b, innerDataDhPrime);
                 
                 NSData *authKeyHash = MTSha1(authKey);
-                int64_t authKeyId = *((int64_t *)(((uint8_t *)authKeyHash.bytes) + authKeyHash.length - 8));
+                
+                int64_t authKeyId = 0;
+                memcpy(&authKeyId, (((uint8_t *)authKeyHash.bytes) + authKeyHash.length - 8), 8);
                 NSMutableData *serverSaltData = [[NSMutableData alloc] init];
                 for (int i = 0; i < 8; i++)
                 {
@@ -608,9 +624,8 @@ typedef enum {
                     [serverSaltData appendBytes:&x length:1];
                 }
                 
-                _authKey = [[MTDatacenterAuthKey alloc] initWithAuthKey:authKey authKeyId:authKeyId];
+                _authKey = [[MTDatacenterAuthKey alloc] initWithAuthKey:authKey authKeyId:authKeyId notBound:_tempAuth];
                 
-                //client_DH_inner_data#6643b654 nonce:int128 server_nonce:int128 retry_id:long g_b:bytes = Client_DH_Inner_Data;
                 MTBuffer *clientDhInnerDataBuffer = [[MTBuffer alloc] init];
                 [clientDhInnerDataBuffer appendInt32:(int32_t)0x6643b654];
                 [clientDhInnerDataBuffer appendBytes:_nonce.bytes length:_nonce.length];

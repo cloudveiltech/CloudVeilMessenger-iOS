@@ -1,0 +1,6 @@
+framework module CloudVeilSecurityManager {
+  umbrella header "CloudVeilSecurityManager-umbrella.h"
+
+  export *
+  module * { export * }
+}

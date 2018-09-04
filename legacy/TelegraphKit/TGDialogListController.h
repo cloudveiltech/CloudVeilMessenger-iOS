@@ -1,12 +1,13 @@
 #import <UIKit/UIKit.h>
+#import <SSignalKit/SSignalKit.h>
 
 #import <LegacyComponents/LegacyComponents.h>
 
 #import <LegacyComponents/ActionStage.h>
+#import "TGTelegraphDialogListCompanion.h"
 
 extern NSString *authorNameYou;
 
-@class TGDialogListCompanion;
 @class TGModernConversationTitlePanel;
 
 @class TGPresentation;
@@ -24,6 +25,7 @@ extern NSString *authorNameYou;
 @property (nonatomic) bool doNotHideSearchAutomatically;
 
 @property (nonatomic) bool isDisplayingSearch;
+@property (nonatomic, strong) NSString *customSearchPlaceholder;
 
 @property (nonatomic, strong) TGPresentation *presentation;
 
@@ -46,8 +48,9 @@ extern NSString *authorNameYou;
 - (void)selectConversationWithId:(int64_t)conversationId;
 
 - (void)searchResultsReloaded:(NSDictionary *)items searchString:(NSString *)searchString;
+- (void)maybeDismissSearchResults;
 
-- (void)titleStateUpdated:(NSString *)text isLoading:(bool)isLoading isProxy:(bool)isProxy;
+- (void)titleStateUpdated:(NSString *)text state:(TGDialogListState)state;
 
 - (void)userTypingInConversationUpdated:(int64_t)conversationId typingString:(NSString *)typingString;
 
@@ -58,5 +61,13 @@ extern NSString *authorNameYou;
 - (void)setCurrentTitlePanel:(TGModernConversationTitlePanel *)titlePanel;
 
 - (void)setDimmed:(bool)dimmed animated:(bool)animated keyboardSnapshot:(UIView *)keyboardSnapshot restoringFocus:(bool)restoringFocus;
+
+- (void)scrollToConversationWithId:(int64_t)conversationId;
+- (void)scrollToTop;
+
+- (SSignal *)atTopSignal;
+- (SSignal *)visibleUnreadDialogsCountSignal;
+
+- (int64_t)currentVisibleUnreadConversation;
 
 @end

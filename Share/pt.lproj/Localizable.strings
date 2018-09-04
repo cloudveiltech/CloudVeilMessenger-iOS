@@ -17,8 +17,8 @@
 "Share.Select" = "Selecionar";
 "Share.Done" = "Feito";
 
-"Share.AuthTitle" = "Entre no CloudVeil Messenger";
-"Share.AuthText" = "Abra o CloudVeil Messenger e conecte-se para compartilhar";
+"Share.AuthTitle" = "Entre no Telegram";
+"Share.AuthText" = "Abra o Telegram e conecte-se para compartilhar";
 
 "Share.ChoosePhoneNumber" = "Escolha um número de telefone para compartilhar";
 
@@ -38,3 +38,7 @@
 "Share.PasscodeTryAgainIn1Minute" = "Tente novamente em 1 minuto";
 
 "Share.SavedMessages" = "Mensagens Salvas";
+
+"Share.ContactInfo" = "Contato";
+"Share.ContactJob" = "trabalho";
+"Share.ContactBirthday" = "aniversário";

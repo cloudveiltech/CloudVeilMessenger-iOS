@@ -26,6 +26,7 @@
 #import <libkern/OSAtomic.h>
 
 #import "MTDiscoverConnectionSignals.h"
+#import "MTHttpTransport.h"
 
 #if defined(MtProtoKitDynamicFramework)
 #   import <MTProtoKitDynamic/MTDisposable.h>
@@ -49,6 +50,14 @@
 - (MTSignal *)fetchContextDatacenterPublicKeys:(MTContext *)context datacenterId:(NSInteger)datacenterId {
     if (_fetchContextDatacenterPublicKeys) {
         return _fetchContextDatacenterPublicKeys(context, datacenterId);
+    } else {
+        return nil;
+    }
+}
+
+- (MTSignal *)isContextNetworkAccessAllowed:(MTContext *)context {
+    if (_isContextNetworkAccessAllowed) {
+        return _isContextNetworkAccessAllowed(context);
     } else {
         return nil;
     }
@@ -98,6 +107,8 @@
     id<MTDisposable> _backupAddressListDisposable;
     
     NSMutableDictionary<NSNumber *, id<MTDisposable> > *_fetchPublicKeysActions;
+    
+    MTDisposableSet *_cleanupSessionInfoDisposables;
 }
 
 @end
@@ -114,7 +125,7 @@
     return self;
 }
 
-- (instancetype)initWithSerialization:(id<MTSerialization>)serialization apiEnvironment:(MTApiEnvironment *)apiEnvironment
+- (instancetype)initWithSerialization:(id<MTSerialization>)serialization apiEnvironment:(MTApiEnvironment *)apiEnvironment isTestingEnvironment:(bool)isTestingEnvironment useTempAuthKeys:(bool)useTempAuthKeys
 {
 #ifdef DEBUG
     NSAssert(serialization != nil, @"serialization should not be nil");
@@ -128,6 +139,8 @@
         
         _serialization = serialization;
         _apiEnvironment = apiEnvironment;
+        _isTestingEnvironment = isTestingEnvironment;
+        _useTempAuthKeys = useTempAuthKeys;
         
         _datacenterSeedAddressSetById = [[NSMutableDictionary alloc] init];
         
@@ -156,6 +169,8 @@
         _passwordRequiredByDatacenterId = [[NSMutableDictionary alloc] init];
         
         _fetchPublicKeysActions = [[NSMutableDictionary alloc] init];
+        
+        _cleanupSessionInfoDisposables = [[MTDisposableSet alloc] init];
         
         [self updatePeriodicTasks];
     }
@@ -195,6 +210,8 @@
     NSDictionary *fetchPublicKeysActions = _fetchPublicKeysActions;
     _fetchPublicKeysActions = nil;
     
+    id<MTDisposable> cleanupSessionInfoDisposables = _cleanupSessionInfoDisposables;
+    
     [[MTContext contextQueue] dispatchOnQueue:^
     {
         for (NSNumber *nDatacenterId in discoverDatacenterAddressActions)
@@ -211,6 +228,13 @@
             [action cancel];
         }
         
+        for (NSNumber *nDatacenterId in datacenterTempAuthActions)
+        {
+            MTDatacenterAuthAction *action = datacenterTempAuthActions[nDatacenterId];
+            action.delegate = nil;
+            [action cancel];
+        }
+        
         for (NSNumber *nDatacenterId in datacenterTransferAuthActions)
         {
             MTDatacenterTransferAuthAction *action = datacenterTransferAuthActions[nDatacenterId];
@@ -223,6 +247,8 @@
             id<MTDisposable> disposable = fetchPublicKeysActions[nDatacenterId];
             [disposable dispose];
         }
+        
+        [cleanupSessionInfoDisposables dispose];
     }];
 }
 
@@ -372,6 +398,8 @@
                 MTLog(@"[MTContext#%x: address set updated for %d]", (int)self, datacenterId);
             }
             
+            bool updateSchemes = forceUpdateSchemes;
+            
             bool previousAddressSetWasEmpty = ((MTDatacenterAddressSet *)_datacenterAddressSetById[@(datacenterId)]).addressList.count == 0;
             
             _datacenterAddressSetById[@(datacenterId)] = addressSet;
@@ -385,15 +413,40 @@
                     [listener contextDatacenterAddressSetUpdated:self datacenterId:datacenterId addressSet:addressSet];
             }
             
-            if (previousAddressSetWasEmpty || forceUpdateSchemes)
+            if (previousAddressSetWasEmpty || updateSchemes)
             {
                 [self updateTransportSchemeForDatacenterWithId:datacenterId transportScheme:[self defaultTransportSchemeForDatacenterWithId:datacenterId media:false isProxy:false] media:false isProxy:false];
                 [self updateTransportSchemeForDatacenterWithId:datacenterId transportScheme:[self defaultTransportSchemeForDatacenterWithId:datacenterId media:true isProxy:false] media:true isProxy:false];
                 [self updateTransportSchemeForDatacenterWithId:datacenterId transportScheme:[self defaultTransportSchemeForDatacenterWithId:datacenterId media:false isProxy:true] media:false isProxy:true];
                 [self updateTransportSchemeForDatacenterWithId:datacenterId transportScheme:[self defaultTransportSchemeForDatacenterWithId:datacenterId media:true isProxy:true] media:true isProxy:true];
+            } else {
+                for (NSNumber *nMedia in @[@false, @true]) {
+                    for (NSNumber *nIsProxy in @[@false, @true]) {
+                        MTDatacenterAddress *address = [self transportSchemeForDatacenterWithId:datacenterId media:[nMedia boolValue] isProxy:[nIsProxy boolValue]].address;
+                        bool matches = false;
+                        if (address != nil) {
+                            for (MTDatacenterAddress *listAddress in addressSet.addressList) {
+                                if ([listAddress.ip isEqualToString:address.ip]) {
+                                    if (listAddress.secret != nil && address.secret != nil && [listAddress.secret isEqualToData:address.secret]) {
+                                        matches = true;
+                                    } else if (listAddress.secret == nil && address.secret == nil) {
+                                        matches = true;
+                                    }
+                                }
+                            }
+                        }
+                        if (!matches) {
+                            if (MTLogEnabled()) {
+                                MTLog(@"[MTContext#%x: updated address set for %d doesn't contain current %@, updating]", (int)self, datacenterId, address);
+                            }
+                            
+                            [self updateTransportSchemeForDatacenterWithId:datacenterId transportScheme:[self defaultTransportSchemeForDatacenterWithId:datacenterId media:[nMedia boolValue] isProxy:[nIsProxy boolValue]] media:[nMedia boolValue] isProxy:[nIsProxy boolValue]];
+                        }
+                    }
+                }
             }
             
-            if (forceUpdateSchemes) {
+            if (updateSchemes) {
                 id<MTDisposable> disposable = _transportSchemeDisposableByDatacenterId[@(datacenterId)];
                 if (disposable != nil) {
                     [disposable dispose];
@@ -567,6 +620,7 @@
 {
     [[MTContext contextQueue] dispatchOnQueue:^
     {
+        
 #warning implement and reenable
         return;
         
@@ -696,10 +750,12 @@
     __block MTDatacenterAddressSet *result = nil;
     [[MTContext contextQueue] dispatchOnQueue:^
     {
-        if (_datacenterAddressSetById[@(datacenterId)] != nil)
+        MTDatacenterAddressSet *addressSet = _datacenterAddressSetById[@(datacenterId)];
+        if (addressSet != nil && addressSet.addressList.count != 0) {
             result = _datacenterAddressSetById[@(datacenterId)];
-        else
+        } else {
             result = _datacenterSeedAddressSetById[@(datacenterId)];
+        }
     } synchronous:true];
     
     return result;
@@ -729,6 +785,10 @@
                 }
             }
             
+            if (candidate.transportClass == [MTHttpTransport class]) {
+                candidate = nil;
+            }
+            
             if (candidate != nil) {
                 result = candidate;
             } else {
@@ -754,6 +814,14 @@
     [[MTContext contextQueue] dispatchOnQueue:^
     {
         result = _datacenterAuthInfoById[@(datacenterId)];
+/*#ifdef DEBUG
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            if (result.tempAuthKey != nil) {
+                result = [result withUpdatedTempAuthKey:[[MTDatacenterAuthKey alloc] initWithAuthKey:result.tempAuthKey.authKey authKeyId:12345 notBound:result.tempAuthKey.notBound]];
+            }
+        });
+#endif*/
     } synchronous:true];
     
     return result;
@@ -900,8 +968,36 @@
         if (disposable == nil)
         {
             __weak MTContext *weakSelf = self;
-            MTDatacenterAddressSet *addressSet = [self addressSetForDatacenterWithId:datacenterId];
-            _transportSchemeDisposableByDatacenterId[@(datacenterId)] = [[[MTDiscoverConnectionSignals discoverSchemeWithContext:self addressList:addressSet.addressList media:media isProxy:isProxy] onDispose:^
+            MTDatacenterAddressSet *initialAddressSet = [self addressSetForDatacenterWithId:datacenterId];
+            NSMutableArray *addressList = [[NSMutableArray alloc] initWithArray:initialAddressSet.addressList];
+            MTDatacenterAddressSet *seedAddress = _datacenterSeedAddressSetById[@(datacenterId)];
+            if (seedAddress != nil) {
+                for (MTDatacenterAddress *address in seedAddress.addressList) {
+                    if (![addressList containsObject:address]) {
+                        [addressList addObject:address];
+                    }
+                }
+            }
+            MTDatacenterAddressSet *addressSet = [[MTDatacenterAddressSet alloc] initWithAddressList:addressList];
+            MTSignal *discoverSignal = [MTDiscoverConnectionSignals discoverSchemeWithContext:self addressList:addressSet.addressList media:media isProxy:isProxy];
+            MTSignal *conditionSignal = [MTSignal single:@(true)];
+            for (id<MTContextChangeListener> listener in _changeListeners) {
+                if ([listener respondsToSelector:@selector(isContextNetworkAccessAllowed:)]) {
+                    MTSignal *signal = [listener isContextNetworkAccessAllowed:self];
+                    if (signal != nil) {
+                        conditionSignal = signal;
+                    }
+                }
+            }
+            MTSignal *filteredSignal = [[conditionSignal mapToSignal:^(NSNumber *value) {
+                if ([value boolValue]) {
+                    return discoverSignal;
+                } else {
+                    return [MTSignal never];
+                }
+            }] take:1];
+
+            _transportSchemeDisposableByDatacenterId[@(datacenterId)] = [[filteredSignal onDispose:^
             {
                 __strong MTContext *strongSelf = weakSelf;
                 if (strongSelf != nil)
@@ -932,6 +1028,32 @@
     }];
 }
 
+- (void)invalidateTransportSchemesForDatacenterIds:(NSArray<NSNumber *> * _Nonnull)datacenterIds {
+    [[MTContext contextQueue] dispatchOnQueue:^{
+        for (NSNumber *datacenterId in datacenterIds) {
+            [self transportSchemeForDatacenterWithIdRequired:[datacenterId integerValue] moreOptimalThan:nil beginWithHttp:false media:false isProxy:_apiEnvironment.socksProxySettings != nil];
+        }
+    }];
+}
+
+- (void)invalidateTransportSchemesForKnownDatacenterIds {
+    [[MTContext contextQueue] dispatchOnQueue:^{
+        NSMutableSet *datacenterIds = [[NSMutableSet alloc] init];
+
+        for (NSNumber *nId in _datacenterAddressSetById.allKeys) {
+            [datacenterIds addObject:nId];
+        }
+        
+        for (NSNumber *nId in _datacenterSeedAddressSetById.allKeys) {
+            [datacenterIds addObject:nId];
+        }
+        
+        for (NSNumber *datacenterId in datacenterIds) {
+            [self transportSchemeForDatacenterWithIdRequired:[datacenterId integerValue] moreOptimalThan:nil beginWithHttp:false media:false isProxy:_apiEnvironment.socksProxySettings != nil];
+        }
+    }];
+}
+
 - (void)invalidateTransportSchemeForDatacenterId:(NSInteger)datacenterId transportScheme:(MTTransportScheme *)transportScheme isProbablyHttp:(bool)isProbablyHttp media:(bool)media
 {
     if (transportScheme == nil)
@@ -941,20 +1063,32 @@
     {
         [self transportSchemeForDatacenterWithIdRequired:datacenterId moreOptimalThan:transportScheme beginWithHttp:isProbablyHttp media:media isProxy:_apiEnvironment.socksProxySettings != nil];
         
-        if (_backupAddressListDisposable == nil && _discoverBackupAddressListSignal != nil) {
-            __weak MTContext *weakSelf = self;
-            double delay = 20.0f;
-#ifdef DEBUG
+        double delay = 20.0f;
+        if (_apiEnvironment.networkSettings == nil || _apiEnvironment.networkSettings.reducedBackupDiscoveryTimeout) {
             delay = 5.0;
-#endif
-            _backupAddressListDisposable = [[[_discoverBackupAddressListSignal delay:delay onQueue:[MTQueue mainQueue]] onDispose:^{
-                __strong MTContext *strongSelf = weakSelf;
-                if (strongSelf != nil) {
-                    [strongSelf->_backupAddressListDisposable dispose];
-                    strongSelf->_backupAddressListDisposable = nil;
-                }
-            }] startWithNext:nil];
         }
+        [self _beginBackupAddressDiscoveryWithDelay:delay];
+    }];
+}
+
+- (void)_beginBackupAddressDiscoveryWithDelay:(double)delay {
+    if (_backupAddressListDisposable == nil && _discoverBackupAddressListSignal != nil) {
+        __weak MTContext *weakSelf = self;
+        _backupAddressListDisposable = [[[_discoverBackupAddressListSignal delay:delay onQueue:[MTQueue mainQueue]] onDispose:^{
+            __strong MTContext *strongSelf = weakSelf;
+            if (strongSelf != nil) {
+                [strongSelf->_backupAddressListDisposable dispose];
+                strongSelf->_backupAddressListDisposable = nil;
+            }
+        }] startWithNext:nil];
+    }
+}
+
+- (void)beginExplicitBackupAddressDiscovery {
+    [[MTContext contextQueue] dispatchOnQueue:^{
+        [_backupAddressListDisposable dispose];
+        _backupAddressListDisposable = nil;
+        [self _beginBackupAddressDiscoveryWithDelay:0.0];
     }];
 }
 
@@ -1033,7 +1167,7 @@
     {
         if (_datacenterAuthActions[@(datacenterId)] == nil)
         {
-            MTDatacenterAuthAction *authAction = [[MTDatacenterAuthAction alloc] initWithTempAuth:false];
+            MTDatacenterAuthAction *authAction = [[MTDatacenterAuthAction alloc] initWithTempAuth:false tempAuthKeyType:MTDatacenterAuthTempKeyTypeMain];
             authAction.delegate = self;
             _datacenterAuthActions[@(datacenterId)] = authAction;
             [authAction execute:self datacenterId:datacenterId isCdn:isCdn];
@@ -1041,10 +1175,10 @@
     }];
 }
 
-- (void)tempAuthKeyForDatacenterWithIdRequired:(NSInteger)datacenterId {
+- (void)tempAuthKeyForDatacenterWithIdRequired:(NSInteger)datacenterId keyType:(MTDatacenterAuthTempKeyType)keyType {
     [[MTContext contextQueue] dispatchOnQueue:^{
         if (_datacenterTempAuthActions[@(datacenterId)] == nil) {
-            MTDatacenterAuthAction *authAction = [[MTDatacenterAuthAction alloc] initWithTempAuth:true];
+            MTDatacenterAuthAction *authAction = [[MTDatacenterAuthAction alloc] initWithTempAuth:true tempAuthKeyType:keyType];
             authAction.delegate = self;
             _datacenterTempAuthActions[@(datacenterId)] = authAction;
             [authAction execute:self datacenterId:datacenterId isCdn:false];
@@ -1056,13 +1190,21 @@
 {
     [[MTContext contextQueue] dispatchOnQueue:^
     {
-        for (NSNumber *nDatacenterId in _datacenterAuthActions)
-        {
-            if (_datacenterAuthActions[nDatacenterId] == action)
-            {
-                [_datacenterAuthActions removeObjectForKey:nDatacenterId];
-                
-                break;
+        if (action.tempAuth) {
+            for (NSNumber *nDatacenterId in _datacenterTempAuthActions) {
+                if (_datacenterTempAuthActions[nDatacenterId] == action) {
+                    [_datacenterTempAuthActions removeObjectForKey:nDatacenterId];
+                    
+                    break;
+                }
+            }
+        } else {
+            for (NSNumber *nDatacenterId in _datacenterAuthActions) {
+                if (_datacenterAuthActions[nDatacenterId] == action) {
+                    [_datacenterAuthActions removeObjectForKey:nDatacenterId];
+                    
+                    break;
+                }
             }
         }
     }];

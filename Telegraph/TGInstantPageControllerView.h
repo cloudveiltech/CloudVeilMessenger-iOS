@@ -45,6 +45,8 @@
 @property (nonatomic, assign) CGFloat statusBarHeight;
 @property (nonatomic, assign) UIEdgeInsets safeAreaInset;
 
+@property (nonatomic, assign) bool disableActions;
+
 @property (nonatomic, assign) int64_t peerId;
 @property (nonatomic, assign) int32_t messageId;
 
@@ -58,5 +60,7 @@
 
 - (void)applyScrollState:(TGInstantPageScrollState *)scrollState;
 - (TGInstantPageScrollState *)currentScrollState;
+
+- (void)setContentHidden:(bool)hidden animated:(bool)animated;
 
 @end

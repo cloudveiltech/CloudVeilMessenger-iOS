@@ -1,10 +1,4 @@
-/*
- * This is the source code of Telegram for iOS v. 1.1
- * It is licensed under GNU GPL v. 2 or later.
- * You should have received a copy of the license in this archive (see LICENSE).
- *
- * Copyright Peter Iakovlev, 2013.
- */
+
 
 #import <Foundation/Foundation.h>
 
@@ -16,6 +10,7 @@
 @class MTIncomingMessage;
 @class MTMessageTransaction;
 @class MTNetworkUsageCalculationInfo;
+@class MTSocksProxySettings;
 
 #if defined(MtProtoKitDynamicFramework)
 #   import <MTProtoKitDynamic/MTMessageService.h>
@@ -30,7 +25,7 @@
 @optional
 
 - (void)transportNetworkAvailabilityChanged:(MTTransport *)transport isNetworkAvailable:(bool)isNetworkAvailable;
-- (void)transportConnectionStateChanged:(MTTransport *)transport isConnected:(bool)isConnected isUsingProxy:(bool)isUsingProxy;
+- (void)transportConnectionStateChanged:(MTTransport *)transport isConnected:(bool)isConnected proxySettings:(MTSocksProxySettings *)proxySettings;
 - (void)transportConnectionContextUpdateStateChanged:(MTTransport *)transport isUpdatingConnectionContext:(bool)isUpdatingConnectionContext;
 - (void)transportConnectionProblemsStatusChanged:(MTTransport *)transport hasConnectionProblems:(bool)hasConnectionProblems isProbablyHttp:(bool)isProbablyHttp;
 
@@ -49,10 +44,12 @@
 
 @property (nonatomic, strong, readonly) MTContext *context;
 @property (nonatomic, readonly) NSInteger datacenterId;
+@property (nonatomic, strong, readonly) MTDatacenterAddress *address;
+@property (nonatomic, strong, readonly) MTSocksProxySettings *proxySettings;
 @property (nonatomic) bool simultaneousTransactionsEnabled;
 @property (nonatomic) bool reportTransportConnectionContextUpdateStates;
 
-- (instancetype)initWithDelegate:(id<MTTransportDelegate>)delegate context:(MTContext *)context datacenterId:(NSInteger)datacenterId address:(MTDatacenterAddress *)address usageCalculationInfo:(MTNetworkUsageCalculationInfo *)usageCalculationInfo;
+- (instancetype)initWithDelegate:(id<MTTransportDelegate>)delegate context:(MTContext *)context datacenterId:(NSInteger)datacenterId address:(MTDatacenterAddress *)address proxySettings:(MTSocksProxySettings *)proxySettings usageCalculationInfo:(MTNetworkUsageCalculationInfo *)usageCalculationInfo;
 
 - (void)setUsageCalculationInfo:(MTNetworkUsageCalculationInfo *)usageCalculationInfo;
 

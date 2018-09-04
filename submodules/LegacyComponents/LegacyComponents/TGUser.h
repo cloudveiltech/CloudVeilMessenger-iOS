@@ -78,6 +78,11 @@ typedef enum {
 @property (nonatomic) NSString *photoUrlSmall;
 @property (nonatomic) NSString *photoUrlMedium;
 @property (nonatomic) NSString *photoUrlBig;
+@property (nonatomic) NSData *photoFileReferenceSmall;
+@property (nonatomic) NSData *photoFileReferenceBig;
+
+@property (nonatomic) NSString *photoFullUrlSmall;
+@property (nonatomic) NSString *photoFullUrlBig;
 
 @property (nonatomic) TGUserPresence presence;
 
@@ -104,7 +109,8 @@ typedef enum {
 @property (nonatomic) bool botInlineGeo;
 
 @property (nonatomic, readonly) bool isBot;
-@property (nonatomic) bool isBlocked;
+@property (nonatomic) bool isBlocked; //Cloudveil
+@property (nonatomic, readonly) bool isDeleted;
 
 - (id)copyWithZone:(NSZone *)zone;
 

@@ -63,6 +63,7 @@
     _checkView.image = presentation.images.collectionMenuCheckImage;
     _reorderingControl.image = presentation.images.collectionMenuReorderIcon;
     _unreadView.image = presentation.images.collectionMenuUnreadIcon;
+    _activityIndicator.color = presentation.pallete.collectionMenuSpinnerColor;
 }
 
 - (void)prepareForReuse
@@ -78,7 +79,7 @@
     if (searching && _activityIndicator == nil)
     {
         _activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-        _activityIndicator.color = UIColorRGB(0x7c828c);
+        _activityIndicator.color = self.presentation.pallete.collectionMenuSpinnerColor;
         _activityIndicator.transform = CGAffineTransformMakeScale(0.85f, 0.85f);
         [self.contentView addSubview:_activityIndicator];
     }
@@ -154,9 +155,17 @@
         TGDocumentMediaAttachment *documentMedia = stickerPack.documents[0];
         NSMutableString *uri = [[NSMutableString alloc] initWithString:@"sticker-preview://?"];
         if (documentMedia.documentId != 0)
+        {
             [uri appendFormat:@"documentId=%" PRId64 "", documentMedia.documentId];
+            
+            TGMediaOriginInfo *originInfo = documentMedia.originInfo ?: [TGMediaOriginInfo mediaOriginInfoForDocumentAttachment:documentMedia];
+            if (originInfo != nil)
+                [uri appendFormat:@"&origin_info=%@", [originInfo stringRepresentation]];
+        }
         else
+        {
             [uri appendFormat:@"localDocumentId=%" PRId64 "", documentMedia.localDocumentId];
+        }
         [uri appendFormat:@"&accessHash=%" PRId64 "", documentMedia.accessHash];
         [uri appendFormat:@"&datacenterId=%" PRId32 "", (int32_t)documentMedia.datacenterId];
         
@@ -195,6 +204,7 @@
     } else {
         if (_statusView == nil) {
             _statusView = [[TGStickerPackStatusView alloc] init];
+            _statusView.presentation = self.presentation;
             __weak TGStickerPackCollectionItemView *weakSelf = self;
             _statusView.install = ^{
                 __strong TGStickerPackCollectionItemView *strongSelf = weakSelf;

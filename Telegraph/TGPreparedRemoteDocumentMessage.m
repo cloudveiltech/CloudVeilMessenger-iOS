@@ -24,7 +24,7 @@
         _size = documentMedia.size;
         _thumbnailInfo = documentMedia.thumbnailInfo;
         _attributes = documentMedia.attributes;
-        _caption = documentMedia.caption;
+        _originInfo = documentMedia.originInfo;
         
         self.replyMessage = replyMessage;
         self.botContextResult = botContextResult;
@@ -67,6 +67,7 @@
     message.date = self.date;
     message.isBroadcast = self.isBroadcast;
     message.messageLifetime = self.messageLifetime;
+    message.text = self.text;
     
     NSMutableArray *attachments = [[NSMutableArray alloc] init];
     
@@ -80,7 +81,7 @@
     documentAttachment.mimeType = _mimeType;
     documentAttachment.size = _size;
     documentAttachment.thumbnailInfo = _thumbnailInfo;
-    documentAttachment.caption = _caption;
+    documentAttachment.originInfo = _originInfo;
     [attachments addObject:documentAttachment];
     
     if (self.replyMessage != nil)
@@ -102,6 +103,7 @@
     }
     
     message.mediaAttachments = attachments;
+    message.entities = self.entities;
     
     return message;
 }
@@ -117,7 +119,7 @@
     documentAttachment.mimeType = _mimeType;
     documentAttachment.size = _size;
     documentAttachment.thumbnailInfo = _thumbnailInfo;
-    documentAttachment.caption = _caption;
+    documentAttachment.originInfo = _originInfo;
     return documentAttachment;
 }
 

@@ -11,12 +11,17 @@
 @property (nonatomic, weak) TGDialogListController *dialogListController;
 
 @property (nonatomic) bool showListEditingControl;
+@property (nonatomic) bool editingControlOnRightSide;
+@property (nonatomic) bool feedChannels;
 @property (nonatomic) bool forwardMode;
 @property (nonatomic) bool privacyMode;
 @property (nonatomic) bool showBroadcastsMenu;
 @property (nonatomic) bool showSecretInForwardMode;
 @property (nonatomic) bool showGroupsOnly;
+@property (nonatomic) bool showPrivateOnly;
+@property (nonatomic) bool showGroupsAndChannelsOnly;
 @property (nonatomic) bool botStartMode;
+@property (nonatomic, strong) NSSet *excludedIds;
 
 @property (nonatomic) int unreadCount;
 
@@ -29,6 +34,7 @@
 - (void)clearData;
 
 - (void)loadMoreItems;
+- (void)loadMoreItems:(int)limit;
 
 - (void)composeMessageAndOpenSearch:(bool)openSearch;
 - (void)navigateToBroadcastLists;
@@ -52,6 +58,8 @@
 
 - (bool)isConversationOpened:(int64_t)conversationId;
 - (int64_t)openedConversationId;
+
+- (void)scrollToNextUnreadChat;
 
 - (void)hintMoveConversationAtIndex:(NSUInteger)fromIndex toIndex:(NSUInteger)toIndex;
 
