@@ -377,7 +377,7 @@ void setCurrentCustomLocalization(TGLocalization *localization) {
 
 NSString *TGLocalized(NSString *s)
 {
-    return [effectiveLocalization() get:s];
+    return [[effectiveLocalization() get:s] stringByReplacingOccurrencesOfString:@"Telegram" withString:@"CloudVeil Messsenger"];
 }
 
 static dispatch_queue_t TGLogQueue()

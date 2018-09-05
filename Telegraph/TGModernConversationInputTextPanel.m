@@ -281,6 +281,7 @@ static CGRect viewFrame(UIView *view)
         [_stickerModeButton addTarget:self action:@selector(stickerModeButtonPressed) forControlEvents:UIControlEventTouchUpInside];
         _stickerModeButton.adjustsImageWhenHighlighted = false;
         _stickerModeButton.alpha = 0.0f;
+        _stickerModeButton.hidden = true; //CloudVeil
         _stickerModeButton.userInteractionEnabled = false;
         
         _commandModeButton = [[TGModernButton alloc] initWithFrame:CGRectMake(0.0f, 0.0f, modeWidth, 33.0f)];
@@ -1007,8 +1008,9 @@ static CGRect viewFrame(UIView *view)
     if ([delegate respondsToSelector:@selector(inputPanelHashtagEntered:hashtag:)])
         [delegate inputPanelHashtagEntered:self hashtag:candidateHashtag];
     
-    if ([delegate respondsToSelector:@selector(inputPanelCommandEntered:command:)])
-        [delegate inputPanelCommandEntered:self command:candidateCommand];
+    //Cloudveil
+    //if ([delegate respondsToSelector:@selector(inputPanelCommandEntered:command:)])
+    //    [delegate inputPanelCommandEntered:self command:candidateCommand];
     
     if ([delegate respondsToSelector:@selector(inputPanelAlphacodeEntered:alphacode:)])
         [delegate inputPanelAlphacodeEntered:self alphacode:candidateAlphacode];
@@ -1401,7 +1403,8 @@ static CGRect viewFrame(UIView *view)
 
 - (bool)isVideoMessage
 {
-    return _videoMessageAvailable && _videoMessage;
+    //CloudVeil
+    return false;//_videoMessageAvailable && _videoMessage;
 }
 
 - (void)decideMicButtonAction
@@ -2746,6 +2749,9 @@ static CGRect viewFrame(UIView *view)
 }
 
 - (void)updateAssociatedPanelVisibility:(bool)animated {
+    //CloudVeil
+    _associatedPanel.hidden=true; // Requestum: - always hide this panel
+    
     CGFloat targetAlpha = 1.0f;
     if ([_associatedPanel displayForTextEntryOnly]) {
         if (!_keepAssociatedPanelVisible && (![_inputField.internalTextView isFirstResponder] || _customKeyboardView != nil)) {

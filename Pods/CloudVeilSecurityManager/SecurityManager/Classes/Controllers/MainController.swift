@@ -60,6 +60,8 @@ import Alamofire
     // MARK: - Actions
     
     @objc open func getSettings(groups: [TGRow] = [], bots: [TGRow] = [], channels: [TGRow] = []) {
+        NetworkActivityLogger.shared.level = .debug
+        NetworkActivityLogger.shared.startLogging()
         
         let request = TGSettingsRequest(JSON: [:])!
         request.id = TGUserController.shared.getUserID()
@@ -69,6 +71,7 @@ import Alamofire
         request.bots = bots
         request.channels = channels
         
+        print("Settings load start\n");
         SecurityManager.shared.getSettings(withRequest: request) { (resp) in
             
             self.saveSettings(resp)
@@ -84,14 +87,14 @@ import Alamofire
     }
     
     @objc open func isGroupAvailable(groupID: NSInteger) -> Bool {
-        
+
         if let dictArray = settings?.access?.groups {
             if let index = dictArray.flatMap({ $0.keys }).index(where: { $0 == "\(groupID)" }) {
                 return dictArray[index]["\(groupID)"] ?? false
             }
         }
         
-        return true
+        return false
     }
     
     @objc open func isChannelAvailable(channelID: NSInteger) -> Bool {

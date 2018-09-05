@@ -113,6 +113,11 @@
     [self setAdditionalTitleIcons:@[lockIcon]];
     
     [self _updateEncryptionState:_conversation.encryptedData.handshakeState];
+    
+    // MARK: - CloudVeil
+    if([[MainController shared] minimumSecretLenght] >= 1) {
+        [self _commitSetSelfDestructTimer:[[MainController shared] minimumSecretLenght]];
+    }
 }
 
 #pragma mark -
@@ -246,10 +251,10 @@
     
     NSUInteger value = 7;
     
-    // MARK: - CloudVeil    
-    [timerValues filteringUsingStringPredicate:@"SELF == 0 OR SELF >= %i"
-                                     arguments:[[MainController shared] minimumSecretLenght]];
-    
+    // MARK: - CloudVeil
+    if([[MainController shared] minimumSecretLenght] >= 1) {
+        [timerValues filteringUsingStringPredicate:@"SELF >= %i" arguments:[[MainController shared] minimumSecretLenght]];
+    }
     if (_selfDestructTimer != 0)
     {
         NSInteger closestValue = 7;

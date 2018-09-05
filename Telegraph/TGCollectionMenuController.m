@@ -493,9 +493,7 @@
         TGCollectionItem *item = indexPath.section < (NSInteger)_menuSections.sections.count && indexPath.row < (NSInteger)((TGCollectionMenuSection *)_menuSections.sections[indexPath.section]).items.count ? ((TGCollectionMenuSection *)_menuSections.sections[indexPath.section]).items[indexPath.item] : nil;
         if (item != nil)
         {
-            // MARK: - CloudVeil
-            if ([[MainController shared] disableBioChange] == false)
-                [item itemSelected:self];
+            [item itemSelected:self];
             
             if (item.deselectAutomatically)
                 [collectionView deselectItemAtIndexPath:indexPath animated:true];

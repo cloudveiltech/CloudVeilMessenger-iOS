@@ -1871,7 +1871,7 @@ typedef enum {
 - (void)avatarPressed
 {
     // MARK: - CloudVeil
-    if ([[MainController shared] disableBio] == false)
+    if ([[MainController shared] disableProfilePhoto] == false)
         [_companion _controllerAvatarPressed];
 }
 
@@ -6278,7 +6278,8 @@ typedef enum {
         {
             if ([action isEqualToString:@"open"])
             {
-                [controller openBrowserFromMessage:0 url:url];
+                // CloudVeil: - remove in app browser
+                //[controller openBrowserFromMessage:0 url:url];
             }
             else if ([action isEqualToString:@"openIn"])
             {
@@ -8000,6 +8001,9 @@ typedef enum {
                                         [strongSelf->_companion controllerWantsToSendGame:gameMedia asReplyToMessageId:[strongSelf currentReplyMessageId] botContextResult:botContextResult botReplyMarkup:concreteMessage.replyMarkup];
                                         [strongSelf->_inputTextPanel.inputField setText:@"" animated:true];
                                     } else if ([concreteResult.type isEqualToString:@"gif"]) {
+                                        //CloudVeil
+                                        //Requestum: - removed gif search
+                                        /*
                                         TGExternalGifSearchResult *externalGifSearchResult = [[TGExternalGifSearchResult alloc] initWithUrl:concreteResult.url originalUrl:concreteResult.originalUrl thumbnailUrl:concreteResult.thumbUrl size:concreteResult.size];
                                         id description = [strongSelf->_companion documentDescriptionFromExternalGifSearchResult:externalGifSearchResult text:concreteMessage.text entities:concreteMessage.entities botContextResult:botContextResult];
                                         if (description != nil) {
@@ -8007,6 +8011,7 @@ typedef enum {
                                             [strongSelf->_inputTextPanel.inputField setText:@"" animated:true];
                                             [TGRecentContextBotsSignal addRecentBot:results.userId];
                                         }
+                                         */
                                     } else if ([concreteResult.type isEqualToString:@"photo"]) {
                                         TGExternalImageSearchResult *externalImageSearchResult = [[TGExternalImageSearchResult alloc] initWithUrl:concreteResult.url originalUrl:concreteResult.originalUrl thumbnailUrl:concreteResult.thumbUrl title:concreteResult.title size:concreteResult.size];
                                         id description = [strongSelf->_companion imageDescriptionFromExternalImageSearchResult:externalImageSearchResult text:concreteMessage.text entities:concreteMessage.entities botContextResult:botContextResult];
@@ -8612,6 +8617,8 @@ typedef enum {
         id description = [self.companion imageDescriptionFromBingSearchResult:item caption:caption entities:entities];
         return description;
     }
+/* CloudVeil
+ Requestum: - removed gif search
     else if ([item isKindOfClass:[TGGiphySearchResultItem class]])
     {
         id description = [self.companion documentDescriptionFromGiphySearchResult:item caption:caption entities:entities];
@@ -8623,6 +8630,7 @@ typedef enum {
     else if ([item isKindOfClass:[TGInternalGifSearchResult class]]) {
         return [self.companion documentDescriptionFromRemoteDocument:((TGInternalGifSearchResult *)item).document caption:caption entities:entities];
     }
+ */
     else if ([item isKindOfClass:[TGWebSearchInternalImageResult class]])
     {
         id description = [self.companion imageDescriptionFromInternalSearchImageResult:item caption:caption entities:entities];

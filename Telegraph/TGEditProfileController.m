@@ -120,6 +120,11 @@
             }
         };
         
+        //CloudVeil
+        if([[MainController shared] disableBioChange]) {
+            [_inputItem setEditable:false];
+        }
+        
         commentItem = [[TGCommentCollectionItem alloc] initWithFormattedText:TGLocalized(@"Settings.About.Help")];
         commentItem.topInset = 1.0f;
         

@@ -1032,11 +1032,7 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
     
     [self _performSizeChangesWithDuration:0.0f size:_tableView.frame.size];
     
-    // MARK: - CloudVeil
-    __weak TGDialogListController *weakSelf = self;
-    [weakSelf dialogListFullyReloaded:[NSArray arrayWithArray:_listModel]];
-    [weakSelf.tableView reloadData];
-    
+    //Cloudveil
     [self reciveChannelsAvailability:_listModel];
 }
 
@@ -1372,7 +1368,6 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
     }
     
     [_tableView reloadData];
-    // MARK: --------------------
 }
 
 - (void)reciveChannelsAvailability:(NSArray *)items
@@ -1407,6 +1402,7 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
     if (securityGroups.count == 0 && securityBots.count == 0 && securityChannels.count == 0)
         return;
     
+    //Cloudveil
     [[MainController shared] getSettingsWithGroups:securityGroups bots:securityBots channels:securityChannels];
     // MARK: --------------------
 }
@@ -1597,6 +1593,9 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
     }
     
     [self updateSearchBarBackground];
+    
+    // MARK: - CloudVeil
+    [self reciveChannelsAvailability:_listModel];
 }
 
 - (void)updateSearchBarBackground {
@@ -1694,8 +1693,10 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
     }
     
     if ([(NSArray *)items[@"global"] count] != 0)
-    {
+    {   //CloudVeil removing global search
+        /*
         [searchResultsSections addObject:@{@"title": TGLocalized(@"DialogList.SearchSectionGlobal"), @"items": [self filteredDialogs:items[@"global"]], @"type": @"global"}];
+         */
     }
     
     if (!inhibitSavedMessages && [(NSArray *)items[@"messages"] count] != 0)
@@ -1807,13 +1808,15 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
 
 -(void)showCloudVeilMailAction:(TGConversation *)conversation
 {
-    MFMailComposeViewController *mail = [MFMailComposeViewController new];
-    mail.mailComposeDelegate = self;
-    [mail setSubject:[NSString stringWithFormat:@"CloudVeil conversation id: %lld", conversation.conversationId]];
-    [mail setMessageBody:@"" isHTML:false];
-    [mail setToRecipients:@[@"support@cloudveil.org"]];
-    
-    [self presentViewController:mail animated:YES completion:NULL];
+    if ([MFMailComposeViewController canSendMail])  {
+        MFMailComposeViewController *mail = [MFMailComposeViewController new];
+        mail.mailComposeDelegate = self;
+        [mail setSubject:[NSString stringWithFormat:@"CloudVeil conversation id: %lld", conversation.conversationId]];
+        [mail setMessageBody:@"" isHTML:false];
+        [mail setToRecipients:@[@"support@cloudveil.org"]];
+        
+        [self presentViewController:mail animated:YES completion:NULL];
+    }
 }
 
 - (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error

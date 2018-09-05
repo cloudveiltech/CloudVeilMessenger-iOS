@@ -144,31 +144,37 @@ strip_invalid_archs() {
 
 if [[ "$CONFIGURATION" == "Debug Hockeyapp" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/AlamofireNetworkActivityLogger/AlamofireNetworkActivityLogger.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/CloudVeilSecurityManager/CloudVeilSecurityManager.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/ObjectMapper/ObjectMapper.framework"
 fi
 if [[ "$CONFIGURATION" == "Debug Fork AppStore" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/AlamofireNetworkActivityLogger/AlamofireNetworkActivityLogger.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/CloudVeilSecurityManager/CloudVeilSecurityManager.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/ObjectMapper/ObjectMapper.framework"
 fi
 if [[ "$CONFIGURATION" == "Debug AppStore" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/AlamofireNetworkActivityLogger/AlamofireNetworkActivityLogger.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/CloudVeilSecurityManager/CloudVeilSecurityManager.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/ObjectMapper/ObjectMapper.framework"
 fi
 if [[ "$CONFIGURATION" == "Release AppStore" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/AlamofireNetworkActivityLogger/AlamofireNetworkActivityLogger.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/CloudVeilSecurityManager/CloudVeilSecurityManager.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/ObjectMapper/ObjectMapper.framework"
 fi
 if [[ "$CONFIGURATION" == "Release Fork AppStore" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/AlamofireNetworkActivityLogger/AlamofireNetworkActivityLogger.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/CloudVeilSecurityManager/CloudVeilSecurityManager.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/ObjectMapper/ObjectMapper.framework"
 fi
 if [[ "$CONFIGURATION" == "Release Hockeyapp" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/AlamofireNetworkActivityLogger/AlamofireNetworkActivityLogger.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/CloudVeilSecurityManager/CloudVeilSecurityManager.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/ObjectMapper/ObjectMapper.framework"
 fi

@@ -491,13 +491,15 @@
 
 -(void)showCloudVeilMailAction:(TGConversation *)conversation
 {
-    MFMailComposeViewController *mail = [MFMailComposeViewController new];
-    mail.mailComposeDelegate = self;
-    [mail setSubject:[NSString stringWithFormat:@"CloudVeil conversation id: %lld", conversation.conversationId]];
-    [mail setMessageBody:@"" isHTML:false];
-    [mail setToRecipients:@[@"support@cloudveil.org"]];
-    
-    [_cloudVeilViewController presentViewController:mail animated:YES completion:NULL];
+    if ([MFMailComposeViewController canSendMail])  {
+        MFMailComposeViewController *mail = [MFMailComposeViewController new];
+        mail.mailComposeDelegate = self;
+        [mail setSubject:[NSString stringWithFormat:@"CloudVeil conversation id: %lld", conversation.conversationId]];
+        [mail setMessageBody:@"" isHTML:false];
+        [mail setToRecipients:@[@"support@cloudveil.org"]];
+        
+        [_cloudVeilViewController presentViewController:mail animated:YES completion:NULL];
+    }
 }
 
 

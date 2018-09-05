@@ -115,7 +115,7 @@ const NSTimeInterval typingIntervalSecond = 0.14;
     {
         _titleLabel = [[UILabel alloc] init];
         _titleLabel.backgroundColor = [UIColor clearColor];
-         _titleLabel.textColor = [UIColor whiteColor]; // MARK: - CloudVeil
+        _titleLabel.textColor = _presentation.pallete.navigationTitleColor;
         _titleLabel.font = TGBoldSystemFontOfSize(17.0f);
         [self addSubview:_titleLabel];
     }
@@ -131,7 +131,7 @@ const NSTimeInterval typingIntervalSecond = 0.14;
         
         _statusLabel = [[UILabel alloc] init];
         _statusLabel.backgroundColor = [UIColor clearColor];
-         _statusLabel.textColor = [UIColor whiteColor]; // MARK: - CloudVeil
+        _statusLabel.textColor = _presentation.pallete.navigationSubtitleColor;
         _statusLabel.font = TGSystemFontOfSize(13.0f);
         [self addSubview:_statusLabel];
     }
@@ -143,7 +143,7 @@ const NSTimeInterval typingIntervalSecond = 0.14;
     if (_toggleLabel == nil) {
         _toggleLabel = [[UILabel alloc] init];
         _toggleLabel.backgroundColor = [UIColor clearColor];
-       _toggleLabel.textColor = [UIColor whiteColor]; // MARK: - CloudVeil
+        _toggleLabel.textColor = _presentation.pallete.navigationSubtitleColor;
         _toggleLabel.font = TGSystemFontOfSize(13.0f);
         [self addSubview:_toggleLabel];
     }
@@ -233,7 +233,7 @@ const NSTimeInterval typingIntervalSecond = 0.14;
         _statusHasAccentColor = statusHasAccentColor;
         
         if (_typingStatus == nil)
-           _statusLabel.textColor = [UIColor whiteColor]; // MARK: - CloudVeil
+            _statusLabel.textColor = _statusHasAccentColor ? _presentation.pallete.navigationActiveSubtitleColor : _presentation.pallete.navigationSubtitleColor;
     }
 }
 
@@ -290,12 +290,12 @@ const NSTimeInterval typingIntervalSecond = 0.14;
         if (typingStatus == nil)
         {
             [self statusLabel].attributedText = [[NSAttributedString alloc] initWithString:_status];
-          _statusLabel.textColor = [UIColor whiteColor]; // MARK: - CloudVeil
+            _statusLabel.textColor = _statusHasAccentColor ? _presentation.pallete.navigationActiveSubtitleColor : _presentation.pallete.navigationSubtitleColor;
         }
         else
         {
             [self statusLabel].attributedText = [[NSAttributedString alloc] initWithString:typingStatus];
-            _statusLabel.textColor = [UIColor whiteColor]; // MARK: - CloudVeil
+            _statusLabel.textColor = _presentation.pallete.navigationActiveSubtitleColor;
         }
         
         if (typingStatus == nil)
@@ -303,16 +303,16 @@ const NSTimeInterval typingIntervalSecond = 0.14;
             if (reallyAnimated)
             {
                 [UIView animateWithDuration:0.12 animations:^
-                {
-                    _activityIndicator.alpha = 0.0f;
-                } completion:^(BOOL finished)
-                {
-                    if (finished)
-                    {
-                        [_activityIndicator setNone];
-                        [_activityIndicator removeFromSuperview];
-                    }
-                }];
+                 {
+                     _activityIndicator.alpha = 0.0f;
+                 } completion:^(BOOL finished)
+                 {
+                     if (finished)
+                     {
+                         [_activityIndicator setNone];
+                         [_activityIndicator removeFromSuperview];
+                     }
+                 }];
             }
             else
             {
@@ -353,9 +353,9 @@ const NSTimeInterval typingIntervalSecond = 0.14;
             if (reallyAnimated)
             {
                 [UIView animateWithDuration:0.12 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^
-                {
-                    _activityIndicator.alpha = 1.0f;
-                } completion:nil];
+                 {
+                     _activityIndicator.alpha = 1.0f;
+                 } completion:nil];
             }
             else
                 _activityIndicator.alpha = 1.0f;
@@ -591,17 +591,17 @@ static UIView *findNavigationBar(UIView *view)
     _statusLabel.alpha = 0.0f;
     
     [UIView animateWithDuration:0.12 delay:0.0 options:iosMajorVersion() >= 7 ? (7 << 16) : 0 animations:^
-    {
-        CGRect titleFrame = _titleLabel.frame;
-        titleFrame.origin = currentTitlePosition;
-        _titleLabel.frame = titleFrame;
-        
-        statusSnapshot.alpha = 0.0f;
-        _statusLabel.alpha = 1.0f;
-    } completion:^(__unused BOOL finished)
-    {
-        [statusSnapshot removeFromSuperview];
-    }];
+     {
+         CGRect titleFrame = _titleLabel.frame;
+         titleFrame.origin = currentTitlePosition;
+         _titleLabel.frame = titleFrame;
+         
+         statusSnapshot.alpha = 0.0f;
+         _statusLabel.alpha = 1.0f;
+     } completion:^(__unused BOOL finished)
+     {
+         [statusSnapshot removeFromSuperview];
+     }];
 }
 
 - (void)setOrientation:(UIInterfaceOrientation)orientation
@@ -657,9 +657,9 @@ static UIView *findNavigationBar(UIView *view)
             
             _editingMode = editingMode;
             [UIView animateWithDuration:editingMode ? 0.2 : 0.3 animations:^
-            {
-                [self layoutSubviews];
-            }];
+             {
+                 [self layoutSubviews];
+             }];
         }
         
         if (_unreadContainer != nil)
@@ -667,10 +667,10 @@ static UIView *findNavigationBar(UIView *view)
             if (animated && !_unreadContainer.hidden)
             {
                 [UIView animateWithDuration:editingMode ? 0.2 : 0.3 animations:^
-                {
-                    _unreadBackground.alpha = editingMode ? 0.0f : 1.0f;
-                    _unreadLabel.alpha = editingMode ? 0.0f : 1.0f;
-                }];
+                 {
+                     _unreadBackground.alpha = editingMode ? 0.0f : 1.0f;
+                     _unreadLabel.alpha = editingMode ? 0.0f : 1.0f;
+                 }];
             }
             else
             {
@@ -756,7 +756,7 @@ static UIView *findNavigationBar(UIView *view)
         CGFloat maxStatusWidth = UIInterfaceOrientationIsPortrait(_orientation) ? (screenWidth - buttonsWidth) : CGFloor((screenWidth - buttonsWidth) / 2.0f);
         
         CGFloat portraitAdjustmentBounds = CGFloor(screenWidth - (_editingMode ? clearAllButtonSize : backButtonSize) * 2.0f);
-
+        
         if (_typingStatus != nil)
             maxStatusWidth -= 18; // dots
         

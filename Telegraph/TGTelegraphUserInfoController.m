@@ -72,6 +72,9 @@
 
 #import "TGPresentation.h"
 
+//CloudVeil
+#import <CloudVeilSecurityManager/CloudVeilSecurityManager-Swift.h>
+
 @interface TGTelegraphUserInfoController () <TGAlertSoundControllerDelegate, TGUserInfoEditingPhoneCollectionItemDelegate, TGPhoneLabelPickerControllerDelegate, TGCreateContactControllerDelegate, TGAddToExistingContactControllerDelegate>
 {
     bool _editing;
@@ -254,6 +257,7 @@
         _userLink = [TGDatabaseInstance() loadUserLink:_uid outdated:&outdated];
         
         _about = [TGDatabaseInstance() _userCachedDataSync:_uid].about;
+     
         
         if (_uid == 777000 || _uid == 333000) {
             self.userInfoItem.automaticallyManageUserPresence = false;
@@ -295,7 +299,9 @@
                     if ((strongSelf->_groupsInCommonCount != 0) != (data.groupsInCommonCount != 0)) {
                         forceUpdate = true;
                     }
+                    
                     strongSelf->_about = data.about;
+                    
                     strongSelf->_groupsInCommonCount = data.groupsInCommonCount;
                     [strongSelf->_groupsInCommonItem setVariant:[NSString stringWithFormat:@"%d", data.groupsInCommonCount]];
                     strongSelf->_supportsCalls = data.supportsCalls;
@@ -411,7 +417,11 @@
                 TGUserInfoTextCollectionItem *infoItem = [[TGUserInfoTextCollectionItem alloc] init];
                 infoItem.highlightLinks = _user.kind == TGUserKindBot || _user.kind == TGUserKindSmartBot;
                 infoItem.title = TGLocalized(@"Profile.About");
-                infoItem.text = _about;
+                
+                //CloudVeil
+                if(![[MainController shared] disableBio] && _uid != TGTelegraphInstance.clientUserId) {
+                   infoItem.text = _about;
+                }
                 __weak TGTelegraphUserInfoController *weakSelf = self;
                 infoItem.followLink = ^(NSString *link) {
                     TGTelegraphUserInfoController *strongSelf = weakSelf;

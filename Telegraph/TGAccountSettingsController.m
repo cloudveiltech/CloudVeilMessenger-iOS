@@ -430,10 +430,6 @@
 
 - (void)editButtonPressed
 {
-    // MARK: - CloudVeil
-    if ([[MainController shared] disableBioChange] == true)
-        return;
-    
     TGEditProfileController *controller = [[TGEditProfileController alloc] init];
     [self.navigationController pushViewController:controller animated:true];
 }
