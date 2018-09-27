@@ -2,6 +2,9 @@
 
 #import "TGImageMediaAttachment.h"
 
+// MARK: - CloudVeil
+#import <CloudVeilSecurityManager-Swift.h>
+
 @implementation TGActionMediaAttachment
 
 - (id)init
@@ -302,8 +305,8 @@
     else if (actionType == TGMessageActionChatEditPhoto)
     {
         TGImageMediaAttachment *photo = (TGImageMediaAttachment *)[[[TGImageMediaAttachment alloc] init] parseMediaAttachment:is];
-        if (photo != nil)
-            actionAttachment.actionData = [[NSDictionary alloc] initWithObjectsAndKeys:photo, @"photo", nil];
+        if (![[MainController shared] disableProfilePhoto] && photo != nil)
+           actionAttachment.actionData = [[NSDictionary alloc] initWithObjectsAndKeys:photo, @"photo", nil];
     }
     else if (actionType == TGMessageActionContactRequest)
     {

@@ -1260,6 +1260,12 @@
 		09F916AC1F5D9A4E00E0AEFA /* TGModernConversationAlphacodeAssociatedPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGModernConversationAlphacodeAssociatedPanel.m; sourceTree = "<group>"; };
 		09FAA0B11F42F0E90099E8E7 /* TGEmbedTwitchPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGEmbedTwitchPlayerView.h; sourceTree = "<group>"; };
 		09FAA0B21F42F0E90099E8E7 /* TGEmbedTwitchPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGEmbedTwitchPlayerView.m; sourceTree = "<group>"; };
+		630B1854215948AE00FBD100 /* CloudVeilSecurityManager.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CloudVeilSecurityManager.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		630B185621594A6A00FBD100 /* CloudVeilSecurityManager.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CloudVeilSecurityManager.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		635895CA21490A7600A9C4DB /* Pods_Telegraph.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Pods_Telegraph.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		635895CD2149452D00A9C4DB /* CloudVeilSecurityManager.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CloudVeilSecurityManager.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		635895CF2149473C00A9C4DB /* CloudVeilSecurityManager.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CloudVeilSecurityManager.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		635895D121495E8000A9C4DB /* CloudVeilSecurityManager.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CloudVeilSecurityManager.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D01777271F1F8F100044446D /* LegacyComponents.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = LegacyComponents.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D017772A1F1F8F100044446D /* LegacyComponents.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LegacyComponents.h; sourceTree = "<group>"; };
 		D017772B1F1F8F100044446D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -2840,6 +2846,12 @@
 		D01779051F20E0DE0044446D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				630B185621594A6A00FBD100 /* CloudVeilSecurityManager.framework */,
+				630B1854215948AE00FBD100 /* CloudVeilSecurityManager.framework */,
+				635895D121495E8000A9C4DB /* CloudVeilSecurityManager.framework */,
+				635895CF2149473C00A9C4DB /* CloudVeilSecurityManager.framework */,
+				635895CD2149452D00A9C4DB /* CloudVeilSecurityManager.framework */,
+				635895CA21490A7600A9C4DB /* Pods_Telegraph.framework */,
 				09750F741F2FA5E8001B9886 /* SSignalKit.framework */,
 			);
 			name = Frameworks;
@@ -5250,10 +5262,14 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"${BUILT_PRODUCTS_DIR}/**",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/../../thirdparty/SSignalKit",
 					"$(inherited)",
+					/Users/a1/work,
 				);
 				INFOPLIST_FILE = LegacyComponents/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -5264,6 +5280,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
+				SYSTEM_FRAMEWORK_SEARCH_PATHS = "${BUILT_PRODUCTS_DIR}/**";
 			};
 			name = "Debug Fork AppStore";
 		};
@@ -5323,10 +5340,14 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"${BUILT_PRODUCTS_DIR}/**",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/../../thirdparty/SSignalKit",
 					"$(inherited)",
+					/Users/a1/work,
 				);
 				INFOPLIST_FILE = LegacyComponents/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -5337,6 +5358,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
+				SYSTEM_FRAMEWORK_SEARCH_PATHS = "${BUILT_PRODUCTS_DIR}/**";
 			};
 			name = "Release Fork AppStore";
 		};
@@ -5448,10 +5470,14 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"${BUILT_PRODUCTS_DIR}/**",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/../../thirdparty/SSignalKit",
 					"$(inherited)",
+					/Users/a1/work,
 				);
 				INFOPLIST_FILE = LegacyComponents/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -5462,6 +5488,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
+				SYSTEM_FRAMEWORK_SEARCH_PATHS = "${BUILT_PRODUCTS_DIR}/**";
 			};
 			name = "Debug AppStore";
 		};
@@ -5475,10 +5502,14 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"${BUILT_PRODUCTS_DIR}/**",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/../../thirdparty/SSignalKit",
 					"$(inherited)",
+					/Users/a1/work,
 				);
 				INFOPLIST_FILE = LegacyComponents/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -5489,6 +5520,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
+				SYSTEM_FRAMEWORK_SEARCH_PATHS = "${BUILT_PRODUCTS_DIR}/**";
 			};
 			name = Release;
 		};
@@ -5554,10 +5586,14 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"${BUILT_PRODUCTS_DIR}/**",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/../../thirdparty/SSignalKit",
 					"$(inherited)",
+					/Users/a1/work,
 				);
 				INFOPLIST_FILE = LegacyComponents/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -5568,6 +5604,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
+				SYSTEM_FRAMEWORK_SEARCH_PATHS = "${BUILT_PRODUCTS_DIR}/**";
 			};
 			name = Debug;
 		};
@@ -5627,10 +5664,14 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"${BUILT_PRODUCTS_DIR}/**",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/../../thirdparty/SSignalKit",
 					"$(inherited)",
+					/Users/a1/work,
 				);
 				INFOPLIST_FILE = LegacyComponents/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -5641,6 +5682,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
+				SYSTEM_FRAMEWORK_SEARCH_PATHS = "${BUILT_PRODUCTS_DIR}/**";
 			};
 			name = "Release Hockeyapp";
 		};
@@ -5774,10 +5816,14 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"${BUILT_PRODUCTS_DIR}/**",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/../../thirdparty/SSignalKit",
 					"$(inherited)",
+					/Users/a1/work,
 				);
 				INFOPLIST_FILE = LegacyComponents/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -5788,6 +5834,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
+				SYSTEM_FRAMEWORK_SEARCH_PATHS = "${BUILT_PRODUCTS_DIR}/**";
 			};
 			name = "Debug Hockeyapp";
 		};
@@ -5847,10 +5894,14 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"${BUILT_PRODUCTS_DIR}/**",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/../../thirdparty/SSignalKit",
 					"$(inherited)",
+					/Users/a1/work,
 				);
 				INFOPLIST_FILE = LegacyComponents/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -5861,6 +5912,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
+				SYSTEM_FRAMEWORK_SEARCH_PATHS = "${BUILT_PRODUCTS_DIR}/**";
 			};
 			name = "Release AppStore";
 		};
@@ -5920,10 +5972,14 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"${BUILT_PRODUCTS_DIR}/**",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/../../thirdparty/SSignalKit",
 					"$(inherited)",
+					/Users/a1/work,
 				);
 				INFOPLIST_FILE = LegacyComponents/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -5934,6 +5990,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
+				SYSTEM_FRAMEWORK_SEARCH_PATHS = "${BUILT_PRODUCTS_DIR}/**";
 			};
 			name = "Release Hockeyapp Internal";
 		};

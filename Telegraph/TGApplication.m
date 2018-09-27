@@ -355,7 +355,8 @@
         return true;
     }
     
-    if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone && iosMajorVersion() >= 9 && ([url.scheme isEqual:@"http"] || [url.scheme isEqual:@"https"])) {
+    //Cloudveil start disable inapp browser
+    /*if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone && iosMajorVersion() >= 9 && ([url.scheme isEqual:@"http"] || [url.scheme isEqual:@"https"])) {
         
         UIViewController *parentController = TGAppDelegateInstance.window.rootViewController;
         if ([parentController.presentedViewController isKindOfClass:[TGHashtagOverviewController class]])
@@ -373,7 +374,8 @@
             [parentController presentViewController:controller animated:true completion:nil];
         }
         return true;
-    }
+    }*/
+    //CloudVeil end
     
     return [super openURL:url];
 }

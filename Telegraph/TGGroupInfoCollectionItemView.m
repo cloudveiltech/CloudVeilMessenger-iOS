@@ -17,6 +17,9 @@
 
 #import "TGPresentation.h"
 
+//CloudVeil
+#import <CloudVeilSecurityManager/CloudVeilSecurityManager-Swift.h>
+
 @interface TGGroupInfoCollectionItemView ()
 {
     bool _editing;
@@ -118,8 +121,8 @@
     UIImage *currentPlaceholder = [_avatarView currentImage];
     if (currentPlaceholder == nil)
         currentPlaceholder = placeholder;
-    
-    if (avatarUri.length == 0)
+    //CloudVeil
+    if ([[MainController shared] disableProfilePhoto] || avatarUri.length == 0)
         [_avatarView loadGroupPlaceholderWithSize:CGSizeMake(64.0f, 64.0f) conversationId:_groupId title:_isBroadcast ? @"" : _titleLabel.text placeholder:placeholder];
     else if (!TGStringCompare([_avatarView currentUrl], avatarUri))
     {
@@ -130,7 +133,8 @@
 
 - (void)setAvatarImage:(UIImage *)avatarImage animated:(bool)__unused animated
 {
-    if (avatarImage == nil) {
+    //CloudVeil
+    if ([[MainController shared] disableProfilePhoto] || avatarImage == nil) {
         static UIImage *placeholder = nil;
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^ {

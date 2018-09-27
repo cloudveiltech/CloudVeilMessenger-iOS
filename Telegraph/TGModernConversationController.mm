@@ -6277,9 +6277,8 @@ typedef enum {
         TGCustomActionSheet *actionSheet = [[TGCustomActionSheet alloc] initWithTitle:displayString.length < 70 ? displayString : [[displayString substringToIndex:70] stringByAppendingString:@"..."] actions:actions menuController:nil advancedActionBlock:^(TGMenuSheetController *menuController, TGModernConversationController *controller, NSString *action)
         {
             if ([action isEqualToString:@"open"])
-            {
-                // CloudVeil: - remove in app browser
-                //[controller openBrowserFromMessage:0 url:url];
+            {                
+                [controller openBrowserFromMessage:0 url:url];
             }
             else if ([action isEqualToString:@"openIn"])
             {

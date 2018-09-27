@@ -47,6 +47,8 @@
 
 #import <set>
 #import <map>
+// MARK: - CloudVeil
+#import <CloudVeilSecurityManager/CloudVeilSecurityManager-Swift.h>
 
 @protocol TGSyntheticUpdateWithPts <NSObject>
 
@@ -1445,6 +1447,7 @@ static int64_t extractMessageConversationId(T concreteMessage, int &outFromUid)
                                         text = [[NSString alloc] initWithFormat:TGLocalized(@"CHAT_PHOTO_EDITED"), user.displayName, chatName];
                                         attachmentFound = true;
                                         
+                                        if([MainController shared])
                                         break;
                                     }
                                     case TGMessageActionChatAddMember:
@@ -1937,7 +1940,9 @@ static int64_t extractMessageConversationId(T concreteMessage, int &outFromUid)
                                 localNotification.category = @"r";
                         }
                         
-                        if (text != nil)
+                        
+                        //CloudVeil notifications
+                        if ([self isChannelUnavailable:message.cid] && text != nil)
                             [[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
                     }
                 }
@@ -1953,6 +1958,29 @@ static int64_t extractMessageConversationId(T concreteMessage, int &outFromUid)
             }
         }];
     });
+}
+
+//CloudVeil notifications
++(BOOL)isChannelUnavailable:(int64_t) cid
+{
+    // MARK: - CloudVeil Security
+    
+    if ([[MainController shared] isGroupAvailableWithGroupID:cid] == false)
+        return true;
+    
+    if ([[MainController shared] isChannelAvailableWithChannelID:cid] == false)
+        return true;
+    
+    TGUser *user = nil;
+    user = [TGDatabaseInstance() loadUser:(int)cid];
+    if (user.isBot) {
+        if ([[MainController shared] isBotAvailableWithBotID:cid] == false) {
+            return true;
+        }
+    }
+    // MARK: --------------------
+    
+    return false;
 }
 
 @end
