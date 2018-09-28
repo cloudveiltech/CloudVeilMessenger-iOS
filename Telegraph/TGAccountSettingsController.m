@@ -83,6 +83,7 @@
 
 // MARK: - CloudVeil
 #import <CloudVeilSecurityManager/CloudVeilSecurityManager-Swift.h>
+#import "TGDebugController.h"
 
 @interface TGAccountSettingsController ()
 {
@@ -114,6 +115,9 @@
     TGDisclosureActionCollectionItem *_stickerSettingsItem;
     TGDisclosureActionCollectionItem *_supportItem;
     TGDisclosureActionCollectionItem *_faqItem;
+    //CloudVeil start
+    TGDisclosureActionCollectionItem *_sendDebugLogsItem;
+    //CloudVeil end
     
     TGCollectionMenuSection *_otherSection;
     TGDisclosureActionCollectionItem *_passportItem;
@@ -248,10 +252,15 @@
         
         _faqItem = [[TGDisclosureActionCollectionItem alloc] initWithTitle:TGLocalized(@"Settings.FAQ") action:@selector(faqPressed)];
         _faqItem.deselectAutomatically = true;
-        
+         //CloudVeil start
+        _sendDebugLogsItem = [[TGDisclosureActionCollectionItem alloc] initWithTitle:@"Send Debug Logs" action:@selector(debugPreessed)];
+        _sendDebugLogsItem.deselectAutomatically = true;
+        //CloudVeil end
         TGCollectionMenuSection *infoSection = [[TGCollectionMenuSection alloc] initWithItems:@[
             _supportItem,
-            _faqItem
+            _faqItem,
+            //CloudVeil
+            _sendDebugLogsItem
         ]];
         [self.menuSections addSection:infoSection];
    
@@ -785,6 +794,12 @@
 {
     [TGAppDelegateInstance handleOpenInstantView:TGLocalized(@"Settings.FAQ_URL") disableActions:false];
 }
+
+//CloudVeil Start
+- (void)debugPreessed {
+  [TGAppDelegateInstance.rootController pushContentController:[[TGDebugController alloc] init]];
+}
+//CloudVeil end
 
 #pragma mark -
 

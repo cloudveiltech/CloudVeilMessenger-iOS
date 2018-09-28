@@ -925,10 +925,8 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
         [self controllerInsetUpdated:UIEdgeInsetsZero];
     
     // MARK: - CloudVeil
-    TGLogSetEnabled(true);
-    
     [[MainController shared] appendObserverWithObs:^{
-        
+        TGLog(@"CloudVeil received sync data");
         [weakSelf updateChannelsAvailability: weakSelf.listModel];
         
         if (weakSelf.searchResultsSections.count > 1)
@@ -1332,6 +1330,7 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
 -(void)updateChannelsAvailability:(NSArray *)items
 {
     // MARK: - CloudVeil Security
+    TGLog(@"CloudVeil received updating lists");
     for (id item in items) {
         if ([item isKindOfClass:[TGConversation class]]) {
             
@@ -1369,6 +1368,7 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
         }
     }
     
+    TGLog(@"CloudVeil update done");
     [_tableView reloadData];
 }
 
