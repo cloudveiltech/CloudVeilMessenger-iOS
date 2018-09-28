@@ -1,4 +1,4 @@
-TELEGRAM_APP_NAME=Telegram
+TELEGRAM_APP_NAME=CloudVeil Messenger
 TELEGRAPH_BUNDLE_ID=com.cloudveil.CloudVeilMessenger
 TELEGRAM_APPSTORE_ID = @686449807
 

@@ -925,6 +925,8 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
         [self controllerInsetUpdated:UIEdgeInsetsZero];
     
     // MARK: - CloudVeil
+    TGLogSetEnabled(true);
+    
     [[MainController shared] appendObserverWithObs:^{
         
         [weakSelf updateChannelsAvailability: weakSelf.listModel];
@@ -1372,6 +1374,8 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
 
 - (void)reciveChannelsAvailability:(NSArray *)items
 {
+    TGLog(@"Syncing CLoudveil settings");
+    
     // MARK: - CloudVeil Security
     TGUser *user = nil;
     NSMutableArray *securityGroups = [NSMutableArray new];
@@ -1399,10 +1403,13 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
         }
     }
     
-    if (securityGroups.count == 0 && securityBots.count == 0 && securityChannels.count == 0)
+    if (securityGroups.count == 0 && securityBots.count == 0 && securityChannels.count == 0) {
+        TGLog(@"Syncing CLoudveil nothing to sync");
         return;
+    }
     
-    //Cloudveil
+    //Cloudveil    
+    TGLog(@"Syncing CLoudveil server request");
     [[MainController shared] getSettingsWithGroups:securityGroups bots:securityBots channels:securityChannels];
     // MARK: --------------------
 }
