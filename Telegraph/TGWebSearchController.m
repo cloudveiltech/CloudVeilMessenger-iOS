@@ -352,12 +352,12 @@
     [self.view addSubview:_recentSearchResultsTableView];
     
     self.scrollViewsForAutomaticInsetsAdjustment = @[_collectionView, _recentSearchResultsTableView];
-    
-    if (self.avatarSelection)
+    //CloudVeil start gif
+    //if (self.avatarSelection)
         _scopeButtonTitles = @[TGLocalized(@"WebSearch.Images"), TGLocalized(@"WebSearch.RecentSectionTitle")];
-    else
-        _scopeButtonTitles = @[TGLocalized(@"WebSearch.Images"), TGLocalized(@"WebSearch.GIFs"), TGLocalized(@"WebSearch.RecentSectionTitle")];
-    
+    //else
+     //   _scopeButtonTitles = @[TGLocalized(@"WebSearch.Images"), TGLocalized(@"WebSearch.GIFs"), TGLocalized(@"WebSearch.RecentSectionTitle")];
+    //CloudVeil end
     _searchBar = [[TGSearchBar alloc] initWithFrame:CGRectMake(0.0f, 0.0f, frameSize.width, 0.0f) style:TGSearchBarStyleHeader];
     [_searchBar setPallete:self.presentation.searchBarPallete];
     _searchBar.safeAreaInset = safeAreaInset;
@@ -501,17 +501,18 @@
 
 - (NSArray *)_listItemsFromResults:(NSArray *)results
 {
+    //CloudVeil search gifs
     NSMutableArray *items = [[NSMutableArray alloc] init];
     for (id item in results)
     {
-        if ([item isKindOfClass:[TGGiphySearchResultItem class]] && !self.avatarSelection)
+       /* if ([item isKindOfClass:[TGGiphySearchResultItem class]] && !self.avatarSelection)
         {
             TGGiphySearchResultItem *concreteItem = item;
             TGWebSearchGifItem *listItem = [[TGWebSearchGifItem alloc] initWithPreviewUrl:concreteItem.previewUrl searchResultItem:item];
             listItem.selectionContext = _recentSelectionContext;
             [items addObject:listItem];
         }
-        else if ([item isKindOfClass:[TGBingSearchResultItem class]])
+        else*/ if ([item isKindOfClass:[TGBingSearchResultItem class]])
         {
             TGBingSearchResultItem *concreteItem = item;
             TGWebSearchImageItem *listItem = [[TGWebSearchImageItem alloc] initWithPreviewUrl:concreteItem.previewUrl searchResultItem:item];
@@ -539,7 +540,7 @@
                 concreteItem.fetchOriginalThumbnailImage = _fetchOriginalThumbnailImage;
             }
         }
-        else if ([item isKindOfClass:[TGWebSearchInternalGifResult class]] && !self.avatarSelection)
+       /*else if ([item isKindOfClass:[TGWebSearchInternalGifResult class]] && !self.avatarSelection)
         {
             TGWebSearchInternalGifItem *listItem = [[TGWebSearchInternalGifItem alloc] initWithSearchResult:item];
             listItem.selectionContext = _recentSelectionContext;
@@ -556,8 +557,9 @@
             TGExternalGifSearchResultItem *listItem = [[TGExternalGifSearchResultItem alloc] initWithSearchResult:item];
             listItem.selectionContext = _recentSelectionContext;
             [items addObject:listItem];
-        }
+        }*/
     }
+    //CloudVeil end
     return items;
 }
 
