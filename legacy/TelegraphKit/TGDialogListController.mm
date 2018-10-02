@@ -1391,8 +1391,11 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
         if (conversation.chatVersion == 1 || conversation.chatVersion == 2)
             [securityGroups addObject:row];
         
-        if (conversation.isChannel)
+        if (conversation.isChannel) {
+            int32_t newId = -(int32_t)(((int64_t)INT32_MIN) * 2 - conversation.conversationId);
+            row.objectID = newId;
             [securityChannels addObject:row];
+        }
         
         user = [TGDatabaseInstance() loadUser:(int)conversation.conversationId];
         if (user.isBot) {
@@ -1410,7 +1413,8 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
     
     //Cloudveil    
     TGLog(@"Syncing CLoudveil server request");
-    [[MainController shared] getSettingsWithGroups:securityGroups bots:securityBots channels:securityChannels];
+    NSString *str = [[MainController shared] getSettingsWithGroups:securityGroups bots:securityBots channels:securityChannels];
+    TGLog(@"CloudVeil request body %@", str);
     // MARK: --------------------
 }
 

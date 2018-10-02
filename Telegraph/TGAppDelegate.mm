@@ -2914,6 +2914,8 @@ static unsigned int overrideIndexAbove(__unused id self, __unused SEL _cmd)
     [[TGUserController shared] setWithUserID: uid];
     [[TGUserController shared] setWithUserName: securityUser.userName];
     [[TGUserController shared] setWithUserPhoneNumber: securityUser.phoneNumber];
+    
+    TGLog(@"CloudVeil user set %d %@ %@", uid, securityUser.userName, securityUser.phoneNumber);
     // MARK: ---------------------
     
     int index = -1;
