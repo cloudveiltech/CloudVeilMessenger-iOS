@@ -8915,7 +8915,9 @@ typedef enum {
         [strongController dismissAnimated:true];
         [strongSelf _displayMediaPicker:false fromFileMenu:false];
     }];
-    galleryItem.longPressAction = ^
+    
+    //CloudVeil start disable long press
+    /*galleryItem.longPressAction = ^
     {
         __strong TGModernConversationController *strongSelf = weakSelf;
         if (strongSelf == nil)
@@ -8927,7 +8929,8 @@ typedef enum {
         
         [strongController dismissAnimated:true];
         [strongSelf _displayWebImagePicker];
-    };
+    };*/
+    //CloudVeil end
     [itemViews addObject:galleryItem];
     
     TGMenuSheetButtonItemView *fileItem = [[TGMenuSheetButtonItemView alloc] initWithTitle:TGLocalized(@"AttachmentMenu.File") type:TGMenuSheetButtonTypeDefault action:^

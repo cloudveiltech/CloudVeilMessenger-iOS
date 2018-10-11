@@ -82,7 +82,6 @@
 #import "TGLegacyComponentsContext.h"
 
 // MARK: - CloudVeil
-#import <CloudVeilSecurityManager/CloudVeilSecurityManager-Swift.h>
 #import "TGDebugController.h"
 
 @interface TGAccountSettingsController ()
@@ -179,11 +178,7 @@
         NSMutableArray *shortcutItems = [[NSMutableArray alloc] init];
         [shortcutItems addObject:(_savedMessagesItem = [[TGDisclosureActionCollectionItem alloc] initWithTitle:TGLocalized(@"Settings.SavedMessages") action:@selector(savedMessagesPressed)])];
         
-        //CloudVeil start
-        if([[MainController shared] disableStickers] == FALSE) {
-            [shortcutItems addObject:(_stickerSettingsItem = [[TGDisclosureActionCollectionItem alloc] initWithTitle:TGLocalized(@"ChatSettings.Stickers") action:@selector(stickerSettingsPressed)])];
-        }
-        //CloudVeil end
+        [shortcutItems addObject:(_stickerSettingsItem = [[TGDisclosureActionCollectionItem alloc] initWithTitle:TGLocalized(@"ChatSettings.Stickers") action:@selector(stickerSettingsPressed)])];
         
         _shortcutSection = [[TGCollectionMenuSection alloc] initWithItems:shortcutItems];
         [self.menuSections addSection:_shortcutSection];
