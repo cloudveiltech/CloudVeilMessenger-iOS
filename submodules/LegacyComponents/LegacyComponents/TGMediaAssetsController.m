@@ -935,6 +935,9 @@
     if (self.requestSearchController == nil) {
         return nil;
     }
+    //CloudVeil start
+    return nil;
+    //CloudVeil end
     
     if (iosMajorVersion() < 7)
     {

@@ -1671,6 +1671,12 @@ static UIView *_findBackArrow(UIView *view)
 
 - (TGModernGalleryController *)createAvatarGalleryControllerForPreviewMode:(bool)previewMode
 {
+    //CloudVeil start
+    if([[MainController shared] disableProfilePhoto]) {
+        return nil;
+    }
+    //CloudVeil end
+    
     TGUser *user = [TGDatabaseInstance() loadUser:_uid];
     
     if (user.photoUrlSmall.length != 0)

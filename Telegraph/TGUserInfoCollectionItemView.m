@@ -78,6 +78,7 @@
         [_avatarView setSingleFontSize:28.0f doubleFontSize:28.0f useBoldFont:false];
         _avatarView.fadeTransition = true;
         _avatarView.userInteractionEnabled = true;
+        
         [_avatarView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(avatarTapGesture:)]];
         [self addSubview:_avatarView];
         
