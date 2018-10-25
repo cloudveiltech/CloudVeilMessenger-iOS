@@ -277,7 +277,7 @@
                 
                 return;
             }
-            
+
             TGConversation *conversation = [TGDatabaseInstance() loadConversationWithId:conversationId];
             if (conversation == nil) {
                 conversation = [[TGConversation alloc] initWithConversationId:conversationId unreadCount:0 serviceUnreadCount:0];

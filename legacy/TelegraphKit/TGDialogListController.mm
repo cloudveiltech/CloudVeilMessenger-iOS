@@ -132,6 +132,10 @@ static int64_t lastAppearedConversationId = 0;
     
     NSArray *_reusableSectionHeaders;
     
+    //Cloudveil start
+    TGConversation* _selectedConversation;
+    //Cloudveil end
+    
     SMetaDisposable *_searchDisposable;
     NSString *_searchResultsQuery;
     
@@ -936,6 +940,7 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
     }];
 }
 
+
 - (void)doUnloadView
 {
     _tableView.delegate = nil;
@@ -1038,6 +1043,7 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
 
 - (void)viewDidAppear:(BOOL)animated
 {
+    _selectedConversation = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^
     {
@@ -1333,31 +1339,10 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
     TGLog(@"CloudVeil received updating lists");
     for (id item in items) {
         if ([item isKindOfClass:[TGConversation class]]) {
-            
             TGConversation *conv = item;
-            
-            if (conv.chatVersion == 1 || conv.chatVersion == 2)
-                if ([[MainController shared] isGroupAvailableWithGroupID:conv.conversationId] == false)
-                    conv.isBlocked = true;
-            
-            if (conv.isChannel)
-                if ([[MainController shared] isChannelAvailableWithChannelID:conv.conversationId] == false)
-                    conv.isBlocked = true;
-            
-            if (conv.isEncrypted)
-                if ([[MainController shared] isSecretChatAvailable] == false)
-                    conv.isBlocked = true;
-            
-            TGUser *user = nil;
-            user = [TGDatabaseInstance() loadUser:(int)conv.conversationId];
-            if (user.isBot) {
-                if ([[MainController shared] isBotAvailableWithBotID:conv.conversationId] == false) {
-                    conv.isBlocked = true;
-                    conv.isBot = true;
-                }
-            }
-        } else if ([item isKindOfClass:[TGUser class]]) {
-            
+            conv.isBlocked = [self isCoversationBlocked:conv];
+        }
+        else if ([item isKindOfClass:[TGUser class]]) {
             TGUser *user = item;
             
             if (user.isBot) {
@@ -1370,7 +1355,56 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
     
     TGLog(@"CloudVeil update done");
     [_tableView reloadData];
+    
+    if(_selectedConversation != nil) {
+        [self closeCurrentConversationIfBlocked];
+    }
 }
+
+//CloudVeil start
+- (BOOL)isCoversationBlocked:(TGConversation *)conv {
+    if (conv.chatVersion == 1 || conv.chatVersion == 2)
+        if ([[MainController shared] isGroupAvailableWithGroupID:conv.conversationId] == false)
+            return true;
+    
+    if (conv.isChannel)
+        if ([[MainController shared] isChannelAvailableWithChannelID:conv.conversationId] == false)
+            return true;
+    
+    if (conv.isEncrypted)
+        if ([[MainController shared] isSecretChatAvailable] == false)
+            return true;
+    
+    TGUser *user = nil;
+    user = [TGDatabaseInstance() loadUser:(int)conv.conversationId];
+    if (user.isBot) {
+        if ([[MainController shared] isBotAvailableWithBotID:conv.conversationId] == false) {
+            conv.isBlocked = true;
+            user.isBlocked = true;
+            return true;
+        }
+    }
+}
+
+- (void)closeCurrentConversationIfBlocked {
+    UINavigationController* navigationController = [self navigationController];
+    UIViewController* viewController = [navigationController visibleViewController];
+    
+    if ([viewController isKindOfClass:[TGModernConversationController class]])
+    {
+        TGModernConversationController *existingConversationController = (TGModernConversationController *)viewController;
+        id companion = existingConversationController.companion;
+        if ([companion isKindOfClass:[TGGenericModernConversationCompanion class]])
+        {
+            TGGenericModernConversationCompanion *comp = companion;
+            if([self isCoversationBlocked:comp.conversation]) {
+                [navigationController popViewControllerAnimated:true];
+                [self showCloudVeilBlockAlert:comp.conversation];
+            }
+        }
+    }
+}
+//CloudVeil end
 
 - (void)reciveChannelsAvailability:(NSArray *)items
 {
@@ -1553,6 +1587,10 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
     }
     
     _visibleConversationsPipe.sink(@true);
+    
+    //CloudVeil start
+    [self reciveChannelsAvailability:_listModel];
+    //CloudVeil end
 }
 
 - (void)dialogListItemsChanged:(NSArray *)__unused insertedIndices insertedItems:(NSArray *)__unused insertedItems updatedIndices:(NSArray *)__unused updatedIndices updatedItems:(NSArray *)__unused updatedItems removedIndices:(NSArray *)__unused removedIndices
@@ -1820,10 +1858,34 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
 -(void)showCloudVeilMailAction:(TGConversation *)conversation
 {
     if ([MFMailComposeViewController canSendMail])  {
+        
+        NSString *title = conversation.chatTitle;
+        NSString *username = conversation.username;
+        
+        NSString *type = @"";
+        if (conversation.isBot)
+            type = @"bot";
+        else if (conversation.isChannel)
+            type = @"channel";
+        else if (conversation.chatVersion == 1 || conversation.chatVersion == 2) // MARK: - CloudVeil group flag = 64
+            type = @"group";
+        else {
+            type = @"user";
+            TGUser *user = [TGDatabaseInstance() loadUser:(int)conversation.conversationId];
+            if(user.isBot) {
+                type = @"bot";
+                title = user.firstName;
+                username = user.userName;
+            }
+        }
+        NSInteger userId = [[TGUserController shared] getUserID];
+        
+        NSString *message = [NSString stringWithFormat:@"User ID: %ld\nConversation ID: %lld\nUsername: %@\nType: %@\nTitle: %@", (long)userId, conversation.conversationId, username, type, title];
+        
         MFMailComposeViewController *mail = [MFMailComposeViewController new];
         mail.mailComposeDelegate = self;
-        [mail setSubject:[NSString stringWithFormat:@"CloudVeil conversation id: %lld", conversation.conversationId]];
-        [mail setMessageBody:@"" isHTML:false];
+        [mail setSubject:[NSString stringWithFormat:@"Unblock Request for %@: %@", type, title]];
+        [mail setMessageBody:message isHTML:false];
         [mail setToRecipients:@[@"support@cloudveil.org"]];
         
         [self presentViewController:mail animated:YES completion:NULL];
@@ -1846,6 +1908,7 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
         [tableView deselectRowAtIndexPath:indexPath animated:false];
         return [self showCloudVeilBlockAlert:conv];
     }
+    _selectedConversation = conv;
     
     // end cloudveil
     

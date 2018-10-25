@@ -11,6 +11,10 @@
 
 #import "TGChatListAvatarSignal.h"
 
+// MARK: - CloudVeil
+#import <CloudVeilSecurityManager/CloudVeilSecurityManager-Swift.h>
+// MARK: ----------------
+
 @interface TGShareChatListCell ()
 {
     TGCheckButtonView *_checkButton;
@@ -76,7 +80,7 @@
         {
             [_avatarView setSignal:[TGChatListAvatarSignal chatListAvatarForSavedMessagesWithContext:shareContext imageSize:imageSize]];
         }
-        else if (userModel.avatarLocation == nil)
+        else if (userModel.avatarLocation == nil || [[MainController shared] disableProfilePhoto])
         {
             NSString *letters = @"";
             if (userModel.firstName.length != 0 && userModel.lastName.length != 0)

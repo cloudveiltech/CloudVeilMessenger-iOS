@@ -380,6 +380,11 @@ static NSString *addGameShareHash(NSString *url, NSString *addHash) {
     return _conversationId;
 }
 
+//CloudVeil
+- (TGConversation *)conversation {
+    return _initialConversation;
+}
+
 - (int64_t)messageAuthorPeerId
 {
     return TGTelegraphInstance.clientUserId;

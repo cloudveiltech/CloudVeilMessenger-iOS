@@ -777,6 +777,7 @@
 		63B457AD213F025600F57ABA /* NSMutableArray+Filtering.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B457A8213F025500F57ABA /* NSMutableArray+Filtering.m */; };
 		63B457AE213F025600F57ABA /* NSMutableArray+Filtering.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B457A8213F025500F57ABA /* NSMutableArray+Filtering.m */; };
 		63B457AF213F025600F57ABA /* NSMutableArray+Filtering.h in Headers */ = {isa = PBXBuildFile; fileRef = 63B457A9213F025500F57ABA /* NSMutableArray+Filtering.h */; };
+		63C5170D2182494800450832 /* Pods_Share.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53108646CE8CBA70B7C68968 /* Pods_Share.framework */; };
 		6801D6681BEF6CC600533783 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D08805C9156E8F5100311537 /* AddressBook.framework */; };
 		6804D8AE1D1D624E0082E71F /* TGGifGalleryAddAccessoryView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6804D8AC1D1D624E0082E71F /* TGGifGalleryAddAccessoryView.h */; };
 		6804D8AF1D1D624E0082E71F /* TGGifGalleryAddAccessoryView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6804D8AD1D1D624E0082E71F /* TGGifGalleryAddAccessoryView.m */; };
@@ -5975,9 +5976,14 @@
 		09FCB6941FB2FAE70007D2CA /* PasscodePlaceholderIcon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "PasscodePlaceholderIcon@3x.png"; path = "Resources/PasscodePlaceholderIcon@3x.png"; sourceTree = "<group>"; };
 		11DC2280B2A74D1E1B32F21F /* Pods-Telegraph.debug appstore.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Telegraph.debug appstore.xcconfig"; path = "Pods/Target Support Files/Pods-Telegraph/Pods-Telegraph.debug appstore.xcconfig"; sourceTree = "<group>"; };
 		471677FC93248FEFF2DDDE81 /* Pods-Telegraph.release fork appstore.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Telegraph.release fork appstore.xcconfig"; path = "Pods/Target Support Files/Pods-Telegraph/Pods-Telegraph.release fork appstore.xcconfig"; sourceTree = "<group>"; };
+		4E7723105C0957A4BE4B5934 /* Pods-Share.release fork appstore.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Share.release fork appstore.xcconfig"; path = "Pods/Target Support Files/Pods-Share/Pods-Share.release fork appstore.xcconfig"; sourceTree = "<group>"; };
+		53108646CE8CBA70B7C68968 /* Pods_Share.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Share.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6358212F213ECF5900683D8F /* CloudVeilSecurityManager.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CloudVeilSecurityManager.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		63B457A8213F025500F57ABA /* NSMutableArray+Filtering.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+Filtering.m"; sourceTree = "<group>"; };
 		63B457A9213F025500F57ABA /* NSMutableArray+Filtering.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+Filtering.h"; sourceTree = "<group>"; };
+		63C516DD21823C7A00450832 /* CloudVeilSecurityManager.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CloudVeilSecurityManager.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		63C516E021823CAE00450832 /* CloudVeilSecurityManager.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CloudVeilSecurityManager.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		63C5170E2182494C00450832 /* CloudVeilSecurityManager.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CloudVeilSecurityManager.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6803268D1D5D74FF0062725B /* TGPhotoPaintSettingsWrapperView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPhotoPaintSettingsWrapperView.h; sourceTree = "<group>"; };
 		6803268E1D5D74FF0062725B /* TGPhotoPaintSettingsWrapperView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPhotoPaintSettingsWrapperView.m; sourceTree = "<group>"; };
 		680326911D5DFC640062725B /* TGPaintingData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPaintingData.h; sourceTree = "<group>"; };
@@ -7301,6 +7307,7 @@
 		68F7D3C41CADF1FB00265D0A /* TGPreviewWebPageItemView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPreviewWebPageItemView.m; sourceTree = "<group>"; };
 		69F842411E67546900C110F7 /* libtgvoip.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libtgvoip.xcodeproj; path = ../submodules/libtgvoip/libtgvoip.xcodeproj; sourceTree = "<group>"; };
 		69F8429E1E67589900C110F7 /* libtgvoip.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = libtgvoip.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		77FE7C218859682DA7998C22 /* Pods-Share.release appstore.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Share.release appstore.xcconfig"; path = "Pods/Target Support Files/Pods-Share/Pods-Share.release appstore.xcconfig"; sourceTree = "<group>"; };
 		7948B011F12C91EFBC4B367B /* Pods-Telegraph.debug hockeyapp.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Telegraph.debug hockeyapp.xcconfig"; path = "Pods/Target Support Files/Pods-Telegraph/Pods-Telegraph.debug hockeyapp.xcconfig"; sourceTree = "<group>"; };
 		80E4DD766B6B52E8FF6B8047 /* Pods-Telegraph.release hockeyapp.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Telegraph.release hockeyapp.xcconfig"; path = "Pods/Target Support Files/Pods-Telegraph/Pods-Telegraph.release hockeyapp.xcconfig"; sourceTree = "<group>"; };
 		9302CA2A171B581200C8559D /* VideoSliderBackground@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "VideoSliderBackground@2x.png"; path = "Resources/VideoSliderBackground@2x.png"; sourceTree = "<group>"; };
@@ -7990,6 +7997,8 @@
 		93F6940416932F8700691086 /* TGBlockListRequestActor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGBlockListRequestActor.h; sourceTree = "<group>"; };
 		93F6940516932F8700691086 /* TGBlockListRequestActor.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TGBlockListRequestActor.mm; sourceTree = "<group>"; };
 		9B72CC72F3DEBCD4C7AFE3B6 /* Pods-Telegraph.debug fork appstore.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Telegraph.debug fork appstore.xcconfig"; path = "Pods/Target Support Files/Pods-Telegraph/Pods-Telegraph.debug fork appstore.xcconfig"; sourceTree = "<group>"; };
+		A4266F1A66B6136771E8CBE7 /* Pods-Share.debug fork appstore.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Share.debug fork appstore.xcconfig"; path = "Pods/Target Support Files/Pods-Share/Pods-Share.debug fork appstore.xcconfig"; sourceTree = "<group>"; };
+		A45E457718A6099A78A7A87C /* Pods-Share.debug appstore.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Share.debug appstore.xcconfig"; path = "Pods/Target Support Files/Pods-Share/Pods-Share.debug appstore.xcconfig"; sourceTree = "<group>"; };
 		C373FBCE7D53895A14FB5235 /* Pods_Telegraph.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Telegraph.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D00040A315BCD2EA00AF9EBF /* TGMessage+Telegraph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TGMessage+Telegraph.h"; sourceTree = "<group>"; };
 		D00040A415BCD2EA00AF9EBF /* TGMessage+Telegraph.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TGMessage+Telegraph.m"; sourceTree = "<group>"; };
@@ -11768,7 +11777,9 @@
 		D0FD89A2156FD4FB00CC3714 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		D0FFBDDD1BAB0E7300F532C9 /* TGChannelMembersController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGChannelMembersController.h; sourceTree = "<group>"; };
 		D0FFBDDE1BAB0E7300F532C9 /* TGChannelMembersController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGChannelMembersController.m; sourceTree = "<group>"; };
+		D8A7E00360DC69EF8B231B4A /* Pods-Share.debug hockeyapp.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Share.debug hockeyapp.xcconfig"; path = "Pods/Target Support Files/Pods-Share/Pods-Share.debug hockeyapp.xcconfig"; sourceTree = "<group>"; };
 		E831AD3317ACE699B2EE5DDC /* Pods-Telegraph.release appstore.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Telegraph.release appstore.xcconfig"; path = "Pods/Target Support Files/Pods-Telegraph/Pods-Telegraph.release appstore.xcconfig"; sourceTree = "<group>"; };
+		FDC08609C0445A537DA696C3 /* Pods-Share.release hockeyapp.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Share.release hockeyapp.xcconfig"; path = "Pods/Target Support Files/Pods-Share/Pods-Share.release hockeyapp.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -11878,6 +11889,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				63C5170D2182494800450832 /* Pods_Share.framework in Frameworks */,
 				09D37F181EF3E55F0071BE64 /* PassKit.framework in Frameworks */,
 				D020FB231D99665400F279AA /* LegacyDatabase.framework in Frameworks */,
 				D04ED6CD1D67495900C541E0 /* WebKit.framework in Frameworks */,
@@ -20064,6 +20076,9 @@
 		D08805AF156E8F3600311537 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				63C5170E2182494C00450832 /* CloudVeilSecurityManager.framework */,
+				63C516E021823CAE00450832 /* CloudVeilSecurityManager.framework */,
+				63C516DD21823C7A00450832 /* CloudVeilSecurityManager.framework */,
 				6358212F213ECF5900683D8F /* CloudVeilSecurityManager.framework */,
 				09C05C2520D7949600D66A08 /* CloudKit.framework */,
 				0944CD712070B5DF00CB0461 /* Vision.framework */,
@@ -20126,6 +20141,7 @@
 				D08805B4156E8F3600311537 /* CoreGraphics.framework */,
 				6869F8C81D96D33C00D5AA92 /* NotificationCenter.framework */,
 				C373FBCE7D53895A14FB5235 /* Pods_Telegraph.framework */,
+				53108646CE8CBA70B7C68968 /* Pods_Share.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -23130,6 +23146,12 @@
 				E831AD3317ACE699B2EE5DDC /* Pods-Telegraph.release appstore.xcconfig */,
 				471677FC93248FEFF2DDDE81 /* Pods-Telegraph.release fork appstore.xcconfig */,
 				80E4DD766B6B52E8FF6B8047 /* Pods-Telegraph.release hockeyapp.xcconfig */,
+				D8A7E00360DC69EF8B231B4A /* Pods-Share.debug hockeyapp.xcconfig */,
+				A4266F1A66B6136771E8CBE7 /* Pods-Share.debug fork appstore.xcconfig */,
+				A45E457718A6099A78A7A87C /* Pods-Share.debug appstore.xcconfig */,
+				77FE7C218859682DA7998C22 /* Pods-Share.release appstore.xcconfig */,
+				4E7723105C0957A4BE4B5934 /* Pods-Share.release fork appstore.xcconfig */,
+				FDC08609C0445A537DA696C3 /* Pods-Share.release hockeyapp.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -24880,6 +24902,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = D02601E31A55CA2400716290 /* Build configuration list for PBXNativeTarget "Share" */;
 			buildPhases = (
+				9197CDD85616CB0124FB4DE3 /* [CP] Check Pods Manifest.lock */,
 				D02601D31A55CA2300716290 /* Sources */,
 				D0CB06831ADC8C6D005E298F /* Frameworks */,
 				D02601D51A55CA2300716290 /* Resources */,
@@ -25937,6 +25960,28 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		9197CDD85616CB0124FB4DE3 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Share-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 		932E96A716946F6A00D6EC55 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -25958,14 +26003,12 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Telegraph/Pods-Telegraph-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
-				"${BUILT_PRODUCTS_DIR}/AlamofireNetworkActivityLogger/AlamofireNetworkActivityLogger.framework",
 				"${BUILT_PRODUCTS_DIR}/CloudVeilSecurityManager/CloudVeilSecurityManager.framework",
 				"${BUILT_PRODUCTS_DIR}/ObjectMapper/ObjectMapper.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AlamofireNetworkActivityLogger.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CloudVeilSecurityManager.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ObjectMapper.framework",
 			);
@@ -29405,6 +29448,7 @@
 		};
 		D018D7B51E5C411500F75970 /* Debug AppStore */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A45E457718A6099A78A7A87C /* Pods-Share.debug appstore.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -29423,7 +29467,7 @@
 				DEVELOPMENT_TEAM = L95C8867HX;
 				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				FRAMEWORK_SEARCH_PATHS = "";
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
@@ -29435,13 +29479,14 @@
 					thirdparty/pop,
 				);
 				INFOPLIST_FILE = Share/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
+					"$(inherited)",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.cloudveil.CloudVeilMessenger.Share;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -29789,6 +29834,7 @@
 		};
 		D02601E41A55CA2400716290 /* Debug Hockeyapp */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D8A7E00360DC69EF8B231B4A /* Pods-Share.debug hockeyapp.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -29807,7 +29853,7 @@
 				DEVELOPMENT_TEAM = L95C8867HX;
 				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				FRAMEWORK_SEARCH_PATHS = "";
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
@@ -29819,13 +29865,14 @@
 					thirdparty/pop,
 				);
 				INFOPLIST_FILE = Share/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
+					"$(inherited)",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.cloudveil.CloudVeilMessenger.Share;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -29838,6 +29885,7 @@
 		};
 		D02601E51A55CA2400716290 /* Release AppStore */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 77FE7C218859682DA7998C22 /* Pods-Share.release appstore.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -29857,7 +29905,7 @@
 				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				FRAMEWORK_SEARCH_PATHS = "";
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -29868,13 +29916,14 @@
 					thirdparty/pop,
 				);
 				INFOPLIST_FILE = Share/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
+					"$(inherited)",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.cloudveil.CloudVeilMessenger.Share;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -30030,6 +30079,7 @@
 		};
 		D064420E1E4E299800394D5F /* Release Hockeyapp */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = FDC08609C0445A537DA696C3 /* Pods-Share.release hockeyapp.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -30049,7 +30099,7 @@
 				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				FRAMEWORK_SEARCH_PATHS = "";
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -30060,13 +30110,14 @@
 					thirdparty/pop,
 				);
 				INFOPLIST_FILE = Share/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
+					"$(inherited)",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.cloudveil.CloudVeilMessenger.Share;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -30389,6 +30440,7 @@
 		};
 		D083491F20977881008CFD52 /* Debug Fork AppStore */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A4266F1A66B6136771E8CBE7 /* Pods-Share.debug fork appstore.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -30407,7 +30459,7 @@
 				DEVELOPMENT_TEAM = L95C8867HX;
 				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				FRAMEWORK_SEARCH_PATHS = "";
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
@@ -30419,13 +30471,14 @@
 					thirdparty/pop,
 				);
 				INFOPLIST_FILE = Share/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
+					"$(inherited)",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.cloudveil.CloudVeilMessenger.Share;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -30771,6 +30824,7 @@
 		};
 		D08349342097788A008CFD52 /* Release Fork AppStore */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4E7723105C0957A4BE4B5934 /* Pods-Share.release fork appstore.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -30790,7 +30844,7 @@
 				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				FRAMEWORK_SEARCH_PATHS = "";
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -30801,13 +30855,14 @@
 					thirdparty/pop,
 				);
 				INFOPLIST_FILE = Share/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
+					"$(inherited)",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.cloudveil.CloudVeilMessenger.Share;
 				PRODUCT_NAME = "$(TARGET_NAME)";

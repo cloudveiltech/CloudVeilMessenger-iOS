@@ -42,6 +42,9 @@
 - (void)setInitialMessagePayloadWithForwardMessages:(NSArray *)initialForwardMessagePayload initialCompleteGroups:(NSSet *)initialCompleteGroups sendMessages:(NSArray *)initialSendMessagePayload sendFiles:(NSArray *)initialSendFilePayload;
 
 - (int64_t)conversationId;
+//CloudVeil
+- (TGConversation*)conversation;
+
 - (int64_t)messageAuthorPeerId;
 - (bool)_shouldCacheRemoteAssetUris;
 - (bool)_shouldDisplayProcessUnreadCount;

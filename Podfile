@@ -5,3 +5,9 @@ target 'Telegraph' do
   
   pod 'CloudVeilSecurityManager'
 end
+
+target 'Share' do
+  use_frameworks!
+  
+  pod 'CloudVeilSecurityManager'
+end
