@@ -1362,7 +1362,7 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
 }
 
 //CloudVeil start
-- (BOOL)isCoversationBlocked:(TGConversation *)conv {
+- (bool)isCoversationBlocked:(TGConversation *)conv {
     if (conv.chatVersion == 1 || conv.chatVersion == 2)
         if ([[MainController shared] isGroupAvailableWithGroupID:conv.conversationId] == false)
             return true;
@@ -1384,6 +1384,7 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
             return true;
         }
     }
+    return false;
 }
 
 - (void)closeCurrentConversationIfBlocked {
