@@ -612,7 +612,7 @@
 "Settings.ChatBackground" = "Fondo de chat";
 "Settings.Support" = "Hacer una pregunta";
 "Settings.FAQ" = "Preguntas frecuentes";
-"Settings.FAQ_URL" = "https://telegram.org/faq/es";
+"Settings.FAQ_URL" = "https://www.cloudveil.org/cloudveil-messenger/";
 "Settings.FAQ_Intro" = "Por favor, considera que el soporte de Telegram está hecho por voluntarios. Respondemos lo antes posible, pero puede tomar tiempo.\n\nPor favor, mira las preguntas frecuentes de Telegram: tienen respuestas para la mayoría de las preguntas.";
 "Settings.FAQ_Button" = "Preguntas frecuentes";
 "Settings.SaveIncomingPhotos" = "Guardar fotos recibidas";

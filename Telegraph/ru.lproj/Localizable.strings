@@ -508,7 +508,7 @@
 "Settings.ChatBackground" = "Фон для чатов";
 "Settings.Support" = "Помощь";
 "Settings.FAQ" = "Вопросы о Telegram";
-"Settings.FAQ_URL" = "http://telegram.org/faq#general";
+"Settings.FAQ_URL" = "https://www.cloudveil.org/cloudveil-messenger/";
 "Settings.FAQ_Intro" = "Пожалуйста, обратите внимание, что в поддержке Telegram отвечают волонтеры. Мы постараемся помочь как можно быстрее, но ожидание может занять время.\n\nПожалуйста, ознакомьтесь с часто задаваемыми вопросами о Telegram: там Вы найдёте ответы на большинство вопросов и важные советы по устранению неполадок.";
 "Settings.FAQ_Button" = "Ответы";
 "Settings.SaveIncomingPhotos" = "Сохранять входящие фото";

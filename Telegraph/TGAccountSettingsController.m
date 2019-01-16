@@ -792,7 +792,10 @@
 
 - (void)faqPressed
 {
-    [TGAppDelegateInstance handleOpenInstantView:TGLocalized(@"Settings.FAQ_URL") disableActions:false];
+    //CloudVeil start
+    NSString *url = @"https://www.cloudveil.org/cloudveil-messenger/";
+    [TGAppDelegateInstance handleOpenInstantView:url disableActions:false];
+    //CloudVeil end
 }
 
 //CloudVeil Start

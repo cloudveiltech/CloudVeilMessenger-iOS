@@ -12039,7 +12039,9 @@ static UIView *_findBackArrow(UIView *view)
     
     [self endEditing];
     
-    _menuController = [TGEmbedMenu presentInParentController:self attachment:webPage peerId:_companion.requestPeerId messageId:messageId cancelPIP:cancelPIP sourceView:_view sourceRect:sourceRect];
+    //CloudVeil start
+    //_menuController = [TGEmbedMenu presentInParentController:self attachment:webPage peerId:_companion.requestPeerId messageId:messageId cancelPIP:cancelPIP sourceView:_view sourceRect:sourceRect];
+    //CloudVeil end
 }
 
 - (void)openEmbed:(TGWebPageMediaAttachment *)webPage sourceRectSource:(CGRect (^)(void))sourceRectSource

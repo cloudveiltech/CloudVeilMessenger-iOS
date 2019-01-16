@@ -612,7 +612,7 @@
 "Settings.ChatBackground" = "خلفية الدردشة";
 "Settings.Support" = "اسأل سؤالًا";
 "Settings.FAQ" = "الأسئلة الشائعة عن تيليجرام";
-"Settings.FAQ_URL" = "https://telegram.org/faq/ar";
+"Settings.FAQ_URL" = "https://www.cloudveil.org/cloudveil-messenger/";
 "Settings.FAQ_Intro" = "نرجو الأخذ بالعلم أن الدعم الفني في تيليجرام يقوم به مجموعة من المتطوعين. نحاول الرد في أسرع وقت، لكن هذا قد يستغرق الكثير من الوقت.\n\nيرجى الإطلاع على لأسئلة الشائعة عن تيليجرام:  يوجد بها حلول للمشاكل وإجابات لمعظم الأسئلة.";
 "Settings.FAQ_Button" = "الأسئلة الشائعة";
 "Settings.SaveIncomingPhotos" = "احفظ الصور الواردة";

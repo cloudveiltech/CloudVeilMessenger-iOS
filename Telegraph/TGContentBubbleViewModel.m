@@ -548,6 +548,9 @@ bool debugShowMessageIds = false;
 
 - (void)setWebPageFooter:(TGWebPageMediaAttachment *)webPage invoice:(TGInvoiceMediaAttachment *)invoice viewStorage:(TGModernViewStorage *)viewStorage
 {
+    //CloudVeil start - disable page preview
+    return;
+    //CloudVeil end
     _webPage = webPage;
     if (webPage.url.length == 0 && ![webPage.pageType isEqualToString:@"game"] && ![webPage.pageType isEqualToString:@"invoice"] && ![webPage.pageType isEqualToString:@"message"])
     {
