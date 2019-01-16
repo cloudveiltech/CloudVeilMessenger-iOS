@@ -10,8 +10,11 @@ TGLocalization *legacyEffectiveLocalization() {
     return [[LegacyComponentsGlobals provider] effectiveLocalization];
 }
 
-NSString *TGLocalized(NSString *s) {
-    return [legacyEffectiveLocalization() get:s];
+NSString *TGLocalized(NSString *s)
+{
+    //CloudVeil start
+    return [[legacyEffectiveLocalization() get:s] stringByReplacingOccurrencesOfString:@"Telegram" withString:@"CloudVeil Messsenger"];
+    //CloudVeil end
 }
 
 bool TGObjectCompare(id obj1, id obj2) {
