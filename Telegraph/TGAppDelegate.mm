@@ -1865,6 +1865,10 @@ static unsigned int overrideIndexAbove(__unused id self, __unused SEL _cmd)
     else
         _autoPlayAnimations = cpuCoreCount() > 1;
     
+    //CloudVeil start - disable gif autoplay
+    _autoPlayAnimations = false;
+    //CloudVeil end
+    
     if ((value = [userDefaults objectForKey:@"alwaysShowStickersMode"]) != nil)
         _alwaysShowStickersMode = [value intValue];
     else
