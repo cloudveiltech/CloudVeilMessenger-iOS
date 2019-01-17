@@ -152,6 +152,8 @@
                     legacyUrl = [legacyUrl stringByAppendingFormat:@"_%@", [fileReference stringByEncodingInHex]];
             }
         }
+        
+        
         bool isCurrent = false;
         
         if (index == 0)

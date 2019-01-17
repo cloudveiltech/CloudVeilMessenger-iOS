@@ -80,6 +80,7 @@
         {
             [_avatarView setSignal:[TGChatListAvatarSignal chatListAvatarForSavedMessagesWithContext:shareContext imageSize:imageSize]];
         }
+        //CloudVeil disable avatar
         else if (userModel.avatarLocation == nil || [[MainController shared] disableProfilePhoto])
         {
             NSString *letters = @"";
@@ -103,7 +104,8 @@
         TGGroupChatModel *groupChatModel = (TGGroupChatModel *)chatModel;
         _titleLabel.text = groupChatModel.title;
         
-        if (groupChatModel.avatarLocation == nil)
+        //CloudVeil disable avatar
+        if (groupChatModel.avatarLocation == nil || [[MainController shared] disableProfilePhoto])
         {
             NSString *letters = [[groupChatModel.title substringToIndex:1] uppercaseString];
             [_avatarView setSignal:[TGChatListAvatarSignal chatListAvatarWithContext:shareContext letters:letters peerId:chatModel.peerId imageSize:imageSize]];
@@ -118,7 +120,8 @@
         TGChannelChatModel *channelChatModel = (TGChannelChatModel *)chatModel;
         _titleLabel.text = channelChatModel.title;
         
-        if (channelChatModel.avatarLocation == nil)
+        //CloudVeil disable avatar
+        if (channelChatModel.avatarLocation == nil || [[MainController shared] disableProfilePhoto])
         {
             NSString *letters = [[channelChatModel.title substringToIndex:1] uppercaseString];
             [_avatarView setSignal:[TGChatListAvatarSignal chatListAvatarWithContext:shareContext letters:letters peerId:channelChatModel.peerId imageSize:imageSize]];

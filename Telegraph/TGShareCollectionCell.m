@@ -9,6 +9,7 @@
 #import "TGTelegraph.h"
 
 #import "TGPresentation.h"
+#import <CloudVeilSecurityManager/CloudVeilSecurityManager-Swift.h>
 
 NSString *const TGShareCollectionCellIdentifier = @"TGShareCollectionCell";
 
@@ -119,8 +120,8 @@ NSString *const TGShareCollectionCellIdentifier = @"TGShareCollectionCell";
         else if (conversation.additionalProperties[@"user"] != nil)
         {
             TGUser *user = conversation.additionalProperties[@"user"];
-            
-            if (user.photoUrlSmall.length != 0)
+            //CloudVeil disable avatars
+            if (user.photoUrlSmall.length != 0 && ![[MainController shared] disableProfilePhoto])
                 [_avatarView loadImage:user.photoFullUrlSmall filter:@"circle:60x60" placeholder:placeholder];
             else
                 [_avatarView loadUserPlaceholderWithSize:size uid:user.uid firstName:user.firstName lastName:user.lastName placeholder:placeholder];
@@ -131,8 +132,8 @@ NSString *const TGShareCollectionCellIdentifier = @"TGShareCollectionCell";
                 title = [user.displayName stringByReplacingOccurrencesOfString:@" " withString:@"\n"];
         }
         else
-        {
-            if (conversation.chatPhotoFullSmall.length != 0)
+        {   //CloudVeil disable avatars
+            if (conversation.chatPhotoFullSmall.length != 0 && ![[MainController shared] disableProfilePhoto])
                 [_avatarView loadImage:conversation.chatPhotoFullSmall filter:@"circle:60x60" placeholder:placeholder];
             else
                 [_avatarView loadGroupPlaceholderWithSize:size conversationId:conversation.conversationId title:conversation.chatTitle placeholder:placeholder];
@@ -144,7 +145,8 @@ NSString *const TGShareCollectionCellIdentifier = @"TGShareCollectionCell";
         TGUser *user = peer;
         
         peerId = user.uid;
-        if (user.photoUrlSmall.length != 0)
+        //CloudVeil disable avatars
+        if (user.photoUrlSmall.length != 0 && ![[MainController shared] disableProfilePhoto])
             [_avatarView loadImage:user.photoFullUrlSmall filter:@"circle:60x60" placeholder:placeholder];
         else
             [_avatarView loadUserPlaceholderWithSize:size uid:user.uid firstName:user.firstName lastName:user.lastName placeholder:placeholder];

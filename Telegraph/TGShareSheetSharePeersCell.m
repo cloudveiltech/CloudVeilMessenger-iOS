@@ -6,7 +6,7 @@
 #import <LegacyComponents/TGCheckButtonView.h>
 
 #import "TGPresentation.h"
-
+#import <CloudVeilSecurityManager/CloudVeilSecurityManager-Swift.h>
 @interface TGShareSheetSharePeersCell () <UIGestureRecognizerDelegate>
 {
     id _peer;
@@ -123,14 +123,16 @@
         if (conversation.additionalProperties[@"user"] != nil) {
             TGUser *user = conversation.additionalProperties[@"user"];
 
-            if (user.photoUrlSmall.length != 0) {
+            //CloudVeil disable avatars
+            if (![[MainController shared] disableProfilePhoto] && user.photoUrlSmall.length != 0) {
                 [_avatarView loadImage:user.photoFullUrlSmall filter:@"circle:60x60" placeholder:placeholder];
             } else {
                 [_avatarView loadUserPlaceholderWithSize:size uid:user.uid firstName:user.firstName lastName:user.lastName placeholder:placeholder];
             }
             _titleLabel.text = user.displayFirstName;
         } else {
-            if (conversation.chatPhotoSmall.length != 0) {
+            //CloudVeil disable avatars
+            if (![[MainController shared] disableProfilePhoto] && conversation.chatPhotoSmall.length != 0) {
                 [_avatarView loadImage:conversation.chatPhotoFullSmall filter:@"circle:60x60" placeholder:placeholder];
             } else {
                 [_avatarView loadGroupPlaceholderWithSize:size conversationId:conversation.conversationId title:conversation.chatTitle placeholder:placeholder];
@@ -141,7 +143,8 @@
         TGUser *user = peer;
 
         peerId = user.uid;
-        if (user.photoUrlSmall.length != 0) {
+        //CloudVeil disable avatars
+        if (![[MainController shared] disableProfilePhoto] && user.photoUrlSmall.length != 0) {
             [_avatarView loadImage:user.photoFullUrlSmall filter:@"circle:60x60" placeholder:placeholder];
         } else {
             [_avatarView loadUserPlaceholderWithSize:size uid:user.uid firstName:user.firstName lastName:user.lastName placeholder:placeholder];

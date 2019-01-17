@@ -2131,7 +2131,7 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
         cell.isAd = conversation.isAd;
         cell.groupedInFeed = conversation.feedId.intValue != 0;
         cell.isFeedChannels = _dialogListCompanion.feedChannels;
-        
+    
         if (conversation.deliveryError)
             cell.deliveryState = TGMessageDeliveryStateFailed;
         else
@@ -2175,6 +2175,7 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
             cell.isGroupChat = false;
             
         }
+        
         cell.authorName = [authorName isEqualToString:authorNameYou] ? TGLocalized(@"DialogList.You") : authorName;
         cell.authorIsSelf = [dialogListData[@"authorIsSelf"] boolValue];
         

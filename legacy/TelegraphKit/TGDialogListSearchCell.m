@@ -3,7 +3,7 @@
 #import <LegacyComponents/LegacyComponents.h>
 
 #import <LegacyComponents/TGLetteredAvatarView.h>
-
+#import <CloudVeilSecurityManager/CloudVeilSecurityManager-Swift.h>
 #import "TGColor.h"
 #import "TGPresentation.h"
 
@@ -183,7 +183,8 @@
     {
         [_avatarView loadSavedMessagesWithSize:CGSizeMake(40.0f, 40.0f) placeholder:placeholder];
     }
-    else if (_avatarUrl != nil && !_hasExplicitContent)
+    //CloudVeil hide avatars
+    else if (![[MainController shared] disableProfilePhoto] && _avatarUrl != nil && !_hasExplicitContent)
     {
         _avatarView.fadeTransitionDuration = animated ? 0.14 : 0.3;
         if (![_avatarUrl isEqualToString:_avatarView.currentUrl])

@@ -5,6 +5,7 @@
 
 #import "TGShareImageView.h"
 #import "TGShareCheckButtonView.h"
+#import <CloudVeilSecurityManager/CloudVeilSecurityManager-Swift.h>
 
 @interface TGShareSinglePeerCell ()
 {
@@ -85,7 +86,7 @@
     [_titleLabel sizeToFit];
     
     CGSize imageSize = CGSizeMake(60.0f, 60.0f);
-    if (peer.avatarLocation == nil)
+    if (peer.avatarLocation == nil || [[MainController shared] disableProfilePhoto])
     {
         NSString *letters = @"";
         if (peer.firstName.length != 0 && peer.lastName.length != 0)
