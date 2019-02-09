@@ -1423,7 +1423,9 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
         row.title = conversation.chatTitle;
         row.userName = conversation.username;
         
-        if (conversation.chatVersion == 1 || conversation.chatVersion == 2)
+        TGLog(@"Iterating over conversation: %d", row.objectID);
+        
+        if (conversation.isChat)
             [securityGroups addObject:row];
         
         if (conversation.isChannel) {

@@ -177,8 +177,9 @@
     
     UIImage *placeholder = [self.presentation.images avatarPlaceholderWithDiameter:diameter];    
     bool animateState = false;
-    if (peer.photoUrlSmall.length != 0)
-    {
+    //CloudVeil start
+    if (peer.photoUrlSmall.length != 0 && ![[MainController shared] disableProfilePhoto])
+    {//cloudveil end
         _avatarView.fadeTransitionDuration = animateState ? 0.14 : 0.3;
         if (![peer.photoFullUrlSmall isEqualToString:_avatarView.currentUrl])
         {
