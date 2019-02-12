@@ -1363,13 +1363,17 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
 
 //CloudVeil start
 - (bool)isCoversationBlocked:(TGConversation *)conv {
-    if (conv.chatVersion == 1 || conv.chatVersion == 2)
+    if ((conv.chatVersion == 1 || conv.chatVersion == 2) && !conv.isChannel)
         if ([[MainController shared] isGroupAvailableWithGroupID:conv.conversationId] == false)
             return true;
     
-    if (conv.isChannel)
-        if ([[MainController shared] isChannelAvailableWithChannelID:conv.conversationId] == false)
+    if (conv.isChannel) {
+        //backprojection of id
+        int32_t newId = -(int32_t)(((int64_t)INT32_MIN) * 2 - conv.conversationId);
+        if ([[MainController shared] isChannelAvailableWithChannelID:newId] == false) {
             return true;
+        }
+    }
     
     if (conv.isEncrypted)
         if ([[MainController shared] isSecretChatAvailable] == false)
@@ -1425,7 +1429,7 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
         
         TGLog(@"Iterating over conversation: %d", row.objectID);
         
-        if (conversation.isChat)
+         if (conversation.chatVersion == 1 || conversation.chatVersion == 2)
             [securityGroups addObject:row];
         
         if (conversation.isChannel) {
@@ -1444,8 +1448,7 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
     }
     
     if (securityGroups.count == 0 && securityBots.count == 0 && securityChannels.count == 0) {
-        TGLog(@"Syncing CLoudveil nothing to sync");
-        return;
+        TGLog(@"Syncing CLoudveil empty data to sync");
     }
     
     //Cloudveil    
