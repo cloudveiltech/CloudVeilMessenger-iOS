@@ -407,12 +407,42 @@
 
 -(BOOL)isChannelUnavailable:(TGConversation *)item
 {
+    TGUser *user = nil;
+    user = [TGDatabaseInstance() loadUser:(int)item.conversationId];
+    
     // MARK: - CloudVeil Security
+    
+    int32_t newId = -(int32_t)(((int64_t)INT32_MIN) * 2 - item.conversationId);
+    if(![[MainController shared] isConversationCheckedOnServerWithConversationId:item.conversationId channelId:newId]) {
+        TGRow *row = [TGRow alloc];
+        row.objectID = item.conversationId;
+        row.title = item.chatTitle;
+        row.userName = item.username;
+        
+        if (item.chatVersion == 1 || item.chatVersion == 2) {
+            [[MainController shared] replayRequestWithGroupWithGroup:row];
+            return true;
+        }
+        
+        if (item.isChannel) {
+            row.objectID = newId;
+            [[MainController shared] replayRequestWithChannelWithChannel:row];
+            return true;
+        }
+        
+        if (user.isBot) {
+            row.title = user.firstName;
+            row.userName = user.userName;
+            [[MainController shared] replayRequestWithBotWithBot:row];
+            return true;
+        }
+    }
     
     if ([[MainController shared] isGroupAvailableWithGroupID:item.conversationId] == false)
         return true;
     
-    if ([[MainController shared] isChannelAvailableWithChannelID:item.conversationId] == false)
+    
+    if ([[MainController shared] isChannelAvailableWithChannelID:newId] == false)
         return true;
     
     int timer = [TGDatabaseInstance() messageLifetimeForPeerId:item.conversationId];
@@ -421,14 +451,14 @@
             if ([[MainController shared] minimumSecretLenght] > timer)
                 return true;
     
-    TGUser *user = nil;
-    user = [TGDatabaseInstance() loadUser:(int)item.conversationId];
+    
     if (user.isBot) {
         if ([[MainController shared] isBotAvailableWithBotID:item.conversationId] == false) {
             return true;
         }
     }
     // MARK: --------------------
+    
     
     return false;
 }

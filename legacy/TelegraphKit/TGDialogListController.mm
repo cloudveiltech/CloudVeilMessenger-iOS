@@ -1363,9 +1363,12 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
 
 //CloudVeil start
 - (bool)isCoversationBlocked:(TGConversation *)conv {
-    if ((conv.chatVersion == 1 || conv.chatVersion == 2) && !conv.isChannel)
-        if ([[MainController shared] isGroupAvailableWithGroupID:conv.conversationId] == false)
+    if ((conv.chatVersion == 1 || conv.chatVersion == 2) && !conv.isChannel) {
+        if ([[MainController shared] isGroupAvailableWithGroupID:conv.conversationId] == false) {
             return true;
+        }
+        return false;
+    }
     
     if (conv.isChannel) {
         //backprojection of id
@@ -1373,11 +1376,17 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
         if ([[MainController shared] isChannelAvailableWithChannelID:newId] == false) {
             return true;
         }
+        
+        return false;
     }
     
-    if (conv.isEncrypted)
-        if ([[MainController shared] isSecretChatAvailable] == false)
+    if (conv.isEncrypted) {
+        if ([[MainController shared] isSecretChatAvailable] == false) {
             return true;
+        }
+        
+        return false;
+    }
     
     TGUser *user = nil;
     user = [TGDatabaseInstance() loadUser:(int)conv.conversationId];
@@ -1387,6 +1396,8 @@ NSString *authorNameYou = @"  __TGLocalized__YOU";
             user.isBlocked = true;
             return true;
         }
+        
+        return false;
     }
     return false;
 }
