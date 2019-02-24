@@ -12749,6 +12749,10 @@ static UIView *_findBackArrow(UIView *view)
                         previewingContext.sourceRect = CGRectMake(location.x, location.y, 1.0f, 1.0f);
                         
                         if ([[link lowercaseString] hasPrefix:@"http://"] || [[link lowercaseString] hasPrefix:@"https://"] || [link rangeOfString:@"://"].location == NSNotFound) {
+                            //CloudVeil start disable force touch preview
+                            return nil;
+                            //CloudVeil end
+                            
                             NSURL *url = nil;
                             @try {
                                 url = [NSURL URLWithString:link];

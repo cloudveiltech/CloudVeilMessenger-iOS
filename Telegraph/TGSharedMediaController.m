@@ -3489,6 +3489,7 @@ static id mediaIdForItem(id<TGSharedMediaItem> item)
             __weak TGSharedMediaController *weakSelf = self;
             _custom3dTouchHandle = [TGPreviewMenu setupPreviewControllerForView:self.view configurator:^TGItemPreviewController *(CGPoint gestureLocation)
             {
+                
                 __strong TGSharedMediaController *strongSelf = weakSelf;
                 if (strongSelf == nil)
                     return nil;
