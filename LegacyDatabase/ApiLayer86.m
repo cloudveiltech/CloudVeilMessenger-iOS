@@ -48137,41 +48137,41 @@ id rules_result = [Api86__Serializer addSerializerToObject:rules_copy serializer
     NSMutableData *_data = [[NSMutableData alloc] init];
     int32_t _functionSignature = 1555998096;
     [_data appendBytes:&_functionSignature length:4];
-            if (![Api86__Environment serializeObject:[Api86__Serializer addSerializerToObject:[[Api86__Number alloc] initWithNumber:tokenType] serializer:[[Api86_BuiltinSerializer_Int alloc] init]] data:_data addSignature:false])
-                return false;
-            if (![Api86__Environment serializeObject:[Api86__Serializer addSerializerToObject:[token copy] serializer:[[Api86_BuiltinSerializer_String alloc] init]] data:_data addSignature:false])
-                return false;
-            if (![Api86__Environment serializeObject:appSandbox data:_data addSignature:true])
-                return false;
-            if (![Api86__Environment serializeObject:[Api86__Serializer addSerializerToObject:[secret copy] serializer:[[Api86_BuiltinSerializer_Bytes alloc] init]] data:_data addSignature:false])
-                return false;
-            if (![Api86__Environment serializeObject:
-({
-NSMutableArray *otherUids_copy = [[NSMutableArray alloc] initWithCapacity:otherUids.count];
-for (id otherUids_item in otherUids)
-{
-    [otherUids_copy addObject:[Api86__Serializer addSerializerToObject:[[Api86__Number alloc] initWithNumber:otherUids_item] serializer:[[Api86_BuiltinSerializer_Int alloc] init]]];
-}
-id otherUids_result = [Api86__Serializer addSerializerToObject:otherUids_copy serializer:[[Api86__Serializer alloc] initWithConstructorSignature:(int32_t)0x1cb5c415 serializeBlock:^bool (NSArray *object, NSMutableData *data)
-{
-    int32_t count = (int32_t)object.count;
-    [data appendBytes:(void *)&count length:4];
-    for (id item in object)
-    {
-        if (![Api86__Environment serializeObject:item data:data addSignature:false])
+    if (![Api86__Environment serializeObject:[Api86__Serializer addSerializerToObject:[[Api86__Number alloc] initWithNumber:tokenType] serializer:[[Api86_BuiltinSerializer_Int alloc] init]] data:_data addSignature:false])
         return false;
-    }
-    return true;
-}]]; otherUids_result;}) data:_data addSignature:true])
-                return false;
+    if (![Api86__Environment serializeObject:[Api86__Serializer addSerializerToObject:[token copy] serializer:[[Api86_BuiltinSerializer_String alloc] init]] data:_data addSignature:false])
+        return false;
+    if (![Api86__Environment serializeObject:appSandbox data:_data addSignature:true])
+        return false;
+    if (![Api86__Environment serializeObject:[Api86__Serializer addSerializerToObject:[secret copy] serializer:[[Api86_BuiltinSerializer_Bytes alloc] init]] data:_data addSignature:false])
+        return false;
+    if (![Api86__Environment serializeObject:
+          ({
+        NSMutableArray *otherUids_copy = [[NSMutableArray alloc] initWithCapacity:otherUids.count];
+        for (id otherUids_item in otherUids)
+        {
+            [otherUids_copy addObject:[Api86__Serializer addSerializerToObject:[[Api86__Number alloc] initWithNumber:otherUids_item] serializer:[[Api86_BuiltinSerializer_Int alloc] init]]];
+        }
+        id otherUids_result = [Api86__Serializer addSerializerToObject:otherUids_copy serializer:[[Api86__Serializer alloc] initWithConstructorSignature:(int32_t)0x1cb5c415 serializeBlock:^bool (NSArray *object, NSMutableData *data)
+        {
+            int32_t count = (int32_t)object.count;
+            [data appendBytes:(void *)&count length:4];
+            for (id item in object)
+            {
+                if (![Api86__Environment serializeObject:item data:data addSignature:false])
+                    return false;
+            }
+            return true;
+        }]]; otherUids_result;}) data:_data addSignature:true])
+        return false;
     return [[Api86_FunctionContext alloc] initWithPayload:_data responseParser:^id (NSData *_data) {
-    id result = nil;
-    NSUInteger __offset = 0;
-    NSUInteger *_offset = &__offset;
-            int32_t result_signature = 0; [_data getBytes:(void *)&result_signature range:NSMakeRange(*_offset, 4)]; *_offset += 4;
-            if ((result = [Api86__Environment parseObject:_data offset:_offset implicitSignature:result_signature metaInfo:nil]) == nil)
-               return nil;
-    return result;
+        id result = nil;
+        NSUInteger __offset = 0;
+        NSUInteger *_offset = &__offset;
+        int32_t result_signature = 0; [_data getBytes:(void *)&result_signature range:NSMakeRange(*_offset, 4)]; *_offset += 4;
+        if ((result = [Api86__Environment parseObject:_data offset:_offset implicitSignature:result_signature metaInfo:nil]) == nil)
+            return nil;
+        return result;
     } metadata:@"account.registerDevice"];
 }
 + (Api86_FunctionContext *)account_getAllSecureValues
